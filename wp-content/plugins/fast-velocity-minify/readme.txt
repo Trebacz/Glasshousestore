@@ -2,7 +2,7 @@
 Contributors: Alignak
 Tags: merge, combine, concatenate, PHP Minify, YUI Compressor, CSS, javascript, JS, minification, minify, optimization, optimize, stylesheet, aggregate, cache, CSS, html, minimize, pagespeed, performance, speed, GTmetrix, pingdom
 Requires at least: 4.5
-Stable tag: 2.1.1
+Stable tag: 2.1.2
 Tested up to: 4.8
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -259,6 +259,9 @@ Note: The Inline all CSS option is now divided into header and footer.
 
 
 == Changelog ==
+
+= 2.1.2 [2017.06.27] =
+* fixed another error notice when debug mode is on
 
 = 2.1.1 [2017.06.24] =
 * fixed an error notice
