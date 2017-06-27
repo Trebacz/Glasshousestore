@@ -1,0 +1,13 @@
+*** a3 License Manager Changelog ***
+
+= 1.0.2 - 2016/07/11 =
+* Fix - Validate version info to resolve PHP warning 'Illegal string offset version'
+* Credit - Thanks to Charlotte Batson for reporting the Illegal string offset warning
+
+= 1.0.1 - 2016/07/05 =
+* Tweak - Add download url into transient of each plugin info
+* Fix - Allow auto upgrade if site is using lifetime license key
+
+= 1.0.0 - 2016/06/14 =
+* Initial Release - Commit Plugins source code to a3rev Github repository
+* Initial Release - Commit Plugin to Amazon Cloud storage for download

@@ -1,0 +1,551 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WooCommerce Advanced Review Reminder v1.6.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-07-14 19:17-0400\n"
+"PO-Revision-Date: 2016-07-14 19:18-0400\n"
+"Last-Translator: Lars Koudal <lars@koudal.dk>\n"
+"Language-Team: \n"
+"Language: es_ES\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 1.8.8\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;"
+"_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2\n"
+"X-Poedit-Basepath: ..\n"
+"X-Textdomain-Support: yes\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: includes/class-wc-advanced-review-reminder.php:9
+msgid "Reminders to review purchases can be sent out automatically."
+msgstr ""
+
+# @ wc-review-reminder
+#: includes/class-wc-advanced-review-reminder.php:10
+msgid "We would love your feedback"
+msgstr "Nos encantaría llegar tus comentarios"
+
+# @ wc-review-reminder
+#: includes/class-wc-advanced-review-reminder.php:11
+msgid "Please help us by reviewing"
+msgstr "Por favor ayúdenos a revisar"
+
+# @ wc-review-reminder
+#: includes/class-wc-advanced-review-reminder.php:88
+msgid "WooCommerce Advanced Review Reminder"
+msgstr "WooCommerce Advanced Review Reminder"
+
+# @ wc-review-reminder
+#: includes/class-wc-advanced-review-reminder.php:89
+msgid "Click here to read the documentation"
+msgstr "Haga clic aquí para leer la documentación (English)"
+
+#: includes/class-wc-advanced-review-reminder.php:99
+msgid ""
+"Reviews are not turned on. Customers will not be able to rate products with "
+"the star rating."
+msgstr ""
+
+#: includes/class-wc-advanced-review-reminder.php:100
+msgid "Click here to enable ratings."
+msgstr ""
+
+# @ wc-review-reminder
+#: includes/class-wc-advanced-review-reminder.php:108
+msgid "Send Test Email"
+msgstr "Enviar correo electrónico de prueba"
+
+# @ wc-review-reminder
+#: includes/class-wc-advanced-review-reminder.php:114
+#: includes/class-wc-advanced-review-reminder.php:118
+msgid "Email Recipient"
+msgstr "Email destinatario"
+
+# @ wc-review-reminder
+#: includes/class-wc-advanced-review-reminder.php:120
+msgid "Enter a valid email to send a test email."
+msgstr ""
+"Introduzca una dirección de correo electrónico válida para enviar un mensaje "
+"de prueba."
+
+# @ wc-review-reminder
+#: includes/class-wc-advanced-review-reminder.php:135
+msgid "Logs"
+msgstr "Registros"
+
+# @ wc-review-reminder
+#: includes/class-wc-advanced-review-reminder.php:139
+#: includes/class-wc-advanced-review-reminder.php:153
+msgid "Time"
+msgstr "Hora"
+
+# @ wc-review-reminder
+#: includes/class-wc-advanced-review-reminder.php:140
+#: includes/class-wc-advanced-review-reminder.php:154
+msgid "Event"
+msgstr "Evento"
+
+#: includes/class-wc-advanced-review-reminder.php:165
+msgid "Scheduled Emails"
+msgstr "Programado de correos electrónicos"
+
+# @ wc-review-reminder
+#: includes/class-wc-advanced-review-reminder.php:210
+#: includes/class-wc-advanced-review-reminder.php:212
+#: includes/class-wc-advanced-review-reminder.php:214
+msgid "Replaced with the customers name."
+msgstr "Reemplazado con el nombre de los clientes."
+
+# @ wc-review-reminder
+#: includes/class-wc-advanced-review-reminder.php:216
+msgid "Replaced with the customer email."
+msgstr "Se reemplaza con el correo electrónico del cliente."
+
+# @ wc-review-reminder
+#: includes/class-wc-advanced-review-reminder.php:218
+msgid "Replaced with the site title."
+msgstr "Se reemplaza con el título del sitio."
+
+# @ wc-review-reminder
+#: includes/class-wc-advanced-review-reminder.php:220
+msgid "Replaced with the order id."
+msgstr "Se reemplaza con la identificación de la orden."
+
+# @ wc-review-reminder
+#: includes/class-wc-advanced-review-reminder.php:222
+msgid "Replaced with the date and time of the order."
+msgstr "Reemplazado con la fecha y hora de la orden."
+
+# @ wc-review-reminder
+#: includes/class-wc-advanced-review-reminder.php:224
+msgid "Replaced with the date the order was marked completed."
+msgstr "Se reemplaza con la fecha que la orden fue marcado completado."
+
+# @ wc-review-reminder
+#: includes/class-wc-advanced-review-reminder.php:226
+msgid "Replaced with a link to stop recieving email review reminders."
+msgstr ""
+"Reemplazado con un enlace a dejar de recibir correo electrónico de revisión "
+"recordatorios."
+
+# @ wc-review-reminder
+#: includes/class-wc-advanced-review-reminder.php:228
+msgid "Replaced with a list of products purchased but not reviewed."
+msgstr ""
+"Se reemplaza con una lista de los productos comprados pero no revisados."
+
+# @ wc-review-reminder
+#: includes/class-wc-advanced-review-reminder.php:230
+msgid ""
+"Replaced with a nice looking table with product images and short description."
+msgstr ""
+"Sustituido por una mesa mira con imágenes de producto y breve descripción."
+
+# @ wc-review-reminder
+#: includes/class-wc-advanced-review-reminder.php:232
+msgid "Replaced with the number of days ago the order was made."
+msgstr "Se sustituye por el número de días atrás el pedido se hizo."
+
+# @ wc-review-reminder
+#: includes/class-wc-advanced-review-reminder.php:248
+msgid "Enable/Disable"
+msgstr "Activar / Desactivar"
+
+# @ wc-review-reminder
+#: includes/class-wc-advanced-review-reminder.php:250
+msgid "Enable this email notification"
+msgstr "Habilite esta notificación por correo electrónico"
+
+# @ wc-review-reminder
+#: includes/class-wc-advanced-review-reminder.php:255
+msgid "Day(s) after order"
+msgstr "Día (s) después de la orden"
+
+# @ wc-review-reminder
+#: includes/class-wc-advanced-review-reminder.php:257
+msgid ""
+"You can choose how many days after a order has been completed before a "
+"reminder email is sent."
+msgstr ""
+"Usted puede elegir el número de días después de que un pedido ha sido "
+"completado antes de que un recordatorio por correo electrónico se envía."
+
+#: includes/class-wc-advanced-review-reminder.php:263
+msgid "Order status to schedule"
+msgstr "Estado del pedido para programar"
+
+#: includes/class-wc-advanced-review-reminder.php:265
+msgid ""
+"When an order reaches a specific status, the reminder is scheduled to be "
+"sent. Choose which status. Default status is <code>Completed</code>."
+msgstr ""
+"Cuando un pedido llega a una situación concreta, el aviso está programado "
+"para ser enviado. Elija el que estado. Estado por defecto es "
+"<code>Completed</code> ."
+
+#: includes/class-wc-advanced-review-reminder.php:270
+msgid "Exclude products"
+msgstr ""
+
+#: includes/class-wc-advanced-review-reminder.php:272
+msgid ""
+"Ignore emails with these product ids. Comma-seperated list of product ids. "
+"No reminder emails with these product ids will be sent."
+msgstr ""
+
+#: includes/class-wc-advanced-review-reminder.php:278
+msgid "Customize Email Content"
+msgstr "Personalizar el contenido de correo electrónico"
+
+# @ wc-review-reminder
+#: includes/class-wc-advanced-review-reminder.php:282
+msgid "Email subject"
+msgstr "Asunto del correo electrónico"
+
+# @ wc-review-reminder
+#: includes/class-wc-advanced-review-reminder.php:284
+msgid "The email subject line."
+msgstr "La línea de asunto de correo electrónico."
+
+# @ wc-review-reminder
+#: includes/class-wc-advanced-review-reminder.php:286
+msgid "[{site_title}] Review recently purchased products"
+msgstr "[{site_title}] Revisión recientemente adquirido productos"
+
+# @ wc-review-reminder
+#: includes/class-wc-advanced-review-reminder.php:290
+msgid "Email Content"
+msgstr "Contenido de Correo"
+
+# @ wc-review-reminder
+#: includes/class-wc-advanced-review-reminder.php:292
+msgid "This is the email template"
+msgstr "Esta es la plantilla de correo electrónico"
+
+#: includes/class-wc-advanced-review-reminder.php:294
+msgid ""
+"Hello {customer_name},\n"
+"\n"
+"Thank you for purchasing items from the {site_title} shop!\n"
+"\n"
+"We would love if you could help us and other customers by reviewing the "
+"products you recently purchased.  It only takes a minute and it would really "
+"help others by giving them an idea of your experience.  Click the link below "
+"for each product and review the product under the 'Reviews' tab.\n"
+"\n"
+"{order_table}\n"
+"\n"
+"Much appreciated,\n"
+"\n"
+"{site_title}.\n"
+"\n"
+"{stop_emails_link}"
+msgstr ""
+
+#: includes/class-wc-advanced-review-reminder.php:298
+msgid "Button Background Color"
+msgstr "Color de fondo del botón"
+
+#: includes/class-wc-advanced-review-reminder.php:301
+msgid ""
+"Background color for Review Now buttons in email. Default <code>#ad74a2</"
+"code>."
+msgstr ""
+
+#: includes/class-wc-advanced-review-reminder.php:307
+msgid "Button Text Color"
+msgstr "Color del texto del botón"
+
+#: includes/class-wc-advanced-review-reminder.php:310
+msgid ""
+"Font color for Review Now buttons in email. Default <code>#ffffff</code>."
+msgstr ""
+"Color de fuente para los botones revisión ahora en correo electrónico. Por "
+"defecto <code>#ffffff</code> ."
+
+#: includes/class-wc-advanced-review-reminder.php:316
+msgid "Text on button"
+msgstr "Text en el botón"
+
+#: includes/class-wc-advanced-review-reminder.php:318
+msgid ""
+"If you use the <code>{product_table}</code> macro you can change the text on "
+"the button here. Default <code>Review Now</code>."
+msgstr ""
+
+# @ wc-review-reminder
+#: includes/class-wc-advanced-review-reminder.php:319
+msgid "Review Now"
+msgstr "Comentar el producto"
+
+#: includes/class-wc-advanced-review-reminder.php:323
+msgid "Append to link"
+msgstr ""
+
+#: includes/class-wc-advanced-review-reminder.php:325
+msgid ""
+"<code>#reviews</code> normally links to the Reviews tab. Change the link "
+"here or add tracking parameters"
+msgstr ""
+
+# @ wc-review-reminder
+#: includes/class-wc-advanced-review-reminder.php:332
+msgid "Unsubscribe Options"
+msgstr "Opciones de darse de baja"
+
+# @ wc-review-reminder
+#: includes/class-wc-advanced-review-reminder.php:336
+msgid "Stop Receiving Emails Text"
+msgstr "Dejar de recibir mensajes de correo electrónico de texto"
+
+#: includes/class-wc-advanced-review-reminder.php:338
+msgid ""
+"This text will be made in to a clickable link you can use with the "
+"<code>{stop_emails_link}</code> macro."
+msgstr ""
+
+# @ wc-review-reminder
+#: includes/class-wc-advanced-review-reminder.php:339
+#: includes/class-wc-advanced-review-reminder.php:340
+msgid "Unsubscribe from review emails"
+msgstr "Darse de baja de los correos electrónicos revisión"
+
+#: includes/class-wc-advanced-review-reminder.php:344
+msgid "Unsubscribe page"
+msgstr ""
+
+#: includes/class-wc-advanced-review-reminder.php:346
+msgid ""
+"Enter url for page to send customers who unsubscribes. This is the link that "
+"will be used in emails. If empty, the frontpage of your website will be used."
+msgstr ""
+
+#: includes/class-wc-advanced-review-reminder.php:353
+msgid "Stop Receiving Emails Confirmation"
+msgstr ""
+
+#: includes/class-wc-advanced-review-reminder.php:355
+msgid ""
+"This will be the subject line in the unsubscribe confirmation email. Note: "
+"You can use these macros: <code>{customer_name}</code>, "
+"<code>{customer_firstname}</code>, <code>{customer_lastname}</code>, "
+"<code>{customer_email}</code>, <code>{site_title}</code>, <code>{order_id}</"
+"code>, <code>{order_date}</code> and <code>{order_date_completed}</code>."
+msgstr ""
+
+# @ wc-review-reminder
+#: includes/class-wc-advanced-review-reminder.php:356
+#: includes/class-wc-advanced-review-reminder.php:357
+msgid "You are now unsubscribed"
+msgstr "Ahora no suscritos"
+
+# @ wc-review-reminder
+#: includes/class-wc-advanced-review-reminder.php:361
+msgid "Unsubscribe message"
+msgstr ""
+
+#: includes/class-wc-advanced-review-reminder.php:363
+msgid "This is the email template that will be sent to users who unsubscribe."
+msgstr ""
+
+#: includes/class-wc-advanced-review-reminder.php:365
+msgid ""
+"Hello {customer_name}\n"
+"\n"
+"You are now unsubscribed from further emails requesting product reviews.\n"
+"\n"
+"{site_title}"
+msgstr ""
+
+# @ wc-review-reminder
+#: includes/class-wc-advanced-review-reminder.php:369
+msgid "Email blocklist"
+msgstr "Email blocklist"
+
+# @ wc-review-reminder
+#: includes/class-wc-advanced-review-reminder.php:371
+msgid ""
+"Comma separated list of emails that have asked not to recieve any more "
+"review reminders."
+msgstr ""
+"Comma lista de correos electrónicos que han pedido no recibir ninguna más "
+"recordatorios de revisión separada."
+
+#: includes/class-wc-advanced-review-reminder.php:377
+msgid "Remove scheduled emails and log database"
+msgstr ""
+
+#: includes/class-wc-advanced-review-reminder.php:379
+msgid ""
+"If this is set, all scheduled emails and tables in the database will be "
+"removed upon deactivating the plugin."
+msgstr ""
+
+#: woocommerce-advanced-review-reminder.php:71
+#: woocommerce-advanced-review-reminder.php:72
+msgid "Review Reminder"
+msgstr ""
+
+#: woocommerce-advanced-review-reminder.php:95
+msgid "Settings"
+msgstr ""
+
+#: woocommerce-advanced-review-reminder.php:112
+#: woocommerce-advanced-review-reminder.php:113
+msgid "Send Review Email"
+msgstr ""
+
+#: woocommerce-advanced-review-reminder.php:159
+#, php-format
+msgid "Review email sent."
+msgid_plural "%s review emails sent."
+msgstr[0] ""
+msgstr[1] ""
+
+#: woocommerce-advanced-review-reminder.php:198
+#, php-format
+msgid "Order # %s marked as %s. Scheduling emails."
+msgstr ""
+
+# @ wc-review-reminder
+#: woocommerce-advanced-review-reminder.php:223
+msgid "Email Review Request"
+msgstr ""
+
+# @ wc-review-reminder
+#: woocommerce-advanced-review-reminder.php:234
+msgid ""
+"Send a request to review this order immediately. Any scheduled emails will "
+"still be sent."
+msgstr ""
+
+# @ wc-review-reminder
+#: woocommerce-advanced-review-reminder.php:239
+msgid "Send reminder now"
+msgstr "Enviar recordatorio ahora"
+
+#: woocommerce-advanced-review-reminder.php:290
+#, php-format
+msgid ""
+"Manual review reminder - %s has requested not to get any more review emails. "
+"Email was not sent."
+msgstr ""
+
+#: woocommerce-advanced-review-reminder.php:294
+#, php-format
+msgid ""
+"Manual review reminder - customer - %s - has requested not to get any more "
+"review emails. Email was not sent."
+msgstr ""
+
+#: woocommerce-advanced-review-reminder.php:328
+#, php-format
+msgid "Order %s has changed status to %s, no review e-mails scheduled."
+msgstr ""
+
+#: woocommerce-advanced-review-reminder.php:355
+#: woocommerce-advanced-review-reminder.php:356
+#, php-format
+msgid ""
+"No scheduled emails to be sent for order # %s due to exclusion of product ID "
+"# %s"
+msgstr ""
+
+#: woocommerce-advanced-review-reminder.php:368
+#, php-format
+msgid ""
+"Order %s has changed status, but %s has requested not to get any more review "
+"emails. Nothing scheduled."
+msgstr ""
+
+#: woocommerce-advanced-review-reminder.php:372
+#, php-format
+msgid ""
+"Customer - %s - has requested not to get any more review emails. Nothing was "
+"scheduled."
+msgstr ""
+
+#: woocommerce-advanced-review-reminder.php:391
+#, php-format
+msgid "Scheduled emails to be sent for order # %s to %s on following dates: %s"
+msgstr ""
+
+#: woocommerce-advanced-review-reminder.php:536
+#, php-format
+msgid ""
+"%s added him/herself to the blocklist and an email confirmation was sent. "
+"Process took %s sec"
+msgstr ""
+
+#: woocommerce-advanced-review-reminder.php:609
+#, php-format
+msgid ""
+"Automatic review reminder - %s has requested not to get any more review "
+"emails. Email was not sent."
+msgstr ""
+
+#: woocommerce-advanced-review-reminder.php:613
+#, php-format
+msgid ""
+"Customer - %s - has requested not to get any more review emails. Email was "
+"not sent."
+msgstr ""
+
+#: woocommerce-advanced-review-reminder.php:689
+#, php-format
+msgid "(Order #%s) %s product does not have comments/reviews enabled. Skipped."
+msgstr ""
+
+# @ wc-review-reminder
+#: woocommerce-advanced-review-reminder.php:744
+msgid "Example Product Review Link #1"
+msgstr "Ejemplo de revisión de producto el enlace #1"
+
+# @ wc-review-reminder
+#: woocommerce-advanced-review-reminder.php:744
+msgid "Example Product Review Link #2"
+msgstr "Ejemplo de revisión de producto el enlace #2"
+
+#: woocommerce-advanced-review-reminder.php:779
+#, php-format
+msgid "(Order #%s) E-mail sent to %s - Day %s reminder. Took %s sec."
+msgstr ""
+
+#: woocommerce-advanced-review-reminder.php:781
+#, php-format
+msgid ""
+"Review reminder sent by Advanced Review Reminder - Day %s reminder. Took %s "
+"sec"
+msgstr ""
+
+#: woocommerce-advanced-review-reminder.php:783
+#, php-format
+msgid "(Order #%s) E-mail sent to %s - Manual request. Took %s sec."
+msgstr ""
+
+#: woocommerce-advanced-review-reminder.php:784
+#, php-format
+msgid ""
+"Manual request for review sent by Advanced Review Reminder. Took %s sec."
+msgstr ""
+
+# @ wc-review-reminder
+#~ msgid ""
+#~ "This text will be made in to a clickable link you can used with the "
+#~ "<code>{stop_emails_link}</code> macro."
+#~ msgstr ""
+#~ "Este texto se hará en un enlace activo que puede utilizarse con el <code> "
+#~ "{stop_emails_link} </ code> macro."
+
+# @ wc-review-reminder
+#~ msgid "New Updates"
+#~ msgstr "Nuevas actualizaciones"
+
+# @ wc-review-reminder
+#~ msgid "Order %s has changed status. Not completed, no e-mails scheduled."
+#~ msgstr ""
+#~ "Orden de %s ha cambiado la situación. No completado, sin e-mails "
+#~ "programados."

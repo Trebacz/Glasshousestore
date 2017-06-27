@@ -1,0 +1,3 @@
+Sitemap: https://www.glasshousestore.com/sitemap.xml
+Sitemap: https://www.glasshousestore.com/sitemap-image.xml
+

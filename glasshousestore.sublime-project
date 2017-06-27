@@ -1,0 +1,17 @@
+{
+	"folders":
+	[
+		{
+			"path": "."
+		}
+	],
+	    "settings": {
+        "xdebug": {
+            "url": "https://test.glasshousestore.com",
+            "ide_key": "sublime.xdebug",
+            "port": 9000,
+            "debug": true,
+            "python_path" : "/usr/lib/python2.7"
+        }
+    }
+}

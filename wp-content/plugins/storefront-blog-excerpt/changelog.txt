@@ -1,0 +1,11 @@
+*** Storefront Blog Excerpt Changelog ***
+
+version 1.1.1
+* fixed - empty <p> tags are added before and after the excerpt
+* made the "Read more" button translatable
+
+version 1.1
+* added support for shortcodes on the excerpt as requested (here)[https://wordpress.org/support/topic/filter-the_excerpt-not-applied?replies=2]
+
+version 1.0.0
+* Initial release
