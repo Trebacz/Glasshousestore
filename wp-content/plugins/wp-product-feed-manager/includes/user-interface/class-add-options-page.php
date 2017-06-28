@@ -42,7 +42,13 @@ if ( !class_exists( 'WPPFM_Add_Options_Page' ) ) :
 
 			echo $this->message_field();
 
-			echo $this->options_page_body();
+			if ( 'valid' === wppfm_validate() ) {
+
+				echo $this->options_page_body();
+			} else {
+				
+				wp_redirect( admin_url( '/admin.php?page=wp-product-feed-manager' ) );
+			}
 			
 			echo $this->options_page_footer();
 		}

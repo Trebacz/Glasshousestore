@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Plugin Name: WP Product Feed Manager
+ * Plugin Name: WooCommerce Google Feed Manager
  * Plugin URI: http://www.wpmarketingrobot.com
  * Description: An easy to use WordPress plugin that generates and submits your product feeds to merchant centres.
- * Version: 1.6.1
+ * Version: 1.8.1
  * Modified: 16-05-2017
  * Author: Michel Jongbloed
  * Author URI: http://www.wpmarketingrobot.com
@@ -27,7 +27,7 @@ if ( !class_exists( 'WP_Product_Feed_Manager' ) ) :
 	 * The Main WP_Product_Feed_Manager Class
 	 * 
 	 * @class WP_Product_Feed_Manager
-	 * @version 1.6.1
+	 * @version 1.8.1
 	 */
 	final class WP_Product_Feed_Manager {
 		/* --------------------------------------------------------------------------------------------------*
@@ -37,7 +37,7 @@ if ( !class_exists( 'WP_Product_Feed_Manager' ) ) :
 		/**
 		 * @var string containing the version number of the plugin
 		 */
-		public $version = '1.6.1';
+		public $version = '1.8.1';
 
 		/**
 		 * @var string countaining the authors name
@@ -97,6 +97,9 @@ if ( !class_exists( 'WP_Product_Feed_Manager' ) ) :
 			
 			// register my version
 			add_option( 'myplugin_version', MYPLUGIN_VERSION_NUM );
+
+			// set up auto updating
+			$this->auto_updater();
 			
 			// register my schedule
 			add_action( 'wppfm_feed_update_schedule', array( $this, 'activate_feed_update_schedules' ) );
@@ -126,7 +129,7 @@ if ( !class_exists( 'WP_Product_Feed_Manager' ) ) :
 			if ( !defined( 'EDD_SL_STORE_URL' ) ) { define( 'EDD_SL_STORE_URL', 'http://www.wpmarketingrobot.com/' ); }
 
 			// Store the plugin title
-			if ( !defined( 'EDD_SL_ITEM_NAME' ) ) { define( 'EDD_SL_ITEM_NAME', 'WP Product Feed Manager' ); }
+			if ( !defined( 'EDD_SL_ITEM_NAME' ) ) { define( 'EDD_SL_ITEM_NAME', 'Woocommerce Google Feed Manager' ); }
 			
 			// Store the base uploads folder, should also work in a multisite environment
 			if ( !defined( 'WPPFM_UPLOADS_DIR' ) ) {
@@ -195,6 +198,24 @@ if ( !class_exists( 'WP_Product_Feed_Manager' ) ) :
 				require_once ( 'includes/user-interface/wppfm-messaging.php' );
 				wppfm_show_wp_warning( __( 'You have insufficient rights to use ' . EDD_SL_ITEM_NAME, 'wp-product-feed-manager' ) );
 			}
+		}
+
+		/**
+		 * Implements the auto update functions
+		 */
+		private function auto_updater() {
+			if ( !class_exists( 'WPMR_Plugin_Updater' ) ) {
+				require_once ( 'includes/wpmr_plugin_updater.php' );
+			}
+
+			$edd_updater = new WPMR_Plugin_Updater( EDD_SL_STORE_URL, __FILE__, array(
+				'version'	 => $this->version,
+				'license'	 => trim( get_option( 'wppfm_lic_key' ) ),
+				'item_name'	 => EDD_SL_ITEM_NAME,
+				'author'	 => $this->author,
+				'url'		 => MYPLUGIN_PLUGIN_URL,
+				'wp_override' => true
+			) );
 		}
 		
 		/**

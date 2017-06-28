@@ -328,7 +328,7 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 									$this->_product_counter++;
 								}
 								
-								if ( $this->_product_counter > $cat_val ) { 
+								if ( $valid_lic && $this->_product_counter > $cat_val ) { 
 									$done = true;
 									break; 
 								}
@@ -356,6 +356,7 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 				fclose( $feed );
 
 				$data_class->set_nr_of_feed_products( $this->_feed->feedId, $this->_product_counter );
+				prep_registration_generation( $this->_product_counter );
 				
 				// restore the origional timeout setting
 				$stored_timeout = ini_get( 'max_execution_time' );

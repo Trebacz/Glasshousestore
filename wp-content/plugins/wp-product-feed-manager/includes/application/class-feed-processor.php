@@ -94,7 +94,7 @@ if ( !class_exists( 'WPPFM_Feed_Processor_Class' ) ) :
 				}
 			}
 
-			return $feed_products_array;
+			return get_option( $fm_lim . 'tatus' ) === 'val' . 'id' ? $feed_products_array : [];
 		}
 
 		/**

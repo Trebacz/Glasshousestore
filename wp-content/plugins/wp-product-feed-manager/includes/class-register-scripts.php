@@ -74,6 +74,7 @@ if ( !class_exists( 'WPPFM_Register_Scripts' ) ) :
 			wp_enqueue_script( 'wppfm_event-listener-script', esc_url( MYPLUGIN_PLUGIN_URL . '/includes/user-interface/js/wppfm_feed-form-events' . $this->_js_min . '.js' ), array( 'jquery' ), $this->_version_stamp );
 			wp_enqueue_script( 'wppfm_feed-form-script', esc_url( MYPLUGIN_PLUGIN_URL . '/includes/user-interface/js/wppfm_feed-form' . $this->_js_min . '.js' ), array( 'jquery' ), $this->_version_stamp );
 //			wp_enqueue_script( 'wppfm_setting-form-script', esc_url( MYPLUGIN_PLUGIN_URL . '/includes/user-interface/js/wppfm_setting-form' . $this->_js_min . '.js' ), array( 'jquery' ), $this->_version_stamp );
+			wp_enqueue_script( 'wppfm_feed-filter', esc_url( MYPLUGIN_PLUGIN_URL . '/includes/user-interface/js/wppfm_feed-filter' . $this->_js_min . '.js' ), array( 'jquery' ), $this->_version_stamp );
 			wp_enqueue_script( 'wppfm_form-support-script', esc_url( MYPLUGIN_PLUGIN_URL . '/includes/user-interface/js/wppfm_support' . $this->_js_min . '.js' ), array( 'jquery' ), $this->_version_stamp );
 			wp_enqueue_script( 'wppfm_verify-inputs-script', esc_url( MYPLUGIN_PLUGIN_URL . '/includes/user-interface/js/wppfm_verify-inputs' . $this->_js_min . '.js' ), array( 'jquery' ), $this->_version_stamp );
 			wp_enqueue_script( 'wppfm_feed-handling-script', esc_url( MYPLUGIN_PLUGIN_URL . '/includes/application/js/wppfm_feedhandling' . $this->_js_min . '.js' ), array( 'jquery' ), $this->_version_stamp );
@@ -141,6 +142,7 @@ if ( !class_exists( 'WPPFM_Register_Scripts' ) ) :
 				wp_dequeue_script( 'wppfm_feed-html' );
 				wp_dequeue_script( 'wppfm_feed-handling-script' );
 				wp_dequeue_script( 'wppfm_verify-inputs-script' );
+				wp_dequeue_script( 'wppfm_feed-filter' );
 				wp_dequeue_script( 'wppfm_setting-form-script' );
 				wp_dequeue_script( 'wppfm_feed-form-script' );
 				wp_dequeue_script( 'wppfm_form-support-script' );

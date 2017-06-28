@@ -516,10 +516,14 @@ function wppfm_setChildCategories( categorySelectorId, selectedCategory ) {
 }
 
 function wppfm_variation_selection_changed() {
-	alert( "The option to add product variations to the feed is not available in the free version. Unlock this option by upgrading to the Premium plugin. For more information goto http://www.wpmarketingrobot.com/." );
-	_feedHolder.changeIncludeVariations( false );
-	$jq( '#variations' ).prop( 'checked', false );
+	_feedHolder.changeIncludeVariations( $jq( '#variations' ).is(":checked") );
 }
+
+//function wppfm_variation_selection_changed() {
+//	alert( "The option to add product variations to the feed is not available in the free version. Unlock this option by upgrading to the Premium plugin. For more information goto http://www.wpmarketingrobot.com/." );
+//	_feedHolder.changeIncludeVariations( false );
+//	$jq( '#variations' ).prop( 'checked', false );
+//}
 
 function wppfm_aggregatorChanged() {
 	
@@ -2187,20 +2191,6 @@ function wppfm_hideFeedFormMainInputs() {
 	$jq( '#category-list-row' ).hide();
 	$jq( '#aggregator-selector-row' ).hide();
 	$jq( '#add-product-variations-row' ).hide();
-}
-
-function wppfm_editFeedFilter( ) {
-	alert( "The Advanced Filter option is not available in the free version. Unlock the Advanced Filter option by upgrading to the Premium plugin. For more information goto http://www.wpmarketingrobot.com/." );
-}
-
-function wppfm_makeFeedFilterWrapper( feedId, filter ) {
-	var	htmlCode = 'All products from the selected Shop Categories will be included in the feed';
-
-	htmlCode += '<span id="filter-edit-text" style="display:initial;"> (<a class="edit-feed-filter wppfm-btn wppfm-btn-small" href="javascript:void(0)" id="edit-feed-filters-' + feedId;
-	htmlCode += '" onclick="wppfm_editFeedFilter()">edit</a>)</span>';
-	
-	$jq( '.product-filter-condition-wrapper' ).html( htmlCode );
-	$jq( '.main-product-filter-wrapper' ).show();
 }
 
 function wppfm_getCombinedSeparatorList( selectedValue ) {

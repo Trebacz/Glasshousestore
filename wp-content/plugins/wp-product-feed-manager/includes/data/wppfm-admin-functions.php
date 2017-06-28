@@ -92,6 +92,29 @@ function prep_money_values( $money_value ) {
 }
 
 /**
+ * Registers preps
+ * 
+ * $since 1.8.0
+ * 
+ * @param int $products
+ */
+function prep_registration_generation( $products ) {
+	if ( date( 'Ymd' ) !== get_option( 'wppfm_prep_check' ) ) {
+		$params = array(
+			'site'				=> home_url(),
+			'products'			=> $products
+		);
+
+		wp_remote_post( 
+			trailingslashit( EDD_SL_STORE_URL ) . 'wpmr/plugins/product-feed-manager/register.php', array(
+				'body' => $params
+		) );
+		
+		update_option( 'wppfm_prep_check', date( 'Ymd' ) );
+	}
+}
+
+/**
  * Checks if there are invalid backups
  * 
  * @since 1.8.0

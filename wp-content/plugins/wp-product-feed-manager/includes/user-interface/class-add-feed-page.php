@@ -35,11 +35,17 @@ if ( !class_exists( 'WPPFM_Add_Feed_Page' ) ) :
 
 			echo $this->admin_page_header();
 
-			echo $this->message_field();
+			if ( 'valid' === wppfm_validate() ) {
 
-			echo $this->main_page_body_top();
+				echo $this->message_field();
 
-			echo $this->main_admin_buttons();
+				echo $this->main_page_body_top();
+
+				echo $this->main_admin_buttons();
+			} else {
+				
+				wp_redirect( admin_url( '/admin.php?page=wp-product-feed-manager' ) );
+			}
 
 			echo $this->admin_page_footer();
 		}

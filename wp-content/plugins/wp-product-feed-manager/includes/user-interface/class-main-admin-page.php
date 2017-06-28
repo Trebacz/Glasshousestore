@@ -37,18 +37,26 @@ if ( !class_exists( 'WPPFM_Main_Admin_Page' ) ) :
 
 			echo $this->admin_page_header();
 			
-			if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_plugin_active_for_network( 'woocommerce/woocommerce.php' ) ) {
+			$stat = wppfm_validate();
+			
+			if ( 'valid' === $stat ) {
+				
+				if ( is_plugin_active( 'woocommerce/woocommerce.php' ) || is_plugin_active_for_network( 'woocommerce/woocommerce.php' ) ) {
 
-				echo $this->tabs();
+					echo $this->tabs();
 
-				echo $this->main_admin_page();
+					echo $this->main_admin_page();
 
-				echo $this->message_field();
+					echo $this->message_field();
 
-				echo $this->main_admin_buttons();
+					echo $this->main_admin_buttons();
+				} else {
+					
+					echo $this->no_woocommerce();
+				}
 			} else {
 
-				echo $this->no_woocommerce();
+				echo $this->licensing_field( $stat );
 			}
 
 			echo $this->admin_page_footer();
