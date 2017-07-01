@@ -670,6 +670,7 @@ class pb_backupbuddy_cron extends pb_backupbuddy_croncore {
 			}
 			
 			$profile_array = pb_backupbuddy::$options['profiles'][ pb_backupbuddy::$options['schedules'][$schedule_id]['profile'] ];
+			$profile_array = array_merge( pb_backupbuddy::$options['profiles'][0], $profile_array ); // Merge defaults.
 			
 			if ( $newBackup->start_backup_process( $profile_array, 'scheduled', array(), $post_backup_steps, pb_backupbuddy::$options['schedules'][$schedule_id]['title'] ) !== true ) {
 				pb_backupbuddy::status( 'error', 'Error #4564658344443: Backup failure. See earlier logging details for more information.' );

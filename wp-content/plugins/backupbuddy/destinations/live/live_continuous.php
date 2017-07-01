@@ -40,6 +40,7 @@ class backupbuddy_live_continuous {
 		'uninstall_plugins',
 		'wwcAmzAff_sync_last_updated_product',
 		'popup_domination_updateinfo',
+		'wordfence_syncAttackDataAttempts',
 	);
 	private static $_postmeta_exclusions = array(
 		'pvc_views',

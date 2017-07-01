@@ -1,7 +1,7 @@
 <?php // This code runs whenever in the wp-admin. pb_backupbuddy::$options preloaded.
 
 
-if ( ( false !== stristr( pb_backupbuddy::_GET( 'page' ), 'backupbuddy' ) ) || ( 'true' == pb_backupbuddy::_GET( 'activate' ) ) ) {
+if ( false !== stristr( pb_backupbuddy::_GET( 'page' ), 'backupbuddy' ) ) {
 	add_action('in_admin_header', 'bb_admin_head');
 }
 function bb_admin_head() {

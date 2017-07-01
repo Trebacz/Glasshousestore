@@ -49,6 +49,16 @@ $settings_form->add_setting( array(
 
 $settings_form->add_setting( array(
 	'type'		=>		'text',
+	'name'		=>		'directory',
+	'title'		=>		__( 'Directory', 'it-l10n-backupbuddy' ),
+	'tip'		=>		__( '[Example: backups] - Path to store backups into.', 'it-l10n-backupbuddy' ),
+	'after'		=>		'',
+	'css'		=>		'width: 255px;',
+	'rules'		=>		'string[0-1000]',
+) );
+
+$settings_form->add_setting( array(
+	'type'		=>		'text',
 	'name'		=>		'archive_limit',
 	'title'		=>		__( 'Archive limit', 'it-l10n-backupbuddy' ),
 	'tip'		=>		__( '[Example: 5] - Enter 0 for no limit. This is the maximum number of archives to be stored in this specific destination. If this limit is met the oldest backups will be deleted.', 'it-l10n-backupbuddy' ),

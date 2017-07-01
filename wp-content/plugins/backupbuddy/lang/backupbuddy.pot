@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the BackupBuddy package.
 msgid ""
 msgstr ""
-"Project-Id-Version: BackupBuddy 8.0.0.3\n"
+"Project-Id-Version: BackupBuddy 8.0.1.0\n"
 "Report-Msgid-Bugs-To: http://ithemes.com/support/\n"
-"POT-Creation-Date: 2017-06-21 00:25:00+00:00\n"
+"POT-Creation-Date: 2017-07-01 03:23:06+00:00\n"
 "PO-Revision-Date: 2017-MO-DA HO:MI+ZONE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1012,6 +1012,7 @@ msgstr ""
 
 #: controllers/ajax/site_size_listing.php:63
 #: controllers/ajax/site_size_listing.php:90
+#: destinations/rackspace/_configure.php:53
 msgid "Directory"
 msgstr ""
 
@@ -2832,7 +2833,7 @@ msgstr ""
 
 #: destinations/dropbox2/_configure.php:140
 #: destinations/email/_configure.php:18 destinations/ftp/_configure.php:72
-#: destinations/gdrive/_configure.php:249 destinations/live/_configure.php:112
+#: destinations/gdrive/_configure.php:251 destinations/live/_configure.php:112
 #: destinations/local/_configure.php:9
 #: destinations/rackspace/_configure.php:10 destinations/s3/_configure.php:43
 #: destinations/s32/_configure.php:38 destinations/s33/_configure.php:38
@@ -2844,7 +2845,7 @@ msgstr ""
 
 #: destinations/dropbox2/_configure.php:141
 #: destinations/email/_configure.php:19 destinations/ftp/_configure.php:73
-#: destinations/gdrive/_configure.php:250 destinations/live/_configure.php:113
+#: destinations/gdrive/_configure.php:252 destinations/live/_configure.php:113
 #: destinations/local/_configure.php:10
 #: destinations/rackspace/_configure.php:11 destinations/s3/_configure.php:44
 #: destinations/s32/_configure.php:39 destinations/s33/_configure.php:39
@@ -2869,14 +2870,14 @@ msgstr ""
 
 #: destinations/dropbox2/_configure.php:160
 #: destinations/ftp/_configure.php:143 destinations/local/_configure.php:53
-#: destinations/rackspace/_configure.php:53
+#: destinations/rackspace/_configure.php:63
 #: destinations/sftp/_configure.php:82
 msgid "Archive limit"
 msgstr ""
 
 #: destinations/dropbox2/_configure.php:161
 #: destinations/ftp/_configure.php:144 destinations/local/_configure.php:54
-#: destinations/rackspace/_configure.php:54
+#: destinations/rackspace/_configure.php:64
 #: destinations/sftp/_configure.php:83
 msgid ""
 "[Example: 5] - Enter 0 for no limit. This is the maximum number of archives "
@@ -2885,9 +2886,9 @@ msgid ""
 msgstr ""
 
 #: destinations/dropbox2/_configure.php:172
-#: destinations/ftp/_configure.php:155 destinations/gdrive/_configure.php:389
+#: destinations/ftp/_configure.php:155 destinations/gdrive/_configure.php:391
 #: destinations/live/_configure.php:225 destinations/local/_configure.php:65
-#: destinations/rackspace/_configure.php:65 destinations/s3/_configure.php:107
+#: destinations/rackspace/_configure.php:75 destinations/s3/_configure.php:107
 #: destinations/s32/_configure.php:191 destinations/s33/_configure.php:218
 #: destinations/sftp/_configure.php:94 destinations/site/_configure.php:49
 #: destinations/stash2/_configure.php:243
@@ -2911,9 +2912,9 @@ msgid ""
 msgstr ""
 
 #: destinations/dropbox2/_configure.php:193
-#: destinations/ftp/_configure.php:191 destinations/gdrive/_configure.php:433
+#: destinations/ftp/_configure.php:191 destinations/gdrive/_configure.php:435
 #: destinations/live/_configure.php:390 destinations/local/_configure.php:76
-#: destinations/rackspace/_configure.php:100
+#: destinations/rackspace/_configure.php:110
 #: destinations/s3/_configure.php:189 destinations/s32/_configure.php:280
 #: destinations/s33/_configure.php:331 destinations/sftp/_configure.php:105
 #: destinations/stash2/_configure.php:307
@@ -2922,9 +2923,9 @@ msgid "Disable file management"
 msgstr ""
 
 #: destinations/dropbox2/_configure.php:194
-#: destinations/ftp/_configure.php:192 destinations/gdrive/_configure.php:434
+#: destinations/ftp/_configure.php:192 destinations/gdrive/_configure.php:436
 #: destinations/live/_configure.php:391 destinations/local/_configure.php:77
-#: destinations/rackspace/_configure.php:101
+#: destinations/rackspace/_configure.php:111
 #: destinations/s3/_configure.php:190 destinations/s32/_configure.php:281
 #: destinations/s33/_configure.php:332 destinations/sftp/_configure.php:106
 #: destinations/stash2/_configure.php:308
@@ -2937,9 +2938,9 @@ msgid ""
 msgstr ""
 
 #: destinations/dropbox2/_configure.php:197
-#: destinations/ftp/_configure.php:195 destinations/gdrive/_configure.php:437
+#: destinations/ftp/_configure.php:195 destinations/gdrive/_configure.php:439
 #: destinations/live/_configure.php:394 destinations/local/_configure.php:80
-#: destinations/rackspace/_configure.php:104
+#: destinations/rackspace/_configure.php:114
 #: destinations/s3/_configure.php:193 destinations/s32/_configure.php:284
 #: destinations/s33/_configure.php:335 destinations/sftp/_configure.php:109
 #: destinations/stash2/_configure.php:311
@@ -2948,8 +2949,8 @@ msgstr ""
 
 #: destinations/dropbox2/_configure.php:205
 #: destinations/email/_configure.php:35 destinations/ftp/_configure.php:203
-#: destinations/gdrive/_configure.php:445 destinations/local/_configure.php:88
-#: destinations/rackspace/_configure.php:112
+#: destinations/gdrive/_configure.php:447 destinations/local/_configure.php:88
+#: destinations/rackspace/_configure.php:122
 #: destinations/s3/_configure.php:201 destinations/s32/_configure.php:292
 #: destinations/s33/_configure.php:343 destinations/sftp/_configure.php:117
 #: destinations/site/_configure.php:69 destinations/stash2/_configure.php:319
@@ -2959,8 +2960,8 @@ msgstr ""
 
 #: destinations/dropbox2/_configure.php:206
 #: destinations/email/_configure.php:36 destinations/ftp/_configure.php:204
-#: destinations/gdrive/_configure.php:446 destinations/local/_configure.php:89
-#: destinations/rackspace/_configure.php:113
+#: destinations/gdrive/_configure.php:448 destinations/local/_configure.php:89
+#: destinations/rackspace/_configure.php:123
 #: destinations/s3/_configure.php:202 destinations/s32/_configure.php:293
 #: destinations/s33/_configure.php:344 destinations/sftp/_configure.php:118
 #: destinations/site/_configure.php:70 destinations/stash2/_configure.php:320
@@ -2973,8 +2974,8 @@ msgstr ""
 
 #: destinations/dropbox2/_configure.php:208
 #: destinations/email/_configure.php:38 destinations/ftp/_configure.php:206
-#: destinations/gdrive/_configure.php:448 destinations/local/_configure.php:91
-#: destinations/rackspace/_configure.php:115
+#: destinations/gdrive/_configure.php:450 destinations/local/_configure.php:91
+#: destinations/rackspace/_configure.php:125
 #: destinations/s3/_configure.php:204 destinations/s32/_configure.php:295
 #: destinations/s33/_configure.php:346 destinations/sftp/_configure.php:120
 #: destinations/site/_configure.php:72 destinations/stash2/_configure.php:322
@@ -3184,11 +3185,11 @@ msgstr ""
 msgid "Fatal Error #9034.72373. Unable to access fileoptions data."
 msgstr ""
 
-#: destinations/gdrive/_configure.php:303
+#: destinations/gdrive/_configure.php:305
 msgid "Storage Folder Identifier"
 msgstr ""
 
-#: destinations/gdrive/_configure.php:304
+#: destinations/gdrive/_configure.php:306
 msgid ""
 "Folder to store files within. Leave blank to store in the root or use the "
 "unique identifier ID. Use the folder picker or get the path ID from the "
@@ -3196,13 +3197,13 @@ msgid ""
 "change the ID or impact backups going into it."
 msgstr ""
 
-#: destinations/gdrive/_configure.php:328 destinations/s32/_configure.php:131
+#: destinations/gdrive/_configure.php:330 destinations/s32/_configure.php:131
 #: destinations/s33/_configure.php:147 destinations/stash2/_configure.php:186
 #: destinations/stash3/_configure.php:185
 msgid "Full backup limit"
 msgstr ""
 
-#: destinations/gdrive/_configure.php:329
+#: destinations/gdrive/_configure.php:331
 #: destinations/stash2/_configure.php:187
 #: destinations/stash3/_configure.php:186
 msgid ""
@@ -3211,13 +3212,13 @@ msgid ""
 "this limit is met the oldest backup of this type will be deleted."
 msgstr ""
 
-#: destinations/gdrive/_configure.php:337 destinations/s32/_configure.php:140
+#: destinations/gdrive/_configure.php:339 destinations/s32/_configure.php:140
 #: destinations/s33/_configure.php:156 destinations/stash2/_configure.php:195
 #: destinations/stash3/_configure.php:194
 msgid "Database only limit"
 msgstr ""
 
-#: destinations/gdrive/_configure.php:338
+#: destinations/gdrive/_configure.php:340
 #: destinations/stash2/_configure.php:196
 #: destinations/stash3/_configure.php:195
 msgid ""
@@ -3226,16 +3227,16 @@ msgid ""
 "limit is met the oldest backup of this type will be deleted."
 msgstr ""
 
-#: destinations/gdrive/_configure.php:347 destinations/s32/_configure.php:150
+#: destinations/gdrive/_configure.php:349 destinations/s32/_configure.php:150
 #: destinations/s33/_configure.php:166 destinations/stash2/_configure.php:205
 #: destinations/stash3/_configure.php:204
 msgid "Themes only limit"
 msgstr ""
 
-#: destinations/gdrive/_configure.php:348
-#: destinations/gdrive/_configure.php:357
-#: destinations/gdrive/_configure.php:366
-#: destinations/gdrive/_configure.php:375 destinations/s32/_configure.php:151
+#: destinations/gdrive/_configure.php:350
+#: destinations/gdrive/_configure.php:359
+#: destinations/gdrive/_configure.php:368
+#: destinations/gdrive/_configure.php:377 destinations/s32/_configure.php:151
 #: destinations/s32/_configure.php:160 destinations/s32/_configure.php:169
 #: destinations/s32/_configure.php:178 destinations/s33/_configure.php:167
 #: destinations/s33/_configure.php:176 destinations/s33/_configure.php:185
@@ -3253,32 +3254,32 @@ msgid ""
 "the oldest backup of this type will be deleted."
 msgstr ""
 
-#: destinations/gdrive/_configure.php:356 destinations/s32/_configure.php:159
+#: destinations/gdrive/_configure.php:358 destinations/s32/_configure.php:159
 #: destinations/s33/_configure.php:175 destinations/stash2/_configure.php:214
 #: destinations/stash3/_configure.php:213
 msgid "Plugins only limit"
 msgstr ""
 
-#: destinations/gdrive/_configure.php:365 destinations/s32/_configure.php:168
+#: destinations/gdrive/_configure.php:367 destinations/s32/_configure.php:168
 #: destinations/s33/_configure.php:184 destinations/stash2/_configure.php:223
 #: destinations/stash3/_configure.php:222
 msgid "Media only limit"
 msgstr ""
 
-#: destinations/gdrive/_configure.php:374 destinations/s32/_configure.php:177
+#: destinations/gdrive/_configure.php:376 destinations/s32/_configure.php:177
 #: destinations/s33/_configure.php:193 destinations/stash2/_configure.php:232
 #: destinations/stash3/_configure.php:231
 msgid "Files only limit"
 msgstr ""
 
-#: destinations/gdrive/_configure.php:398 destinations/live/_configure.php:258
+#: destinations/gdrive/_configure.php:400 destinations/live/_configure.php:258
 #: destinations/s32/_configure.php:198 destinations/s33/_configure.php:238
 #: destinations/stash2/_configure.php:252
 #: destinations/stash3/_configure.php:250
 msgid "Send per burst"
 msgstr ""
 
-#: destinations/gdrive/_configure.php:399
+#: destinations/gdrive/_configure.php:401
 msgid ""
 "[Default 25] - This is the amount of data that will be sent per burst within "
 "a single PHP page load/chunk. Bursts happen within a single page load. "
@@ -3287,13 +3288,13 @@ msgid ""
 "bursts. Lower burst size if timeouts occur before chunking checks trigger."
 msgstr ""
 
-#: destinations/gdrive/_configure.php:409 destinations/s32/_configure.php:208
+#: destinations/gdrive/_configure.php:411 destinations/s32/_configure.php:208
 #: destinations/s33/_configure.php:248 destinations/stash2/_configure.php:262
 #: destinations/stash3/_configure.php:260
 msgid "Max time per chunk"
 msgstr ""
 
-#: destinations/gdrive/_configure.php:410 destinations/s32/_configure.php:209
+#: destinations/gdrive/_configure.php:412 destinations/s32/_configure.php:209
 #: destinations/s33/_configure.php:249 destinations/stash2/_configure.php:263
 #: destinations/stash3/_configure.php:261
 msgid ""
@@ -3304,24 +3305,24 @@ msgid ""
 "Multiple bursts may be sent within each chunk."
 msgstr ""
 
-#: destinations/gdrive/_configure.php:413 destinations/live/_configure.php:312
+#: destinations/gdrive/_configure.php:415 destinations/live/_configure.php:312
 #: destinations/s32/_configure.php:212 destinations/s33/_configure.php:252
 #: destinations/stash2/_configure.php:266
 #: destinations/stash3/_configure.php:264 views/settings/_advanced.php:212
 msgid "Blank for detected default:"
 msgstr ""
 
-#: destinations/gdrive/_configure.php:421
+#: destinations/gdrive/_configure.php:423
 msgid "Disable Compression"
 msgstr ""
 
-#: destinations/gdrive/_configure.php:422
+#: destinations/gdrive/_configure.php:424
 msgid ""
 "[Default: unchecked] - If you are getting Invalid jSON errors from Google, "
 "you can try checking this option."
 msgstr ""
 
-#: destinations/gdrive/_configure.php:424
+#: destinations/gdrive/_configure.php:426
 msgid "Check to disable gzip compression."
 msgstr ""
 
@@ -4036,7 +4037,7 @@ msgstr ""
 msgid "Need More Storage?"
 msgstr ""
 
-#. #-#-#-#-#  backupbuddy.pot (BackupBuddy 8.0.0.3)  #-#-#-#-#
+#. #-#-#-#-#  backupbuddy.pot (BackupBuddy 8.0.1.0)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: destinations/live/_manage.php:997
 msgid "BackupBuddy"
@@ -4309,40 +4310,44 @@ msgid ""
 "automatically if it does not already exist. Please create it first."
 msgstr ""
 
-#: destinations/rackspace/_configure.php:74
+#: destinations/rackspace/_configure.php:54
+msgid "[Example: backups] - Path to store backups into."
+msgstr ""
+
+#: destinations/rackspace/_configure.php:84
 msgid "Cloud network"
 msgstr ""
 
-#: destinations/rackspace/_configure.php:87
+#: destinations/rackspace/_configure.php:97
 msgid "Use internal service net"
 msgstr ""
 
-#: destinations/rackspace/_configure.php:88
+#: destinations/rackspace/_configure.php:98
 msgid ""
 "[Default: unchecked] - When checked, BackupBuddy will connect to Rackspace "
 "using the internal Service Net (prefixes the host with `snet-`).  If you are "
 "hosting within Rackspace this may prevent external bandwidth charges."
 msgstr ""
 
-#: destinations/rackspace/_manage.php:51
+#: destinations/rackspace/_manage.php:52
 msgid "Deleted %d file"
 msgid_plural "Deleted %d files"
 msgstr[0] ""
 msgstr[1] ""
 
-#: destinations/rackspace/init.php:158
+#: destinations/rackspace/init.php:160
 msgid "Missing one or more required fields."
 msgstr ""
 
-#: destinations/rackspace/init.php:170
+#: destinations/rackspace/init.php:172
 msgid "There was a problem selecting the container:"
 msgstr ""
 
-#: destinations/rackspace/init.php:175
+#: destinations/rackspace/init.php:177
 msgid "BackupBuddy was not able to write the test file."
 msgstr ""
 
-#: destinations/rackspace/init.php:180
+#: destinations/rackspace/init.php:182
 msgid "Unable to delete file from container."
 msgstr ""
 

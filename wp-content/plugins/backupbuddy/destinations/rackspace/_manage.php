@@ -11,6 +11,7 @@ if ( isset( $destination['disabled'] ) && ( '1' == $destination['disabled'] ) ) 
 	$rs_api_key = $destination['api_key'];
 	$rs_container = $destination['container'];
 	$rs_server = $destination['server'];
+	$directory = trim( $settings['directory'], '\\/' ) . '/';
 	/*
 	if ( isset( $destination['server'] ) ) {
 		$rs_server = $destination['server'];
@@ -39,7 +40,7 @@ if ( isset( $destination['disabled'] ) && ( '1' == $destination['disabled'] ) ) 
 		pb_backupbuddy::verify_nonce();
 		
 		$delete_count = 0;
-		if ( !empty( $_POST['files'] ) && is_array( $_POST['files'] ) ) {	
+		if ( !empty( $_POST['files'] ) && is_array( $_POST['files'] ) ) {
 			// loop through and delete Rackspace files
 			foreach ( $_POST['files'] as $rsfile ) {
 				$delete_count++;
@@ -71,7 +72,7 @@ if ( isset( $destination['disabled'] ) && ( '1' == $destination['disabled'] ) ) 
 		$results = $container->get_objects( 0, NULL, 'backup-', $rs_path );
 	} else {
 	*/
-		$results = $container->get_objects( 0, NULL, 'backup-');
+		$results = $container->get_objects( 0, NULL, $directory . 'backup-');
 	/* } */
 
 

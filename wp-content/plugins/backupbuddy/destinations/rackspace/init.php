@@ -73,6 +73,8 @@ class pb_backupbuddy_destination_rackspace { // Change class name end to match d
 			return false;
 		}
 		
+		$directory = trim( $settings['directory'], '\\/'  . '/'); // Trailing slash. No leading slash.
+		
 		// Set container
 		@$conn->create_container( $rs_container ); // Create container if it does not exist.
 		$container = $conn->get_container( $rs_container ); // Get container.
@@ -81,7 +83,7 @@ class pb_backupbuddy_destination_rackspace { // Change class name end to match d
 			pb_backupbuddy::status( 'details',  'About to create object on Rackspace...' );
 			
 			// Put file to Rackspace.
-			$sendbackup = $container->create_object( basename( $rs_file ) );
+			$sendbackup = $container->create_object( $directory . basename( $rs_file ) );
 			pb_backupbuddy::status( 'details',  'Object created. About to stream actual file `' . $rs_file . '`...' );
 			if ( $sendbackup->load_from_filename( $rs_file ) ) {
 				pb_backupbuddy::status( 'details', 'Send succeeded.' );
@@ -92,7 +94,7 @@ class pb_backupbuddy_destination_rackspace { // Change class name end to match d
 					
 					$bkupprefix = backupbuddy_core::backup_prefix();
 					
-					$results = $container->get_objects( 0, NULL, 'backup-' . $bkupprefix . '-' );
+					$results = $container->get_objects( 0, NULL, $directory . 'backup-' . $bkupprefix . '-' );
 					// Create array of backups and organize by date
 					$backups = array();
 					foreach( $results as $backup ) {

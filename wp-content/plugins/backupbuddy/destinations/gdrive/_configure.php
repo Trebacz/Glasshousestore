@@ -15,6 +15,8 @@ $default_name = NULL;
 
 $service_account_file = '';
 $service_account_email = '';
+$client_id = '';
+$client_secret = '';
 
 set_include_path( pb_backupbuddy::plugin_path() . '/destinations/gdrive/' . PATH_SEPARATOR . get_include_path());
 
@@ -29,7 +31,7 @@ if ( 'add' == $mode ) {
 				<li>In the new window select <span class="pb_label pb_label-subtle">Create Project</span> and name it something like "BackupBuddy" (If you have more than 50 sites please use Service Accounts above due to Google token limits) & <span class="pb_label pb_label-subtle">Create</span>. Wait for the next screen to display.</li>
 				<li>Under Google Apps APIs click the link for <span class="pb_label pb_label-subtle">Drive API</span>.</li>
 				<li>On the next screen, click the blue <span class="pb_label pb_label-subtle">Enable</span> button to enable its API.</li>
-				<li>From the left menu select <span class="pb_label pb_label-subtle">Credentials</span>.</li>
+				<li>From the upper left hamburger menu (<span class="dashicons dashicons-menu"></span>) select <span class="pb_label pb_label-subtle">API Manager &gt; Credentials</span>.</li>
 				<li>Select the <span class="pb_label pb_label-subtle">Create Credentials</span> button then <span class="pb_label pb_label-subtle">OAuth client ID</span>.</li>
 				<li>Click the button to <span class="pb_label pb_label-subtle">Configure consent screen</span>.</li>
 				<li>On the next screen, type any name you would like into the <span class="pb_label pb_label-subtle">Product name shown to users</span> field and save the form. (nobody but you will ever see this information).</li>

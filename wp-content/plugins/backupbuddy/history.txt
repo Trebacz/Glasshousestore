@@ -166,4 +166,12 @@
 	Renamed temporarily created recurse() function to bb_recurse() to avoid conflict.
 8.0.0.3 - 2017-06-20 - Dustin Bolton
 	Full backup types can no longer auto-exclude media due to current technical limitations.
+8.0.1.0 - 2017-06-30 - Dustin Bolton
+	Fixed BackupBuddy welcome banner showing on plugin activate screen.
+	Rackspace destination: Added support for directory paths.
+	Stash Live live database backup now excludes options updates to "wordfence_syncAttackDataAttempts" option due to rapid updates.
+	Updated Google Drive setup instructions to reflect Google's UI changes.
+	Fixed undefined index $client_id and $client_secret for Google Drive destination.
+	Fixed global exclusions not being applied to schedule backups.
+	If Full profile type was auto-excluding media then this is now forced off upon upgrade.
 	

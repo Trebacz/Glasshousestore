@@ -456,8 +456,27 @@ if ( pb_backupbuddy::$options['data_version'] < 16 ) {
 	pb_backupbuddy::$options['data_version'] = '16';
 	
 	// Move backup_mode setting from root into default provilde.
-	pb_backupbuddy::$options['profiles'][0]['backup_mode'] = pb_backupbuddy::$options['backup_mode'];
+	if ( isset( pb_backupbuddy::$options['backup_mode'] ) ) {
+		pb_backupbuddy::$options['profiles'][0]['backup_mode'] = pb_backupbuddy::$options['backup_mode'];
+	}
 	unset( pb_backupbuddy::$options['backup_mode'] );
+	
+	pb_backupbuddy::save();
+}
+// ********** END 8.0 UPGRADE **********
+
+// ********** BEGIN 8.0.1 UPGRADE **********
+if ( pb_backupbuddy::$options['data_version'] < 17 ) {
+	pb_backupbuddy::$options['data_version'] = '17';
+	
+	// Make sure any full backup types do not have exclude_media enabled.
+	foreach( pb_backupbuddy::$options['profiles'] as &$profile ) {
+		if ( 'full' == $profile['type'] ) {
+			if ( isset( $profile['exclude_media'] ) && ( '1' == $profile['exclude_media'] ) ) {
+				$profile['exclude_media'] = '0';
+			}
+		}
+	}
 	
 	pb_backupbuddy::save();
 }
