@@ -2,7 +2,7 @@
 /*
 Plugin Name: WooCommerce Predictive Search PRO
 Description: WooCommerce Predictive Search - featuring "Smart Search" technology. Give your store customers the most awesome search experience on the web via widgets, shortcodes, Search results pages and the Predictive Search function.
-Version: 4.2.3
+Version: 4.3.0
 Author: a3rev Software
 Author URI: https://a3rev.com/
 Requires at least: 4.5
@@ -39,7 +39,7 @@ if(!defined("WOO_PREDICTIVE_SEARCH_MANAGER_URL"))
 if(!defined("WOO_PREDICTIVE_SEARCH_DOCS_URI"))
     define("WOO_PREDICTIVE_SEARCH_DOCS_URI", "http://docs.a3rev.com/user-guides/woocommerce/woo-predictive-search/");
 
-define( 'WOOPS_VERSION', '4.2.3' );
+define( 'WOOPS_VERSION', '4.3.0' );
 
 /**
  * Load Localisation files.
@@ -95,6 +95,7 @@ include 'classes/class-wc-predictive-search-backbone.php';
 include 'widget/wc-predictive-search-widgets.php';
 
 include 'classes/class-wc-predictive-search-synch.php';
+include 'classes/class-wc-predictive-search-schedule.php';
 
 // Editor
 include 'tinymce3/tinymce.php';

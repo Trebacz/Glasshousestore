@@ -576,7 +576,7 @@ class Meow_MFRH_Core {
 
 	function save_post( $post_id ) {
 		$status = get_post_status( $post_id );
-		if ( !in_array( $status, array( 'publish', 'future' ) ) )
+		if ( !in_array( $status, array( 'publish', 'future', 'private' ) ) )
 			return;
 		$this->rename_media_on_publish( $post_id );
 	}
@@ -636,8 +636,8 @@ class Meow_MFRH_Core {
 	function log_sql( $data, $antidata ) {
 		if ( !get_option( 'mfrh_logsql' ) || !$this->mfrh_admin->is_registered() )
 			return;
-		$fh = fopen( trailingslashit( WP_PLUGIN_DIR ) . 'media-file-renamer/mfrh_sql.log', 'a' );
-		$fh_anti = fopen( trailingslashit( WP_PLUGIN_DIR ) . 'media-file-renamer/mfrh_sql_revert.log', 'a' );
+		$fh = fopen( trailingslashit( dirname(__FILE__) ) . 'media-file-renamer/mfrh_sql.log', 'a' );
+		$fh_anti = fopen( trailingslashit( dirname(__FILE__) ) . 'media-file-renamer/mfrh_sql_revert.log', 'a' );
 		$date = date( "Y-m-d H:i:s" );
 		fwrite( $fh, "{$data}\n" );
 		fwrite( $fh_anti, "{$antidata}\n" );
@@ -934,7 +934,7 @@ class Meow_MFRH_Core {
 					if ( $force_rename || ( file_exists( $meta_old_filepath ) && ( ( !file_exists( $meta_new_filepath ) )
 						|| is_writable( $meta_new_filepath ) ) ) ) {
 						// WP Retina 2x is detected, let's rename those files as well
-						if ( function_exists( 'wr2x_generate_images' ) ) {
+						if ( function_exists( 'wr2x_get_retina' ) ) {
 							$wr2x_old_filepath = $this->str_replace( '.' . $ext, '@2x.' . $ext, $meta_old_filepath );
 							$wr2x_new_filepath = $this->str_replace( '.' . $ext, '@2x.' . $ext, $meta_new_filepath );
 							if ( file_exists( $wr2x_old_filepath ) && ( (!file_exists( $wr2x_new_filepath ) ) || is_writable( $wr2x_new_filepath ) ) ) {

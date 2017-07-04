@@ -94,32 +94,24 @@ class WC_Predictive_Search_Synch
 	<?php
 	}
 
-	public function wc_predictive_search_sync_products_ajax() {
+	public function get_sync_posts_statistic( $post_type = 'product' ) {
 		$status = 'completed';
-		$end_time = time() + 16;
-
-		$this->migrate_posts( 'product', $end_time );
 
 		global $wc_ps_posts_data;
-		$current_products = $wc_ps_posts_data->get_total_items_synched( 'product' );
+		$current_items = $wc_ps_posts_data->get_total_items_synched( $post_type );
 
-		$all_products      = wp_count_posts( 'product' );
-		$total_products    = isset( $all_products->publish ) ? $all_products->publish : 0;
+		$all_items      = wp_count_posts( $post_type );
+		$total_items    = isset( $all_items->publish ) ? $all_items->publish : 0;
 
-		if ( $total_products > $current_products ) {
+		if ( $total_items > $current_items ) {
 			$status = 'continue';
 		}
 
-		echo json_encode( array( 'status' => $status, 'current_items' => $current_products, 'total_items' => $total_products ) );
-
-		die();
+		return array( 'status' => $status, 'current_items' => $current_items, 'total_items' => $total_items );
 	}
 
-	public function wc_predictive_search_sync_product_skus_ajax() {
+	public function get_sync_product_skus_statistic() {
 		$status = 'completed';
-		$end_time = time() + 16;
-
-		$this->migrate_skus( $end_time );
 
 		global $wc_ps_product_sku_data;
 		$current_skus = $wc_ps_product_sku_data->get_total_items_synched();
@@ -131,16 +123,11 @@ class WC_Predictive_Search_Synch
 			$status = 'continue';
 		}
 
-		echo json_encode( array( 'status' => $status, 'current_items' => $current_skus, 'total_items' => $total_skus ) );
-
-		die();
+		return array( 'status' => $status, 'current_items' => $current_skus, 'total_items' => $total_skus );
 	}
 
-	public function wc_predictive_search_sync_categories_ajax() {
+	public function get_sync_categories_statistic() {
 		$status = 'completed';
-		$end_time = time() + 16;
-
-		$this->migrate_product_categories( $end_time );
 
 		global $wc_ps_product_categories_data;
 		$current_categories = $wc_ps_product_categories_data->get_total_items_synched();
@@ -152,16 +139,11 @@ class WC_Predictive_Search_Synch
 			$status = 'continue';
 		}
 
-		echo json_encode( array( 'status' => $status, 'current_items' => $current_categories, 'total_items' => $total_categories ) );
-
-		die();
+		return array( 'status' => $status, 'current_items' => $current_categories, 'total_items' => $total_categories );
 	}
 
-	public function wc_predictive_search_sync_tags_ajax() {
+	public function get_sync_tags_statistic() {
 		$status = 'completed';
-		$end_time = time() + 16;
-
-		$this->migrate_product_tags( $end_time );
 
 		global $wc_ps_product_tags_data;
 		$current_tags = $wc_ps_product_tags_data->get_total_items_synched();
@@ -173,16 +155,11 @@ class WC_Predictive_Search_Synch
 			$status = 'continue';
 		}
 
-		echo json_encode( array( 'status' => $status, 'current_items' => $current_tags, 'total_items' => $total_tags ) );
-
-		die();
+		return array( 'status' => $status, 'current_items' => $current_tags, 'total_items' => $total_tags );
 	}
 
-	public function wc_predictive_search_sync_relationships_ajax() {
+	public function get_sync_relationships_statistic() {
 		$status = 'completed';
-		$end_time = time() + 16;
-
-		$this->migrate_term_relationships( $end_time );
 
 		global $wc_ps_term_relationships_data;
 		$current_items = $wc_ps_term_relationships_data->get_total_items_synched();
@@ -192,57 +169,110 @@ class WC_Predictive_Search_Synch
 			$status = 'continue';
 		}
 
-		echo json_encode( array( 'status' => $status, 'current_items' => $current_items, 'total_items' => $total_items ) );
+		return array( 'status' => $status, 'current_items' => $current_items, 'total_items' => $total_items );
+	}
+
+	public function wc_predictive_search_sync_posts( $post_type = 'product' ) {
+		$end_time = time() + 16;
+
+		$this->migrate_posts( $post_type, $end_time );
+
+		return $this->get_sync_posts_statistic( $post_type );
+	}
+
+	public function wc_predictive_search_sync_product_skus() {
+		$end_time = time() + 16;
+
+		$this->migrate_skus( $end_time );
+
+		return $this->get_sync_product_skus_statistic();
+	}
+
+	public function wc_predictive_search_sync_categories() {
+		$end_time = time() + 16;
+
+		$this->migrate_product_categories( $end_time );
+
+		return $this->get_sync_categories_statistic();
+	}
+
+	public function wc_predictive_search_sync_tags() {
+		$end_time = time() + 16;
+
+		$this->migrate_product_tags( $end_time );
+
+		return $this->get_sync_tags_statistic();
+	}
+
+	public function wc_predictive_search_sync_relationships() {
+		$end_time = time() + 16;
+
+		$this->migrate_term_relationships( $end_time );
+
+		return $this->get_sync_relationships_statistic();
+	}
+
+	public function wc_predictive_search_sync_products_ajax() {
+		$result = $this->wc_predictive_search_sync_posts( 'product' );
+
+		echo json_encode( $result );
+
+		die();
+	}
+
+	public function wc_predictive_search_sync_product_skus_ajax() {
+		$result = $this->wc_predictive_search_sync_product_skus();
+
+		echo json_encode( $result );
+
+		die();
+	}
+
+	public function wc_predictive_search_sync_categories_ajax() {
+		$result = $this->wc_predictive_search_sync_categories();
+
+		echo json_encode( $result );
+
+		die();
+	}
+
+	public function wc_predictive_search_sync_tags_ajax() {
+		$result = $this->wc_predictive_search_sync_tags();
+
+		echo json_encode( $result );
+
+		die();
+	}
+
+	public function wc_predictive_search_sync_relationships_ajax() {
+		$result = $this->wc_predictive_search_sync_relationships();
+
+		echo json_encode( $result );
 
 		die();
 	}
 
 	public function wc_predictive_search_sync_posts_ajax() {
-		$status = 'completed';
-		$end_time = time() + 16;
+		$result = $this->wc_predictive_search_sync_posts( 'post' );
 
-		$this->migrate_posts( 'post', $end_time );
-
-		global $wc_ps_posts_data;
-		$current_posts = $wc_ps_posts_data->get_total_items_synched( 'post' );
-
-		$all_posts      = wp_count_posts( 'post' );
-		$total_posts    = isset( $all_posts->publish ) ? $all_posts->publish : 0;
-
-		if ( $total_posts > $current_posts ) {
-			$status = 'continue';
-		}
-
-		echo json_encode( array( 'status' => $status, 'current_items' => $current_posts, 'total_items' => $total_posts ) );
+		echo json_encode( $result );
 
 		die();
 	}
 
 	public function wc_predictive_search_sync_pages_ajax() {
-		$status = 'completed';
-		$end_time = time() + 16;
+		$result = $this->wc_predictive_search_sync_posts( 'page' );
 
-		$this->migrate_posts( 'page', $end_time );
-
-		global $wc_ps_posts_data;
-		$current_pages = $wc_ps_posts_data->get_total_items_synched( 'page' );
-
-		$all_pages      = wp_count_posts( 'page' );
-		$total_pages    = isset( $all_pages->publish ) ? $all_pages->publish : 0;
-
-		if ( $total_pages > $current_pages ) {
-			$status = 'continue';
-		}
-
-		echo json_encode( array( 'status' => $status, 'current_items' => $current_pages, 'total_items' => $total_pages ) );
+		echo json_encode( $result );
 
 		die();
 	}
 
 	public function wc_predictive_search_sync_end_ajax() {
 		update_option( 'wc_predictive_search_synced_posts_data', 1 );
+		update_option( 'wc_predictive_search_manual_synced_completed_time', current_time( 'timestamp' ) );
 
-		echo json_encode( array( 'status' => 'OK' ) );
+		wp_send_json( array( 'status' => 'OK', 'date' => date_i18n( get_option( 'date_format' ) . ' - ' . get_option( 'time_format' ) ) ) );
 
 		die();
 	}

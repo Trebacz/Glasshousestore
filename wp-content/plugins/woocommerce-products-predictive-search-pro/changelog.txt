@@ -1,5 +1,14 @@
 *** WooCommerce Predictive Search Changelog ***
 
+= 4.3.0 - 2017/06/27 =
+* Feature - Added Daily Auto Database Sync option
+* Feature - Added Time Picker for setting daily Auto Sync time
+* Feature - Added Auto synch email success and error notifications
+* Feature - Added date and time stamp for last successful auto sync
+* Feature - Added date and time stamp for Manual Sync
+* Tweak - Tested for compatibility with WooCommerce 3.0.9
+* Tweak - Updated description text on Database Sync Option box
+
 = 4.2.3 - 2017/06/05 =
 * Tweak - Tested for compatibility with WordPress major version 4.8.0
 * Tweak - Include bootstrap modal script into plugin framework
