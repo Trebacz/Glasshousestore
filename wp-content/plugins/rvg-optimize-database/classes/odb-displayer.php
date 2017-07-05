@@ -35,11 +35,11 @@ class ODB_Displayer
           </p>
 	      <span class="odb-bold">
 		    '.__('Plugin version', $odb_class->odb_txt_domain).': v'.$odb_class->odb_version.' ['.$odb_class->odb_release_date.'] -
-		    <a href="http://cagewebdev.com/index.php/optimize-database-after-deleting-revisions-wordpress-plugin/" target="_blank">'.__('Plugin page', $odb_class->odb_txt_domain).'</a> -
+		    <a href="http://cagewebdev.com/optimize-database-after-deleting-revisions-wordpress-plugin/" target="_blank">'.__('Plugin page', $odb_class->odb_txt_domain).'</a> -
 		    <a href="http://wordpress.org/plugins/rvg-optimize-database/" target="_blank">'.__('Download page', $odb_class->odb_txt_domain).'</a> -
 		    <a href="http://rvg.cage.nl/" target="_blank">'.__('Author', $odb_class->odb_txt_domain).'</a> -
 		    <a href="http://cagewebdev.com/" target="_blank">'.__('Company', $odb_class->odb_txt_domain).'</a> -
-		    <a href="http://cagewebdev.com/index.php/donations-odb/" target="_blank">'.__('Donation page', $odb_class->odb_txt_domain).'</a>
+		    <a href="http://cagewebdev.com/donations-odb/" target="_blank">'.__('Donation page', $odb_class->odb_txt_domain).'</a>
 	      </span>		
         </div><!-- odb-options-opening -->
 	  </div><!-- /odb-header -->

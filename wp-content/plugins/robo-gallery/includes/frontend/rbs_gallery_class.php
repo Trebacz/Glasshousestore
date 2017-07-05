@@ -53,6 +53,10 @@ class roboGallery extends roboGalleryUtils{
 
 	public $rbsMainDivStyle = '';
 
+	public $rbsSearchStyle = '';
+	public $rbsSearchInputStyle = '';
+	public $rbsSearchInputPlaceholderStyle = '';
+
 
  	public $javaScript = '';
  	public $javaScriptStyle = '';
@@ -613,10 +617,28 @@ class roboGallery extends roboGalleryUtils{
  		$retHtml .= '<div class="rbs_gallery_button'.$align.'"  id="'.$this->galleryId.'filter">';
  		
  		if( get_post_meta( $this->id,  ROBO_GALLERY_PREFIX.'searchEnable', true ) ){
- 			$retHtml .= '<div class="rbs_search_wrap">';
+
+ 			/* Get color search input box */
+ 			$searchColor = get_post_meta( $this->id,  ROBO_GALLERY_PREFIX.'searchColor', true );
+ 			if($searchColor){
+ 				$this->rbsSearchStyle = ' color:'.$searchColor.';';
+ 				$this->rbsSearchInputStyle = 'border-color:'.$searchColor.'; color:'.$searchColor.';';
+ 				$this->rbsSearchInputPlaceholderStyle = 'color:'.$searchColor.';';
+ 			}
+
+ 			$cssPatch = '#'.$this->galleryId.'filter .rbs_search_wrap';
+			$this->addJavaScriptStyle('rbsSearch', $cssPatch,2);
+			$this->addJavaScriptStyle('rbsSearchInputPlaceholder', $cssPatch.' input.rbs-search::placeholder',2);
+
+			$this->addJavaScriptStyle('rbsSearchInput', $cssPatch.' input.rbs-search',2);
+
+			/* Search gallery item block */
+ 			$retHtml .= '<div class="rbs_search_wrap"  >';
  				$searchLabel = get_post_meta( $this->id,  ROBO_GALLERY_PREFIX.'searchLabel', true );
-	 			$retHtml .= '<input type="text" class="rbs-search" placeholder="'.$searchLabel.'">';
+	 			$retHtml .= '<input type="text" class="rbs-search" placeholder="'.$searchLabel.'" />';
  			$retHtml .= '</div>';
+
+ 			/* Setup  gallery */
  			$this->helper->setValue( 'search',  '#'.$this->galleryId.'filter .rbs-search' );
  			$this->helper->setValue( 'searchTarget',  '.rbs-img-image' );
  		}

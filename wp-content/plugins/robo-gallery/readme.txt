@@ -4,7 +4,7 @@ Donate link: https://robosoft.co/robogallery
 Tags: gallery, photo gallery, images gallery, gallery images, responsive gallery, categories gallery, Polaroid gallery, gallery lightbox, portfolio gallery, video gallery, Gallery Plugin, Robo Gallery
 Requires at least: 3.3
 Tested up to: 4.8
-Stable tag: 2.6.16
+Stable tag: 2.6.17
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -254,6 +254,11 @@ If any problem occurs, please contact us.
 
 == Changelog ==
 
+= 2.6.17 =
+*   Update admin settings
+*   Added new search options
+*   Search background color
+
 = 2.6.16 =
 *   Extend languages support
 *   Update of the statistics features
@@ -392,6 +397,11 @@ If any problem occurs, please contact us.
 
 
 == Upgrade Notice ==
+
+= 2.6.17 =
+Update admin settings
+Added new search options
+Search background color
 
 = 2.6.16 =
 Extend languages support

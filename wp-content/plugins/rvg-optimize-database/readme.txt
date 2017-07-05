@@ -1,15 +1,15 @@
 === Optimize Database after Deleting Revisions ===
 Contributors: CAGE Web Design | Rolf van Gelder
-Donate link: http://cagewebdev.com/index.php/donations-odb/
+Donate link: http://cagewebdev.com/donations-odb/
 Plugin Name: Optimize Database after Deleting Revisions
-Plugin URI: http://cagewebdev.com/index.php/optimize-database-after-deleting-revisions-wordpress-plugin
+Plugin URI: http://cagewebdev.com/optimize-database-after-deleting-revisions-wordpress-plugin
 Tags: database, delete, revisions, optimize, post, posts, page, pages, clean, clean up, trash, spam, trashed, spammed, database size, scheduler, transients, unused tags, pingback, trackback, unix cron tab, crontab, multisite
 Author URI: http://cagewebdev.com
 Author: CAGE Web Design | Rolf van Gelder, Eindhoven, The Netherlands
 Requires at least: 2.8
-Tested up to: 4.7.3
-Stable tag: 4.2.2
-Version: 4.2.2
+Tested up to: 4.8
+Stable tag: 4.2.3
+Version: 4.2.3
 License: GPLv2 or later
 
 == Description ==
@@ -76,7 +76,7 @@ Then, start the .php file from your crontab!<br>
 CAGE Web Design | Rolf van Gelder, Eindhoven, The Netherlands - http://cagewebdev.com - http://rvg.cage.nl
 
 = Plugin URL =
-http://cagewebdev.com/index.php/optimize-database-after-deleting-revisions-wordpress-plugin
+http://cagewebdev.com/optimize-database-after-deleting-revisions-wordpress-plugin
 
 = Download URL =
 http://wordpress.org/plugins/rvg-optimize-database/
@@ -86,7 +86,7 @@ NO WARRANTY, USE IT AT YOUR OWN RISK!
 
 = Plugins by CAGE Web Design | Rolf van Gelder =
 WordPress plugins created by CAGE Web Design | Rolf van Gelder<br>
-http://cagewebdev.com/index.php/wordpress-plugins/
+http://cagewebdev.com/wordpress-plugins/
 
 == Installation ==
 
@@ -102,6 +102,9 @@ http://cagewebdev.com/index.php/wordpress-plugins/
 * If you run the plugin from any of the sites, it will cleanup ALL the sites in the network!
 
 == Changelog ==
+= 4.2.3 [07/05/2017] =
+* CHANGE: Extra save button added to the settings page
+
 = 4.2.2 [04/06/2017] =
 * NEW: Indonesian (id_ID) translation added
 

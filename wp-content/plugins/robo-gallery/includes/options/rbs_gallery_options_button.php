@@ -48,10 +48,10 @@ $button_group->add_field( array(
 	
 	'depends' 		=> 	'.menuTagOptions',
 
-	'onText'		=> __('Tags', 'robo-gallery' ),
+	'onText'		=> __('Tags', 		'robo-gallery' ),
 	'offText'		=> __('Categories', 'robo-gallery' ),
-	'onStyle'		=> __('primary', 'robo-gallery' ),
-	'offStyle'		=> __('info', 'robo-gallery' ),
+	'onStyle'		=> __('primary', 	'robo-gallery' ),
+	'offStyle'		=> __('info', 		'robo-gallery' ),
 	'bootstrap_style'=> 1,
 	'after_row'		=> '
 	<div class="menuTagOptions">'
@@ -140,10 +140,10 @@ $button_group->add_field( array(
 	'level'			   => !ROBO_GALLERY_PRO,
 	'default'          => 'border',
 	'options'          => array(
-		 'normal' 	=> __( 'Normal' , 	'cmb' ),
-		 'flat' 	=> __( 'flat' , 	'cmb' ),
-		 '3d'		=> __( '3d' , 		'cmb' ),
-		 'border' 	=> __( 'Border' , 	'cmb' ),
+		 'normal' 	=> __( 'Normal' , 	'robo-gallery' ),
+		 'flat' 	=> __( 'flat' , 	'robo-gallery' ),
+		 '3d'		=> __( '3d' , 		'robo-gallery' ),
+		 'border' 	=> __( 'Border' , 	'robo-gallery' ),
 	),
 	 'before_row'=> 	'
 	   			</div>
@@ -159,12 +159,12 @@ $button_group->add_field( array(
 	'level'			   => !ROBO_GALLERY_PRO,
 	'default'          => 'red',
 	'options'          => array(
-		'gray' 		=> __( 'gray' , 'cmb' ),
-		'blue' 		=> __( 'blue' , 'cmb' ),
-		'green' 	=> __( 'green' , 'cmb' ),
-		'orange' 	=> __( 'orange' , 'cmb' ),
-		'red' 		=> __( 'red' , 'cmb' ),
-		'purple' 	=> __( 'purple' , 'cmb' ),
+		'gray' 		=> __( 'Gray' , 'robo-gallery' ),
+		'blue' 		=> __( 'Blue' , 'robo-gallery' ),
+		'green' 	=> __( 'Green' , 'robo-gallery' ),
+		'orange' 	=> __( 'Orange' , 'robo-gallery' ),
+		'red' 		=> __( 'Red' , 'robo-gallery' ),
+		'purple' 	=> __( 'Purple' , 'robo-gallery' ),
 	),
 ));
 
@@ -175,10 +175,10 @@ $button_group->add_field( array(
 	'show_option_none' => false,
 	'default'          => 'normal',
 	'options'          => array(
-		'normal' 	=> __( 'Normal' , 	'cmb' ),
-		'rounded' 	=> __( 'Rounded' , 	'cmb' ),
-		'pill' 		=> __( 'Pill' , 	'cmb' ),
-		'circle' 	=> __( 'Circle ' , 	'cmb' ),
+		'normal' 	=> __( 'Normal' , 	'robo-gallery' ),
+		'rounded' 	=> __( 'Rounded' , 	'robo-gallery' ),
+		'pill' 		=> __( 'Pill' , 	'robo-gallery' ),
+		'circle' 	=> __( 'Circle ' , 	'robo-gallery' ),
 	),
 ));
 
@@ -189,11 +189,11 @@ $button_group->add_field( array(
 	'show_option_none' => false,
 	'default'          => 'normal',
 	'options'          => array(
-		'jumbo' 	=> __( 'Jumbo' , 	'cmb' ),
-		'large' 	=> __( 'Large' , 	'cmb' ),
-		'normal' 	=> __( 'Normal' , 	'cmb' ),
-		'small' 	=> __( 'Small' , 	'cmb' ),
-		'tiny' 		=> __( 'Tiny ' , 	'cmb' ),
+		'jumbo' 	=> __( 'Jumbo' , 	'robo-gallery' ),
+		'large' 	=> __( 'Large' , 	'robo-gallery' ),
+		'normal' 	=> __( 'Normal' , 	'robo-gallery' ),
+		'small' 	=> __( 'Small' , 	'robo-gallery' ),
+		'tiny' 		=> __( 'Tiny ' , 	'robo-gallery' ),
 	),
 ));
 
@@ -204,9 +204,9 @@ $button_group->add_field( array(
 	'show_option_none' => false,
 	'default'          => 'left',
 	'options'          => array(
-		'left' 	=> __( 'Left' , 	'cmb' ),
-		'center'=> __( 'Center' , 	'cmb' ),
-		'right' => __( 'Right' , 	'cmb' ),
+		'left' 	=> __( 'Left' , 	'robo-gallery' ),
+		'center'=> __( 'Center' , 	'robo-gallery' ),
+		'right' => __( 'Right' , 	'robo-gallery' ),
 	),
 ));
 
@@ -245,6 +245,19 @@ $button_group->add_field( array(
 	'bootstrap_style'=> 1,
 	
 ));
+
+
+$button_group->add_field( array(
+    'name'    		=> __( 'Search Color', 'rbs_gallery' ),
+    'id'   			=> ROBO_GALLERY_PREFIX.'searchColor',
+    'type' 			=> 'rbstext',
+    'class'			=> 'form-control rbs_color',
+    'data-default' 	=> 'rgba(0, 0, 0)',
+    'default'  		=> 'rgba(0, 0, 0)',
+    'small'			=> 1,
+    'level'			=> !ROBO_GALLERY_PRO,
+));
+
 $button_group->add_field( array(
     'name'    => __('Search Text','robo-gallery'),
     'default' => __('search', 'robo-gallery' ),

@@ -64,7 +64,7 @@ if(!function_exists('rbs_gallery_get_current_post_type')){
         if ( $post && $post->post_type )                          return $post->post_type;
           elseif( $typenow )                                      return $typenow;
           elseif( $current_screen && $current_screen->post_type ) return $current_screen->post_type;
-          elseif( isset( $_REQUEST['post_type'] ) )               return sanitize_key( $_REQUEST['post_type'] );
+          elseif( isset( $_REQUEST['post_type'] ) && !is_array($_REQUEST['post_type']) )  return sanitize_key( $_REQUEST['post_type'] );
           elseif (isset( $_REQUEST['post'] ) && get_post_type($_REQUEST['post']))               return get_post_type($_REQUEST['post']);
         return null;
     }

@@ -366,6 +366,16 @@ echo '
           </table>
 		  <div align="center"><em>* '.__('change will be visible after loading the next page', $this->odb_txt_domain).'</em></div>
           <br>
+		  
+		  <div id="odb-options-buttons" align="center">
+			<p>
+			  <input class="button-primary button-large odb-bold" type="submit" name="info_update" value="'.__('Save Settings',$this->odb_txt_domain).'">
+			  &nbsp;
+			  <input class="button odb-normal" type="button" name="optimizer" value="'.__('Go To Optimizer',$this->odb_txt_domain).'" onclick="self.location=\'tools.php?page=rvg-optimize-database\'">
+			</p>
+		  </div>
+          <!-- odb-options-buttons -->		  
+          <br>
           <div align="center">
             <span class="odb-bold">
               '.__('EXCLUDE DATABASE TABLES FROM OPTIMIZATION:<br><span class="odb-underline-red">CHECKED</span> TABLES <span class="odb-underline-red">WON\'T</span> BE OPTIMIZED!</span>',$this->odb_txt_domain).'

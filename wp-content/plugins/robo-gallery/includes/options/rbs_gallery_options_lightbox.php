@@ -22,20 +22,15 @@ $lightbox_group = new_cmb2_box( array(
     'context' 		=> 'normal',
 ));
 
-
-
-
 $lightbox_group->add_field( array(
 	'name' 			=> __('Text', 'rbs_gallery' ),
 	'id' 			=> ROBO_GALLERY_PREFIX . 'lightboxTitle',
 	'type' 			=> 'switch', 
 	'default'		=> rbs_gallery_set_checkbox_default_for_new_post(1),
-	'bootstrap_style'=> 1,
 	'showhide'		=> 1,
 	'depends' 		=> 	'.rbs_lightbox_source',
 	'before_row' 	=> '
 <div class="rbs_block"><br/>',
-
 ));
 
 $lightbox_group->add_field( array(
@@ -52,7 +47,6 @@ $lightbox_group->add_field( array(
 	'before_row' 	=> '<div class="rbs_lightbox_source">',
 	'after_row'		=> '</div> '
 ));
-
 
 $lightbox_group->add_field( array(
     'name'    		=> __( 'Text Color', 'rbs_gallery' ),
@@ -84,7 +78,6 @@ $lightbox_group->add_field( array(
 	'type' 			=> 'switch', 
 	'desc'			=> __('This option enable linking for every particular image ', 'rbs_gallery' ),
 	'default'		=> rbs_gallery_set_checkbox_default_for_new_post(0),
-	'bootstrap_style'=> 1,
 ));
 
 $lightbox_group->add_field( array(
@@ -93,7 +86,6 @@ $lightbox_group->add_field( array(
 	'type' 			=> 'switch', 
 	'showhide'		=> 1,
 	'default'		=> rbs_gallery_set_checkbox_default_for_new_post(1),
-	'bootstrap_style'=> 1,
 	'depends' 		=> 	'.rbs_lightbox_counter_text',
 	'after_row'		=> '
 		<div class="rbs_lightbox_counter_text">',
@@ -110,12 +102,34 @@ $lightbox_group->add_field( array(
 ));
 
 $lightbox_group->add_field( array(
+	'name' 			=> __('Swipe', 'rbs_gallery' ),
+	'id' 			=> ROBO_GALLERY_PREFIX . 'lightboxSwipe',
+	'type' 			=> 'switch', 
+	'default'		=> rbs_gallery_set_checkbox_default_for_new_post(1),
+));
+
+$lightbox_group->add_field( array(
+	'name' 			=> __('Mobile Style', 'rbs_gallery' ),
+	'id' 			=> ROBO_GALLERY_PREFIX . 'lightboxMobile',
+	'type' 			=> 'switch', 
+	'default'		=> rbs_gallery_set_checkbox_default_for_new_post(0),
+));
+
+$lightbox_group->add_field( array(
 	'name' 			=> __('Close Icon', 'rbs_gallery' ),
 	'id' 			=> ROBO_GALLERY_PREFIX . 'lightboxClose',
 	'type' 			=> 'switch', 
 	'showhide'		=> 1,
 	'default'		=> rbs_gallery_set_checkbox_default_for_new_post(1),
-	'bootstrap_style'=> 1,
+	'before_row'	=> '
+	<div role="tabpanel">
+		<ul class="nav nav-tabs" role="tablist">
+			<li role="presentation" class="active">	<a href="#lightboxButtons"	aria-controls="lightboxButtons" role="tab" data-toggle="tab">'.__('Control Buttons', 'robo-gallery' ).'</a></li>
+			<li role="presentation">				<a href="#lightboxPanel" 	aria-controls="lightboxPanel" 	role="tab" data-toggle="tab">'.__('Lightbox Description Panel', 'robo-gallery' ).'</a></li>
+			<li role="presentation">				<a href="#lightboxSocial" 	aria-controls="lightboxSocial" 	role="tab" data-toggle="tab">'.__('Social Buttons', 'robo-gallery' ).'</a></li>
+		</ul>
+		<div class="tab-content">
+			<div role="tabpanel" class="tab-pane active" id="lightboxButtons"><br/>',
 ));
 
 $lightbox_group->add_field( array(
@@ -124,23 +138,6 @@ $lightbox_group->add_field( array(
 	'type' 			=> 'switch', 
 	'showhide'		=> 1,
 	'default'		=> rbs_gallery_set_checkbox_default_for_new_post(1),
-	'bootstrap_style'=> 1,
-));
-
-$lightbox_group->add_field( array(
-	'name' 			=> __('Swipe', 'rbs_gallery' ),
-	'id' 			=> ROBO_GALLERY_PREFIX . 'lightboxSwipe',
-	'type' 			=> 'switch', 
-	'default'		=> rbs_gallery_set_checkbox_default_for_new_post(1),
-	'bootstrap_style'=> 1,
-));
-
-$lightbox_group->add_field( array(
-	'name' 			=> __('Mobile Style', 'rbs_gallery' ),
-	'id' 			=> ROBO_GALLERY_PREFIX . 'lightboxMobile',
-	'type' 			=> 'switch', 
-	'default'		=> rbs_gallery_set_checkbox_default_for_new_post(0),
-	'bootstrap_style'=> 1
 ));
 
 $lightbox_group->add_field( array(
@@ -149,17 +146,19 @@ $lightbox_group->add_field( array(
 	'type' 			=> 'switch', 
 	'showhide'		=> 1,
 	'default'		=> rbs_gallery_set_checkbox_default_for_new_post(0),
-	'bootstrap_style'=> 1,
+	'after_row'		=> ' 
+			</div> '
 ));
 
 $lightbox_group->add_field( array(
-	'name' 			=> __('Description Panel', 'rbs_gallery' ),
+	'name' 			=> __('Panel', 'rbs_gallery' ),
 	'id' 			=> ROBO_GALLERY_PREFIX . 'lightboxDescPanel',
 	'type' 			=> 'switch', 
 	'showhide'		=> 1,
 	'depends' 		=> 	'.rbs_lightbox_desc_panel',
 	'default'		=> rbs_gallery_set_checkbox_default_for_new_post(0),
-	'bootstrap_style'=> 1,
+	'before_row'	=> '
+			<div role="tabpanel" class="tab-pane" id="lightboxPanel"><br/>',
 ));
 
 $lightbox_group->add_field( array(
@@ -190,7 +189,9 @@ $lightbox_group->add_field( array(
 		'green' 	=> __( 'Green' , 	'rbs_gallery' ),
 		'pink' 		=> __( 'Pink' , 	'rbs_gallery' ),
 	),
-	'after_row'		=> '</div>',
+	'after_row'		=> '
+						</div>
+			</div>',
 ));
 
 $lightbox_group->add_field( array(
@@ -200,10 +201,11 @@ $lightbox_group->add_field( array(
 	'showhide'		=> 1,
 	'depends' 		=> 	'.rbs_lightbox_social_button',
 	'default'		=> rbs_gallery_set_checkbox_default_for_new_post(0),
-	'bootstrap_style'=> 1,
 	'level'			=> !ROBO_GALLERY_PRO,
+	'before_row'	=> '
+			<div role="tabpanel" class="tab-pane" id="lightboxSocial"><br/>',
      'after_row'		=> '
-	<div class="rbs_lightbox_social_button">'
+				<div class="rbs_lightbox_social_button">'
 ));
 
 $lightbox_group->add_field( array(
@@ -249,6 +251,9 @@ $lightbox_group->add_field( array(
 	'showhide'		=> 1,
 	'default'		=> rbs_gallery_set_checkbox_default_for_new_post(1),
      'after_row'		=> '
+				</div>
+			</div>
+    	</div>
 	</div>
 </div> '
 ));

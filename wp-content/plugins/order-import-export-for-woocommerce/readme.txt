@@ -4,7 +4,7 @@ Donate link:
 Tags: woocommerce export orders, woocommerce import orders, woocommerce export import orders, export woocommerce orders with line item details,woocommerce export coupons, woocommerce import coupons, woocommerce export import coupons
 Requires at least: 3.0.1
 Tested up to: 4.8
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -75,6 +75,8 @@ Yes. You can import or export order line item details.
 3. Exported sample order Screen
 
 == Changelog ==
+= 1.2.1 =
+* Bug fix: Fixed Coupon import warnings.
 = 1.2.0 =
 * Bug fix: Fixed WC Log issues.
 = 1.1.9 =
@@ -120,6 +122,8 @@ Yes. You can import or export order line item details.
 * Export /Import WooCommerce Orders.
 
 == Upgrade Notice ==
+= 1.2.1 =
+* Bug fix: Fixed Coupon import warnings.
 = 1.2.0 =
 * Bug fix: Fixed WC Log issues.
 = 1.1.9 =

@@ -441,8 +441,8 @@ class WF_OrderImpExpCsv_Order_Import extends WP_Importer {
 	 */
 	public function import_start( $file, $start_pos, $end_pos ) {
 
-		$memory    = size_format( woocommerce_let_to_num( ini_get( 'memory_limit' ) ) );
-		$wp_memory = size_format( woocommerce_let_to_num( WP_MEMORY_LIMIT ) );
+                $memory    = size_format( (WC()->version < '2.7.0')?woocommerce_let_to_num( ini_get( 'memory_limit' ) ):wc_let_to_num( ini_get( 'memory_limit' ) )  );
+                $wp_memory = size_format( (WC()->version < '2.7.0')? woocommerce_let_to_num( WP_MEMORY_LIMIT ) : wc_let_to_num( WP_MEMORY_LIMIT ) );
 
 		$this->log->add( 'csv-import', '---[ New Import ] PHP Memory: ' . $memory . ', WP Memory: ' . $wp_memory );
 		$this->log->add( 'csv-import', __( 'Parsing products CSV.', 'wf_order_import_export' ) );

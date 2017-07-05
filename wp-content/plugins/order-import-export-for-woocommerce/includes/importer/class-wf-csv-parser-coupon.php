@@ -87,10 +87,12 @@ class WF_CSV_Parser_Coupon {
             				$s_heading = esc_attr( $mapping[$s_heading] );
             			}
             		}
+                        if(!empty($mapping)){
                         foreach ($mapping as $mkey => $mvalue) {
                                 if(trim($mvalue) === trim($heading)){
                                     $s_heading =  $mkey;
                                 }
+                        }
                         }
 
             		if ( $s_heading == '' )
@@ -99,6 +101,7 @@ class WF_CSV_Parser_Coupon {
 	            	// Add the heading to the parsed data
 					$row[$s_heading] = ( isset( $postmeta[$key] ) ) ? $this->format_data_from_csv( $postmeta[$key], $enc ) : '';
 
+                                        if(isset($eval_field[$s_heading]))
 					$row[$s_heading] = $this->evaluate_field($row[$s_heading], $eval_field[$s_heading]);
 					
 	               	// Raw Headers stores the actual column name in the CSV
