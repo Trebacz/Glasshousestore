@@ -25,7 +25,7 @@ if ( ! class_exists( 'ITSEC_Core' ) ) {
 		 *
 		 * @access private
 		 */
-		private $plugin_build = 4070;
+		private $plugin_build = 4072;
 
 		/**
 		 * Used to distinguish between a user modifying settings and the API modifying settings (such as from Sync
@@ -105,17 +105,18 @@ if ( ! class_exists( 'ITSEC_Core' ) ) {
 			register_uninstall_hook( $this->plugin_file, array( 'ITSEC_Core', 'handle_uninstall' ) );
 
 
-			require( $this->plugin_dir . 'core/class-itsec-modules.php' );
+			require( $this->plugin_dir . 'core/modules.php' );
 			add_action( 'itsec-register-modules', array( $this, 'register_modules' ) );
 			ITSEC_Modules::init_modules();
 
-			require( $this->plugin_dir . 'core/class-itsec-lib.php' );
-			require( $this->plugin_dir . 'core/class-itsec-logger.php' );
-			require( $this->plugin_dir . 'core/class-itsec-lockout.php' );
-			require( $this->plugin_dir . 'core/class-itsec-files.php' );
-			require( $this->plugin_dir . 'core/class-itsec-notify.php' );
-			require( $this->plugin_dir . 'core/class-itsec-response.php' );
+			require( $this->plugin_dir . 'core/lib.php' );
+			require( $this->plugin_dir . 'core/logger.php' );
+			require( $this->plugin_dir . 'core/lockout.php' );
+			require( $this->plugin_dir . 'core/files.php' );
+			require( $this->plugin_dir . 'core/notify.php' );
+			require( $this->plugin_dir . 'core/response.php' );
 			require( $this->plugin_dir . 'core/lib/class-itsec-lib-user-activity.php' );
+			require( $this->plugin_dir . 'core/lib/class-itsec-lib-password-requirements.php' );
 
 			$this->itsec_files = ITSEC_Files::get_instance();
 			$this->itsec_notify = new ITSEC_Notify();
@@ -138,9 +139,13 @@ if ( ! class_exists( 'ITSEC_Core' ) ) {
 
 			add_action( 'plugins_loaded', array( $this, 'continue_init' ), -90 );
 			add_action( 'wp_login_failed', array( 'ITSEC_Lib', 'handle_wp_login_failed' ) );
+
 			add_action( 'ithemes_sync_register_verbs', array( $this, 'register_sync_verbs' ) );
 		}
 
+		/**
+		 * Perform initialization that requires the plugins_loaded hook to be fired.
+		 */
 		public function continue_init() {
 			ITSEC_Modules::run_active_modules();
 
@@ -149,24 +154,53 @@ if ( ! class_exists( 'ITSEC_Core' ) ) {
 				add_action( 'admin_bar_menu', array( $this, 'modify_admin_bar' ), 99 );
 			}
 
+			$disabled = defined( 'ITSEC_DISABLE_PASSWORD_REQUIREMENTS') && ITSEC_DISABLE_PASSWORD_REQUIREMENTS;
+
+			if ( ! $disabled && has_action( 'itsec_validate_password' ) ) {
+				$pass_requirements = new ITSEC_Lib_Password_Requirements();
+				$pass_requirements->run();
+			}
+
 			do_action( 'itsec_initialized' );
 		}
 
+		/**
+		 * Retrieve the global instance of the files utility.
+		 *
+		 * @return ITSEC_Files
+		 */
 		public static function get_itsec_files() {
 			$self = self::get_instance();
 			return $self->itsec_files;
 		}
 
+		/**
+		 * Retrieve the global instance of the user notification utility.
+		 *
+		 * @return ITSEC_Notify
+		 */
 		public static function get_itsec_notify() {
 			$self = self::get_instance();
 			return $self->itsec_notify;
 		}
 
+		/**
+		 * Retrieve the global instance of the Sync API.
+		 *
+		 * The API is not available until iThemes Sync verbs have been registered ( init#11 ).
+		 *
+		 * @return Ithemes_Sync_API|null
+		 */
 		public static function get_sync_api() {
 			$self = self::get_instance();
 			return $self->sync_api;
 		}
 
+		/**
+		 * Register ITSEC verbs with sync.
+		 *
+		 * @param Ithemes_Sync_API $sync_api
+		 */
 		public function register_sync_verbs( $sync_api ) {
 			// For use by the itsec-get-everything verb as it has to run other verbs to get their details.
 			$this->sync_api = $sync_api;
@@ -174,6 +208,9 @@ if ( ! class_exists( 'ITSEC_Core' ) ) {
 			$sync_api->register( 'itsec-get-everything', 'Ithemes_Sync_Verb_ITSEC_Get_Everything', dirname( __FILE__ ) . '/sync-verbs/itsec-get-everything.php' );
 		}
 
+		/**
+		 * Register core modules.
+		 */
 		public function register_modules() {
 			$path = dirname( __FILE__ );
 
@@ -218,13 +255,12 @@ if ( ! class_exists( 'ITSEC_Core' ) ) {
 		 *
 		 * @since 4.0
 		 *
-		 * @param object $links Array of WordPress links
+		 * @param array  $links Array of WordPress links
 		 * @param string $file  String name of current file
 		 *
-		 * @return object Array of WordPress links
-		 *
+		 * @return array Array of WordPress links
 		 */
-		function add_action_link( $links, $file ) {
+		public function add_action_link( $links, $file ) {
 
 			static $this_plugin;
 
@@ -264,9 +300,11 @@ if ( ! class_exists( 'ITSEC_Core' ) ) {
 		}
 
 		/**
-		 * Add admin bar item
+		 * Add admin bar items
 		 *
 		 * @since 4.0
+		 *
+		 * @param WP_Admin_Bar $wp_admin_bar
 		 *
 		 * @return void
 		 */
@@ -313,28 +351,39 @@ if ( ! class_exists( 'ITSEC_Core' ) ) {
 			);
 		}
 
+		/**
+		 * Dispatch a request to upgrade the data schema to another version.
+		 *
+		 * @param int|bool $build The version of the data storage format. Pass false to default to the current version.
+		 */
 		public function handle_upgrade( $build = false ) {
 			$this->doing_data_upgrade = true;
 
-			require_once( self::get_core_dir() . '/class-itsec-setup.php' );
+			require_once( self::get_core_dir() . '/setup.php' );
 			ITSEC_Setup::handle_upgrade( $build );
 		}
 
 		public static function handle_activation() {
-			require_once( self::get_core_dir() . '/class-itsec-setup.php' );
+			require_once( self::get_core_dir() . '/setup.php' );
 			ITSEC_Setup::handle_activation();
 		}
 
 		public static function handle_deactivation() {
-			require_once( self::get_core_dir() . '/class-itsec-setup.php' );
+			require_once( self::get_core_dir() . '/setup.php' );
 			ITSEC_Setup::handle_deactivation();
 		}
 
 		public static function handle_uninstall() {
-			require_once( self::get_core_dir() . '/class-itsec-setup.php' );
+			require_once( self::get_core_dir() . '/setup.php' );
 			ITSEC_Setup::handle_uninstall();
 		}
 
+		/**
+		 * Register a notice to be displayed in the WordPress admin.
+		 *
+		 * @param callable $callback Function that will render a notice.
+		 * @param bool    $all_pages Display the notice on all pages or only on ITSEC, plugins, and upgrade page.
+		 */
 		public static function add_notice( $callback, $all_pages = false ) {
 			global $pagenow, $plugin_page;
 
@@ -358,10 +407,20 @@ if ( ! class_exists( 'ITSEC_Core' ) ) {
 			}
 		}
 
+		/**
+		 * Get the required capability to manage ITSEC.
+		 *
+		 * @return string
+		 */
 		public static function get_required_cap() {
 			return apply_filters( 'itsec_cap_required', is_multisite() ? 'manage_network_options' : 'manage_options' );
 		}
 
+		/**
+		 * Does the current user have permission to manage ITSEC.
+		 *
+		 * @return bool
+		 */
 		public static function current_user_can_manage() {
 			return current_user_can( self::get_required_cap() );
 		}
@@ -396,20 +455,46 @@ if ( ! class_exists( 'ITSEC_Core' ) ) {
 			return $self->plugin_name;
 		}
 
+		/**
+		 * Is this an iThemes Security Pro installation.
+		 *
+		 * This value is not cached.
+		 *
+		 * @return bool
+		 */
 		public static function is_pro() {
 			return is_dir( self::get_plugin_dir() . 'pro' );
 		}
 
+		/**
+		 * Get the current local timestamp.
+		 *
+		 * This value will be the same throughout the entire request.
+		 *
+		 * @return int
+		 */
 		public static function get_current_time() {
 			$self = self::get_instance();
 			return $self->current_time;
 		}
 
+		/**
+		 * Get the current UTC timestamp.
+		 *
+		 * This value will be the same throughout the entire request.
+		 *
+		 * @return int
+		 */
 		public static function get_current_time_gmt() {
 			$self = self::get_instance();
 			return $self->current_time_gmt;
 		}
 
+		/**
+		 * Get the UTC offset in seconds.
+		 *
+		 * @return int
+		 */
 		public static function get_time_offset() {
 			$self = self::get_instance();
 			return $self->current_time - $self->current_time_gmt;
@@ -447,16 +532,31 @@ if ( ! class_exists( 'ITSEC_Core' ) ) {
 			return network_admin_url( 'admin.php?page=itsec&module=' . $module );
 		}
 
+		/**
+		 * Specify whether there is a user modifying settings or if an API is modifying settings.
+		 *
+		 * @param bool $interactive
+		 */
 		public static function set_interactive( $interactive ) {
 			$self = self::get_instance();
 			$self->interactive = (bool) $interactive;
 		}
 
+		/**
+		 * Is a user modifying settings or the API modifying settings (such as from Sync requests).
+		 *
+		 * @return bool
+		 */
 		public static function is_interactive() {
 			$self = self::get_instance();
 			return $self->interactive;
 		}
 
+		/**
+		 * Determine whether the current request is an Infinite WP API call.
+		 *
+		 * @return bool
+		 */
 		public static function is_iwp_call() {
 			$self = self::get_instance();
 
@@ -485,6 +585,16 @@ if ( ! class_exists( 'ITSEC_Core' ) ) {
 			return $self->is_iwp_call;
 		}
 
+		/**
+		 * Get the configured WordPress upload directory of the main site.
+		 *
+		 * This value is cached for both the lifetime of the request and possibly indefinitely when WordPress is
+		 * using an object cache.
+		 *
+		 * @see wp_upload_dir
+		 *
+		 * @return array
+		 */
 		public static function get_wp_upload_dir() {
 			$self = self::get_instance();
 
@@ -511,6 +621,12 @@ if ( ! class_exists( 'ITSEC_Core' ) ) {
 			return $self->wp_upload_dir;
 		}
 
+		/**
+		 * Set a new upload directory and ensure the previously cached value is cleared.
+		 *
+		 * @param string $old_dir
+		 * @param string $new_dir
+		 */
 		public static function update_wp_upload_dir( $old_dir, $new_dir ) {
 			$self = self::get_instance();
 
@@ -523,6 +639,13 @@ if ( ! class_exists( 'ITSEC_Core' ) ) {
 			delete_site_transient( 'itsec_wp_upload_dir' );
 		}
 
+		/**
+		 * Retrieve and/or create a directory for ITSEC to store data.
+		 *
+		 * @param string $dir Optionally specify an additional sub-directory.
+		 *
+		 * @return string
+		 */
 		public static function get_storage_dir( $dir = '' ) {
 			$self = self::get_instance();
 
@@ -549,6 +672,10 @@ if ( ! class_exists( 'ITSEC_Core' ) ) {
 		}
 
 		public static function is_ajax_request() {
+			if ( function_exists( 'wp_doing_ajax' ) ) {
+				return wp_doing_ajax();
+			}
+
 			return defined( 'DOING_AJAX' ) && DOING_AJAX;
 		}
 
@@ -556,6 +683,13 @@ if ( ! class_exists( 'ITSEC_Core' ) ) {
 			return defined( 'XMLRPC_REQUEST' ) && XMLRPC_REQUEST;
 		}
 
+		/**
+		 * Is this a WordPress REST API request.
+		 *
+		 * This function is suitable to be used immediately, not just after REST_REQUEST has been defined.
+		 *
+		 * @return bool
+		 */
 		public static function is_rest_api_request() {
 			if ( isset( $GLOBALS['__itsec_core_is_rest_api_request'] ) ) {
 				return $GLOBALS['__itsec_core_is_rest_api_request'];
@@ -578,19 +712,61 @@ if ( ! class_exists( 'ITSEC_Core' ) ) {
 
 			if ( 0 === strpos( $_SERVER['REQUEST_URI'], $rest_api_path ) ) {
 				$GLOBALS['__itsec_core_is_rest_api_request'] = true;
+			} else {
+				$GLOBALS['__itsec_core_is_rest_api_request'] = false;
+			}
+
+			return $GLOBALS['__itsec_core_is_rest_api_request'];
+		}
+
+		/**
+		 * Is this a request to wp-admin/admin-post.php?
+		 *
+		 * @return bool
+		 */
+		public static function is_admin_post_php_request() {
+			if ( 'wp-admin/admin-post.php' === ITSEC_Lib::get_request_path() ) {
 				return true;
 			}
 
-			$GLOBALS['__itsec_core_is_rest_api_request'] = false;
 			return false;
 		}
 
-		public static function is_api_request( $include_ajax = true ) {
+		/**
+		 * Is the current request being made by a WordPress API.
+		 *
+		 * @param bool $include_ajax           Whether to include Ajax requests as a subset of API requests.
+		 * @param bool $include_admin_post_php Whether to include wp-admin/admin-post.php requests as a subset of API
+		 *                                     requests.
+		 *
+		 * @return bool
+		 */
+		public static function is_api_request( $include_ajax = true, $include_admin_post_php = true ) {
 			if ( $include_ajax && self::is_ajax_request() ) {
 				return true;
 			}
 
+			if ( $include_admin_post_php && self::is_admin_post_php_request() ) {
+				return true;
+			}
+
 			if ( self::is_rest_api_request() || self::is_xmlrpc_request() ) {
+				return true;
+			}
+
+			return false;
+		}
+
+		/**
+		 * Check to see if the define to disable all active modules is set.
+		 *
+		 * Note that the ITSEC_DISABLE_MODULES should only be used to gain access to a site that you are locked out of.
+		 * Once logged in, you should remove the define to re-enable the protections offered by iThemes Security.
+		 *
+		 * @return bool true if the define is set to a truthy value, false otherwise.
+		 */
+		public static function is_temp_disable_modules_set() {
+			if ( defined( 'ITSEC_DISABLE_MODULES' ) && ITSEC_DISABLE_MODULES ) {
 				return true;
 			}
 

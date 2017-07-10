@@ -3,6 +3,26 @@
 	{
 		"selected_items":
 		[
+			[
+				"update_po",
+				"update_post_meta"
+			],
+			[
+				"wp_trim_",
+				"wp_trim_words"
+			],
+			[
+				"a",
+				"array"
+			],
+			[
+				"fun",
+				"function"
+			],
+			[
+				"admin_",
+				"admin_notices"
+			]
 		]
 	},
 	"buffers":
@@ -11,61 +31,16 @@
 			"file": "wp-content/plugins/theme-customisations/custom/functions.php",
 			"settings":
 			{
-				"buffer_size": 4804,
+				"buffer_size": 6836,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"contents": "/**\n * Add any custom CSS here.\n *\n * This file will be loaded after all other theme stylesheets.\n Theme Name:\t\tGlass House Customizations Start Here\n Author:\t\t\tDavid Trebacz\n Author URI:\t\thttps://www.trebacz.com\n Version:\t\t17.06.0\n --------------------------------------------------------------\n */\n\n\n/* Eliminate error for jet pack https://wordpress.org/support/topic/failed-to-decode-downloaded-font/ */\n.share-icon {\n    text-rendering: auto;\n}\n\n/*----- Reduce site header image height branding height and search box height */\n.site-header {\n\tpadding-top: .736em;\n}\n\n.site-header .site-branding {\n\tmargin-bottom: .617924em;\n}\n\n.site-branding, .site-search {\n\tmargin-bottom: .617924em;\n}\n\n/*----- Fix site branding font */\n.site-branding .site-title a {\n    \tfont-family: \"Source Sans Pro\", HelveticaNeue-Light, \"Helvetica Neue Light\", \"Helvetica Neue\", Helvetica, Arial, \"Lucida Grande\", sans-serif;\n\tfont-weight: 500;\n}\n\n/*----- Fix Serif fonts on headers */\nh1, h2, h3, h4, h5, h6 {\n\tfont-family: \"Source Sans Pro\", HelveticaNeue-Light, \"Helvetica Neue Light\", \"Helvetica Neue\", Helvetica, Arial, \"Lucida Grande\", sans-serif;\n\tfont-weight: 600;\n}\n\n.site-branding {\n\tborder-radius: .438em;\n\tbackground: #222;\n\tpadding-left: .313em;\n\tpadding-right: .313em;\n}\n\n/*----- Fix Header Site Branding width */\n@media screen and (min-width: 768px) {\n\t.site-header .site-branding, .site-header .site-logo-anchor, .site-header .site-logo-link, .site-header .custom-logo-link {\n\t\twidth: 31.5%;\n\t/* Adjust this percentage up or down to make the logo larger or smaller. */\n\t}\n}\n\n/* Make header search box wider */\n@media screen and (min-width: 768px){\n\t.woocommerce-active .site-header .site-search {width: 35.73913%;}\n}\n\n/*----- Fix Mobile Menu Background color and round corners */\n.main-navigation.toggled .handheld-navigation, .main-navigation.toggled .menu>ul:not(.nav-menu), .main-navigation.toggled ul[aria-expanded=true] {\n\tbackground-color: #212121;\n\tborder-top-left-radius: .438em;\n\tborder-bottom-left-radius: .438em;\n\tborder-bottom-right-radius: .438em;\n}\n\n/*----- Fix Mobile Menu padding */\n.handheld-navigation ul {\n\tmargin-left: .35em;\n\tmargin-right: .35em;\n}\n\n/*----- Fix to reduce crumb trail height for desktop only and bottom padding*/\n@media screen and (min-width: 768px) {\n\t.header-widget-region .col-full {\n\t\tpadding: 1.236em 5.874em .236em;\n\t}\n}\n\n.hentry .entry-header {\n\tmargin-bottom: 1.631em;\n}\n\n.woocommerce-breadcrumb {is a local staged file untracked in git\n\tmargin-bottom: 1.236em;\n}\n\n/*----- Fix Submenu item height */\n@media screen and (min-width: 768px) {\n\t.main-navigation ul.menu ul li a, .main-navigation ul.nav-menu ul li a {\n\t\tpadding: .275em 1.41575em;\n\t}\n}\n\n/*----- Fix Submenu rounded bottom corners */\n@media screen and (min-width: 768px) {\n\t.main-navigation ul li.focus>ul, .main-navigation ul li:hover>ul, .secondary-navigation ul li.focus>ul, .secondary-navigation ul {\n\t\tborder-bottom-left-radius: .438em;\n\t\tborder-bottom-right-radius: .438em;\n\t}\n}\n\n/*----- Fix Submenu hover color and bottom rounded corners */\n@media screen {\n\t.main-navigation ul.menu ul a:hover, .main-navigation ul.menu ul li:hover>a, .main-navigation ul.nav-menu ul a:hover, .main-navigation ul.nav-menu ul li:hover>a {\n\t\tbackground-color: rgb(55,55,55);\n\t\tborder-bottom-left-radius: .438em;\n\t\tborder-bottom-right-radius: .438em;\n\t}\n}\n\n/*----- Fix Menu non active color */\n@media screen {\n\t.main-navigation ul li a, .site-title a, ul.menu li a, .site-branding h1 a, .site-footer .storefront-handheld-footer-bar a:not(.button), button.menu-toggle, button.menu-toggle:hover {\n\t\tcolor: #b5b1b1;\n\t}\n}\n\n/*----- Fix for price on category pages being grey 11-29-2016 */\nul.products li.product .price {\n\tcolor: #fff !important;\n}\n\n/*----- Fix for WooCommerce error message size at top of cart */\n.woocommerce-info, .woocommerce-message {\n    padding: .3em 0.618em;\n    margin-bottom: 0.917924em;\n}\n\n/*----- Fix Checkout shipping method width */\n@media screen and (min-width: 768px)\n{\n.shop_table.woocommerce-checkout-review-order-table .product-name {\n    width: 59.82%;\n}\n}\n\n/* Fix grey box on stripe credit card checkout form table tbody tr:nth-child(2n) td,fieldset,fieldset legend{background-color:transparent} */\nfieldset#wc-stripe-cc-form {\n\tbackground-color: transparent;\n}\n.wc_payment_method { \n\tbackground-color: #fff !important;\n}\n\n/*----- Fix height of bottom of content on page */\n.hentry {\n\tmargin: 0 0 2.236em;\n\tpadding-bottom: .631em;\n}\n\n/*----- Fix Footer Menu and change colors reduce height */\n@media screen and (min-width: 768px) {\n\t.footer-widgets {\n\t\tpadding-top: .236em;\n\t}\n}\n\n@media screen and (min-width: 768px) {\n\t.footer-widgets.col-4 .block.footer-widget-4 {\n\t\tmargin-bottom: .335em;\n\t}\n}\n\n@media screen and (min-width: 768px) {\n\t.block.footer-widget-4 aside#text-4, .block.footer-widget-3 aside#text-5, .block.footer-widget-2 aside#text-6 {\n\t\tmargin-bottom: .237em;\n\t}\n}\n\n.site-footer a:not(.button) {\n\tcolor: #777;\n}\n\n/*----- Fix Footer Site Branding reduce height */\n@media screen and (min-width: 768px) {\n\t.site-content .col-full, .site-footer .col-full {\n\t\tpadding: .236em 5.874em;\n\t}\n}\n\n@media screen and (min-width: 768px) {\n\t.content-area, .widget-area {\n\t\tmargin-bottom: .618em;\n\t}\n}\n\n/*----- Fix Footer height hide the Google Remarketing and Facebook tag */\ndiv#text-8, div#text-9 {\n\tdisplay: none;\n}\n\n/*----- Fix Footer align 4 and 5 widget text areas to look better on desktop */\n@media screen and (min-width: 1024px) {\n\tdiv#text-5 {\n\t\tmargin-left: -7em;\n\t}\n}\n\n@media screen and (min-width: 1024px) {\n\tdiv#text-4 {\n\t\tmargin-left: 2.8em;\n\t}\n}\n\n/*----- Removed Site info from bottom of page */\n.site-info {\n\tdisplay: none;\n}\n\n/*----- Fix for MailPoet Spacing on Forms */\np.wysija-paragraph {\n\tmargin: 0 0 .5em;\n}\n\n/*----- Fix for Contact 7 Spacing on Forms */\n.wpcf7-form p {\n\tmargin: 0 0 .5em;\n}\n\n.wpcf7-form input {\n\tborder-radius: 7px;\n}\n\n.wpcf7-form textarea {\n\tborder-radius: .438em;\n\theight: 4em;\n}\n\n/*----- Fix for Contact 7 field width on small screens */\ndiv.wpcf7 .wpcf7-form-control {\n\tmax-width: 100%;\n}",
-			"file": "wp-content/plugins/theme-customisations/custom/style.css",
-			"file_size": 6286,
-			"file_write_time": 131431547038177072,
+			"file": "wp-content/plugins/woocommerce/includes/data-stores/class-wc-product-data-store-cpt.php",
 			"settings":
 			{
-				"buffer_size": 6051,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "wp-content/plugins/woocommerce/includes/class-wc-structured-data.php",
-			"settings":
-			{
-				"buffer_size": 14983,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "wp-content/plugins/you-tube-analytics/lunametrics-youtube.gtm.js",
-			"settings":
-			{
-				"buffer_size": 11006,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "wp-content/plugins/woocommerce/includes/abstracts/abstract-wc-product.php",
-			"settings":
-			{
-				"buffer_size": 49196,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "wp-config.php",
-			"settings":
-			{
-				"buffer_size": 3721,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "wp-content/plugins/woocommerce/templates/content-single-product.php",
-			"settings":
-			{
-				"buffer_size": 2379,
+				"buffer_size": 45915,
 				"line_ending": "Unix"
 			}
 		},
@@ -161,11 +136,28 @@
 		"/home/david/Public/www/GlassHouseStore_com",
 		"/home/david/Public/www/GlassHouseStore_com/wp-content",
 		"/home/david/Public/www/GlassHouseStore_com/wp-content/plugins",
-		"/home/david/Public/www/GlassHouseStore_com/wp-content/plugins/you-tube-analytics"
+		"/home/david/Public/www/GlassHouseStore_com/wp-content/plugins/wonderm00ns-simple-facebook-open-graph-tags",
+		"/home/david/Public/www/GlassHouseStore_com/wp-content/plugins/wonderm00ns-simple-facebook-open-graph-tags/admin",
+		"/home/david/Public/www/GlassHouseStore_com/wp-content/plugins/wonderm00ns-simple-facebook-open-graph-tags/includes",
+		"/home/david/Public/www/GlassHouseStore_com/wp-content/plugins/wonderm00ns-simple-facebook-open-graph-tags/public",
+		"/home/david/Public/www/GlassHouseStore_com/wp-content/plugins/woocommerce",
+		"/home/david/Public/www/GlassHouseStore_com/wp-content/plugins/woocommerce/includes",
+		"/home/david/Public/www/GlassHouseStore_com/wp-content/plugins/woocommerce/includes/data-stores",
+		"/home/david/Public/www/GlassHouseStore_com/wp-content/themes",
+		"/home/david/Public/www/GlassHouseStore_com/wp-content/themes/boutique",
+		"/home/david/Public/www/GlassHouseStore_com/wp-content/themes/storefront"
 	],
 	"file_history":
 	[
+		"/home/david/Public/www/GlassHouseStore_com/wp-content/themes/boutique/404.php",
+		"/home/david/Public/www/GlassHouseStore_com/wp-content/plugins/theme-customisations/custom/style.css",
 		"/home/david/Public/www/GlassHouseStore_com/wp-content/plugins/woocommerce/includes/class-wc-structured-data.php",
+		"/home/david/Public/www/GlassHouseStore_com/wp-content/plugins/facebook-for-woocommerce/facebook-commerce.php",
+		"/home/david/Public/www/GlassHouseStore_com/wp-content/plugins/woocommerce-example-plugin/woocommerce-example-plugin.php",
+		"/home/david/Public/www/GlassHouseStore_com/wp-content/plugins/woocommerce/templates/content-single-product.php",
+		"/home/david/Public/www/GlassHouseStore_com/wp-config.php",
+		"/home/david/Public/www/GlassHouseStore_com/wp-content/plugins/woocommerce/includes/abstracts/abstract-wc-product.php",
+		"/home/david/Public/www/GlassHouseStore_com/backupbuddy_deploy_undo-ar8f3yuc46.php",
 		"/home/david/Public/www/GlassHouseStore_com/phpinfo.php.trebacz",
 		"/home/david/Public/www/GlassHouseStore_com/wp-content/plugins/woocommerce/includes/data-stores/class-wc-product-data-store-cpt.php",
 		"/home/david/Public/www/GlassHouseStore_com/wp-content/plugins/woocommerce/includes/data-stores/class-wc-order-item-data-store.php",
@@ -176,7 +168,7 @@
 	],
 	"find":
 	{
-		"height": 34.0
+		"height": 22.0
 	},
 	"find_in_files":
 	{
@@ -191,6 +183,11 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"?>",
+			"debug",
+			"setting",
+			"in",
+			"sett",
 			"opcache.php",
 			"where",
 			"wc where",
@@ -216,7 +213,7 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 0,
 			"sheets":
 			[
 				{
@@ -225,15 +222,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4804,
+						"buffer_size": 6836,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4804,
-								4804
+								3996,
+								3996
 							]
 						],
 						"settings":
@@ -241,183 +238,39 @@
 							"syntax": "Packages/PHP/PHP.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 1890.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "wp-content/plugins/theme-customisations/custom/style.css",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 6051,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								4205,
-								4205
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/CSS/CSS.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 1788.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "wp-content/plugins/woocommerce/includes/class-wc-structured-data.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 14983,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								7348,
-								7348
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 3150.0,
+						"translation.y": 1414.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 3,
-					"file": "wp-content/plugins/you-tube-analytics/lunametrics-youtube.gtm.js",
-					"semi_transient": true,
+					"buffer": 1,
+					"file": "wp-content/plugins/woocommerce/includes/data-stores/class-wc-product-data-store-cpt.php",
+					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 11006,
+						"buffer_size": 45915,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								27742,
+								27742
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1665.0,
+						"translation.y": 10942.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "wp-content/plugins/woocommerce/includes/abstracts/abstract-wc-product.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 49196,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								6413,
-								6413
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 595.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 7,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "wp-config.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3721,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 5,
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "wp-content/plugins/woocommerce/templates/content-single-product.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2379,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1912,
-								1912
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 673.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 8,
 					"type": "text"
 				}
 			]
@@ -427,7 +280,7 @@
 			"sheets":
 			[
 				{
-					"buffer": 7,
+					"buffer": 2,
 					"semi_transient": false,
 					"settings":
 					{
@@ -455,7 +308,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 8,
+					"buffer": 3,
 					"semi_transient": false,
 					"settings":
 					{
@@ -479,7 +332,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 4,
 					"type": "text"
 				}
 			]
@@ -489,7 +342,7 @@
 			"sheets":
 			[
 				{
-					"buffer": 9,
+					"buffer": 4,
 					"semi_transient": false,
 					"settings":
 					{
@@ -513,11 +366,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 10,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
-					"buffer": 10,
+					"buffer": 5,
 					"semi_transient": false,
 					"settings":
 					{
@@ -541,7 +394,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
+					"stack_index": 2,
 					"type": "text"
 				}
 			]
@@ -549,7 +402,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 23.0
+		"height": 22.0
 	},
 	"input":
 	{
@@ -604,7 +457,7 @@
 	"project": "glasshousestore.sublime-project",
 	"replace":
 	{
-		"height": 42.0
+		"height": 40.0
 	},
 	"save_all_on_build": true,
 	"select_file":

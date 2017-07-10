@@ -1,9 +1,9 @@
 === iThemes Security (formerly Better WP Security) ===
 Contributors: ithemes, chrisjean, gerroald, mattdanner
 Tags: security, security plugin, malware, hack, secure, block, SSL, admin, htaccess, lockdown, login, protect, protection, anti virus, attack, injection, login security, maintenance, permissions, prevention, authentication, administration, password, brute force, ban, permissions, bots, user agents, xml rpc, security log
-Requires at least: 4.5
-Tested up to: 4.7.3
-Stable tag: 6.2.1
+Requires at least: 4.6
+Tested up to: 4.8
+Stable tag: 6.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -187,6 +187,41 @@ Free support may be available with the help of the community in the <a href="htt
 5. Free malware scan powered by Sucuri SiteCheck.
 
 == Changelog ==
+
+= 6.3.0 =
+ * Important: The way that Hide Backend functions changes in this release. Previously, if your Hide Backend Login Slug was wplogin, going to example.com/wplogin would result in the URL remaining example.com/wplogin. The new implementation of this feature results in a redirect to a URL that looks as follows: example.com/wp-login.php?itsec-hb-token=wplogin. While this may not be desireable for some users, this change was necessary to fix longstanding compatibility issues with other plugins. Once you access the login page using the Login Slug page, a cookie is set with an expiration time of one hour. As long as the cookie remains, you can access example.com/wp-login.php without having to access the Hide Backend Login Slug first. If you wish to confirm that Hide Backend is working properly on your site, opening up a private browsing window is a quick way to test without having to log out and clear cookies.
+ * New Feature: Added support for iThemes Sync to run the Security Check feature from inside the Sync service.
+ * New Feature: Added support for the ITSEC_DISABLE_MODULES define.
+ * Bug Fix: Removed warning: "Non-static method ITSEC_Setup::uninstall() should not be called statically".
+ * Bug Fix: Fixed the ability to manually enter a page number to navigate to on the Security > Logs page.
+ * Bug Fix: Fixed source of warning that could appear when creating a backup while running a PHP version less than 5.4.
+ * Bug Fix: Fixed source of notice that could appear when reseting a user's password when the Strong Passwords Enforcement feature is enabled.
+ * Bug Fix: Fixed bugs that prevented reporting of specific error messages related to updating the wp-config.php file.
+ * Bug Fix: Fixed an infinite loop that could occur when expiring a cookie and Hide Backend is enabled.
+ * Bug Fix: Fixed compatibility issue with the Jetpack plugin when Hide Backend is enabled which could prevent Jetpack from redirecting users to the wordpress.com login page.
+ * Bug Fix: Fixed issue where access to wp-admin/admin-post.php when Hide Backend is enabled.
+ * Bug Fix: Fixed issue that could prevent "Register" and "Lost your password?" links from working properly on the login page when Hide Backend is enabled.
+ * Bug Fix: Fix fatal error when updating a profile.
+ * Bug Fix: Fix strong passwords not being recognized as strong on the profile page.
+ * Bug Fix: Fix fatal error when registering a new user without specifying a role ( iThemes Exchange ).
+ * Bug Fix: Compatability with JetPack SSO and Password Requirements.
+ * Bug Fix: Ensure viewport meta is defined when loading the password requirements update password form.
+ * Bug Fix: Hide Backend is now compatible with Jetpack Single Sign On.
+ * Bug Fix: Hide Backend now hides registration pages on multisite sites.
+ * Bug Fix: Fixed password-protected posts not properly handling the password when Hide Backend is enabled.
+ * Enhancement: Removed AhrefsBot from the HackRepair blacklist as they are legitimate bot.
+ * Enhancement: Improved efficiency of Hide Backend code, increasing site performance when the feature is enabled.
+ * Enhancement: Enforce strong passwords during log-in. Can be disabled via the ITSEC_DISABLE_PASSWORD_REQUIREMENTS constant.
+ * Enhancement: Use canonical roles library to determine if a new user or an updated role requires a strong password.
+ * Enhancement: Introduce password requirements module to centralize handling of password updates.
+ * Enhancement: The Hide Backend hidden login URL is no longer leaked by password-protected content.
+ * Enhancement: Allow for searching through modules and settings.
+ * Enhancement: Link to other module settings pages without forcing the page to refresh.
+ * Enhancement: Fire an action, "itsec_change_admin_user_id", when the admin user id changes.
+ * Enhancement: Changed default Hide Backend Register Slug from wp-register.php to wp-signup.php since WordPress switched from using wp-register.php to wp-signup.php for registrations. This will not affect existing sites.
+ * Enhancement: Hide Backend functions purely in PHP code now rather than relying half on PHP code and half on .htaccess and nginx.conf modifications. This allows Hide Backend to function on web servers and server configurations that it was previously not compatible with.
+ * Misc: Updated or added phpDoc to many functions.
+ * Misc: Updated Disable File Locking description.
 
 = 6.2.1 =
  * Bug Fix: When a requesting IP address cannot be found, default to 127.0.0.1. This fixes issues with some alternate cron setups.
@@ -1666,5 +1701,5 @@ This release is a complete rewrite from the ground up. Special thanks to Cory Mi
 
 == Upgrade Notice ==
 
-= 6.2.1 =
-Version 6.2.1 contains important bug fixes. It is recommended for all users.
+= 6.3.0 =
+Version 6.3.0 contains important bug and compatibility fixes. It is recommended for all users.

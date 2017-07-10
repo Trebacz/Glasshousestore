@@ -139,6 +139,15 @@ final class ITSEC_Admin_User_Validator extends ITSEC_Validator {
 				$wpdb->query( "UPDATE `" . $wpdb->comments . "` SET user_id = '" . $new_user . "' WHERE user_id = 1;" );
 				$wpdb->query( "UPDATE `" . $wpdb->links . "` SET link_owner = '" . $new_user . "' WHERE link_owner = 1;" );
 
+				/**
+				 * Fires when the admin user with id of #1 has been changed.
+				 *
+				 * @since 6.3.0
+				 *
+				 * @param int $new_user The new user's ID.
+				 */
+				do_action( 'itsec_change_admin_user_id', $new_user );
+
 				$itsec_files->release_file_lock( 'admin_user' );
 
 				return true;

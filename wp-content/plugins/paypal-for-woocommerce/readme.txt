@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: woocommerce, paypal, express checkout, payments pro, angelleye, payflow, dodirectpayment, braintree, payments advanced, rest
 Requires at least: 3.8
 Tested up to: 4.7.5
-Stable tag: 1.4.5
+Stable tag: 1.4.5.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -120,6 +120,18 @@ Automatic updates should work great for you.  As always, though, we recommend ba
 * If you are unsure, you may need to [contact PayPal](https://www.paypal.com/us/webapps/helpcenter/helphub/home/) and request the information.  Just let them know you need to enable a Payments Pro plugin on your website, but you're unsure whether you should use Website Payments Pro 3.0(DoDirectPayment) or Payments Pro 2.0 (PayFlow).  They can confirm which one you need to use.
 
 == Changelog ==
+
+= 1.4.5.1 - 07.07.2017 =
+* Tweak - Adds shipping company name from WooCommerce checkout page to PayPal shipping address (name). ([#792](https://github.com/angelleye/paypal-woocommerce/issues/792))
+* Tweak - Adds custom class for calculating totals in all gateways to avoid conflicts with WC and PayPal calculations. ([#767](https://github.com/angelleye/paypal-woocommerce/issues/767))
+* Tweak - Ensures a Billing Agreement is always included with Express Checkout for Woo Subscription products. ([#789](https://github.com/angelleye/paypal-woocommerce/issues/789))
+* Tweak - Adds an admin notice any time your settings would require a PayPal Express Checkout Billing agreement. ([#788](https://github.com/angelleye/paypal-woocommerce/issues/788))
+* Tweak - Ignores option to "Set billing to the same as shipping" when the WooCommerce checkout page is used with Express Checkout. ([#796](https://github.com/angelleye/paypal-woocommerce/issues/796))
+* Fix - Resolves a PHP fatal error. ([#762](https://github.com/angelleye/paypal-woocommerce/issues/762))
+* Fix - More adjustments to Express Checkout shipping address. ([#765](https://github.com/angelleye/paypal-woocommerce/issues/765))
+* Fix - Resolves some PHP warnings / failures. ([#781](https://github.com/angelleye/paypal-woocommerce/issues/781))
+* Fix - Resolves a conflict between our "PayPal for WooCommerce" and "PayPal Plus for WooCommerce" review screens. ([#779](https://github.com/angelleye/paypal-woocommerce/issues/779))
+* Fix - Resolves conflict with Woo Germanized plugin. ([#764](https://github.com/angelleye/paypal-woocommerce/issues/764))
 
 = 1.4.5 - 06.06.2017 =
 * Tweak - Adds a note to the settings panel about the new product-level option for enabling Express Checkout. ([#729](https://github.com/angelleye/paypal-woocommerce/issues/729))

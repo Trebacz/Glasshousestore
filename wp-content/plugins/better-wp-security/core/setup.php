@@ -76,7 +76,6 @@ final class ITSEC_Setup {
 
 
 		// Ensure that the database tables are present and updated to the current schema.
-		require_once( ITSEC_Core::get_core_dir() . '/class-itsec-lib.php' );
 		ITSEC_Lib::create_database_tables();
 
 		// Run activation routines for modules to ensure that they are properly set up.
@@ -144,7 +143,7 @@ final class ITSEC_Setup {
 
 	}
 
-	private function uninstall() {
+	private static function uninstall() {
 
 		global $wpdb;
 

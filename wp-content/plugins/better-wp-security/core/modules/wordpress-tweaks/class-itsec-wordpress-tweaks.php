@@ -91,7 +91,7 @@ final class ITSEC_WordPress_Tweaks {
 		if ( 2 == $this->settings['disable_xmlrpc'] ) {
 			add_filter( 'xmlrpc_enabled', '__return_null' );
 			add_filter( 'bloginfo_url', array( $this, 'remove_pingback_url' ), 10, 2 );
-		} else if ( 1 == $this->settings['disable_xmlrpc'] ) {
+		} else if ( 1 == $this->settings['disable_xmlrpc'] ) { // Disable pingbacks
 			add_filter( 'xmlrpc_methods', array( $this, 'xmlrpc_methods' ) );
 		}
 
@@ -122,7 +122,17 @@ final class ITSEC_WordPress_Tweaks {
 		}
 	}
 
-	public function filter_rest_dispatch_request( $result, $request, $route_schema, $handler ) {
+	/**
+	 * Require capabilities for reading from WordPress object routes.
+	 *
+	 * @param null|WP_REST_Response|WP_Error $result
+	 * @param WP_REST_Request                $request
+	 * @param string                         $route_regex
+	 * @param array                          $handler
+	 *
+	 * @return WP_Error
+	 */
+	public function filter_rest_dispatch_request( $result, $request, $route_regex, $handler ) {
 		if ( in_array( $this->settings['rest_api'], array( 'enable', 'default-access' ) ) ) {
 			return $result;
 		}
@@ -242,6 +252,15 @@ final class ITSEC_WordPress_Tweaks {
 		wp_enqueue_script( 'itsec-wt-block-tabnapping', plugins_url( 'js/block-tabnapping.js', __FILE__ ), array( 'blankshield' ), ITSEC_Core::get_plugin_build(), true );
 	}
 
+	/**
+	 * Prevent an attacker from trying multiple login credentials in a single XML-RPC request.
+	 *
+	 * @param WP_User|WP_Error|null $filter_val
+	 * @param string                $username
+	 * @param string                $password
+	 *
+	 * @return null|\WP_User|\WP_Error
+	 */
 	public function block_multiauth_attempts( $filter_val, $username, $password ) {
 		if ( empty( $this->first_xmlrpc_credentials ) ) {
 			$this->first_xmlrpc_credentials = array(
@@ -261,11 +280,16 @@ final class ITSEC_WordPress_Tweaks {
 		die( __( 'XML-RPC services are disabled on this site.' ) );
 	}
 
+	/**
+	 * Attempt to force the core version of jQuery to be loaded.
+	 *
+	 * This will deregister the current version of jQuery and re-enqueue with the core version of the script.
+	 *
+	 * This could probably be refactored to use the 'script_loader_src' filter.
+	 */
 	public function current_jquery() {
 
-		global $itsec_is_old_admin;
-
-		if ( ! is_admin() && ! $itsec_is_old_admin ) {
+		if ( ! is_admin() ) {
 
 			wp_deregister_script( 'jquery' );
 			wp_deregister_script( 'jquery-core' );
@@ -300,9 +324,15 @@ final class ITSEC_WordPress_Tweaks {
 	}
 
 	/**
-	 * Requires a unique nicename on profile update or activate.
+	 * Requires a user's nicename to be distinct from their username.
+	 *
+	 * This helps to prevent username leaking.
 	 *
 	 * @since 4.0
+	 *
+	 * @param \WP_Error $errors
+	 * @param bool      $update
+	 * @param \WP_User  $user
 	 *
 	 * @return void
 	 */

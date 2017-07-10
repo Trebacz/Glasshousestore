@@ -40,6 +40,7 @@ var itsecSettingsPage = {
 		$container.on( 'itsec-popstate', '.itsec-module-filter a', this.filterView );
 		$container.on( 'click', '.itsec-settings-view-toggle a', this.toggleView );
 //		$container.on( 'click', '.itsec-toggle-settings, .itsec-module-card-content h2', this.toggleSettings );
+		$container.on( 'click', 'a[data-module-link]', this.openModuleFromLink );
 		$container.on( 'click', '.list .itsec-module-card:not(.itsec-module-pro-upsell) .itsec-module-card-content, .itsec-toggle-settings, .itsec-module-settings-cancel', this.toggleSettings );
 		$container.on( 'itsec-popstate', '.list .itsec-module-card-content, .itsec-toggle-settings', this.toggleSettings );
 		$container.on( 'click', '.itsec-close-modal, .itsec-modal-background', this.closeGridSettingsModal );
@@ -291,6 +292,35 @@ var itsecSettingsPage = {
 		$cardContainer.fadeIn( 100 );
 	},
 
+	openModuleFromLink: function( e ) {
+
+		var $link = jQuery( this ), module = $link.data( 'module-link' ),
+			$module = jQuery( '.itsec-module-card[data-module-id="' + module + '"]' );
+
+		if ( ! $module.length ) {
+			return; // safety check
+		}
+
+		e.preventDefault();
+
+		jQuery( '.itsec-module-settings-container:visible' ).hide();
+
+		var $listClassElement = $module.parents( '.itsec-module-cards-container' ),
+			$toggleButton = $module.find( '.itsec-toggle-settings' );
+
+		console.log( $toggleButton );
+
+		if ( $listClassElement.hasClass( 'list' ) ) {
+			itsecSettingsPage.toggleListSettingsCard.call( $toggleButton, e );
+		} else if ( $listClassElement.hasClass( 'grid' ) ) {
+			itsecSettingsPage.showGridSettingsModal.call( $toggleButton, e );
+		}
+
+		var type = $module.hasClass( 'itsec-module-type-advanced' ) ? 'advanced' : 'recommended';
+
+		window.history.pushState( {module: module}, module, '?page=itsec&module=' + module + '&module_type=' + type );
+	},
+
 	toggleSettings: function( e ) {
 		e.stopPropagation();
 
@@ -323,7 +353,28 @@ var itsecSettingsPage = {
 			$container = $container.parents( '.itsec-module-card' ).find( '.itsec-module-card-content' );
 		}
 
-		$container.siblings( '.itsec-module-settings-container' ).stop().slideToggle( 300 );
+		var $settings = $container.siblings( '.itsec-module-settings-container' ),
+			isVisible = $settings.is( ':visible' );
+		$settings.stop().slideToggle( 300 );
+
+		if ( ! isVisible ) {
+			var $highlighted = jQuery( '.itsec-highlighted-setting', $settings );
+
+			if ( $highlighted.length ) {
+				setTimeout( function () {
+					jQuery.scrollTo( $highlighted.first(), 'swing', {
+						offset: { top: -30 },
+						onAfter: function() {
+							var $el = jQuery( 'input[type!="button"], textarea, select', $highlighted ).not( ':hidden' ).first();
+							itsecSettingsPage.focus( $el, $highlighted );
+						}
+					} );
+				}, 50 );
+			} else {
+				var $el = jQuery( 'input[type!="button"], textarea, select', $settings ).not( ':hidden' ).first();
+				itsecSettingsPage.focus( $el, $settings );
+			}
+		}
 
 		var $button = $container.find( '.itsec-toggle-settings' );
 
@@ -353,23 +404,46 @@ var itsecSettingsPage = {
 	showGridSettingsModal: function( e ) {
 		e.preventDefault();
 
-		var $settingsContainer = jQuery(this).parents( '.itsec-module-card' ).find( '.itsec-module-settings-container' ),
+		var $module = jQuery(this).parents( '.itsec-module-card' ),
+			$settingsContainer = $module.find( '.itsec-module-settings-container' ),
 			$modalBackground = jQuery( '.itsec-modal-background' );
 
-		$modalBackground.show();
-		$settingsContainer
-			.show()
-			.find( '.itsec-close' )
-			.focus();
+		$module.show();
+
+		$modalBackground.fadeIn();
+		$settingsContainer.fadeIn( 200 );
 
 		jQuery( 'body' ).addClass( 'itsec-modal-open' );
 
+		var $highlighted = jQuery( '.itsec-highlighted-setting', $module ).first();
 
-/*		if ( jQuery(e.currentTarget).hasClass( 'page-title-action' ) ) {
-			$modal.first().find( '.hidden' ).removeClass( 'hidden' );
+		if ( $highlighted.length ) {
+			jQuery( '.itsec-module-settings-content-container', $module ).scrollTo( $highlighted, 'swing', {
+				offset: { top: -20 },
+				onAfter: function() {
+					var $el = jQuery( 'input[type!="button"], textarea, select', $highlighted ).not( ':hidden' ).first();
+					itsecSettingsPage.focus( $el, $highlighted );
+				}
+			} );
 		} else {
-			$modal.first().find( '.itsec-right, .itsec-left' ).addClass( 'hidden' );
-		}*/
+			var $el = jQuery( 'input[type!="button"], textarea, select', $settingsContainer ).not( ':hidden' ).first();
+			itsecSettingsPage.focus( $el, $settingsContainer );
+		}
+	},
+
+	focus: function( $el, $fallback ) {
+		if ( itsecSettingsPage.isElementVisible( $el ) && jQuery( window ).height() > 800 ) {
+			$el.focus();
+		} else {
+			$fallback.prop( 'tabindex', -1 ).focus();
+		}
+	},
+
+	isElementVisible: function( $el ) {
+
+		var $window = jQuery( window ), height = $window.height(), width = $window.width(), offset = $el.offset();
+
+		return offset.top < height && offset.left < width;
 	},
 
 	closeGridSettingsModal: function( e ) {
@@ -382,8 +456,8 @@ var itsecSettingsPage = {
 			}
 		}
 
-		jQuery( '.itsec-modal-background' ).hide();
-		jQuery( '.itsec-module-settings-container' ).hide();
+		jQuery( '.itsec-modal-background' ).fadeOut();
+		jQuery( '.itsec-module-settings-container' ).fadeOut( 200 );
 		jQuery( 'body' ).removeClass( 'itsec-modal-open' );
 
 		if ( 'undefined' === typeof e || 'popstate' !== e.type ) {
@@ -392,6 +466,10 @@ var itsecSettingsPage = {
 				module_type = 'recommended';
 			}
 			window.history.pushState( {'module':'', 'module_type':module_type}, module_type, '?page=itsec&module_type=' + module_type );
+		}
+
+		if ( jQuery( '#search' ).val().length ) {
+			jQuery( '#search' ).focus();
 		}
 	},
 
@@ -678,7 +756,7 @@ var itsecSettingsPage = {
 	}
 };
 
-jQuery(document).ready(function() {
+jQuery(document).ready(function( $ ) {
 	itsecSettingsPage.init();
 
 	if ( itsec_page.show_security_check ) {
@@ -714,5 +792,90 @@ jQuery(document).ready(function() {
 
 		jQuery( '.ui-dialog :button' ).blur();
 
+	} );
+
+	var regex = /[^\w]/ig;
+
+	var $search = $( '#search' ), $cardsContainer = $( '.itsec-module-cards' ),
+		$cards = $( '.itsec-module-card', $cardsContainer ),
+		$searchFilter = $( '#itsec-module-filter-search' ),
+		$currentFilter = $( '.itsec-feature-tabs .current' ).parent();
+
+	$search.on( 'input', _.debounce( function () {
+		var query = $search.val().trim().replace( regex, ' ' );
+
+		var $maybeCurrent = $( '.itsec-feature-tabs .current' ).parent();
+
+		if ( $maybeCurrent && $maybeCurrent.prop( 'id' ) !== 'itsec-module-filter-search' ) {
+			$currentFilter = $maybeCurrent;
+		}
+
+		$( '.itsec-highlighted-setting', $cards ).removeClass( 'itsec-highlighted-setting' );
+
+		if ( !query.length ) {
+			$searchFilter.addClass( 'hide-if-js' );
+			$( 'a', $searchFilter ).removeClass( 'current' );
+			$( 'a', $currentFilter ).addClass( 'current' );
+
+			var type = $currentFilter.prop( 'id' ).substr( 20 );
+
+			if ( 'all' === type ) {
+				$cards.show();
+			} else {
+				$( '.itsec-module-type-' + type ).show();
+				$( '.itsec-module-card' ).not( '.itsec-module-type-' + type ).hide();
+			}
+
+			return;
+		}
+
+		var $titleMatches = $( ".itsec-module-card-content > h2:itsecContains('" + query + "')", $cards ),
+			$titleMatchesCards = $titleMatches.parents( '.itsec-module-card' );
+
+		var $descriptionMatches = $( ".itsec-module-card-content > p:itsecContains('" + query + "')", $cards ),
+			$descriptionMatchesCards = $descriptionMatches.parents( '.itsec-module-card' );
+
+		var $settingMatches = $( ".itsec-module-settings-container .form-table tr > th > label:itsecContains('" + query + "')", $cards ),
+			$settingMatchesCards = $settingMatches.parents( '.itsec-module-card' );
+
+
+		var $matches = $titleMatchesCards.add( $descriptionMatchesCards ).add( $settingMatchesCards );
+
+		$searchFilter.removeClass( 'hide-if-js' );
+		$( 'a', $currentFilter ).removeClass( 'current' );
+		$( 'a', $searchFilter ).addClass( 'current' );
+		$( '.count', $searchFilter ).text( '(' + $matches.length + ')' );
+
+		$cards.hide();
+		$matches.show();
+
+		$settingMatches.parents( 'tr' ).addClass( 'itsec-highlighted-setting' );
+
+		if ( $matches.length === 1 ) {
+			$( '.itsec-toggle-settings', $matches.first() ).click();
+		}
+
+	}, 250 ) );
+
+	$.expr[":"].itsecContains = $.expr.createPseudo( function ( arg ) {
+
+		return function ( elem ) {
+
+			var candidate = $( elem ).text().toUpperCase().replace( regex, ' ' ), term = arg.toUpperCase();
+			var index = candidate.indexOf( term );
+
+			if ( index === -1 ) {
+				return false;
+			}
+
+			if ( index === 0 ) {
+				return true;
+			}
+
+			var prior = candidate.charAt( index - 1 ), next = candidate.charAt( term.length + index );
+
+			// full word
+			return prior === ' ' && ( next === ' ' || next === '' );
+		};
 	} );
 });

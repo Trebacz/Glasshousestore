@@ -2,7 +2,7 @@
 
 
 final class ITSEC_Settings_Page {
-	private $version = 1.4;
+	private $version = 1.5;
 
 	private $self_url = '';
 	private $modules = array();
@@ -83,7 +83,8 @@ final class ITSEC_Settings_Page {
 			}
 		}
 
-		wp_enqueue_script( 'itsec-settings-page-script', plugins_url( 'js/script.js', __FILE__ ), array(), $this->version, true );
+		wp_enqueue_script( 'itsec-scrollTo', plugins_url( 'js/scrollTo.js', dirname( __FILE__ ) ), array( 'jquery' ) );
+		wp_enqueue_script( 'itsec-settings-page-script', plugins_url( 'js/script.js', __FILE__ ), array( 'underscore' ), $this->version, true );
 		wp_localize_script( 'itsec-settings-page-script', 'itsec_page', $vars );
 	}
 
@@ -465,8 +466,12 @@ final class ITSEC_Settings_Page {
 							<a class="itsec-grid<?php if ( 'grid' === $view ) { echo ' itsec-selected'; } ?>"><span class="dashicons dashicons-grid-view"></span></a>
 							<a class="itsec-list<?php if ( 'list' === $view ) { echo ' itsec-selected'; } ?>"><span class="dashicons dashicons-list-view"></span></a>
 						</div>
+						<div class="itsec-module-search">
+							<input type="search" placeholder="<?php esc_attr_e( 'Search Modules', 'better-wp-security' ); ?>" id="search" spellcheck="false" autocomplete="off" autofill="off" x-autocomplete="false">
+						</div>
 						<ul class="subsubsub itsec-feature-tabs hide-if-no-js">
 							<?php echo implode( $feature_tabs, " |</li>\n" ) . "</li>\n"; ?>
+							<li class="itsec-module-filter hide-if-js" id="itsec-module-filter-search">| <a><?php esc_html_e( 'Search', 'better-wp-security' ); ?></a> <span class="count"></span></li>
 						</ul>
 					</div>
 					<div class="itsec-module-cards-container <?php echo $view; ?> hide-if-js">

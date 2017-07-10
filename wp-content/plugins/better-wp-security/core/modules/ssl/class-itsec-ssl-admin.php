@@ -47,7 +47,15 @@ class ITSEC_SSL_Admin {
 
 		if ( isset( $_POST['itsec_admin_save_wp_nonce'] ) ) {
 
-			if ( ! wp_verify_nonce( $_POST['itsec_admin_save_wp_nonce'], 'ITSEC_Admin_Save' ) || ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || ( $_POST['post_type'] == 'page' && ! current_user_can( 'edit_page', $id ) ) || ( $_POST['post_type'] == 'post' && ! current_user_can( 'edit_post', $id ) ) ) {
+			if ( ! wp_verify_nonce( $_POST['itsec_admin_save_wp_nonce'], 'ITSEC_Admin_Save' ) ) {
+				return $id;
+			}
+
+			if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+				return $id;
+			}
+			
+			if ( ! current_user_can( 'edit_post', $id ) ) {
 				return $id;
 			}
 

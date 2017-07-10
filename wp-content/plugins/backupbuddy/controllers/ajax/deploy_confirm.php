@@ -12,7 +12,7 @@ pb_backupbuddy::load();
 if ( 'pull' == $direction ) { // Local so clean up here.
 	
 	require_once( pb_backupbuddy::plugin_path() . '/classes/housekeeping.php' );
-	backupbuddy_housekeeping::cleanup_temp_tables( $serial, 0 );
+	backupbuddy_housekeeping::remove_temp_tables( $serial, 0 );
 	die( '1' );
 	
 } elseif ( 'push' == $direction ) { // Remote so call API to clean up.

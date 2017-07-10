@@ -233,7 +233,7 @@ class ITSEC_Backup {
 		if ( 1 === $this->settings['method'] ) {
 			@unlink( $file );
 		} else if ( $this->settings['retain'] > 0 ) {
-			$files = scandir( $dir, SCANDIR_SORT_DESCENDING );
+			$files = scandir( $dir, 1 );
 
 			if ( is_array( $files ) && count( $files ) > 0 ) {
 				$count = 0;

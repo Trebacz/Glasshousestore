@@ -68,6 +68,8 @@ class ITSEC_Notify {
 	 * @return
 	 */
 	public function send_daily_digest() {
+
+		/** @var ITSEC_Lockout $itsec_lockout */
 		global $itsec_lockout;
 
 

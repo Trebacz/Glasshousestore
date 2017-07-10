@@ -19,7 +19,7 @@ final class ITSEC_Logger {
 	 *
 	 * @var array Events that need to be logged to a file but couldn't
 	 */
-	private $_events_to_log_to_file = array();
+	private $events_to_log_to_file = array();
 
 	function __construct() {
 
@@ -157,11 +157,11 @@ final class ITSEC_Logger {
 			$type = ITSEC_Modules::get_setting( 'global', 'log_type' );
 
 			if ( 'database' === $type || 'both' === $type ) {
-				$this->_log_event_to_db( $module, $priority, $data, $host, $username, $user, $url, $referrer );
+				$this->log_event_to_db( $module, $priority, $data, $host, $username, $user, $url, $referrer );
 			}
 
 			if ( 'file' === $type || 'both' === $type ) {
-				$this->_log_event_to_file( $module, $priority, $data, $host, $username, $user, $url, $referrer );
+				$this->log_event_to_file( $module, $priority, $data, $host, $username, $user, $url, $referrer );
 			}
 
 		}
@@ -170,7 +170,7 @@ final class ITSEC_Logger {
 
 	}
 
-	private function _log_event_to_db( $module, $priority = 5, $data = array(), $host = '', $username = '', $user = '', $url = '', $referrer = '' ) {
+	private function log_event_to_db( $module, $priority, $data, $host, $username, $user, $url, $referrer ) {
 		global $wpdb, $itsec_globals;
 
 		$options = $this->logger_modules[ $module ];
@@ -210,12 +210,12 @@ final class ITSEC_Logger {
 		$wpdb->show_errors( $cached_show_errors_setting );
 	}
 
-	private function _log_event_to_file( $module, $priority = 5, $data = array(), $host = '', $username = '', $user = '', $url = '', $referrer = '' ) {
+	private function log_event_to_file( $module, $priority = 5, $data = array(), $host = '', $username = '', $user = '', $url = '', $referrer = '' ) {
 		global $itsec_globals;
 
 		// If the file can't be prepared, store the events up to write later (at plugins_loaded)
-		if ( false === $this->_prepare_log_file() ) {
-			$this->_events_to_log_to_file[] = compact( 'module', 'priority', 'data', 'host', 'username', 'user', 'url', 'referrer' );
+		if ( false === $this->prepare_log_file() ) {
+			$this->events_to_log_to_file[] = compact( 'module', 'priority', 'data', 'host', 'username', 'user', 'url', 'referrer' );
 			return;
 		}
 
@@ -241,8 +241,8 @@ final class ITSEC_Logger {
 	}
 
 	public function write_pending_events_to_file() {
-		foreach ( $this->_events_to_log_to_file as $event ) {
-			call_user_func_array( array( $this, '_log_event_to_file' ), $event );
+		foreach ( $this->events_to_log_to_file as $event ) {
+			call_user_func_array( array( $this, 'log_event_to_file' ), $event );
 		}
 	}
 
@@ -404,8 +404,9 @@ final class ITSEC_Logger {
 	 */
 	private function rotate_log() {
 		$log_file = $this->get_log_file();
+		$max_size = 1024 * 1024 * 10; // 10MiB
 
-		if ( ! @file_exists( $log_file ) || @filesize( $log_file ) < 10485760 ) { // 10485760 is 1 mebibyte
+		if ( ! @file_exists( $log_file ) || @filesize( $log_file ) < $max_size ) {
 			return;
 		}
 
@@ -445,7 +446,7 @@ final class ITSEC_Logger {
 
 		}
 
-		$this->_prepare_log_file();
+		$this->prepare_log_file();
 
 	}
 
@@ -494,7 +495,6 @@ final class ITSEC_Logger {
 	private function get_log_file() {
 		if ( isset( $this->log_file ) ) {
 			return $this->log_file;
-			$this->rotate_log();
 		}
 
 		$log_location = ITSEC_Modules::get_setting( 'global', 'log_location' );
@@ -522,7 +522,7 @@ final class ITSEC_Logger {
 	 *
 	 * @return void
 	 */
-	private function _prepare_log_file() {
+	private function prepare_log_file() {
 		$log_file = $this->get_log_file();
 
 		// We can't prepare a file if we can't get the file name

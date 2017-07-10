@@ -260,29 +260,26 @@ final class ITSEC_Lib {
 	/**
 	 * Returns the root of the WordPress install.
 	 *
-	 * Get's the URI path to the WordPress installation.
+	 * Gets the URI path to the WordPress installation.
 	 *
 	 * @since 4.0.6
 	 *
 	 * @return string the root folder
 	 */
 	public static function get_home_root() {
-
-		//homeroot from wp_rewrite
-		$home_root = parse_url( site_url() );
-
-		if ( isset( $home_root['path'] ) ) {
-
-			$home_root = trailingslashit( $home_root['path'] );
-
-		} else {
-
-			$home_root = '/';
-
+		if ( isset( $GLOBALS['__itsec_lib_get_home_root'] ) ) {
+			return $GLOBALS['__itsec_lib_get_home_root'];
 		}
 
-		return $home_root;
+		$url_parts = parse_url( site_url() );
 
+		if ( isset( $url_parts['path'] ) ) {
+			$GLOBALS['__itsec_lib_get_home_root'] = trailingslashit( $url_parts['path'] );
+		} else {
+			$GLOBALS['__itsec_lib_get_home_root'] = '/';
+		}
+
+		return $GLOBALS['__itsec_lib_get_home_root'];
 	}
 
 	/**
@@ -496,13 +493,15 @@ final class ITSEC_Lib {
 	/**
 	 * Determines whether a given IP address is whiteliste
 	 *
-	 * @param  string  $ip_to_check     ip to check (can be in CIDR notation)
+	 * @param  string  $ip              ip to check (can be in CIDR notation)
 	 * @param  array   $whitelisted_ips ip list to compare to if not yet saved to options
 	 * @param  boolean $current         whether to whitelist the current ip or not (due to saving, etc)
 	 *
 	 * @return boolean true if whitelisted or false
 	 */
 	public static function is_ip_whitelisted( $ip, $whitelisted_ips = null, $current = false ) {
+
+		/** @var ITSEC_Lockout $itsec_lockout */
 		global $itsec_lockout;
 
 		$ip = sanitize_text_field( $ip );
@@ -869,6 +868,14 @@ final class ITSEC_Lib {
 		echo "<div class=\"error inline\"><p><strong>$message</strong></p></div>\n";
 	}
 
+	/**
+	 * Get a WordPress user object.
+	 *
+	 * @param int|string|WP_User|bool $user Either the user ID ( must be an int ), the username, a WP_User object,
+	 *                                      or false to retrieve the currently logged-in user.
+	 *
+	 * @return WP_User|false
+	 */
 	public static function get_user( $user = false ) {
 		if ( $user instanceof WP_User ) {
 			return $user;
@@ -880,6 +887,8 @@ final class ITSEC_Lib {
 			$user = get_user_by( 'id', $user );
 		} else if ( is_string( $user ) ) {
 			$user = get_user_by( 'login', $user );
+		} else if ( is_object( $user ) && isset( $user->ID ) ) {
+			$user = get_user_by( 'id', $user->ID );
 		} else {
 			if ( is_object( $user ) ) {
 				$type = 'object(' . get_class( $user ) . ')';
@@ -899,6 +908,14 @@ final class ITSEC_Lib {
 		return false;
 	}
 
+	/**
+	 * Evaluate a password's strength.
+	 *
+	 * @param string $password
+	 * @param array  $penalty_strings Additional strings that if found within the password, will decrease the strength.
+	 *
+	 * @return ITSEC_Zxcvbn_Results
+	 */
 	public static function get_password_strength_results( $password, $penalty_strings = array() ) {
 		if ( ! isset( $GLOBALS['itsec_zxcvbn'] ) ) {
 			require_once( ITSEC_Core::get_core_dir() . '/lib/itsec-zxcvbn-php/zxcvbn.php' );
@@ -908,6 +925,13 @@ final class ITSEC_Lib {
 		return $GLOBALS['itsec_zxcvbn']->test_password( $password, $penalty_strings );
 	}
 
+	/**
+	 * Retrieve the URL to a website to lookup the location of an IP address.
+	 *
+	 * @param string|bool $ip IP address to lookup, or false to return a URL to their home page.
+	 *
+	 * @return string
+	 */
 	public static function get_trace_ip_link( $ip = false ) {
 		if ( empty( $ip ) ) {
 			return 'http://www.traceip.net/';
@@ -916,6 +940,11 @@ final class ITSEC_Lib {
 		}
 	}
 
+	/**
+	 * Whenever a login fails, collect details of the attempt, and forward them to modules.
+	 *
+	 * @param string $username
+	 */
 	public static function handle_wp_login_failed( $username ) {
 		$authentication_types = array();
 
@@ -956,5 +985,44 @@ final class ITSEC_Lib {
 		$details = apply_filters( 'itsec-filter-failed-login-details', $details );
 
 		do_action( 'itsec-handle-failed-login', $username, $details );
+	}
+
+	/**
+	 * Reliably provides the URL path.
+	 *
+	 * It optionally takes a prefix that will be stripped from the path, if present. This is useful for use to get site
+	 * URL paths without the site's subdirectory.
+	 *
+	 * Trailing slashes are not preserved.
+	 *
+	 * @param string $url    The URL to pull the path from.
+	 * @param string $prefix [optional] A string prefix to be removed from the path.
+	 *
+	 * @return string The URL path.
+	 */
+	public static function get_url_path( $url, $prefix = '' ) {
+		$path = (string) parse_url( $url, PHP_URL_PATH );
+		$path = untrailingslashit( $path );
+
+		if ( ! empty( $prefix ) && 0 === strpos( $path, $prefix ) ) {
+			return substr( $path, strlen( $prefix ) );
+		}
+
+		return '';
+	}
+
+	/**
+	 * Returns the current request path without the protocol, domain, site subdirectories, or query args.
+	 *
+	 * This function returns "wp-login.php" when requesting http://example.com/site-path/wp-login.php?action=register.
+	 *
+	 * @return string The requested site path.
+	 */
+	public static function get_request_path() {
+		if ( ! isset( $GLOBALS['__itsec_lib_get_request_path'] ) ) {
+			$GLOBALS['__itsec_lib_get_request_path'] = self::get_url_path( $_SERVER['REQUEST_URI'], self::get_home_root() );
+		}
+
+		return $GLOBALS['__itsec_lib_get_request_path'];
 	}
 }

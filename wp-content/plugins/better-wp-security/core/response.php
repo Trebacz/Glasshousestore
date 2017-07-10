@@ -226,7 +226,7 @@ final class ITSEC_Response {
 		}
 	}
 
-	public static function send_json() {
+	public static function get_raw_data() {
 		$self = self::get_instance();
 
 		self::maybe_regenerate_wp_config();
@@ -249,6 +249,12 @@ final class ITSEC_Response {
 			'redirect'      => $self->redirect,
 			'closeModal'    => $self->close_modal,
 		);
+
+		return $data;
+	}
+
+	public static function send_json() {
+		$data = self::get_raw_data();
 
 		wp_send_json( $data );
 	}
