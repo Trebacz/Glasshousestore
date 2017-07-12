@@ -189,7 +189,11 @@ class WC_Predictive_Search_Legacy_API {
 			}
 
 			if ( $found_items === false ) {
-				$nothing_title = sprintf( wc_ps_ict_t__( 'Nothing found', __('Nothing found for "%s".', 'woocommerce-predictive-search' ) ), $search_keyword );
+				if ( 0 == $product_term_id ) {
+					$nothing_title = sprintf( wc_ps_ict_t__( 'Nothing found', __('Nothing found for "%s".', 'woocommerce-predictive-search' ) ), $search_keyword );
+				} else {
+					$nothing_title = sprintf( wc_ps_ict_t__( 'Nothing found in Category', __('Nothing found for "%s" in "%s" Category. Try selecting All from the dropdown and search again.', 'woocommerce-predictive-search' ) ), $search_keyword, $term_data->name );
+				}
 
 				if ( '' != $last_found_search_term && $last_found_search_term != $search_keyword ) {
 					$nothing_title .= ' ' . sprintf( wc_ps_ict_t__( 'Last Found', __('Showing results for last found search term "%s".', 'woocommerce-predictive-search' ) ), $last_found_search_term );

@@ -31,18 +31,29 @@ $search_results_page = str_replace( array( 'http:', 'https:' ), '', get_permalin
 
 		<?php
 		if ( 1 == $ps_args['show_catdropdown'] && false !== $product_categories = wc_ps_get_product_categories() ) {
+			$default_cat       = '';
+			$default_cat_label = wc_ps_ict_t__( 'All', __('All', 'woocommerce-predictive-search' ) );
+			if ( isset( $ps_args['default_cat'] ) && ! empty( $ps_args['default_cat'] ) ) {
+				foreach ( $product_categories as $category_data ) {
+					if ( $ps_args['default_cat'] == $category_data['slug'] ) {
+						$default_cat       = $category_data['slug'];
+						$default_cat_label = esc_html( $category_data['name'] );
+						break;
+					}
+				}
+			}
 		?>
 		<div class="wc_ps_nav_<?php echo $ps_args['cat_align']; ?>">
 			<div class="wc_ps_nav_scope">
 				<div class="wc_ps_nav_facade">
 					<i class="fa fa-angle-down wc_ps_nav_down_icon" aria-hidden="true"></i>
-					<span class="wc_ps_nav_facade_label"><?php wc_ps_ict_t_e( 'All', __('All', 'woocommerce-predictive-search' ) ); ?></span>
+					<span class="wc_ps_nav_facade_label"><?php echo $default_cat_label; ?></span>
 				</div>
 				<select class="wc_ps_category_selector" name="cat_in">
 					<option value="" selected="selected"><?php wc_ps_ict_t_e( 'All', __('All', 'woocommerce-predictive-search' ) ); ?></option>
 				<?php if ( $product_categories !== false ) { ?>
 					<?php foreach ( $product_categories as $category_data ) { ?>
-					<option data-href="<?php echo esc_url( $category_data['url'] ); ?>" value="<?php echo esc_attr( $category_data['slug'] ); ?>"><?php echo esc_html( $category_data['name'] ); ?></option>
+					<option <?php selected( $default_cat, $category_data['slug'], true ); ?> data-href="<?php echo esc_url( $category_data['url'] ); ?>" value="<?php echo esc_attr( $category_data['slug'] ); ?>"><?php echo esc_html( $category_data['name'] ); ?></option>
 					<?php } ?>
 				<?php } ?>
 				</select>

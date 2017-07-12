@@ -5,7 +5,7 @@ Plugin URI: http://fastvelocity.com
 Description: Improve your speed score on GTmetrix, Pingdom Tools and Google PageSpeed Insights by merging and minifying CSS and JavaScript files into groups, compressing HTML and other speed optimizations. 
 Author: Raul Peixoto
 Author URI: http://fastvelocity.com
-Version: 2.1.2
+Version: 2.1.3
 License: GPL2
 
 ------------------------------------------------------------------------
@@ -99,6 +99,7 @@ $disable_css_minification = false;   # disable CSS minification? Default: false
 $use_yui = false;         			 # Use the YUI processor instead of PHP Minify? Default false
 $remove_print_mediatypes = false;    # remove CSS files of "print" mediatype
 $skip_html_minification = false;     # skip HTML minification? Default: false
+$use_alt_html_minification = false;  # use alt HTML minification? Default: false
 $strip_htmlcomments = false;         # whether to remove html comments on html minification
 $skip_cssorder = false;              # skip reordering CSS files by mediatype
 $skip_google_fonts = false;          # skip google fonts optimization? Default: false
@@ -139,6 +140,7 @@ if(is_admin()) {
 	$use_yui = get_option('fastvelocity_min_use_yui');
 	$remove_print_mediatypes = get_option('fastvelocity_min_remove_print_mediatypes'); 
 	$skip_html_minification = get_option('fastvelocity_min_skip_html_minification');
+	$use_alt_html_minification = get_option('fastvelocity_min_use_alt_html_minification');
 	$strip_htmlcomments = get_option('fastvelocity_min_strip_htmlcomments');
 	$skip_cssorder = get_option('fastvelocity_min_skip_cssorder');
 	$skip_google_fonts = get_option('fastvelocity_min_skip_google_fonts');
@@ -266,6 +268,7 @@ function fastvelocity_min_register_settings() {
 	register_setting('fvm-group', 'fastvelocity_min_use_yui');
     register_setting('fvm-group', 'fastvelocity_min_remove_print_mediatypes');
     register_setting('fvm-group', 'fastvelocity_min_skip_html_minification');
+    register_setting('fvm-group', 'fastvelocity_min_use_alt_html_minification');
 	register_setting('fvm-group', 'fastvelocity_min_strip_htmlcomments');
     register_setting('fvm-group', 'fastvelocity_min_skip_cssorder');
 	register_setting('fvm-group', 'fastvelocity_min_skip_google_fonts');
@@ -366,7 +369,6 @@ if($fvm_license != false && mb_strlen($fvm_license, 'UTF-8') == 32) {
 							<?php submit_button('Delete', 'button-secondary', 'submit', false); ?>
 							</form>
 						</li>
-						<div class="clear"></div>
 						</ul>
                     </div>
                 </div>				
@@ -417,6 +419,11 @@ Fix Page Editors <span class="note-info">[ If selected, logged in users with the
 <label for="fastvelocity_min_skip_html_minification">
 <input name="fastvelocity_min_skip_html_minification" type="checkbox" id="fastvelocity_min_skip_html_minification" value="1" <?php echo checked(1 == get_option('fastvelocity_min_skip_html_minification'), true, false); ?>>
 Disable minification on HTML <span class="note-info">[ Normally, it's safe to leave HTML minification enabled ]</span></label>
+<br />
+
+<label for="fastvelocity_min_use_alt_html_minification">
+<input name="fastvelocity_min_use_alt_html_minification" type="checkbox" id="fastvelocity_min_use_alt_html_minification" value="1" <?php echo checked(1 == get_option('fastvelocity_min_use_alt_html_minification'), true, false); ?>>
+Use the alternative HTML minification <span class="note-info">[ Select this, if you have some problem with some spaces disappearing ]</span></label>
 <br />
 
 <label for="fastvelocity_min_strip_htmlcomments">
@@ -1171,7 +1178,7 @@ if(!$skip_google_fonts && count($google_fonts) > 0) {
 		$tkey = 'fvm-cache-'.$ctime.hash('adler32', $concat_google_fonts);
 		$newcode = false; $newcode = get_transient($tkey);
 		if ( $newcode === false) {
-			$res = fvm_download_and_cache($concat_google_fonts, $tkey, null, false, null);
+			$res = fvm_download_and_cache($concat_google_fonts, $tkey, null, $disable_minification, 'css');
 			if(is_array($res)) { $newcode = $res['code']; }
 		}
 		
@@ -1290,7 +1297,7 @@ for($i=0,$l=count($header);$i<$l;$i++) {
 					$tkey = 'fvm-cache-'.$ctime.hash('adler32', $hurl);
 					$newcode = false; $newcode = get_transient($tkey);
 					if ( $newcode === false) {
-						$res = fvm_download_and_cache($hurl, $tkey, null, $disable_css_minification, null);
+						$res = fvm_download_and_cache($hurl, $tkey, null, $disable_css_minification, 'css');
 						if(is_array($res)) {
 							$newcode = $res['code'];
 							$newlog = $res['log'];
@@ -1404,7 +1411,7 @@ if(!$skip_google_fonts && count($google_fonts) > 0) {
 		$tkey = 'fvm-cache-'.$ctime.hash('adler32', $concat_google_fonts);
 		$newcode = false; $newcode = get_transient($tkey);
 		if ( $newcode === false) {
-			$res = fvm_download_and_cache($concat_google_fonts, $tkey, null, $disable_css_minification, null);
+			$res = fvm_download_and_cache($concat_google_fonts, $tkey, null, $disable_css_minification, 'css');
 			if(is_array($res)) { $newcode = $res['code']; }
 		}
 		
@@ -1515,7 +1522,7 @@ for($i=0,$l=count($footer);$i<$l;$i++) {
 					$tkey = 'fvm-cache-'.$ctime.hash('adler32', $hurl);
 					$newcode = false; $newcode = get_transient($tkey);
 					if ( $newcode === false) {
-						$res = fvm_download_and_cache($hurl, $tkey, null, $disable_css_minification, 'js');
+						$res = fvm_download_and_cache($hurl, $tkey, null, $disable_css_minification, 'css');
 						if(is_array($res)) {
 							$newcode = $res['code'];
 							$newlog = $res['log'];

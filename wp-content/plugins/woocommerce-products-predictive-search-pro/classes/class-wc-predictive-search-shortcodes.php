@@ -21,6 +21,7 @@ class WC_Predictive_Search_Shortcodes
 		extract(array_merge(array(
 			'widget_template'  => 'sidebar',
 			'show_catdropdown' => 1,
+			'default_cat'      => '',
 			'show_image'       => 1,
 			'show_price'       => 1,
 			'show_desc'        => 1,
@@ -81,6 +82,7 @@ class WC_Predictive_Search_Shortcodes
 			'row'              => $row,
 			'text_lenght'      => $text_lenght,
 			'show_catdropdown' => $show_catdropdown,
+			'default_cat'      => $default_cat,
 			'widget_template'  => $widget_template,
 			'show_image'       => $show_image,
 			'show_price'       => $show_price,
@@ -106,13 +108,25 @@ class WC_Predictive_Search_Shortcodes
 	public static function add_search_widget_mce_popup(){
 		global $wc_predictive_search_cache;
 		$disabled_cat_dropdown = false;
+		$product_categories = wc_ps_get_product_categories();
 		if ( ! $wc_predictive_search_cache->enable_cat_cache() || ! $wc_predictive_search_cache->cat_cache_is_built() ) {
 			$disabled_cat_dropdown = true;
+			$product_categories = false;
 		}
 
 		$items_search_default = WC_Predictive_Search_Widgets::get_items_search();
 		?>
 		<script type="text/javascript">
+			jQuery(document).ready(function(){
+				jQuery('#woo_search_show_catdropdown').on('click', function(){
+					if ( jQuery(this).is(':checked') ) {
+						jQuery('.woo_search_set_default_cat_container').show();
+					} else {
+						jQuery('.woo_search_set_default_cat_container').hide();
+					}
+				});
+			});
+
 			function woo_search_widget_add_shortcode(){
 				var number_items = '';
 				<?php foreach ($items_search_default as $key => $data) {?>
@@ -120,25 +134,28 @@ class WC_Predictive_Search_Shortcodes
 				number_items += woo_search_<?php echo $key ?>_items;
 				<?php } ?>
 				var woo_search_widget_template = jQuery("#woo_search_widget_template").val();
+				var woo_search_set_default_cat = jQuery('#woo_search_set_default_cat').val();
 				var woo_search_show_catdropdown = 0;
 				if ( jQuery('#woo_search_show_catdropdown').is(":checked") ) {
-					var woo_search_show_catdropdown = 1;
+					woo_search_show_catdropdown = 1;
+				} else {
+					woo_search_set_default_cat = '';
 				}
 				var woo_search_show_image = 0;
 				if ( jQuery('#woo_search_show_image').is(":checked") ) {
-					var woo_search_show_image = 1;
+					vwoo_search_show_image = 1;
 				}
 				var woo_search_show_price = 0;
 				if ( jQuery('#woo_search_show_price').is(":checked") ) {
-					var woo_search_show_price = 1;
+					woo_search_show_price = 1;
 				}
 				var woo_search_show_desc = 0;
 				if ( jQuery('#woo_search_show_desc').is(":checked") ) {
-					var woo_search_show_desc = 1;
+					woo_search_show_desc = 1;
 				}
 				var woo_search_show_in_cat = 0;
 				if ( jQuery('#woo_search_show_in_cat').is(":checked") ) {
-					var woo_search_show_in_cat = 1;
+					woo_search_show_in_cat = 1;
 				}
 				var woo_search_text_lenght = jQuery("#woo_search_text_lenght").val();
 				var woo_search_align = jQuery("#woo_search_align").val();
@@ -163,7 +180,7 @@ class WC_Predictive_Search_Shortcodes
 				if (parseInt(woo_search_padding_left) >= 0) woo_search_style += 'padding-left:'+parseInt(woo_search_padding_left)+'px;';
 				if (parseInt(woo_search_padding_right) >= 0) woo_search_style += 'padding-right:'+parseInt(woo_search_padding_right)+'px;';
 				var win = window.dialogArguments || opener || parent || top;
-				win.send_to_editor('[woocommerce_search_widget ' + number_items + ' widget_template="'+woo_search_widget_template+'" show_catdropdown="'+woo_search_show_catdropdown+'" show_image="'+woo_search_show_image+'" show_price="'+woo_search_show_price+'" show_desc="'+woo_search_show_desc+'" show_in_cat="'+woo_search_show_in_cat+'" character_max="'+woo_search_text_lenght+'" style="'+woo_search_style+'" '+wrap+' search_box_text="'+woo_search_box_text+'" ]');
+				win.send_to_editor('[woocommerce_search_widget ' + number_items + ' widget_template="'+woo_search_widget_template+'" show_catdropdown="'+woo_search_show_catdropdown+'" default_cat="'+woo_search_set_default_cat+'" show_image="'+woo_search_show_image+'" show_price="'+woo_search_show_price+'" show_desc="'+woo_search_show_desc+'" show_in_cat="'+woo_search_show_in_cat+'" character_max="'+woo_search_text_lenght+'" style="'+woo_search_style+'" '+wrap+' search_box_text="'+woo_search_box_text+'" ]');
 			}
 			
 			
@@ -230,6 +247,21 @@ class WC_Predictive_Search_Shortcodes
             		<label>&nbsp;</label><span><?php echo sprintf( __( 'Activate and build <a href="%s" target="_blank">Category Cache</a> to activate this feature', 'woocommerce-predictive-search' ), admin_url( 'admin.php?page=woo-predictive-search&tab=search-box-settings&box_open=predictive_search_category_cache_box#predictive_search_category_cache_box', 'relative' ) ); ?></span>
             		<?php } ?>
             	</p>
+
+            	
+            	<p class="woo_search_set_default_cat_container" style="<?php if ( $disabled_cat_dropdown || false === $product_categories ) { ?>display: none;<?php } ?>">
+            		<label for="woo_search_set_default_cat"><?php _e('Default Category', 'woocommerce-predictive-search' ); ?>:</label> 
+            		<select style="width:100px" id="woo_search_set_default_cat" name="woo_search_set_default_cat">
+            			<option value="" selected="selected"><?php _e('All', 'woocommerce-predictive-search' ); ?></option>
+            		<?php if ( $product_categories ) { ?>
+						<?php foreach ( $product_categories as $category_data ) { ?>
+						<option value="<?php echo esc_attr( $category_data['slug'] ); ?>"><?php echo esc_html( $category_data['name'] ); ?></option>
+						<?php } ?>
+            		<?php } ?>
+            		</select> 
+            		<span class="description"><?php _e('Set category as default selected category for Category Dropdown', 'woocommerce-predictive-search' ); ?></span>
+            	</p>
+
                 <p><label for="woo_search_show_image"><?php _e('Image', 'woocommerce-predictive-search' ); ?>:</label> <input type="checkbox" checked="checked" id="woo_search_show_image" name="woo_search_show_image" value="1" /> <span class="description"><?php _e('Show Results Images', 'woocommerce-predictive-search' ); ?></span></p>
                 <p><label for="woo_search_show_price"><?php _e('Price', 'woocommerce-predictive-search' ); ?>:</label> <input type="checkbox" checked="checked" id="woo_search_show_price" name="woo_search_show_price" value="1" /> <span class="description"><?php _e('Product Results - Show Prices', 'woocommerce-predictive-search' ); ?></span></p>
             	<p><label for="woo_search_show_desc"><?php _e('Description', 'woocommerce-predictive-search' ); ?>:</label> <input type="checkbox" checked="checked" id="woo_search_show_desc" name="woo_search_show_desc" value="1" /> <span class="description"><?php _e('Show Results Description', 'woocommerce-predictive-search' ); ?></span></p>

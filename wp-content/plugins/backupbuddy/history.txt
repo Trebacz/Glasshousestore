@@ -176,4 +176,7 @@
 	If Full profile type was auto-excluding media then this is now forced off upon upgrade.
 8.0.1.1 - 2017-07-06 - Dustin Bolton
 	Fixed Deployment confirmation not cleaning up some tables due to housekeeping cleanup_temp_tables rename to remove_temp_tables().
+8.0.1.2 - 2017-07-10 - Dustin Bolton
+	Rackspace Remote Destination: Fixed support for storing into directories and browsing directories.
+	Rackspace Remote Destination: Fixed table listing size.
 	

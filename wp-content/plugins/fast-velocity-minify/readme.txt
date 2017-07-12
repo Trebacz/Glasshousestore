@@ -2,7 +2,7 @@
 Contributors: Alignak
 Tags: merge, combine, concatenate, PHP Minify, YUI Compressor, CSS, javascript, JS, minification, minify, optimization, optimize, stylesheet, aggregate, cache, CSS, html, minimize, pagespeed, performance, speed, GTmetrix, pingdom
 Requires at least: 4.5
-Stable tag: 2.1.2
+Stable tag: 2.1.3
 Tested up to: 4.8
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -140,7 +140,12 @@ This functionality depends on wheter you have exec and java available on your sy
 
 = After installing, why is my design or layout broken or some images and sliders are not showing? =
 
-Kindly review the "Why are some of the CSS and JS files not being merged or why is my layout broken ?" question below for better insights. 
+First thing to check is, are you doing double minification?
+You must disable any features on your theme and other plugins, that perform minification of css, html and js.
+You cannot also have other optimization plugins, because you are forcing wordpress to do double work.
+I recommend W3 Total Cache (with css, js and html minifcation disabled) + Fast Velocity Minify, for minification of CSS and JS files.
+Also, kindly review the "Why are some of the CSS and JS files not being merged or why is my layout broken ?" below for better insights. 
+
 Additionally, the Advanced Otions should only be used by advanced users or developers that understand what the settings mean and do, especially the "defer JS" options. Having said that, this is how you can solve most issues on the settings tab when not using any options on the advanced tab:
 
 * `Disabling CSS processing but keeping JS processing enabled:` This will leave CSS files alone and it's useful to determine if the problem is CSS or JS related. If isabling CSS processing fixed the layout problems, now you know it's related to CSS... 
@@ -259,6 +264,11 @@ Note: The Inline all CSS option is now divided into header and footer.
 
 
 == Changelog ==
+
+= 2.1.3 [2017.07.01] =
+* updated PHP Minify for better compatibility
+* added an alternative mode for html minification (because PHP Minify sometimes breaks things)
+* css bug fixes and performance improvements
 
 = 2.1.2 [2017.06.27] =
 * fixed another error notice when debug mode is on

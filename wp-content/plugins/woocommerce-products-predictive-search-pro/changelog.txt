@@ -1,5 +1,11 @@
 *** WooCommerce Predictive Search Changelog ***
 
+= 4.4.0 - 2017/07/12 =
+* Feature - Added Set Default Category option on Shortcode. Can now set a Category to show as the default (instead of All) on the shortcode search box.
+* Tweak - Registry event - Send Error Email - for each sync Object data so that it does not send email error although Synced full database
+* Tweak - Update nothing found text for Category search with nothing found in 'category_name' and suggest try All search
+* Tweak - Tested for compatibility with WoCommerce 3.1.1
+
 = 4.3.0 - 2017/06/27 =
 * Feature - Added Daily Auto Database Sync option
 * Feature - Added Time Picker for setting daily Auto Sync time

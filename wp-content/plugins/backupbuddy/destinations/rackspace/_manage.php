@@ -11,7 +11,7 @@ if ( isset( $destination['disabled'] ) && ( '1' == $destination['disabled'] ) ) 
 	$rs_api_key = $destination['api_key'];
 	$rs_container = $destination['container'];
 	$rs_server = $destination['server'];
-	$directory = trim( $settings['directory'], '\\/' ) . '/';
+	$directory = trim( $destination['directory'], '\\/' ) . '/';
 	/*
 	if ( isset( $destination['server'] ) ) {
 		$rs_server = $destination['server'];
@@ -78,7 +78,7 @@ if ( isset( $destination['disabled'] ) && ( '1' == $destination['disabled'] ) ) 
 
 $urlPrefix = pb_backupbuddy::ajax_url( 'remoteClient' ) . '&destination_id=' . htmlentities( pb_backupbuddy::_GET( 'destination_id' ) );
 ?>
-<div style="max-width: 950px;">
+<div>
 	<form id="posts-filter" enctype="multipart/form-data" method="post" action="<?php echo $urlPrefix; ?>">
 		<div class="tablenav">
 			<div class="alignleft actions">

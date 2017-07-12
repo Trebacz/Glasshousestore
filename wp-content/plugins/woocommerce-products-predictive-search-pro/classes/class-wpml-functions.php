@@ -70,6 +70,7 @@ class WC_Predictive_Search_WPML_Functions
 			icl_register_string( $this->plugin_wpml_name, 'Category', __( 'Category', 'woocommerce-predictive-search' ) );
 			icl_register_string( $this->plugin_wpml_name, 'Tags', __( 'Tags', 'woocommerce-predictive-search' ) );
 			icl_register_string( $this->plugin_wpml_name, 'Nothing found', __( 'Nothing found for "%s".', 'woocommerce-predictive-search' ) );
+			icl_register_string( $this->plugin_wpml_name, 'Nothing found in Category', __( 'Nothing found for "%s" in "%s" Category. Try selecting All from the dropdown and search again.', 'woocommerce-predictive-search' ) );
 			icl_register_string( $this->plugin_wpml_name, 'Last Found', __( 'Showing results for last found search term "%s".', 'woocommerce-predictive-search' ) );
 			icl_register_string( $this->plugin_wpml_name, 'Viewing all', __( 'Viewing all', 'woocommerce-predictive-search' ) );
 			icl_register_string( $this->plugin_wpml_name, 'Search Result Text', __( 'search results for your search query', 'woocommerce-predictive-search' ) );

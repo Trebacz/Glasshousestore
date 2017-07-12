@@ -315,7 +315,7 @@ if(!function_exists('fvm_get_serverload')) {
                 }
 			} else if ('WIN' == strtoupper(substr(PHP_OS, 0, 3))) {
 				$process = @popen('wmic cpu get NumberOfCores', 'rb');
-				if (false !== $process) {
+				if (false !== $process && null !== $process) {
 					fgets($process);
 					$numCpus = intval(fgets($process));
 					pclose($process);
@@ -346,7 +346,7 @@ if(!function_exists('fvm_get_servercpu')) {
 				$numCpus = count($matches[0]);
 			} else {
 				$process = @popen('sysctl -a', 'rb');
-				if (false !== $process) {
+				if (false !== $process && null !== $process) {
 					$output = stream_get_contents($process);
 					preg_match('/hw.ncpu: (\d+)/', $output, $matches);
 					if ($matches) { $numCpus = intval($matches[1][0]); }

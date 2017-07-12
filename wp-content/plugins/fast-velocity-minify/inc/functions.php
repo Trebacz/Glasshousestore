@@ -3,12 +3,17 @@
 # handle better utf-8 and unicode encoding
 if(function_exists('mb_internal_encoding')) { mb_internal_encoding('UTF-8'); }
 
-# Consider fallback to PHP Minify [2016.08.01] from https://github.com/matthiasmullie/minify (must be defined on the outer scope)
-require_once ($plugindir . 'libs/matthiasmullie/minify/src/Minify.php');
-require_once ($plugindir . 'libs/matthiasmullie/minify/src/CSS.php');
-require_once ($plugindir . 'libs/matthiasmullie/minify/src/JS.php');
-require_once ($plugindir . 'libs/matthiasmullie/minify/src/Exception.php');
-require_once ($plugindir . 'libs/matthiasmullie/path-converter/src/Converter.php');
+# Consider fallback to PHP Minify [2017.07.01] from https://github.com/matthiasmullie/minify (must be defined on the outer scope)
+$path = $plugindir . 'libs/matthiasmullie';
+require_once $path . '/minify/src/Minify.php';
+require_once $path . '/minify/src/CSS.php';
+require_once $path . '/minify/src/JS.php';
+require_once $path . '/minify/src/Exception.php';
+require_once $path . '/minify/src/Exceptions/BasicException.php';
+require_once $path . '/minify/src/Exceptions/FileImportException.php';
+require_once $path . '/minify/src/Exceptions/IOException.php';
+require_once $path . '/path-converter/src/ConverterInterface.php';
+require_once $path . '/path-converter/src/Converter.php';
 use MatthiasMullie\Minify;
 
 # use HTML minification
@@ -77,8 +82,8 @@ $hurl = $wp_home.'/'.ltrim($hurl, "/"); }
 $hurl = $protocol.str_ireplace(array('http://', 'https://'), '', $hurl); # enforce protocol
 
 # no query strings
-if (stripos($hurl, '.js?v') !== false) { $hurl = stristr($hurl, '.js?v', true); } # no query strings
-if (stripos($hurl, '.css?v') !== false) { $hurl = stristr($hurl, '.css?v', true); } # no query strings
+if (stripos($hurl, '.js?v') !== false) { $hurl = stristr($hurl, '.js?v', true).'.js'; } # no query strings
+if (stripos($hurl, '.css?v') !== false) { $hurl = stristr($hurl, '.css?v', true).'.css'; } # no query strings
 
 return $hurl;	
 }
@@ -86,7 +91,9 @@ return $hurl;
 
 # functions, minify html
 function fastvelocity_min_minify_html($html) {
-return trim(fastvelocity_min_Minify_HTML::minify($html));
+$use_alt_html_minification = get_option('fastvelocity_min_use_alt_html_minification', '0');
+if($use_alt_html_minification == '1') { return trim(preg_replace('/\v(?:[\v\h]+)/', ' ', $html)); }
+else { return trim(fastvelocity_min_Minify_HTML::minify($html)); }
 }
 
 
@@ -215,6 +222,8 @@ function fastvelocity_rrmdir($dir) {
 }
 
 
+
+
 # return size in human format
 function fastvelocity_format_filesize($bytes, $decimals = 2) {
     $units = array( 'B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB' );
@@ -247,6 +256,8 @@ return array('size'=>fastvelocity_format_filesize($size), 'count'=>$count);
 }
 
 
+
+
 # minify css on demand (one file at one time, for compatibility)
 function fastvelocity_min_get_css($url, $css, $disable_css_minification) {
 
@@ -262,8 +273,8 @@ $css = preg_replace('/(.eot|.woff2|.woff|.ttf)+[?+](.+?)(\)|\'|\")/ui', "$1"."#"
 
 # minify CSS
 if(!$disable_css_minification) { 
-	$css = fastvelocity_min_minify_css_string($css); }
-else {
+	$css = fastvelocity_min_minify_css_string($css); 
+} else {
 	$css = fvm_compat_urls($css); 
 }
 

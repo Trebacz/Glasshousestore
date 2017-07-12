@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the BackupBuddy package.
 msgid ""
 msgstr ""
-"Project-Id-Version: BackupBuddy 8.0.1.1\n"
+"Project-Id-Version: BackupBuddy 8.0.1.2\n"
 "Report-Msgid-Bugs-To: http://ithemes.com/support/\n"
-"POT-Creation-Date: 2017-07-06 20:55:18+00:00\n"
+"POT-Creation-Date: 2017-07-10 23:51:37+00:00\n"
 "PO-Revision-Date: 2017-MO-DA HO:MI+ZONE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4037,7 +4037,7 @@ msgstr ""
 msgid "Need More Storage?"
 msgstr ""
 
-#. #-#-#-#-#  backupbuddy.pot (BackupBuddy 8.0.1.1)  #-#-#-#-#
+#. #-#-#-#-#  backupbuddy.pot (BackupBuddy 8.0.1.2)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: destinations/live/_manage.php:997
 msgid "BackupBuddy"
@@ -4335,19 +4335,19 @@ msgid_plural "Deleted %d files"
 msgstr[0] ""
 msgstr[1] ""
 
-#: destinations/rackspace/init.php:160
+#: destinations/rackspace/init.php:162
 msgid "Missing one or more required fields."
 msgstr ""
 
-#: destinations/rackspace/init.php:172
+#: destinations/rackspace/init.php:174
 msgid "There was a problem selecting the container:"
 msgstr ""
 
-#: destinations/rackspace/init.php:177
+#: destinations/rackspace/init.php:179
 msgid "BackupBuddy was not able to write the test file."
 msgstr ""
 
-#: destinations/rackspace/init.php:182
+#: destinations/rackspace/init.php:184
 msgid "Unable to delete file from container."
 msgstr ""
 

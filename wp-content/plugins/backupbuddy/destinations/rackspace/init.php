@@ -73,17 +73,19 @@ class pb_backupbuddy_destination_rackspace { // Change class name end to match d
 			return false;
 		}
 		
-		$directory = trim( $settings['directory'], '\\/'  . '/'); // Trailing slash. No leading slash.
+		$directory = trim( $settings['directory'], '\\/' ) . '/'; // Trailing slash. No leading slash.
 		
 		// Set container
 		@$conn->create_container( $rs_container ); // Create container if it does not exist.
 		$container = $conn->get_container( $rs_container ); // Get container.
 		
 		foreach( $files as $rs_file ) {
-			pb_backupbuddy::status( 'details',  'About to create object on Rackspace...' );
+			$fullFilename = $directory . basename( $rs_file );
+			
+			pb_backupbuddy::status( 'details',  'About to create object on Rackspace at ' . $fullFilename );
 			
 			// Put file to Rackspace.
-			$sendbackup = $container->create_object( $directory . basename( $rs_file ) );
+			$sendbackup = $container->create_object( $fullFilename );
 			pb_backupbuddy::status( 'details',  'Object created. About to stream actual file `' . $rs_file . '`...' );
 			if ( $sendbackup->load_from_filename( $rs_file ) ) {
 				pb_backupbuddy::status( 'details', 'Send succeeded.' );
