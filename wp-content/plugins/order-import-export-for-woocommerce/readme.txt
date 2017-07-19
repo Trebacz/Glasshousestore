@@ -1,10 +1,10 @@
 === Order / Coupon / Subscription Export Import Plugin for WooCommerce (BASIC) ===
-Contributors: xadapter, hikeforce, niwf, mujeebur
+Contributors: xadapter, niwf, mujeebur
 Donate link: 
 Tags: woocommerce export orders, woocommerce import orders, woocommerce export import orders, export woocommerce orders with line item details,woocommerce export coupons, woocommerce import coupons, woocommerce export import coupons
 Requires at least: 3.0.1
 Tested up to: 4.8
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -49,9 +49,9 @@ For complete list of features and details, Please visit <a rel="nofollow" href="
 
 </blockquote>
 
-= About HikeForce.com =
+= About XAdapter.com =
 
-HikeForce creates quality WordPress/WooCommerce plugins that are easy to use and customize. We are proud to have thousands of customers actively using our plugins across the globe.
+XAdapter creates quality WordPress/WooCommerce plugins that are easy to use and customize. We are proud to have thousands of customers actively using our plugins across the globe.
 
 
 == Installation ==
@@ -75,6 +75,8 @@ Yes. You can import or export order line item details.
 3. Exported sample order Screen
 
 == Changelog ==
+= 1.2.2 =
+* Minor Content Change.
 = 1.2.1 =
 * Bug fix: Fixed Coupon import warnings.
 = 1.2.0 =
@@ -122,6 +124,8 @@ Yes. You can import or export order line item details.
 * Export /Import WooCommerce Orders.
 
 == Upgrade Notice ==
+= 1.2.2 =
+* Minor Content Change.
 = 1.2.1 =
 * Bug fix: Fixed Coupon import warnings.
 = 1.2.0 =

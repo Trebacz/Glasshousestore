@@ -19,8 +19,6 @@ use MatthiasMullie\Minify;
 # use HTML minification
 require_once ($plugindir . 'libs/mrclay/HTML.php');
 
-
-
 # get cache directories and urls
 function fvm_cachepath() {
 
@@ -89,10 +87,30 @@ return $hurl;
 }
 
 
+# alternative html minification, minimal
+function fastvelocity_min_minify_alt_html($html) {
+$html = trim(preg_replace('/\v(?:[\t\v\h]+)/', "\n", $html));
+$html = trim(preg_replace('/\t(?:[\t\v\h]+)/', ' ', $html));
+$html = trim(preg_replace('/\h(?:[\t\v\h]+)/', ' ', $html));
+return $html;
+}
+
+
+# check if it's an internal url or not
+function fvm_internal_url($hurl, $wp_home) {
+if (substr($hurl, 0, strlen($wp_home)) === $wp_home) { return true; }
+if (stripos($hurl, $wp_home) !== false) { return true; }
+if (isset($_SERVER['HTTP_HOST']) && stripos($hurl, preg_replace('/:\d+$/', '', $_SERVER['HTTP_HOST'])) !== false) { return true; }
+if (isset($_SERVER['SERVER_NAME']) && stripos($hurl, preg_replace('/:\d+$/', '', $_SERVER['SERVER_NAME'])) !== false) { return true; }
+if (isset($_SERVER['SERVER_ADDR']) && stripos($hurl, preg_replace('/:\d+$/', '', $_SERVER['SERVER_ADDR'])) !== false) { return true; }
+return false;
+}
+
+
 # functions, minify html
 function fastvelocity_min_minify_html($html) {
 $use_alt_html_minification = get_option('fastvelocity_min_use_alt_html_minification', '0');
-if($use_alt_html_minification == '1') { return trim(preg_replace('/\v(?:[\v\h]+)/', ' ', $html)); }
+if($use_alt_html_minification == '1') { return fastvelocity_min_minify_alt_html($html); }
 else { return trim(fastvelocity_min_Minify_HTML::minify($html)); }
 }
 
@@ -706,32 +724,39 @@ function fastvelocity_ie_blacklist($url) {
 # download function with cache support and fallback
 function fastvelocity_download($url, $tkey, $ttl) {
 	
-	# info
+	# rate limit requests, prevent slowdowns
+	$rtlim = false; $rtlim = get_transient($tkey.'_access');
+	if ( $rtlim !== false) { return false; }
+	
+	# info (needed for google fonts woff files)
 	$uagent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_4) AppleWebKit/600.7.12 (KHTML, like Gecko) Version/8.0.7 Safari/600.7.12';
 	$data = false; $data = get_transient($tkey);
 	if ( $data === false) {
 		
 		# get updated list from our api and cache it for 24 hours
-		$response = wp_remote_get($url, array('user-agent'=>$uagent, 'timeout' => 10, 'httpversion' => '1.1', 'sslverify'=>false)); 
+		$response = wp_remote_get($url, array('user-agent'=>$uagent, 'timeout' => 7, 'httpversion' => '1.1', 'sslverify'=>false)); 
 		$res_code = wp_remote_retrieve_response_code($response);
 		if($res_code == '200') { 			
 			$data = wp_remote_retrieve_body($response);
-				if($ttl > 0) {
-					set_transient($tkey, $data, $ttl);
-					fvm_update_transient_keys($tkey); # keep track
-				}
-			    return $data;
+			if(strlen($data) > 1 && $ttl > 0) {
+				set_transient($tkey, $data, $ttl);
+				fvm_update_transient_keys($tkey); # keep track
+				return $data; 
+			}
 		}	
 	
 		# fallback, let's try curl if available
 		if(function_exists('curl_version')) {
 			$curl = fvm_file_get_contents_curl($url, $uagent);
-			if(!empty($curl) && strlen($curl) > 1) {
+			if(!empty($curl) && strlen($curl) > 1 && $ttl > 0) {
+				set_transient($tkey, $data, $ttl);
+				fvm_update_transient_keys($tkey); # keep track
 				return $data;
 			}
 		}
 		
 		# error
+		set_transient($tkey.'_access', "Failed to fetch: $url on ".current_time('timestamp'), $ttl);
 		return false;
 	}
 	
@@ -811,7 +836,14 @@ return __('<div class="notice notice-info is-dismissible"><p>All caches from <st
 # Purge Godaddy Managed WordPress Hosting (Varnish + APC)
 if (class_exists('WPaaS\Plugin')) {
 fastvelocity_godaddy_request('BAN');
-return __('<div class="notice notice-info is-dismissible"><p>All caches from <strong>Godaddy Managed WordPress Hosting</strong> have also been purged.</p></div>');
+return __('<div class="notice notice-info is-dismissible"><p>All caches from <strong>WP Engine</strong> have also been purged.</p></div>');
+}
+
+# Purge WP Engine
+if (class_exists("WpeCommon")) {
+if (method_exists('WpeCommon', 'purge_memcached')) { WpeCommon::purge_memcached(); }
+if (method_exists('WpeCommon', 'clear_maxcdn_cache')) { WpeCommon::clear_maxcdn_cache(); }
+if (method_exists('WpeCommon', 'purge_varnish_cache')) { WpeCommon::purge_varnish_cache(); }
 }
 
 }

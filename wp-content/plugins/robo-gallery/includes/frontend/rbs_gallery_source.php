@@ -108,7 +108,18 @@ class roboGalleryImages{
 				$this->imgArray[$i]['data'] 	=	get_post($img['id'] );
 				$this->imgArray[$i]['link'] 	=	get_post_meta( $img['id'], ROBO_GALLERY_PREFIX.'gallery_link', true );
 				$this->imgArray[$i]['typelink'] = 	get_post_meta( $img['id'], ROBO_GALLERY_PREFIX.'gallery_type_link', true );
-				$this->imgArray[$i]['videolink']= 	get_post_meta( $img['id'], ROBO_GALLERY_PREFIX.'gallery_video_link', true );
+
+				$this->imgArray[$i]['videolink'] = get_post_meta( $img['id'], ROBO_GALLERY_PREFIX.'gallery_video_link', true );
+				$videolink = $this->imgArray[$i]['videolink'];
+				if( $videolink && strpos($videolink, 'youtu')!==false ){
+					$matches =array();	
+					preg_match("#(?<=v=)[a-zA-Z0-9-]+(?=&)|(?<=v\/)[^&\n]+|(?<=v=)[^&\n]+|(?<=youtu.be/)[^&\n]+#", $videolink, $matches);
+					#preg_match("#(?<=v=)[a-zA-Z0-9-]+(?=&)|(?<=v\/)[^&\n]+(?=\?)|(?<=v=)[^&\n]+|(?<=youtu.be/)[^&\n]+#", $videolink, $matches);
+					if( count($matches) && $matches[0] ){
+						$this->imgArray[$i]['videolink']= 'https://youtube.com/v='.$matches[0];
+					}
+				}
+				
 				$this->imgArray[$i]['col'] 		=	get_post_meta( $img['id'], ROBO_GALLERY_PREFIX.'gallery_col', true );
 				$this->imgArray[$i]['effect'] 	=	get_post_meta( $img['id'], ROBO_GALLERY_PREFIX.'gallery_effect', true );
 				$this->imgArray[$i]['alt'] 		=	get_post_meta( $img['id'], '_wp_attachment_image_alt', true );

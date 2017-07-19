@@ -6,9 +6,9 @@ Tags: Google Analytics, Universal Analytics, Enhanced E-commerce, E-commerce, e-
 Author URI: http://www.tatvic.com/
 Author: Tatvic
 Requires at least: 3.6
-Tested up to: 4.7.x
-Stable tag: 1.0.21
-Version: 1.0.21
+Tested up to: 4.8
+Stable tag: 1.0.21.1
+Version: 1.0.21.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -50,7 +50,7 @@ Provides integration between Enhanced Ecommerce feature of Google Analytics and 
 * All the product sections on product page will be fired as Related Product and will be available in product list performance report.
 
 = Need an Advanced Google Analytics Plugin? =
-We have recently launched an Advanced Google Analytics Plugin for WooCommerce which includes tracking of 9 Reports of Enhanced Ecommerce, User ID Tracking, Product Refund, I.P. Anonymization, 15+ Custom Dimenensions & Metrics, Form Field Tracking, Content Grouping & much more. <a href="https://codecanyon.net/item/actionable-google-analytics-for-woocommerce/9899552" target="_blank">Learn More</a>
+We have recently launched an Advanced Google Analytics Plugin for WooCommerce which includes tracking of 9 Reports of Enhanced Ecommerce, User ID Tracking, Product Refund, I.P. Anonymization, 15+ Custom Dimenensions & Metrics, Form Field Tracking, Content Grouping & much more. <a href="https://codecanyon.net/item/actionable-google-analytics-for-woocommerce/9899552?ref=tatvic" target="_blank">Learn More</a>
 
 == Note : ==
 == Our plugin does not support the below features out of the box ==
@@ -224,3 +224,6 @@ Important Note: When you update the plugin, please save your settings again.
 
  = 1.0.21 - 12/05/2017 =
  * Minor Bug Fixes.
+
+ = 1.0.21.1 - 13/07/2017 =
+ * Minor Changes.

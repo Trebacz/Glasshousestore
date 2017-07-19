@@ -18,7 +18,7 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
      * @return void
      */
     //set plugin version
-    public $tvc_eeVer = '1.0.21';
+    public $tvc_eeVer = '1.0.21.1';
     public function __construct() {
         
          //Set Global Variables
@@ -156,7 +156,8 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
                    });
                 
             //Pugin Promotion
-            jQuery("form#mainform").after("<a href=https://codecanyon.net/item/actionable-google-analytics-for-woocommerce/9899552 target=_blank><img src='.plugins_url( '/woo_plugin_promotion.png' , __FILE__ ).' title=Actionable Google Analytics Plugin by Tatvic alt=Actionable Google Analytics Plugin by Tatvic></a>");
+            jQuery("h1.screen-reader-text").before("<a href=https://codecanyon.net/item/actionable-google-analytics-for-woocommerce/9899552?ref=tatvic target=_blank><img src='.plugins_url( '/woo_plugin_promotion.png' , __FILE__ ).' title=Actionable Google Analytics Plugin by Tatvic alt=Actionable Google Analytics Plugin by Tatvic></a>");
+            jQuery("form#mainform").after("<a href=https://www.tatvic.com/contact/?utm_source=mage-uaee-owox&utm_medium=banner&utm_campaign=owox%20banner target=_blank><img src='.plugins_url( '/owox_banner_700_150.png' , __FILE__ ).' title=Owox Banner Ad alt=Owox Banner Ad></a>");
             </script>';
         }
     }
@@ -526,6 +527,7 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
      */
     public function product_detail_view() {
 
+        
         if ($this->disable_tracking($this->ga_eeT)) {
             return;
         }
@@ -567,7 +569,7 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
             $prodpage_detail_json = array();
         }
         //prod page detail view json
-        $this->wc_version_compare("tvc_po=" . json_encode($prodpage_detail_json) . ";");
+       $this->wc_version_compare("tvc_po=" . json_encode($prodpage_detail_json) . ";");
         $code = '
         ga("require", "ec", "ec.js");    
         ga("ec:addProduct", {
@@ -734,7 +736,6 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
                         
                 );
             }
-               
         }
         //category page, search page and shop page json
         else if (is_product_category() || is_search() || is_shop()) {

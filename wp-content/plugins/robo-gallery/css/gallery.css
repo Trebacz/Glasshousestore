@@ -1953,12 +1953,12 @@ mfp-container, 	.rbs-img, 	.rbs-imges-load-more, 	.rbs-imges-filter,	.rbs-im
 }
 
 * .rbs_gallery_button .rbs_search_wrap .rbs-search{
-	border: 1px black solid;
+	border: 2px black solid;
 	background: none;
 	font-size: 100%;
 	width: 100%;
 	float: none;
-	padding: 5px;
+	padding: 4px;
 	margin: 0px;
 	color: black;
 	font-family: tahoma;

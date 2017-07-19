@@ -2,7 +2,7 @@
 Contributors: Alignak
 Tags: merge, combine, concatenate, PHP Minify, YUI Compressor, CSS, javascript, JS, minification, minify, optimization, optimize, stylesheet, aggregate, cache, CSS, html, minimize, pagespeed, performance, speed, GTmetrix, pingdom
 Requires at least: 4.5
-Stable tag: 2.1.3
+Stable tag: 2.1.6
 Tested up to: 4.8
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -43,7 +43,7 @@ I can offer you aditional `custom made` optimization on top of this plugin. If y
 *	Support for multisite installations
 *	Support for gzip_static on Nginx
 *	Support for the CDN Enabler plugin
-*	Auto purging of cache files on W3 Total Cache, WP Supercache, WP Rocket, Wp Fastest Cache, Cachify, Comet Cache, Zen Cache, LiteSpeed Cache, SG Optimizer and Godaddy Managed WordPress Hosting (read the FAQs)
+*	Auto purging of cache files on W3 Total Cache, WP Supercache, WP Rocket, Wp Fastest Cache, Cachify, Comet Cache, Zen Cache, LiteSpeed Cache, SG Optimizer, Godaddy Managed WordPress Hosting and WP Engine (read the FAQs)
 *	Support for preconnect and preload headers
 *	and some more...
 
@@ -98,7 +98,7 @@ Yes, but it's recommended that you purge the cached files (from the plugin statu
 = Is it compatible with other caching plugins? =
 
 The plugin will try to automatically purge several popular cache plugins, however we still recommend you to purge all caches (on whatever you use) if you also  manually purge the cache on the plugin settings for some reason.
-The automatic purge is active for the following plugins and hosting: W3 Total Cache, WP Supercache, WP Rocket, Wp Fastest Cache, Cachify, Comet Cache, Zen Cache, LiteSpeed Cache, SG Optimizer and Godaddy Managed WordPress Hosting
+The automatic purge is active for the following plugins and hosting: W3 Total Cache, WP Supercache, WP Rocket, Wp Fastest Cache, Cachify, Comet Cache, Zen Cache, LiteSpeed Cache, SG Optimizer, Godaddy Managed WordPress Hosting and WP Engine
 
 ...
 
@@ -207,6 +207,15 @@ This hides all optimization from editors and administrators, as long as they are
 
 ...
 
+= Is it compatible with Visual Composer and other editors ? =
+
+Visual composer, adds some style tags into your header and/or footer, however they simply print the code and don't use the wordpress `wp_add_inline_style` hook. 
+This means, we cannot easily capture that csa code and therefore it's left out of all the merging by Fast Velocity Minify.
+You may have all else merged and minified correctly, however if that generated visual composer css code is important, those styles might be overwritten by the merged file, or that code can also overwrite the rules inside the css generated file.
+If you experience some styles missing, this could be the cause... but try the ignore list first.
+
+...
+
 = How should I use the "Preload Images" and what is it for? =
 
 Certain themes and plugins, either load large images or sliders on the homepage. Most of them will also load "above the fold" causing the "Prioritize visible content" or the "Eliminate render-blocking JavaScript and CSS in above-the-fold content" message on pagespeed insights (see the previous faq question above).
@@ -259,13 +268,25 @@ If you would like to donate any amount to the plugin author (thank you in advanc
 
 == Upgrade Notice ==
 
-= 2.0.0 =
-Note: The Inline all CSS option is now divided into header and footer.
+= 2.1.6 =
+Note: Kindly purge the plugin cache as well as your server /plugin cache after updating.
 
 
 == Changelog ==
 
-= 2.1.3 [2017.07.01] =
+= 2.1.6 [2017.07.17] =
+* fixed a php notice in debug mode
+* children styles (added with wp_add_inline_style) are now kept in order and merged together in place
+* added faqs for possible "visual composer" issues
+
+= 2.1.5 [2017.07.17] =
+* css bug fixes and performance improvements
+* added support for auto purging on WP Engine
+
+= 2.1.4 [2017.07.14] =
+* added compatibility with WP Engine.com and other providers that use a CNAME with their own subdomain
+
+= 2.1.3 [2017.07.11] =
 * updated PHP Minify for better compatibility
 * added an alternative mode for html minification (because PHP Minify sometimes breaks things)
 * css bug fixes and performance improvements
@@ -323,243 +344,6 @@ Note: The Inline all CSS option is now divided into header and footer.
 * changed the advanced settings tab back to the settings page for quicker selection of options by the advanced users
 * changed the cache purging option to also delete our plugin transients via the API, rather than just let them expire
 * changed the "Inline all CSS" option into header and footer separately
-
-= 1.5.3 [2017.05.10] =
-* quick rollback to 1.5.1 due to some css issues found, another update will come in a few hours
-
-= 1.5.2 [2017.05.10] =
-* added debug information to the CSS logs
-* added back the option to remove the "Print" related stylesheets
-* added some performance tweaks to the CSS processing
-* added support to purge cache automatically for Wp Fastest Cache, Cachify, Comet Cache, Zen Cache and SG Optimizer (read the FAQs)
-* changed the CSS processing engine to merge all INLINE and CSS files in order
-* fixed the loading of conditional CSS files
-
-= 1.5.1 [2017.05.06] =
-* fixed a bug with the CSS defer checkbox
-
-= 1.5.0 [2017.05.05] =
-* fixed some javascript errors introduced on 1.4.9
-
-= 1.4.9 [2017.05.05] =
-* changed some of the design and colors
-* fixed a bug with the JS defer option
-
-= 1.4.8 [2017.05.04] =
-* added back the YUI Compressor as an option (if java and exec is available)
-* added a tab for checking the server information
-* added support to purge cache automatically for W3 Total Cache, WP Rocket and WP Supercache (read the FAQs)
-* changed how css files are fetched, it will first try to open locally and then fallback to remote urls
-* fixed CSS bugs introduced on 1.4.4
-
-= 1.4.7 [2017.05.03] =
-* changed css files of media="all" to load first (so it can be overriden by other mediatypes)
-
-= 1.4.6 [2017.05.03] =
-* fixed some bugs introduced on 1.4.4
-
-= 1.4.5 [2017.05.02] =
-* added a new advanced settings tab
-* added preconnect and prefetch support
-* updated the readme file and blacklist
-
-= 1.4.4 [2017.04.19] =
-* changed css merging logic to be more efficient and have as less files as possible
-* changed css merging engine to fetch urls instead of opening them by file path
-* changed google fonts optimization so they are now inlined in the CSS files (IE9+ only)
-* changed to remove the "Print" related stylesheets by default
-* changed the font awesome optimization method for better compatibility
-* added option to defer css with LoadCSS and rel="preload" (make sure you know how to use this before trying it)
-* added an internal blacklist for JS and CSS files that must always be ignored (for example, IE only files)
-* fixed some minor performance issues
-* fixed a compatibility issue with the thrive leads plugin
-
-= 1.4.3 [2017.03.10] =
-* changed minimum requirements to PHP 5.4 for older clients
-
-= 1.4.2 [2017.02.26] =
-* fixed another warning when debug mode is active on wordpress
-
-= 1.4.1 [2017.02.26] =
-* fixed a warning when debug mode is active on wordpress
-
-= 1.4.0 [2017.02.24] =
-* added option to force HTTP or HTTPS protocol to the generated files, so it can work with the CDN Enabler plugin
-* fixed compatibility for sites where home_url() and site_url() differ (some files could not be find by the plugin)
-* fixed removing valid code from .svg images when "removal of query strings for Web Fonts" was on the default settings 
-* changed the "defer of JS for Pagespeed Insights" option so it ignores scripts that already have the async or defer attribute
-* changed the "defer of JS for Pagespeed Insights" so it doesn't defer external resources https://www.chromestatus.com/feature/5718547946799104
-* changed so that Font Awesome now loads asynchronously in the footer, unless "Disable Font Awesome optimization" is selected
-* changed minimum requirements to PHP 5.5 and WP 4.4 for compatibility reasons.
-* removed YUI and Google Closure for simplicity thus making JS minification default to PHP MINIFY 
-* updated the faq questions
-
-= 1.3.9 [2017.01.15] =
-* stop removing some important CSS comments during HTML minification
-
-= 1.3.8 [2017.01.11] =
-* added support to strip html comments during HTML minification
-* added wildcard support to the ignore list (url's must end in *), ex: http://yourdomain.com/wp-content/plugins/some-plugin/dynamic-css-*
-* changed mrclay HTML library to an older version (same as WP Rocket 2.91) due to unecessary line breaks on HTML minification
-* changed some code on mrclay HTML library in order to properly minify some inline css styles
-* changed absolute urls during minification to protocol-relative URLs for better https compatibility
-* changed the plugin cache directory to the uploads directory for better compatibility with Google App Engine and Amazon Elastic Beanstalk (beta)
-
-= 1.3.7 [2016.12.03] =
-* stop removing html comments from html minification for better compatibility with some plugins
-
-= 1.3.6 [2016.11.29] =
-* fixed a bug where sometimes the paths and urls have double slashes in the middle leading to those files not being found
-* fixed a bug that was stripping the conditional IE tags for javascript and some css files
-
-= 1.3.5 [2016.11.25] =
-* added option to automatically exclude dynamically generated css and js files
-
-= 1.3.4 [2016.11.25] =
-* added option to defer all JS files for Pagespeed Insights tests only
-* fontawesome improvements
-
-= 1.3.3 [2016.11.16] =
-* fixed a bug where the ignore list was not being completely ignored when defer javascript is enabled
-* added some options to exclude jquery from other sections
-
-= 1.3.2 [2016.11.16] =
-* added option for inlining all CSS
-* added option for inlining google fonts as woff (modern browsers only)
-* added option for optimizing fontawesome
-* bug fixes
-
-= 1.3.1 [2016.10.31] =
-* fixed some other reported notices that are visible when debug mode is enabled
-
-= 1.3.0 [2016.10.23] =
-* fixed a few notices that are visible when debug mode is enabled
-* fixed keeping of CSS handles with empty src for better dependency management (JS processing already does this)
-
-= 1.2.9 [2016.10.22] =
-* added merging of "screen" and "all" CSS mediatypes
-* added auto reordering of CSS files by mediatype
-* added support to keep order of CSS for better compatibility
-* fixed a bug with CSS where "print" mediatypes were being merged together with "all", breaking some designs
-* added an option to remove Print Style Sheets (CSS files of mediatype "print" for printers)
-* changed the defer JS files logic in order to skip files that are on the ignore list
-* added option to force JS files defer even if they are on the ignore list
-* improved some descriptions for some options in the settings page
-* added option to remove emojis support
-
-= 1.2.8 [2016.10.21] =
-* added font awesome optimization and cdn delivery (if used by your theme)
-* load only one font awesome css file, even when your theme or plugins enqueue multiple files
-* replaced the HTML minification engine with mrclay minify (same as the autoptimize plugin, w3 total cache and a few other popular plugins)
-
-= 1.2.7 [2016.10.18] =
-* fixed CSS minification not working on some cases after the latest update
-
-= 1.2.6 [2016.10.16] =
-* improved html minification speed and compatibility
-* fixed a PHP 7 compatibility issue on PHP Minify JS minify script
-* fixed the JS defer option for scripts that already have defer or async, such as the AMP plugin
-
-= 1.2.5 [2016.10.03] =
-* reverted back the PHP Minify library due to a bug
-
-= 1.2.4 [2016.10.03] =
-* added support for `gzip_static` on nginx for cached files
-* updated PHP Minify with today's release date
-* added donation link to the FAQ's section
-
-= 1.2.3 [2016.10.02] =
-* google fonts related bugfixes
-* improved help section
-
-= 1.2.2 [2016.09.22] =
-* bugfixes
-
-= 1.2.1 [2016.09.22] =
-* more improvements on multisite installations
-
-= 1.2.0 [2016.09.22] =
-* improved compatibility with multisite instalations
-
-= 1.1.9 [2016.09.21] =
-* fixed a fatal error on versions older than PHP 5.5 (note that our recommended PHP version is still PHP 5.6+)
-
-= 1.1.8 [2016.09.20] =
-* fixed support for custom directory names on wordpress (wp-content, plugins, etc)
-* bug fixes
-
-= 1.1.7 [2016.08.26] =
-* fixed a compatibility issue with SunOS and Solaris systems
-
-= 1.1.6 [2016.08.24] =
-* changed the CSS minification to PHP Minify for better compatibility with the calc() expression and others.
-* fixed a bug for when wp-content has been renamed to something else
-
-= 1.1.5 [2016.08.21] =
-* better support for third party cache plugins
-* bug fixes
-
-= 1.1.4 [2016.08.20] =
-* added logic for when wp-content has been renamed to something else
-* small improvements
-
-= 1.1.3 [2016.08.05] =
-* minor bug fix on the defer javascript option
-
-= 1.1.2 [2016.08.02] =
-* added option to force the use of PHP Minify for JS minification instead of YUI or Google Closure
-
-= 1.1.1 [2016.08.01] =
-* added PHP Minify [2016.08.01] as fallback for JS files again
-* PHP Minify issues (white screen on PHP 7) might have been fixed
-* other small bug fixes
-
-= 1.1.0 [2016.07.11] =
-* improved compatibility for PHP 7
-* new location for cache and temporary files
-* removed PHP Minify as fallback due to incompatibility (white screen) with some PHP 7 configurations
-* Fallback method for JS files updated to merge only
-
-= 1.0.9 [2016.07.10] =
-* added new logic to group handling for better compatibility
-* added an intermediate minification cache for faster performance
-* added PHP Minify as fallback option for JS files
-* added a local Google Closure alternative to YUI Compressor
-* added help page to the plugin
-* removed the Google Closure API because their rate limit can lead to incomplete minified files
-
-= 1.0.8 [2016.07.02] =
-* disabled error reporting messages
-* added some extra code checks
-
-= 1.0.7 [2016.07.01] =
-* bug fixes related to warnings being displayed at the admin area
-
-= 1.0.6 [2016.06.30] =
-* fixed some header and footer scripts not being enqueued on the right place
-* added a better dependency check before merging and minifying of JS files
-* added more logic to keep the order of js files, when one or several of them are excluded from minification
-* performance improvements and some code simplification
-
-= 1.0.5 [2016.06.24] =
-* bug fixes on the admin page log viewer
-
-= 1.0.4 [2016.06.23] =
-* added YUI Compressor for local JS minification with java (if available)
-* JS minification fallback to the Google Closure API if java not available or YUI Compressor fails
-* added individual cache for already minified files, so they are minified again only if that cache is older than the original files to minify
-
-= 1.0.3 [2016.06.23] =
-* removed JSrink and added back the Google Closure API for compatibility with PHP 7
-
-= 1.0.2 [2016.06.23] =
-* Fixed Google Fonts optimization
-* Replaced Google Closure API with JSrink PHP library
-* Reorganized inline CSS code dependencies
-* New (safer) HTML minification
-
-= 1.0.1 [2016.06.22] =
-* Javascript minification fixes
 
 = 1.0 [2016.06.19] =
 * Initial Release
