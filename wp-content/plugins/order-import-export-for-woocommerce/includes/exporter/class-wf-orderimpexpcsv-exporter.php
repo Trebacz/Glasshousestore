@@ -137,16 +137,30 @@ class WF_OrderImpExpCsv_Exporter {
                 $product = new WC_Product(0);
             }
 
+            if(WC()->version < '3.1.0'){
             $item_meta = new WC_Order_Item_Meta((defined('WC_VERSION') >= 2.4) ? $item : $item['item_meta'] );
             $meta = $item_meta->display(true, true);
+            }else{
+            $arg = array(
+			'before'    => '',
+			'after'		=> '',
+			'separator'	=> ',',
+			'echo'		=> false,
+		);
+            
+            $meta = wc_display_item_meta( $item,$arg );
+            }
 
             if ($meta) {
 
+                
                 // remove newlines
                 $meta = str_replace(array("\r", "\r\n", "\n"), '', $meta);
-
+                $meta = str_replace(array('<strong class="wc-item-meta-label">', '</strong> <p>', "</p>"), '', $meta);
+                
                 // switch reserved chars (:;|) to =
                 $meta = str_replace(array(': ', ':', ';', '|'), '=', $meta);
+                $meta = str_replace( 'meta=', '', $meta);
             }
 
             $line_item = array(

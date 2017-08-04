@@ -7,7 +7,7 @@ class WF_CSV_Parser_Coupon {
 	var $row;
 	var $post_type;
 	var $reserved_fields;		// Fields we map/handle (not custom fields)
-	var $post_defaults;			// Default post data
+	var $post_defaults;             // Default post data
 	var $postmeta_defaults;		// default post meta
 	var $postmeta_allowed;		// post meta validation
 	var $allowed_coupon_types;	// Allowed product types
@@ -51,7 +51,7 @@ class WF_CSV_Parser_Coupon {
 	 * @return array
 	 */
 	public function parse_data( $file, $delimiter, $mapping, $start_pos = 0, $end_pos = null, $eval_field ) {
-// Set locale
+                // Set locale
 		$enc = mb_detect_encoding( $file, 'UTF-8, ISO-8859-1', true );
 		if ( $enc )
 			setlocale( LC_ALL, 'en_US.' . $enc );
@@ -73,27 +73,7 @@ class WF_CSV_Parser_Coupon {
 	            foreach ( $header as $key => $heading ) {
 					$s_heading = $heading;
 
-	            	// Check if this heading is being mapped to a different field
-            		if ( isset( $mapping[$s_heading] ) ) {
-            			if ( $mapping[$s_heading] == 'import_as_meta' ) {
 
-            				$s_heading = 'meta:' . $s_heading;
-
-            			} elseif ( $mapping[$s_heading] == 'import_as_images' ) {
-
-            				$s_heading = 'images';
-
-            			} else {
-            				$s_heading = esc_attr( $mapping[$s_heading] );
-            			}
-            		}
-                        if(!empty($mapping)){
-                        foreach ($mapping as $mkey => $mvalue) {
-                                if(trim($mvalue) === trim($heading)){
-                                    $s_heading =  $mkey;
-                                }
-                        }
-                        }
 
             		if ( $s_heading == '' )
             			continue;
@@ -101,9 +81,6 @@ class WF_CSV_Parser_Coupon {
 	            	// Add the heading to the parsed data
 					$row[$s_heading] = ( isset( $postmeta[$key] ) ) ? $this->format_data_from_csv( $postmeta[$key], $enc ) : '';
 
-                                        if(isset($eval_field[$s_heading]))
-					$row[$s_heading] = $this->evaluate_field($row[$s_heading], $eval_field[$s_heading]);
-					
 	               	// Raw Headers stores the actual column name in the CSV
 					$raw_headers[ $s_heading ] = $heading;
 	            }
@@ -121,43 +98,7 @@ class WF_CSV_Parser_Coupon {
 		return array( $parsed_data, $raw_headers, $position );
 	}
 	
-	private function evaluate_field($value, $evaluation_field)
-	{
-		$processed_value = $value;
-		if(!empty($evaluation_field)){
-			$operator = substr($evaluation_field, 0, 1);
-			if(in_array($operator, array('=', '+', '-', '*', '/', '&'))){
-				$eval_val = substr($evaluation_field, 1);
-				switch($operator){
-					case '=':
-							$processed_value = trim($eval_val); 
-							break;
-					case '+':
-							$processed_value = $this->hf_currency_formatter($value) + $eval_val; 
-							break;
-					case '-': 
-							$processed_value = $value - $eval_val; 
-							break;
-					case '*': 
-							$processed_value = $value * $eval_val; 
-							break;
-					case '/': 
-							$processed_value = $value / $eval_val; 
-							break;
-					case '&': 
-							if (strpos($eval_val, '[VAL]') !== false) {
-								$processed_value = str_replace('[VAL]',$value,$eval_val);								 
-							}
-							else{
-								$processed_value = $value . $eval_val;
-							}
-							break;					
-				}
-			}	
-		}
-		return $processed_value;	
-	}
-
+	
 	/**
 	 * Parse product
 	 * @param  array  $item
@@ -172,17 +113,17 @@ class WF_CSV_Parser_Coupon {
 		$attributes = $default_attributes = $gpf_data = null;
 		// Merging
 		$merging = ( ! empty( $_GET['merge'] ) && $_GET['merge'] ) ? true : false;
-        $this->post_defaults['post_type'] = 'shop_coupon';
+                $this->post_defaults['post_type'] = 'shop_coupon';
 
 		$post_id = ( ! empty( $item['id'] ) ) ? $item['id'] : 0;
 		$post_id = ( ! empty( $item['post_id'] ) ) ? $item['post_id'] : $post_id;
 		if ( $merging ) 
 		{
 			$product['merging'] = true;
-			$WF_CSV_Coupon_Import->log->add( 'csv-import', sprintf( __('> Row %s - preparing for merge.', 'wf_order_import_export'), $this->row ) );
+			$WF_CSV_Coupon_Import->hf_coupon_log_data_change( 'coupon-csv-import', sprintf( __('> Row %s - preparing for merge.', 'wf_order_import_export'), $this->row ) );
 			if ( ! $post_id  ) 
 			{
-				$WF_CSV_Coupon_Import->log->add( 'csv-import', __( '> > Cannot merge without id or sku. Importing instead.', 'wf_order_import_export') );
+				$WF_CSV_Coupon_Import->hf_coupon_log_data_change( 'coupon-csv-import', __( '> > Cannot merge without id or sku. Importing instead.', 'wf_order_import_export') );
 
 				$merging = false;
 			} else 
@@ -202,14 +143,14 @@ class WF_CSV_Parser_Coupon {
 					$found_product_id = $wpdb->get_var($db_query);
 					if ( ! $found_product_id ) 
 					{
-						$WF_CSV_Coupon_Import->log->add( 'csv-import', sprintf(__( '> > Skipped. Cannot find coupon with sku %s. Importing instead.', 'wf_order_import_export'), $item['sku']) );
+						$WF_CSV_Coupon_Import->hf_coupon_log_data_change( 'coupon-csv-import', sprintf(__( '> > Skipped. Cannot find coupon with sku %s. Importing instead.', 'wf_order_import_export'), $item['sku']) );
 						$merging = false;
 
 					} else 
 					{
 
 						$post_id = $found_product_id;
-						$WF_CSV_Coupon_Import->log->add( 'csv-import', sprintf(__( '> > Found coupon with ID %s.', 'wf_order_import_export'), $post_id) );
+						$WF_CSV_Coupon_Import->hf_coupon_log_data_change( 'coupon-csv-import', sprintf(__( '> > Found coupon with ID %s.', 'wf_order_import_export'), $post_id) );
 
 					}
 				}
@@ -221,14 +162,14 @@ class WF_CSV_Parser_Coupon {
 		{
 
 			$product['merging'] = false;
-			$WF_CSV_Coupon_Import->log->add( 'csv-import', sprintf( __('> Row %s - preparing for import.', 'wf_order_import_export'), $this->row ) );
+			$WF_CSV_Coupon_Import->hf_coupon_log_data_change( 'coupon-csv-import', sprintf( __('> Row %s - preparing for import.', 'wf_order_import_export'), $this->row ) );
 			if ( isset($item['post_parent']) && $item['post_parent']=== '' &&  $item['post_title']=== '') {
-				$WF_CSV_Coupon_Import->log->add( 'csv-import', __( '> > Skipped. No post_title set for new coupon.', 'wf_order_import_export') );
+				$WF_CSV_Coupon_Import->hf_coupon_log_data_change( 'coupon-csv-import', __( '> > Skipped. No post_title set for new coupon.', 'wf_order_import_export') );
 				return new WP_Error( 'parse-error', __( 'No post_title set for new coupon.', 'wf_order_import_export' ) );
 			}
             if ( isset($item['post_parent']) && $item['post_parent']!== '' && $item['post_parent']!== null &&  $item['parent_sku'] === '' ) 
             {
-				$WF_CSV_Coupon_Import->log->add( 'csv-import', __( '> > Skipped. No parent set for new variation product.', 'wf_order_import_export') );
+				$WF_CSV_Coupon_Import->hf_coupon_log_data_change( 'coupon-csv-import', __( '> > Skipped. No parent set for new variation product.', 'wf_order_import_export') );
                 return new WP_Error( 'parse-error', __( 'No parent set for new variation product.', 'wf_order_import_export' ) );
 			}
 		}
@@ -279,9 +220,5 @@ class WF_CSV_Parser_Coupon {
 		unset( $item, $terms_array, $postmeta, $attributes, $gpf_data, $images );
 		return $product;
 	}
-    function hf_currency_formatter($price)
-    {
-        $decimal_seperator = wc_get_price_decimal_separator();
-        return preg_replace("[^0-9\\'.$decimal_seperator.']", "", $price);
-    }
+
 }

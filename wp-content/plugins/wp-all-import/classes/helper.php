@@ -1,8 +1,8 @@
 <?php
 /**
  * Helper class which defnes a namespace for some commonly used functions
- * 
- * @author Pavel Kulbakin <p.kulbakin@gmail.com>
+ *
+ * @author Maksym Tsypliakov <maksym.tsypliakov@gmail.com>
  */
 class PMXI_Helper {
 	const GLOB_MARK = 1;

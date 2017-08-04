@@ -13,7 +13,7 @@ class WF_CpnImpExpCsv_Coupon_Import extends WP_Importer {
 	var $id;
 	var $file_url;
 	var $delimiter;
-    var $profile;
+        var $profile;
 	var $merge_empty_cells;
 
 	// mappings from old information to new
@@ -32,7 +32,11 @@ class WF_CpnImpExpCsv_Coupon_Import extends WP_Importer {
 	 */
 	public function __construct() {
 
-		$this->log                     = new WC_Logger();
+		if (WC()->version < '2.7.0') {
+                    $this->log = new WC_Logger();
+                } else {
+                    $this->log = wc_get_logger();
+                }
 		$this->import_page             = 'coupon_csv';
 		$this->file_url_import_enabled = apply_filters( 'coupon_csv_coupon_file_url_import_enabled', true );
 	}
@@ -344,7 +348,7 @@ class WF_CpnImpExpCsv_Coupon_Import extends WP_Importer {
 									data:       data,
 									type:       'POST',
 									success:    function( response ) {
-										console.log( response );
+										//console.log( response );
 										$('#import-progress tbody').append( '<tr class="complete"><td colspan="5">' + response + '</td></tr>' );
 										$('.importer-loading').hide();
 									}
@@ -529,8 +533,8 @@ class WF_CpnImpExpCsv_Coupon_Import extends WP_Importer {
 
 		wp_suspend_cache_invalidation( true );
 
-		$this->log->add( 'csv-import', '---' );
-		$this->log->add( 'csv-import', __( 'Processing coupons.', 'wf_order_import_export' ) );
+		$this->hf_coupon_log_data_change( 'coupon-csv-import', '---' );
+		$this->hf_coupon_log_data_change( 'coupon-csv-import', __( 'Processing coupons.', 'wf_order_import_export' ) );
 		foreach ( $this->parsed_data as $key => &$item )
 		{
 			$coupon = $this->parser->parse_coupon( $item, $this->merge_empty_cells );
@@ -541,7 +545,7 @@ class WF_CpnImpExpCsv_Coupon_Import extends WP_Importer {
 
 			unset( $item, $coupon );
 		}
-		$this->log->add( 'csv-import', __( 'Finished processing coupons.', 'wf_order_import_export' ) );
+		$this->hf_coupon_log_data_change( 'coupon-csv-import', __( 'Finished processing coupons.', 'wf_order_import_export' ) );
 		wp_suspend_cache_invalidation( false );
 	}
 
@@ -555,13 +559,13 @@ class WF_CpnImpExpCsv_Coupon_Import extends WP_Importer {
                 $memory    = size_format( (WC()->version < '2.7.0')?woocommerce_let_to_num( ini_get( 'memory_limit' ) ):wc_let_to_num( ini_get( 'memory_limit' ) )  );
                 $wp_memory = size_format( (WC()->version < '2.7.0')? woocommerce_let_to_num( WP_MEMORY_LIMIT ) : wc_let_to_num( WP_MEMORY_LIMIT ) );
 
-		$this->log->add( 'csv-import', '---[ New Import ] PHP Memory: ' . $memory . ', WP Memory: ' . $wp_memory );
-		$this->log->add( 'csv-import', __( 'Parsing coupons CSV.', 'wf_order_import_export' ) );
+		$this->hf_coupon_log_data_change( 'coupon-csv-import', '---[ New Import ] PHP Memory: ' . $memory . ', WP Memory: ' . $wp_memory );
+		$this->hf_coupon_log_data_change( 'coupon-csv-import', __( 'Parsing coupons CSV.', 'wf_order_import_export' ) );
 
 		$this->parser = new WF_CSV_Parser_Coupon( 'shop_coupon' );
 
 		list( $this->parsed_data, $this->raw_headers, $position ) = $this->parser->parse_data( $file, $this->delimiter, $mapping, $start_pos, $end_pos, $eval_field );
-		$this->log->add( 'csv-import', __( 'Finished parsing coupons CSV.', 'wf_order_import_export' ) );
+		$this->hf_coupon_log_data_change( 'coupon-csv-import', __( 'Finished parsing coupons CSV.', 'wf_order_import_export' ) );
 
 		unset( $import_data );
 
@@ -666,13 +670,13 @@ class WF_CpnImpExpCsv_Coupon_Import extends WP_Importer {
 		if ( ! empty( $post['post_title'] ) ) {
 			$processing_coupon_title = $post['post_title'];
 		}
-        $post['post_type'] = 'shop_coupon';
+                $post['post_type'] = 'shop_coupon';
                 
 
 		if ( ! empty( $processing_coupon_id ) && isset( $this->processed_posts[ $processing_coupon_id ] ) ) 
 		{
 			$this->add_import_result( 'skipped', __( 'Coupon already processed', 'wf_order_import_export' ), $processing_coupon_id, $processing_coupon_title );
-			$this->log->add( 'csv-import', __('> Coupon ID already processed. Skipping.', 'wf_order_import_export'), true );
+			$this->hf_coupon_log_data_change( 'coupon-csv-import', __('> Coupon ID already processed. Skipping.', 'wf_order_import_export'), true );
 			unset( $post );
 			return;
 		}
@@ -680,7 +684,7 @@ class WF_CpnImpExpCsv_Coupon_Import extends WP_Importer {
 		if ( ! empty ( $post['post_status'] ) && $post['post_status'] == 'auto-draft' ) 
 		{
 			$this->add_import_result( 'skipped', __( 'Skipping auto-draft', 'wf_order_import_export' ), $processing_coupon_id, $processing_coupon_title);
-			$this->log->add( 'csv-import', __('> Skipping auto-draft.', 'wf_order_import_export'), true );
+			$this->hf_coupon_log_data_change( 'coupon-csv-import', __('> Skipping auto-draft.', 'wf_order_import_export'), true );
 			unset( $post );
 			return;
 		}
@@ -694,8 +698,8 @@ class WF_CpnImpExpCsv_Coupon_Import extends WP_Importer {
                 }else{
                    	$usr_msg = 'Coupon already exists.'; 
                 }
-                $this->add_import_result( 'skipped', __( $usr_msg, 'wf_order_import_export' ), $processing_coupon_id, $processing_coupon_title );
-				$this->log->add( 'csv-import', sprintf( __('> &#8220;%s&#8221;'.$usr_msg, 'wf_order_import_export'), esc_html($processing_coupon_title) ), true );
+                                $this->add_import_result( 'skipped', __( $usr_msg, 'wf_order_import_export' ), $processing_coupon_id, $processing_coupon_title );
+				$this->hf_coupon_log_data_change( 'coupon-csv-import', sprintf( __('> &#8220;%s&#8221;'.$usr_msg, 'wf_order_import_export'), esc_html($processing_coupon_title) ), true );
 				unset( $post );
 				return;
 			}
@@ -703,17 +707,18 @@ class WF_CpnImpExpCsv_Coupon_Import extends WP_Importer {
 			if ( $processing_coupon_id && is_string( get_post_status( $processing_coupon_id ) ) ) 
 			{
 				$this->add_import_result( 'skipped', __( 'Importing coupon ID conflicts with an existing coupon ID', 'wf_order_import_export' ), $processing_coupon_id, get_the_title( $processing_coupon_id ) );
-				$this->log->add( 'csv-import', sprintf( __('> &#8220;%s&#8221; ID already exists.', 'wf_order_import_export'), esc_html( $processing_coupon_id ) ), true );
+				$this->hf_coupon_log_data_change( 'coupon-csv-import', sprintf( __('> &#8220;%s&#8221; ID already exists.', 'wf_order_import_export'), esc_html( $processing_coupon_id ) ), true );
 				unset( $post );
 				return;
 			}
 		}
-        $is_post_exist_in_db = get_post_type( $processing_coupon_id );
+                $is_post_exist_in_db = get_post_type( $processing_coupon_id );
 
 		if ( $merging && $processing_coupon_id && !empty($is_post_exist_in_db) && (get_post_type( $processing_coupon_id ) !== $post['post_type'] )) 
 		{
 			$this->add_import_result( 'skipped', __( 'Post is not a coupon', 'wf_order_import_export' ), $processing_coupon_id, $processing_coupon_title );
-			$this->log->add( 'csv-import', sprintf( __('> &#8220;%s&#8221; is not a coupon.', 'wf_order_import_export'), esc_html($processing_coupon_id) ), true );
+			$this->hf_coupon_log_data_change( 'coupon-csv-import', sprintf( __('> &#8220;%s&#8221; is not a coupon.', 'wf_order_import_export'), esc_html($processing_coupon_id) ), true );
+                        
 			unset( $post );
 			return;
 		}
@@ -722,7 +727,7 @@ class WF_CpnImpExpCsv_Coupon_Import extends WP_Importer {
 		{
 			$post_id = $processing_coupon_id;
 
-			$this->log->add( 'csv-import', sprintf( __('> Merging coupon ID %s.', 'wf_order_import_export'), $post_id ), true );
+			$this->hf_coupon_log_data_change( 'coupon-csv-import', sprintf( __('> Merging coupon ID %s.', 'wf_order_import_export'), $post_id ), true );
 
 			$postdata = array(
 				'ID' => $post_id
@@ -774,19 +779,19 @@ class WF_CpnImpExpCsv_Coupon_Import extends WP_Importer {
 				if ( ! $result ) 
 				{
 					$this->add_import_result( 'failed', __( 'Failed to update coupon', 'wf_order_import_export' ), $post_id, $processing_coupon_title );
-					$this->log->add( 'csv-import', sprintf( __('> Failed to update coupon %s', 'wf_order_import_export'), $post_id ), true );
+					$this->hf_coupon_log_data_change( 'coupon-csv-import', sprintf( __('> Failed to update coupon %s', 'wf_order_import_export'), $post_id ), true );
 					unset( $post );
 					return;
 				} else {
-					$this->log->add( 'csv-import', __( '> Merged post data: ', 'wf_order_import_export' ) . print_r( $postdata, true ) );
+					$this->hf_coupon_log_data_change( 'coupon-csv-import', __( '> Merged post data: ', 'wf_order_import_export' ) . print_r( $postdata, true ) );
 				}
 			}
 
 		} else 
 		{
-            $merging = FALSE;
+                        $merging = FALSE;
 			
-			$this->log->add( 'csv-import', sprintf( __('> Inserting %s', 'wf_order_import_export'), esc_html( $processing_coupon_title ) ), true );
+			$this->hf_coupon_log_data_change( 'coupon-csv-import', sprintf( __('> Inserting %s', 'wf_order_import_export'), esc_html( $processing_coupon_title ) ), true );
 			$postdata = array(
 				'post_author'    => $post['post_author'] ? absint( $post['post_author'] ) : get_current_user_id(),
 				'post_date'      => ( $post['post_date'] ) ? date( 'Y-m-d H:i:s', strtotime( $post['post_date'] )) : '',
@@ -805,13 +810,13 @@ class WF_CpnImpExpCsv_Coupon_Import extends WP_Importer {
 			{
 
 				$this->add_import_result( 'failed', __( 'Failed to import coupon', 'wf_order_import_export' ), $processing_coupon_id, $processing_coupon_title );
-				$this->log->add( 'csv-import', sprintf( __( 'Failed to import coupon &#8220;%s&#8221;', 'wf_order_import_export' ), esc_html($processing_coupon_title) ) );
+				$this->hf_coupon_log_data_change( 'coupon-csv-import', sprintf( __( 'Failed to import coupon &#8220;%s&#8221;', 'wf_order_import_export' ), esc_html($processing_coupon_title) ) );
 				unset( $post );
 				return;
 
 			} else {
 
-				$this->log->add( 'csv-import', sprintf( __('> Inserted - coupon ID is %s.', 'wf_order_import_export'), $post_id ) );
+				$this->hf_coupon_log_data_change( 'coupon-csv-import', sprintf( __('> Inserted - coupon ID is %s.', 'wf_order_import_export'), $post_id ) );
 
 			}
 		}
@@ -847,10 +852,10 @@ class WF_CpnImpExpCsv_Coupon_Import extends WP_Importer {
 		if ( $merging ) 
 		{
 			$this->add_import_result( 'merged', 'Coupon Merge successful', $post_id, $processing_coupon_title );
-			$this->log->add( 'csv-import', sprintf( __('> Finished merging post ID %s.', 'wf_order_import_export'), $post_id ) );
+			$this->hf_coupon_log_data_change( 'coupon-csv-import', sprintf( __('> Finished merging post ID %s.', 'wf_order_import_export'), $post_id ) );
 		} else {
 			$this->add_import_result( 'imported', 'Coupon Import successful', $post_id, $processing_coupon_title );
-			$this->log->add( 'csv-import', sprintf( __('> Finished importing post ID %s.', 'wf_order_import_export'), $post_id ) );
+			$this->hf_coupon_log_data_change( 'coupon-csv-import', sprintf( __('> Finished importing post ID %s.', 'wf_order_import_export'), $post_id ) );
 		}
 		unset( $post );
 	}
@@ -1014,7 +1019,7 @@ class WF_CpnImpExpCsv_Coupon_Import extends WP_Importer {
 		$bytes      = apply_filters( 'import_upload_size_limit', wp_max_upload_size() );
 		$size       = size_format( $bytes );
 		$upload_dir = wp_upload_dir();
-        $ftp_settings = get_option( 'wf_coupon_tracking_importer_ftp');
+                $ftp_settings = get_option( 'wf_coupon_tracking_importer_ftp');
 		include( 'views-coupon/html-wf-import-greeting.php' );
 	}
 
@@ -1024,6 +1029,18 @@ class WF_CpnImpExpCsv_Coupon_Import extends WP_Importer {
 	 */
 	public function bump_request_timeout( $val ) {
 		return 60;
+	}
+        
+        public function hf_coupon_log_data_change ($content = 'coupon-csv-import',$data='')
+	{
+		if (WC()->version < '2.7.0')
+		{
+			$this->log->add($content,$data);
+		}else
+		{
+			$context = array( 'source' => $content );
+			$this->log->log("debug", $data ,$context);
+		}
 	}
        
 }

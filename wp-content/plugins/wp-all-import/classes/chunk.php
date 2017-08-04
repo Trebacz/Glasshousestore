@@ -88,8 +88,11 @@ class PMXI_Chunk {
 
     $this->parser_type = empty($parser_type) ? 'xmlreader' : $parser_type;
 
+    $sleep = apply_filters( 'wp_all_import_shard_delay', 0 );
+    usleep($sleep);
+
     $is_html = false;
-    $f = @fopen($file, "rb");       
+    $f = @fopen($file, "rb");
     while (!@feof($f)) {
       $chunk = @fread($f, 1024);         
       if (strpos($chunk, "<!DOCTYPE") === 0) $is_html = true;
@@ -107,7 +110,7 @@ class PMXI_Chunk {
       @$this->reader->open($path);
       @$this->reader->setParserProperty(XMLReader::VALIDATE, false);
       return;
-    } 
+    }
 
     $input  = new PMXI_Input();
     $import_id = $input->get('id', 0);
@@ -178,7 +181,7 @@ class PMXI_Chunk {
         $this->cloud = $parser->cloud;
 
       }
-     
+
       if ( ! empty($this->cloud) and empty($this->options['element']) ){
         
         arsort($this->cloud);           
@@ -197,11 +200,11 @@ class PMXI_Chunk {
               $this->options['element'] = $el;
               break;            
           }          
-        }          
+        }
 
         $this->options['element'] = apply_filters('wp_all_import_root_element', $this->options['element'], $import_id, $this->cloud);
       }
-    } 
+    }
 
     $path = $this->get_file_path();                                 
 
@@ -303,9 +306,7 @@ class PMXI_Chunk {
     {    
       $is_preprocess_enabled = apply_filters('is_xml_preprocess_enabled', true);    
 
-      while ($xml = $this->reader->getNode()) {          
-          // $simpleXmlNode = simplexml_load_string($node);
-          // echo (string)$simpleXmlNode->firstName;                    
+      while ($xml = $this->reader->getNode()) {
 
           if ($this->loop < $this->options['pointer']){
             $this->loop++;                              
@@ -322,7 +323,7 @@ class PMXI_Chunk {
           break;       
       }
     }
-    
+
     return ( ! empty($xml) ) ? self::removeColonsFromRSS(preg_replace('%xmlns.*=\s*([\'"&quot;]).*\1%sU', '', $xml)) : false;
 
   }  
@@ -341,15 +342,19 @@ class PMXI_Chunk {
         $pattern = '/(<\/\w+):([\w+|\.|-]+>)/i';
         $replacement = '$1_$2';
         $feed = preg_replace($pattern, $replacement, $feed);
-        // pull out colons from attributes
-        $pattern = '/(\s+\w+):(\w+[=]{1})/i';
-        $replacement = '$1_$2';
-        $feed = preg_replace($pattern, $replacement, $feed);
+
+        $is_replace_colons = apply_filters('wp_all_import_replace_colons_in_attribute_names', true);
+        if ( $is_replace_colons ) {
+            // pull out colons from attributes
+            $pattern = '/(\s+\w+):(\w+[=]{1})/i';
+            $replacement = '$1_$2';
+            $feed = preg_replace($pattern, $replacement, $feed);
+        }
         // pull colons from single element 
         // (<\w+):(\w+\/>)
         $pattern = '/(<\w+):([\w+|\.|-]+\/>)/i';
         $replacement = '$1_$2';
-        $feed = preg_replace($pattern, $replacement, $feed);              
+        $feed = preg_replace($pattern, $replacement, $feed);
 
         $is_preprocess_enabled = apply_filters('is_xml_preprocess_enabled', true);
         if ($is_preprocess_enabled)
@@ -357,6 +362,7 @@ class PMXI_Chunk {
           // replace temporary word _ampersand_ back to & symbol
           $feed = str_replace("_ampersand_", "&", $feed);
         }
+
         // replace all standalone & symbols ( which is not in htmlentities e.q. &nbsp; and not wrapped in CDATA section ) to &amp;
         PMXI_Import_Record::preprocessXml($feed); 
 

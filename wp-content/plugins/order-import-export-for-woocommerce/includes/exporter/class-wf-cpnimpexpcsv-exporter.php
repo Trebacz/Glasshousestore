@@ -90,6 +90,11 @@ class WF_CpnImpExpCsv_Exporter {
                 break;
             foreach ($coupons as $product) {
                 foreach ($csv_columns as $column => $value) {
+                    
+                    if(is_array($product->$column)){
+                        $product->$column = implode(',', $product->$column);
+                    }
+                    
                     if (!$export_columns || in_array($column, $export_columns)) {
                         if (isset($product->meta->$column)) {
                             $row[] = self::format_data($product->meta->$column);

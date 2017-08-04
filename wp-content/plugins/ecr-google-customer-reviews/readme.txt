@@ -2,8 +2,8 @@
 Contributors: ecreationsllc, natekinkead
 Tags: WooCommerce, Google Customer Reviews, Google Merchant, Google Trusted Sites, Opt-in, Badge, Google Rating Badge, GCR
 Requires at least: 3.0.0
-Tested up to: 4.7.5
-Stable tag: 1.0.3
+Tested up to: 4.8
+Stable tag: 1.0.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/quick-guide-gplv3.html
 
@@ -64,7 +64,11 @@ There are many reasons why the survey opt-in is not coming up, most of them out 
 
 = Does the survey opt-in show on mobile devices? =
 
-Unfortunately, no... not for now.  According to Google, the GCR opt-in survey will not show on mobile devices.  They said "Thanks for your feedback though and we will take it onboard for future reference."
+Yes, it does now!  Originally it didn't and at that time, according to Google, the GCR opt-in survey would not show on mobile devices.  They had said "Thanks for your feedback though and we will take it onboard for future reference."
+
+Well, I'm happy to report that it seems Google really has taken this feedback and implemented the survey popup on mobile devices.  No update of this plugin is necessary for this new feature.
+
+If you find it's not working for you, please let us know in the support forum.  Thanks.
 
 = Why does the survey opt-in not show on some browsers =
 

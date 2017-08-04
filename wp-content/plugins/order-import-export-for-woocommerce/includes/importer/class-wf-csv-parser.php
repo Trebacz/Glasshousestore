@@ -168,7 +168,7 @@ class WF_CSV_Parser {
 			$row++;
 
 			if ( $row <= $record_offset ) {
-				$WF_CSV_Order_Import->log->add( 'csv-import', sprintf( __( '> Row %s - skipped due to record offset.', 'wf_order_import_export' ), $row ) );
+				$WF_CSV_Order_Import->hf_order_log_data_change('order-csv-import', sprintf( __( '> Row %s - skipped due to record offset.', 'wf_order_import_export' ), $row ) );
 				unset($item);
                                 return;
 			}
@@ -180,7 +180,7 @@ class WF_CSV_Parser {
 				$order_number            = ( ! empty( $item['order_number'] ) )            ? $item['order_number']            : null;
 				$order_number_formatted  = ( ! empty( $item['order_number_formatted'] ) )  ? $item['order_number_formatted']  : $order_number;
 
-				$WF_CSV_Order_Import->log->add( 'csv-import', sprintf( __( '> Row %s - preparing for import.', 'wf_order_import_export' ), $row ) );
+				$WF_CSV_Order_Import->hf_order_log_data_change('order-csv-import', sprintf( __( '> Row %s - preparing for import.', 'wf_order_import_export' ), $row ) );
 
 
 				// validate the supplied formatted order number/order number
@@ -188,7 +188,7 @@ class WF_CSV_Parser {
 
 				if ( $order_number && ! is_numeric( $order_number ) ) {
 
-					$WF_CSV_Order_Import->log->add( 'csv-import', sprintf( __( '> > Skipped. Order number field must be an integer: %s.', 'wf_order_import_export' ),  $order_number ) );
+					$WF_CSV_Order_Import->hf_order_log_data_change('order-csv-import', sprintf( __( '> > Skipped. Order number field must be an integer: %s.', 'wf_order_import_export' ),  $order_number ) );
 					$skipped++;
 					unset($item);
                                         return;
@@ -197,14 +197,14 @@ class WF_CSV_Parser {
 
 				if ( $order_number_formatted && ! $order_number ) {
 
-					$WF_CSV_Order_Import->log->add( 'csv-import', __( '> > Skipped. Formatted order number provided but no numerical order number, see the documentation for further details.', 'wf_order_import_export' ) );
+					$WF_CSV_Order_Import->hf_order_log_data_change('order-csv-import', __( '> > Skipped. Formatted order number provided but no numerical order number, see the documentation for further details.', 'wf_order_import_export' ) );
 					$skipped++;
 					unset($item);
                                         return;
 
 				}
 			} else {
-				$order_number_formatted = $item['order_id'];
+				$order_number_formatted =  ! empty( $item['order_id']) ? $item['order_id'] : 0 ;
 				$order_number           = ( ! empty( $item['order_number'] ) ? $item['order_number'] : ( is_numeric( $order_number_formatted ) ? $order_number_formatted : 0 ) );
 			}
 
@@ -229,7 +229,7 @@ class WF_CSV_Parser {
 
 				if ( $order_id ) {
                                     // skip if order ID already exist. 
-					$WF_CSV_Order_Import->log->add( 'csv-import', sprintf( __( '> > Skipped. Order %s already exists.', 'wf_order_import_export' ), $order_number_formatted ) );
+					$WF_CSV_Order_Import->hf_order_log_data_change('order-csv-import', sprintf( __( '> > Skipped. Order %s already exists.', 'wf_order_import_export' ), $order_number_formatted ) );
 					$skipped++;
 					unset($item);
                                         return;
@@ -245,7 +245,7 @@ class WF_CSV_Parser {
 
 					if ( ! $found_customer ) {
 
-						$WF_CSV_Order_Import->log->add( 'csv-import', sprintf( __( '> > Skipped. Cannot find customer with id %s.', 'wf_order_import_export' ),  $item['customer_id'] ) );
+						$WF_CSV_Order_Import->hf_order_log_data_change('order-csv-import', sprintf( __( '> > Skipped. Cannot find customer with id %s.', 'wf_order_import_export' ),  $item['customer_id'] ) );
 						$skipped++;
                                                 unset($item);
                                                 return;;
@@ -286,7 +286,7 @@ class WF_CSV_Parser {
 				}
 
 				if ( ! $found_status ) {
-					$WF_CSV_Order_Import->log->add( 'csv-import', sprintf( __( '> > Skipped. Unknown order status %s (%s).', 'wf_order_import_export' ),  $item['status'], implode( $available_statuses, ', ' ) ) );
+					$WF_CSV_Order_Import->hf_order_log_data_change('order-csv-import', sprintf( __( '> > Skipped. Unknown order status %s (%s).', 'wf_order_import_export' ),  $item['status'], implode( $available_statuses, ', ' ) ) );
 					$skipped++;					
                                         unset($item);
                                         return;
@@ -300,7 +300,7 @@ class WF_CSV_Parser {
 			if ( ! empty( $item['date'] ) ) {
 				if ( false === ( $item['date'] = strtotime( $item['date'] ) ) ) {
 					// invalid date format
-					$WF_CSV_Order_Import->log->add( 'csv-import', sprintf( __( '> > Skipped. Invalid date format %s.', 'wf_order_import_export' ),  $item['date'] ) );
+					$WF_CSV_Order_Import->hf_order_log_data_change('order-csv-import', sprintf( __( '> > Skipped. Invalid date format %s.', 'wf_order_import_export' ),  $item['date'] ) );
 					$skipped++;
                                         unset($item);
                                         return;
@@ -593,7 +593,7 @@ class WF_CSV_Parser {
 
 						if ( ! $allow_unknown_products && ! $product_id ) {
 							// unknown product
-							$WF_CSV_Order_Import->log->add( 'csv-import', sprintf( __( '> > Skipped. Unknown order item: %s.', 'wf_order_import_export' ),  $product_identifier ) );
+							$WF_CSV_Order_Import->hf_order_log_data_change('order-csv-import', sprintf( __( '> > Skipped. Unknown order item: %s.', 'wf_order_import_export' ),  $product_identifier ) );
 							$skipped++;
                                                         $i++;
 							continue;  // break outer loop
@@ -628,7 +628,7 @@ class WF_CSV_Parser {
 
 				if ( ! $sku || ! $qty || ! is_numeric( $total ) ) {
 					// invalid item
-					$WF_CSV_Order_Import->log->add( 'csv-import', sprintf( __( '> > Row %d - %s - skipped. Missing SKU, quantity or total', 'wf_order_import_export' ), $row, $item['order_id'] ) );
+					$WF_CSV_Order_Import->hf_order_log_data_change('order-csv-import', sprintf( __( '> > Row %d - %s - skipped. Missing SKU, quantity or total', 'wf_order_import_export' ), $row, $item['order_id'] ) );
 					$skipped++;
                                         unset($item);
                                         return; // break outer loop
@@ -639,7 +639,7 @@ class WF_CSV_Parser {
 
 				if ( ! $product_id ) {
 					// unknown product
-					$WF_CSV_Order_Import->log->add( 'csv-import', sprintf( __( '> > Row %d - %s - skipped. Unknown order item: %s.', 'wf_order_import_export' ), $row, $item['order_id'], $sku ) );
+					$WF_CSV_Order_Import->hf_order_log_data_change('order-csv-import', sprintf( __( '> > Row %d - %s - skipped. Unknown order item: %s.', 'wf_order_import_export' ), $row, $item['order_id'], $sku ) );
 					$skipped++;
                                         unset($item);
                                         return;  // break outer loop
@@ -784,10 +784,6 @@ class WF_CSV_Parser {
 		);
 	}
         
-        function hf_currency_formatter($price){
-            $decimal_seperator = wc_get_price_decimal_separator();
-            return ereg_replace("[^0-9\\'.$decimal_seperator.']", "", $price);
-        }
         private function wc_get_order_statuses_neat() {
 
 		$order_statuses = array();

@@ -8,8 +8,8 @@ Author URI: http://cagewebdev.com
 Author: CAGE Web Design | Rolf van Gelder, Eindhoven, The Netherlands
 Requires at least: 2.8
 Tested up to: 4.8
-Stable tag: 4.2.3
-Version: 4.2.3
+Stable tag: 4.3
+Version: 4.3
 License: GPLv2 or later
 
 == Description ==
@@ -102,6 +102,10 @@ http://cagewebdev.com/wordpress-plugins/
 * If you run the plugin from any of the sites, it will cleanup ALL the sites in the network!
 
 == Changelog ==
+= 4.3 [07/24/2017] =
+* NEW: New setting added: Delete revisions of (POSTS and PAGES, POSTS only or PAGES only)
+* CHANGE: Some code clean-up and minor changes
+
 = 4.2.3 [07/05/2017] =
 * CHANGE: Extra save button added to the settings page
 
@@ -428,6 +432,11 @@ http://cagewebdev.com/wordpress-plugins/
 = Why do I see 'InnoDB table: skipped...'? =
 * That's because optimizing InnoDB tables is not really efficient, so change the table type to MyISAM to have them being optimized.
 * Update: if you want to optimize your InnoDB tables too, just check the 'Optimize InnoDB tables too' option on the settings page
+
+= After I ran the plugin, I got "Total savings since the first run: -64 KB" =
+* Sometimes that happens when you optimize InnoDB tables (instead of MyISAM tables).
+Optimizing InnoDB tables works differently than MyISAM.
+InnoDB focuses on speed optimization and sometimes it means the database can grow a little.
 
 = I scheduled the optimization for 8pm but it runs at 6pm (my local time) =
 * The scheduler uses the local time of the web server which can differ from your own local time

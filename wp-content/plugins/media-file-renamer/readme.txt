@@ -3,7 +3,7 @@ Contributors: TigrouMeow
 Tags: rename, file, media, management, image, renamer, wpml, wp-retina-2x
 Requires at least: 4.2
 Tested up to: 4.8
-Stable tag: 3.5.9
+Stable tag: 3.6.0
 
 Automatically rename files depending on Media titles dynamically + update links. Pro version has many more options. Check the description :)
 
@@ -100,10 +100,11 @@ You are welcome to create plugins using Media File Renamer using special rules f
 
 == Changelog ==
 
-= 3.5.9 =
+= 3.6.0 =
+* Fix: Compatibility with WPML.
 * Fix: There was a compatibility issue with retina.
 
-= 3.5.8 =
+= 3.5.8 =s
 * Add: New button "Lock All"
 * Fix: Button "Unlock All and Rename" was not really unlocking everything.
 

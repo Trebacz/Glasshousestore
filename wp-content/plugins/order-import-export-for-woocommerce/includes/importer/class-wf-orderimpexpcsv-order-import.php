@@ -33,8 +33,12 @@ class WF_OrderImpExpCsv_Order_Import extends WP_Importer {
 	 */
 	public function __construct() {
 
-		$this->log                     = new WC_Logger();
-		$this->import_page             = 'woocommerce_wf_order_csv';
+                if (WC()->version < '2.7.0') {
+                    $this->log = new WC_Logger();
+                } else {
+                    $this->log = wc_get_logger();
+                }
+                $this->import_page             = 'woocommerce_wf_order_csv';
 		$this->file_url_import_enabled = apply_filters( 'woocommerce_csv_product_file_url_import_enabled', true );
 	}
 
@@ -271,7 +275,7 @@ class WF_OrderImpExpCsv_Order_Import extends WP_Importer {
 									data:       data,
 									type:       'POST',
 									success:    function( response ) {
-										console.log( response );
+										//console.log( response );
 										$('#import-progress tbody').append( '<tr class="complete"><td colspan="5">' + response + '</td></tr>' );
 										$('.importer-loading').hide();
 									}
@@ -415,8 +419,8 @@ class WF_OrderImpExpCsv_Order_Import extends WP_Importer {
 		global $woocommerce, $wpdb;
 
 		wp_suspend_cache_invalidation( true );
-		$this->log->add( 'csv-import', '---' );
-		$this->log->add( 'csv-import', __( 'Processing orders.', 'wf_order_import_export' ) );
+		$this->hf_order_log_data_change('order-csv-import', '---' );
+		$this->hf_order_log_data_change('order-csv-import', __( 'Processing orders.', 'wf_order_import_export' ) );
                 $merging = 1;
                 $record_offset = 0;
 		foreach ( $this->parsed_data as $key => &$item ) {
@@ -427,10 +431,10 @@ class WF_OrderImpExpCsv_Order_Import extends WP_Importer {
 			$this->add_import_result( 'failed', $order->get_error_message(), 'Not parsed', json_encode( $item ), '-' );
                     
 			unset( $item, $order );
-                        $i++;
+                        
 		}
-                //error_log('Merged: '.$this->merged.'skipped: '.$this->skipped.'Errored: '.$this->errored.'Imported: '.$this->imported, 3, "C:/xampp/htdocs/wordpress/wp-content/plugins/order-import-export-for-woocommerce/test.txt");
-		$this->log->add( 'csv-import', __( 'Finished processing Orders.', 'wf_order_import_export' ) );
+                
+		$this->hf_order_log_data_change('order-csv-import', __( 'Finished processing Orders.', 'wf_order_import_export' ) );
 		wp_suspend_cache_invalidation( false );
 	}
 
@@ -444,14 +448,14 @@ class WF_OrderImpExpCsv_Order_Import extends WP_Importer {
                 $memory    = size_format( (WC()->version < '2.7.0')?woocommerce_let_to_num( ini_get( 'memory_limit' ) ):wc_let_to_num( ini_get( 'memory_limit' ) )  );
                 $wp_memory = size_format( (WC()->version < '2.7.0')? woocommerce_let_to_num( WP_MEMORY_LIMIT ) : wc_let_to_num( WP_MEMORY_LIMIT ) );
 
-		$this->log->add( 'csv-import', '---[ New Import ] PHP Memory: ' . $memory . ', WP Memory: ' . $wp_memory );
-		$this->log->add( 'csv-import', __( 'Parsing products CSV.', 'wf_order_import_export' ) );
+		$this->hf_order_log_data_change('order-csv-import', '---[ New Import ] PHP Memory: ' . $memory . ', WP Memory: ' . $wp_memory );
+		$this->hf_order_log_data_change('order-csv-import', __( 'Parsing products CSV.', 'wf_order_import_export' ) );
 
 		$this->parser = new WF_CSV_Parser( 'shop_order' );
 
 		list( $this->parsed_data, $this->raw_headers, $position ) = $this->parser->parse_data( $file, $this->delimiter, $start_pos, $end_pos );
 
-		$this->log->add( 'csv-import', __( 'Finished parsing products CSV.', 'wf_order_import_export' ) );
+		$this->hf_order_log_data_change('order-csv-import', __( 'Finished parsing products CSV.', 'wf_order_import_export' ) );
 
 		unset( $import_data );
 
@@ -521,7 +525,7 @@ class WF_OrderImpExpCsv_Order_Import extends WP_Importer {
         global $wpdb;
         $query = "SELECT ID FROM $wpdb->posts WHERE post_type = 'shop_order' AND post_status IN ( 'wc-pending', 'wc-processing', 'wc-completed', 'wc-on-hold', 'wc-failed' , 'wc-refunded', 'wc-cancelled')";
         $args = array();
-        $posts_are_exist = $wpdb->get_col($wpdb->prepare($query, $args));
+        $posts_are_exist = @$wpdb->get_col($wpdb->prepare($query, $args));
         
         if ($posts_are_exist) {
             foreach ($posts_are_exist as $exist_id) {
@@ -546,9 +550,10 @@ class WF_OrderImpExpCsv_Order_Import extends WP_Importer {
 		
                 // plan a dry run
 		//$dry_run = isset( $_POST['dry_run'] ) && $_POST['dry_run'] ? true : false;
+                $dry_run = FALSE;
 
-		$this->log->add( 'csv-import', '---' );
-		$this->log->add( 'csv-import', __( 'Processing orders.', 'wf_order_import_export' ) );
+		$this->hf_order_log_data_change('order-csv-import', '---' );
+		$this->hf_order_log_data_change('order-csv-import', __( 'Processing orders.', 'wf_order_import_export' ) );
 
 			// check class-wc-checkout.php for reference
 
@@ -575,7 +580,7 @@ class WF_OrderImpExpCsv_Order_Import extends WP_Importer {
             if (!$merging && $is_order_exist) {
                     $usr_msg = 'Order already exists.';
                     $this->add_import_result('skipped', __($usr_msg, 'wf_order_import_export'), $post['order_number'], $order_data['post_title'], $post['order_number']);
-                    $this->log->add('csv-import', sprintf(__('> &#8220;%s&#8221;' . $usr_msg, 'wf_order_import_export'), esc_html($order_data['post_title'])), true);
+                    $this->hf_order_log_data_change('order-csv-import', sprintf(__('> &#8220;%s&#8221;' . $usr_msg, 'wf_order_import_export'), esc_html($order_data['post_title'])), true);
                     unset($post);
                     return;
                 }
@@ -590,7 +595,7 @@ class WF_OrderImpExpCsv_Order_Import extends WP_Importer {
 					$this->errored++;
                                         $new_added = false;
                                         //$this->add_import_result('failed', __($order_id->get_error_message() , 'wf_order_import_export'), $post['order_number'], $order_data['post_title'], $post['order_number']);
-					$this->log->add( 'csv-import', sprintf( __( '> Error inserting %s: %s', 'wf_order_import_export'), $post['order_number'], $order_id->get_error_message() ), true );
+					$this->hf_order_log_data_change('order-csv-import', sprintf( __( '> Error inserting %s: %s', 'wf_order_import_export'), $post['order_number'], $order_id->get_error_message() ), true );
                     }
                     
                 }
@@ -651,13 +656,21 @@ class WF_OrderImpExpCsv_Order_Import extends WP_Importer {
 						'order_item_name' => $product ? $product->get_title() : __( 'Unknown Product', 'wf_order_import_export' ),
 						'order_item_type' => 'line_item',
 					);
-
+                                        
+                                        $var_id = 0;
+                                        if($product){
+                                            if (WC()->version < '2.7.0' && method_exists( $product,'get_variation_id' )) {
+                                            $var_id = $product->get_variation_id();
+                                        }else{
+                                            $var_id = $product->get_id();
+                                        }
+                                        }
 					// standard order item meta
 					$_order_item_meta = array(
 						'_qty'               => (int) $item['qty'],
 						'_tax_class'         => '', // Tax class (adjusted by filters)
 						'_product_id'        => $item['product_id'],
-						'_variation_id'      => $product && method_exists( $product,'get_variation_id' ) ? $product->get_variation_id() : 0,
+						'_variation_id'      => $var_id,
 						'_line_subtotal'     => number_format( (float) $item['total'], 2, '.', '' ), // Line subtotal (before discounts)
 						'_line_subtotal_tax' => 0, // Line tax (before discounts)
 						'_line_total'        => number_format( (float) $item['total'], 2, '.', '' ), // Line total (after discounts)
@@ -733,9 +746,12 @@ class WF_OrderImpExpCsv_Order_Import extends WP_Importer {
 				}
 
 				// record the product sales
-				$order->record_product_sales();
-
-			} // ! dry run
+                                if (WC()->version < '2.7.0') {
+                                        $order->record_product_sales();
+                                    } else {
+                                        wc_update_total_sales_counts($order_id);
+                                    }
+                                } // ! dry run
 
 			// was an original order number provided?
 			if ( ! empty( $post['order_number_formatted'] ) ) {
@@ -756,13 +772,14 @@ class WF_OrderImpExpCsv_Order_Import extends WP_Importer {
                             $out_msg = 'Order Imported Successfully.';
                         
                         $this->add_import_result('imported', __($out_msg, 'wf_order_import_export'), $order_id, $order_data['post_title'], $order_id);
-                        $this->log->add('csv-import', sprintf(__('> &#8220;%s&#8221;' . $usr_msg, 'wf_order_import_export'), esc_html($order_data['post_title'])), true);
+                        $this->hf_order_log_data_change('order-csv-import', sprintf(__('> &#8220;%s&#8221;' . $out_msg, 'wf_order_import_export'), esc_html($order_data['post_title'])), true);
 			$this->imported++;
-			$this->log->add( 'csv-import', sprintf( __( '> Finished importing order %s', 'wf_order_import_export' ), $dry_run ? "" : $order->get_order_number() ) );
+			$this->hf_order_log_data_change( 'order-csv-import', sprintf( __( '> Finished importing order %s', 'wf_order_import_export' ), $dry_run ? "" : $order->get_order_number() ) );
 
 //		}
 
-		$this->log->add( 'csv-import', __( 'Finished processing orders.', 'wf_order_import_export' ) );
+		
+                $this->hf_order_log_data_change( 'order-csv-import', __( 'Finished processing orders.', 'wf_order_import_export' ) );
 
 		unset( $post );
 	}
@@ -818,5 +835,18 @@ class WF_OrderImpExpCsv_Order_Import extends WP_Importer {
 	 */
 	public function bump_request_timeout( $val ) {
 		return 60;
+	}
+        
+        
+        public function hf_order_log_data_change ($content = 'order-csv-import',$data='')
+	{
+		if (WC()->version < '2.7.0')
+		{
+			$this->log->add($content,$data);
+		}else
+		{
+			$context = array( 'source' => $content );
+			$this->log->log("debug", $data ,$context);
+		}
 	}
 }

@@ -3,7 +3,7 @@ Contributors:      shawfactor
 Donate link: 	   https://lhero.org/plugins/lh-archived-post-status/
 Tags:              admin, posts, pages, status, workflow
 Requires at least: 3.0
-Tested up to:      4.7
+Tested up to:      4.8
 Stable tag:        trunk
 License:           GPLv2 or later
 License URI:       http://www.gnu.org/licenses/gpl-2.0.html
@@ -121,3 +121,6 @@ If you want to customise the display that shortcode has plenty of arguments. The
 
 **2.15 January 27, 2017**
 * Sticky post bug fix
+
+**2.16 July 25, 2017**
+* Don't use on attachments

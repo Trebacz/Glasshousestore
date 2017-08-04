@@ -7,9 +7,9 @@
   License:            GPLv3
   License URI:        http://www.gnu.org/licenses/quick-guide-gplv3.html
   Text Domain:        ecr-google-customer-reviews
-  Version:            1.0.3
+  Version:            1.0.4
   Requires at least:  3.0.0
-  Tested up to:       4.7.5
+  Tested up to:       4.8
  */
 
 // If this file is called directly, abort.

@@ -1,8 +1,8 @@
 <?php 
 /**
  * Manage Import's History
- * 
- * @author Pavel Kulbakin <p.kulbakin@gmail.com>
+ *
+ * @author Maksym Tsypliakov <maksym.tsypliakov@gmail.com>
  */
 class PMXI_Admin_History extends PMXI_Controller_Admin {
 	

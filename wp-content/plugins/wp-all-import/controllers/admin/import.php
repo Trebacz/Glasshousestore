@@ -1,8 +1,8 @@
 <?php 
 /**
  * Import configuration wizard
- * 
- * @author Pavel Kulbakin <p.kulbakin@gmail.com>
+ *
+ * @author Maksym Tsypliakov <maksym.tsypliakov@gmail.com>
  */
 
 class PMXI_Admin_Import extends PMXI_Controller_Admin {
@@ -2081,33 +2081,35 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
 
 			global $wpdb;
 
-			// Get all meta keys for requested post type			
-			$hide_fields = array('_wp_page_template', '_edit_lock', '_edit_last', '_wp_trash_meta_status', '_wp_trash_meta_time');
-			$records = get_posts( array('post_type' => $post['custom_type']) );
-			if ( ! empty($records)){			
-				foreach ($records as $record) {
-					$record_meta = get_post_meta($record->ID, '');
-					if ( ! empty($record_meta)){
-						foreach ($record_meta as $record_meta_key => $record_meta_value) {
-							if ( ! in_array($record_meta_key, $this->data['existing_meta_keys']) and ! in_array($record_meta_key, $hide_fields)) $this->data['existing_meta_keys'][] = $record_meta_key;
-						}
-					}
-				}
-			}	
+            // Get all meta keys for requested post type
+            $hide_fields = array('_edit_lock', '_edit_last', '_wp_trash_meta_status', '_wp_trash_meta_time');
+            $records = get_posts( array('post_type' => $post['custom_type']) );
+            if ( ! empty($records)){
+                foreach ($records as $record) {
+                    $record_meta = get_post_meta($record->ID, '');
+                    if ( ! empty($record_meta)){
+                        foreach ($record_meta as $record_meta_key => $record_meta_value) {
+                            if ( ! in_array($record_meta_key, $this->data['existing_meta_keys']) and ! in_array($record_meta_key, $hide_fields)) $this->data['existing_meta_keys'][] = $record_meta_key;
+                        }
+                    }
+                }
+            }
 
-			// Get existing product attributes
-			$existing_attributes = $wpdb->get_results("SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = '_product_attributes' LIMIT 0 , 50" );
-			$this->data['existing_attributes'] = array();
-			if ( ! empty($existing_attributes)){
-				foreach ($existing_attributes as $key => $existing_attribute) {				
-					$existing_attribute = maybe_unserialize($existing_attribute->meta_value);				
-					if (!empty($existing_attribute) and is_array($existing_attribute)): 
-						foreach ($existing_attribute as $key => $value) {
-							if (strpos($key, "pa_") === false and ! in_array($key, $this->data['existing_attributes'])) $this->data['existing_attributes'][] = $key;
-						} 
-					endif;
-				}
-			}	
+            $this->data['existing_meta_keys'] = apply_filters('wp_all_import_existing_meta_keys', $this->data['existing_meta_keys'], $post['custom_type']);
+
+            // Get existing product attributes
+            $existing_attributes = $wpdb->get_results("SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = '_product_attributes' LIMIT 0 , 50" );
+            $this->data['existing_attributes'] = array();
+            if ( ! empty($existing_attributes)){
+                foreach ($existing_attributes as $key => $existing_attribute) {
+                    $existing_attribute = maybe_unserialize($existing_attribute->meta_value);
+                    if (!empty($existing_attribute) and is_array($existing_attribute)):
+                        foreach ($existing_attribute as $key => $value) {
+                            if (strpos($key, "pa_") === false and ! in_array($key, $this->data['existing_attributes'])) $this->data['existing_attributes'][] = $key;
+                        }
+                    endif;
+                }
+            }	
 		}			
 		
 		$this->render();
@@ -2410,8 +2412,9 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
 			$pointer = 0;			
 			$records = array();
 
-			if ($import->options['is_import_specified']) {								
-				foreach (preg_split('% *, *%', $import->options['import_specified'], -1, PREG_SPLIT_NO_EMPTY) as $chank) {
+			if ($import->options['is_import_specified']) {						
+				$import_specified_option = apply_filters('wp_all_import_specified_records', $import->options['import_specified'], $import->id, false);		
+				foreach (preg_split('% *, *%', $import_specified_option, -1, PREG_SPLIT_NO_EMPTY) as $chank) {
 					if (preg_match('%^(\d+)-(\d+)$%', $chank, $mtch)) {
 						$records = array_merge($records, range(intval($mtch[1]), intval($mtch[2])));
 					} else {
@@ -2653,7 +2656,7 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
 
 			if ( $ajax_processing ) ob_start();			
 
-			do_action( 'pmxi_after_xml_import', $import->id );
+			do_action( 'pmxi_after_xml_import', $import->id, $import );
 
 			$import->delete_source( $logger );
 			$import->options['is_import_specified'] and $logger and call_user_func($logger, 'Done');	

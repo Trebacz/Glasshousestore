@@ -1,9 +1,9 @@
 <?php 
 /*
 Plugin Name: LH Archived Post Status
-Plugin URI: http://lhero.org/plugins/lh-archived-post-status/
+Plugin URI: https://lhero.org/plugins/lh-archived-post-status/
 Description: Creates an archived post status. Content can be excluded from the main loop and feed (but visible with a message), or hidden entirely
-Version: 2.15
+Version: 2.16
 Author: Peter Shaw
 Author URI: https://shawfactor.com/
 License:
@@ -196,10 +196,17 @@ $js_format; ?>"></span>
 
 public function add_post_scripts() {
 
+  global $post_type;
+
+if( 'attachment' != $post_type ){
+
 wp_enqueue_style('jquery-ui-css',plugins_url( '/styles/jquery-ui-fresh.min.css' , __FILE__ ));
-	wp_enqueue_script( 'jquery-ui-datepicker' );
-	wp_enqueue_script( 'jquery-ui-slider' );
+
+wp_enqueue_script( 'jquery-ui-datepicker' );
+wp_enqueue_script( 'jquery-ui-slider' );
 wp_enqueue_script('pw-spe-expiration', plugins_url( '/scripts/edit.js' , __FILE__ ), array(), '1.00', true  );
+
+}
 
 }
 
@@ -213,7 +220,7 @@ public function save_expiration( $post_id = 0 ) {
 		return;
 	}
 
-	if( ! wp_verify_nonce( $_POST['pw_spe_expiration_nonce'], 'pw_spe_edit_expiration' ) ) {
+	if( !isset($_POST['pw_spe_expiration_nonce']) or ! wp_verify_nonce( $_POST['pw_spe_expiration_nonce'], 'pw_spe_edit_expiration' ) ) {
 		return;
 	}
 
@@ -441,7 +448,7 @@ global $post;
 
 if (is_singular()){
 
-if ($post->post_status == $this->newstatusname){
+if (isset($post->post_status) and ($post->post_status == $this->newstatusname)){
 
 
 $content = $this->options[$this->message_field_name].$content;
@@ -673,7 +680,7 @@ if (in_the_loop() && is_singular()){
 $post_object = get_post($post_id);
 
 
-if ($post_object->post_status == $this->newstatusname){
+if (isset($post_object->post_status) and ($post_object->post_status == $this->newstatusname)){
 
 
   if (!empty($this->options[$this->title_label_field_name])){
@@ -758,8 +765,8 @@ add_action('admin_footer-post.php', array($this,"append_post_status_list"));
 add_filter('plugin_action_links', array($this,"add_settings_link"), 10, 2);
 
 add_action( 'post_submitbox_misc_actions', array($this,"add_expiration_field"));
-add_action( 'load-post-new.php', array($this,"add_post_scripts"));
-add_action( 'load-post.php', array($this,"add_post_scripts"));
+add_action( 'admin_print_scripts-post-new.php', array($this,"add_post_scripts"));
+add_action( 'admin_print_scripts-post.php', array($this,"add_post_scripts"));
 add_action( 'save_post', array($this,"save_expiration"));
 add_filter( 'manage_posts_columns', array( $this, 'admin_edit_columns' ) );
 add_action( 'manage_posts_custom_column', array( $this, 'admin_edit_column_values' ), 10, 2 );
