@@ -1,0 +1,4 @@
+[submodule "wp-content/plugins/youtube-google-analytics"]
+	url = https://github.com/lunametrics/youtube-google-analytics.git
+[submodule "wp-content/plugins/woocommerce-shipping-estimate"]
+	url = https://github.com/skyverge/woocommerce-shipping-estimate.git
