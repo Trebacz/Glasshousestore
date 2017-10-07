@@ -60,6 +60,16 @@ function wppfm_deactivateFeedCategory( id ) {
 	}
 }
 
+function wppfm_contains_special_characters( string ) {
+	var specialChars = '%^#<>{}[]\/~`@?:;=&';
+	
+	for( var i=0; i < specialChars.length; i++ ) {
+		if ( string.indexOf( specialChars[i] ) > -1 ) return true;
+	}
+	
+	return false;
+}
+
 function wppfm_deactivateFeedCategorySelector( id, parent ) {
 
 	_feedHolder.deactivateCategory( id );

@@ -199,7 +199,7 @@ $backup_url .= '?page=pb_backupbuddy_backup';
 	
 	
 	
-	<h3><?php _e( 'Source Media / Atachments', 'LIONS' ); ?></h3>
+	<h3><?php _e( 'Source Media / Attachments', 'LIONS' ); ?></h3>
 	<label><input type="checkbox" name="sendMedia" value="true"> Update media files with newer or missing files to match.</label>
 	<br><br>
 	

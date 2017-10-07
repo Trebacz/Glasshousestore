@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: Storefront Blog Customiser
- * Plugin URI: http://woothemes.com/products/storefront-blog-customiser/
+ * Plugin URI: http://woocommerce.com/products/storefront-blog-customiser/
  * Description: Adds blog customisation settings to the Storefront theme
- * Version: 1.2.1
- * Author: WooThemes
- * Author URI: http://woothemes.com/
+ * Version: 1.2.2
+ * Author: WooCommerce
+ * Author URI: http://woocommerce.com/
  * Requires at least: 4.1.0
  * Tested up to: 4.5.0
  *
@@ -101,7 +101,7 @@ final class Storefront_Blog_Customiser {
 		$this->token 			= 'storefront-blog-customiser';
 		$this->plugin_url 		= plugin_dir_url( __FILE__ );
 		$this->plugin_path 		= plugin_dir_path( __FILE__ );
-		$this->version 			= '1.2.1';
+		$this->version 			= '1.2.2';
 
 		register_activation_hook( __FILE__, array( $this, 'install' ) );
 
@@ -536,7 +536,7 @@ final class Storefront_Blog_Customiser {
 			$version = '';
 		}
 
-		if ( is_archive() || is_category() || is_tag() || ( is_home() && ! is_page_template( 'template-homepage.php' ) ) ) {
+		if ( is_archive() || is_search() || is_category() || is_tag() || ( is_home() && ! is_page_template( 'template-homepage.php' ) ) ) {
 			$classes[] = 'sbc-' . $post_layout_archive . $version;
 		}
 
@@ -575,12 +575,12 @@ final class Storefront_Blog_Customiser {
 		$blog_single_full_width  = get_theme_mod( 'sbc_blog_single_layout', false );
 
 		// Archives.
-		if ( 'meta-inline-bottom' == $post_layout_archive && ( is_archive() || is_category() || is_tag() || ( is_home() && ! is_page_template( 'template-homepage.php' ) ) ) ) {
+		if ( 'meta-inline-bottom' == $post_layout_archive && ( is_archive() || is_search() || is_category() || is_tag() || ( is_home() && ! is_page_template( 'template-homepage.php' ) ) ) ) {
 			remove_action( 'storefront_loop_post', 'storefront_post_meta', 20 );
 			add_action( 'storefront_loop_post',    'storefront_post_meta', 35 );
 		}
 
-		if ( 'meta-hidden' == $post_layout_archive && ( is_archive() || is_category() || is_tag() || ( is_home() && ! is_page_template( 'template-homepage.php' ) ) ) ) {
+		if ( 'meta-hidden' == $post_layout_archive && ( is_archive() || is_search() || is_category() || is_tag() || ( is_home() && ! is_page_template( 'template-homepage.php' ) ) ) ) {
 			remove_action( 'storefront_loop_post', 'storefront_post_meta', 20 );
 		}
 

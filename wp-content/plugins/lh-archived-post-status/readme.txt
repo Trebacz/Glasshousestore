@@ -124,3 +124,6 @@ If you want to customise the display that shortcode has plenty of arguments. The
 
 **2.16 July 25, 2017**
 * Don't use on attachments
+
+**2.17 October 04, 2017**
+* Various improvements

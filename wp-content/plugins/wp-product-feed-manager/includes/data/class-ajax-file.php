@@ -1,8 +1,8 @@
 <?php
 
 /* * ******************************************************************
- * Version 2.1
- * Modified: 25-05-2017
+ * Version 2.4
+ * Modified: 20-08-2017
  * Copyright 2017 Accentio. All rights reserved.
  * License: None
  * By: Michel Jongbloed
@@ -17,7 +17,7 @@ if ( !class_exists( 'WPPFM_Ajax_File_Class' ) ) :
 	 * The WPPFM_Ajax_File_Class contains all functions for file manipulation ajax calls
 	 * 
 	 * @class		WPPFM_Ajax_File_Class
-	 * @version		2.1
+	 * @version		2.4
 	 * @category	Class
 	 * @author		Michel Jongbloed
 	 */
@@ -36,9 +36,10 @@ if ( !class_exists( 'WPPFM_Ajax_File_Class' ) ) :
 			add_action( 'wp_ajax_myajax-delete-feed-file', array( $this, 'myajax_delete_feed_file' ) );
 			add_action( 'wp_ajax_myajax-update-feed-file', array( $this, 'myajax_update_feed_file' ) );
 			add_action( 'wp_ajax_myajax-log-message', array( $this, 'myajax_log_message' ) );
-			add_action( 'wp_ajax_myajax-update-ftp-mode-selection', array( $this, 'myajax_update_ftp_mode_selection' ) );
 			add_action( 'wp_ajax_myajax-auto-feed-fix-mode-selection', array( $this, 'myajax_auto_feed_fix_mode_selection' ) );
+			add_action( 'wp_ajax_myajax-debug-mode-selection', array( $this, 'myajax_debut_mode_selection' ) );
 			add_action( 'wp_ajax_myajax-third-party-attribute-keywords', array( $this, 'myajax_set_third_party_attribute_keywords' ) );
+			add_action( 'wp_ajax_myajax-reinitiate-plugin', array( $this, 'myajax_reinitiate_plugin' ) );
 		}
 
 		/* --------------------------------------------------------------------------------------------------*
@@ -49,7 +50,7 @@ if ( !class_exists( 'WPPFM_Ajax_File_Class' ) ) :
 		 * Returns the sub-categories from a selected category
 		 */
 		public function myajax_read_next_categories() {
-
+			
 			// make sure this call is legal
 			if ( $this->safe_ajax_call( filter_input( INPUT_POST, 'nextCategoryNonce' ), 'myajax-next-category-nonce' ) ) {
 				$file_class = new WPPFM_File_Class();
@@ -77,11 +78,11 @@ if ( !class_exists( 'WPPFM_Ajax_File_Class' ) ) :
 		 * 
 		 */
 		public function myajax_read_category_lists() {
-
+			
 			// make sure this call is legal
 			if ( $this->safe_ajax_call( filter_input( INPUT_POST, 'categoryListsNonce' ), 'myajax-category-lists-nonce' ) ) {
 				$file_class = new WPPFM_File_Class();
-
+				
 				$channel_id				 = filter_input( INPUT_POST, 'channelId' );
 				$main_categories_string	 = filter_input( INPUT_POST, 'mainCategories' );
 				$file_language			 = filter_input( INPUT_POST, 'fileLanguage' );
@@ -91,7 +92,7 @@ if ( !class_exists( 'WPPFM_Ajax_File_Class' ) ) :
 				for ( $i = 0; $i < count( $categories_array ); $i ++ ) {
 					$parent_category = $i > 0 ? $categories_array[ $i - 1 ] : '';
 					$c = $file_class->get_categories_for_list( $channel_id, $i, $parent_category, $file_language );
-					array_push( $categories, $c );
+					array_push( $categories, $c  );
 				}
 
 				echo json_encode( $categories );
@@ -178,25 +179,6 @@ if ( !class_exists( 'WPPFM_Ajax_File_Class' ) ) :
 		}
 
 		/**
-		 * Changes the FTP Passive Mode setting from the Settings page
-		 * 
-		 * @since 1.7.0
-		 */
-		public function myajax_update_ftp_mode_selection() {
-			
-			// make sure this call is legal
-			if ( $this->safe_ajax_call( filter_input( INPUT_POST, 'updateFeedDataNonce' ), 'myajax-ftp-mode-nonce' ) ) {
-				$selection = filter_input( INPUT_POST, 'ftp_selection' );
-				update_option( 'wppfm_ftp_passive', $selection );
-				
-				echo get_option( 'wppfm_ftp_passive' );
-			}
-
-			// IMPORTANT: don't forget to exit
-			exit;
-		}
-
-		/**
 		 * Changes the Auto Feed Fix setting from the Settings page
 		 * 
 		 * @since 1.7.0
@@ -209,6 +191,25 @@ if ( !class_exists( 'WPPFM_Ajax_File_Class' ) ) :
 				update_option( 'wppfm_auto_feed_fix', $selection );
 				
 				echo get_option( 'wppfm_auto_feed_fix' );
+			}
+
+			// IMPORTANT: don't forget to exit
+			exit;
+		}
+
+		/**
+		 * Changes the Debug setting from the Settings page
+		 * 
+		 * @since 1.9.0
+		 */
+		public function myajax_debug_mode_selection() {
+			
+			// make sure this call is legal
+			if ( $this->safe_ajax_call( filter_input( INPUT_POST, 'debugNonce' ), 'myajax-debug-nonce' ) ) {
+				$selection = filter_input( INPUT_POST, 'debug_selection' );
+				update_option( 'wppfm_debug_mode', $selection );
+				
+				echo get_option( 'wppfm_debug_mode' );
 			}
 
 			// IMPORTANT: don't forget to exit
@@ -228,6 +229,26 @@ if ( !class_exists( 'WPPFM_Ajax_File_Class' ) ) :
 				update_option( 'wppfm_third_party_attribute_keywords', $keywords );
 				
 				echo get_option( 'wppfm_third_party_attribute_keywords' );
+			}
+
+			// IMPORTANT: don't forget to exit
+			exit;
+		}
+		
+		/**
+		 * Re-initiates the plugin, updates the database and loads all cron jobs
+		 * 
+		 * @since 1.9.0
+		 */
+		public function myajax_reinitiate_plugin() {
+			
+			if ( $this->safe_ajax_call( filter_input( INPUT_POST, 'reInitiateNonce' ), 'myajax-reinitiate-nonce' ) ) {
+				
+				if ( wppfm_reinitiate_plugin() ) {
+					echo "Plugin re-initiated";
+				} else {
+					echo "Re-initiation failed!";
+				}
 			}
 
 			// IMPORTANT: don't forget to exit

@@ -114,6 +114,46 @@ if( ! function_exists('nm_wpml_translate') ) {
 	}
 }
 
+/**
+ * returning order id 
+ * 
+ * @since 7.9
+ */
+if ( ! function_exists('nm_get_order_id') ) {
+	function nm_get_order_id( $order ) {
+		
+		$class_name = get_class ($order);
+		if( $class_name != 'WC_Order' ) 
+			return $order -> ID;
+		
+		if ( version_compare( WC_VERSION, '2.7', '<' ) ) {  
+		
+			// vesion less then 2.7
+			return $order -> id;
+		} else {
+			
+			return $order -> get_id();
+		}
+	}
+}
 
- 
+/**
+ * returning product id 
+ * 
+ * @since 7.9
+ */
 
+if( ! function_exists('nm_get_product_id') ) {
+	
+	function nm_get_product_id( $product ) {
+		
+		if ( version_compare( WC_VERSION, '2.7', '<' ) ) {  
+		
+			// vesion less then 2.7
+			return $product -> ID;
+		} else {
+			
+			return $product -> get_id();
+		}
+	}
+}

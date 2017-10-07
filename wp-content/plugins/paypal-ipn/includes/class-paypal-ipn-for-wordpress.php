@@ -56,7 +56,7 @@ class AngellEYE_Paypal_Ipn_For_Wordpress {
     public function __construct() {
 
         $this->plugin_name = 'paypal-ipn';
-        $this->version = '1.1.0';
+        $this->version = '1.1.2';
 
         $this->load_dependencies();
         $this->set_locale();
@@ -193,6 +193,7 @@ class AngellEYE_Paypal_Ipn_For_Wordpress {
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'admin_enqueue_scripts');
         $this->loader->add_action('posts_where_request', $plugin_admin, 'paypal_ipn_for_wordpress_modify_wp_search');
         $this->loader->add_action('post_row_actions', $plugin_admin, 'paypal_ipn_for_wordpress_remove_row_actions', 10, 2);
+        $this->loader->add_action( 'delete_post', $plugin_admin, 'paypal_ipn_for_wordpress_remove_postmeta', 10 );
     }
 
     /**
@@ -210,6 +211,7 @@ class AngellEYE_Paypal_Ipn_For_Wordpress {
         
         $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
         $this->loader->add_action('the_posts', $plugin_public, 'paypal_ipn_for_wordpress_load_shortcode_asset', 10, 1);
+        $this->loader->add_action('wp', $plugin_public, 'paypal_ipn_for_wordpress_private_ipn_post', 10);
     }
 
     /**
@@ -308,15 +310,10 @@ class AngellEYE_Paypal_Ipn_For_Wordpress {
         /**
          * The check_ipn_request function check and validation for ipn response
          */
-        $ipn_url_name = false;
-        if( isset($_POST['ipn_url_name']) && !empty($_POST['ipn_url_name']) ) {
-            $ipn_url_name = $_POST['ipn_url_name'];
-            unset($_POST['ipn_url_name']);
-        }
         if ($AngellEYE_Paypal_Ipn_For_Wordpress_Paypal_Helper_Object->check_ipn_request()) {
-            $AngellEYE_Paypal_Ipn_For_Wordpress_Paypal_Helper_Object->successful_request($IPN_status = true, $ipn_url_name);
+            $AngellEYE_Paypal_Ipn_For_Wordpress_Paypal_Helper_Object->successful_request($IPN_status = true);
         } else {
-            $AngellEYE_Paypal_Ipn_For_Wordpress_Paypal_Helper_Object->successful_request($IPN_status = false, $ipn_url_name);
+            $AngellEYE_Paypal_Ipn_For_Wordpress_Paypal_Helper_Object->successful_request($IPN_status = false);
         }
     }
 

@@ -56,10 +56,16 @@ class backupbuddy_constants {
 		'/wp-content/cache/',
 		'/wp-content/mysql.sql',
 		'/wp-content/wfcache/',
+		'/wp-admin/error_log',
+		'/logs/',
+		'/wp-content/mysql.sql', // WPEngine's stuff.
+		'/_wpeprivate/', // WPEngine's stuff.
+		'/wp-content/updraft/', // Updraft stuff.
 	);
 	
 	// Remote Sends
 	const REMOTE_SEND_MAX_TIME_SINCE_START_TO_BAIL = 2592000; // 30 days. If this amount of time passed since the START of a remote send to consider bailing when retrying. This is basically a failsafe of the retry count fails and it keeps trying to send retries indefinitely. Only a failsafe.
+	const RECENT_SENDS_MAX_LISTING_COUNT = 100; // Only show the most recent X sends on the Remote Destinations Recent Sends listing table.
 	
 	// PHP date() timestamp format for the backup archive filename. DATE is default.
 	const ARCHIVE_NAME_FORMAT_DATE = 'Y_m_d';				// Format when archive_name_format = date.

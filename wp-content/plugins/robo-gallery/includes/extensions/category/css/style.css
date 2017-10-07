@@ -1,5 +1,5 @@
-.nestable-list.dd,
-.nestable-list .dd {
+html.dd,
+html .dd {
     position: relative;
     display: block;
     margin: 0;
@@ -9,7 +9,7 @@
     line-height: 20px;
 }
 
-.nestable-list .dd-list {
+html .dd-list {
     display: block;
     position: relative;
     margin: 0;
@@ -17,17 +17,17 @@
     list-style: none;
 }
 
-.nestable-list .dd-list .dd-list {
+html .dd-list .dd-list {
     padding-left: 30px;
 }
 
-.nestable-list .dd-collapsed .dd-list {
+html .dd-collapsed .dd-list {
     display: none;
 }
 
-.nestable-list .dd-item,
-.nestable-list .dd-empty,
-.nestable-list .dd-placeholder {
+html .dd-item,
+html .dd-empty,
+html .dd-placeholder {
     display: block;
     position: relative;
     margin: 0;
@@ -37,7 +37,7 @@
     line-height: 20px;
 }
 
-.nestable-list .dd-handle {
+html .dd-handle {
     display: block;
     height: 30px;
     margin: 5px 0;
@@ -56,12 +56,12 @@
     -moz-box-sizing: border-box;
 }
 
-.nestable-list .dd-handle:hover {
+html .dd-handle:hover {
     color: #2ea8e5;
     background: #fff;
 }
 
-.nestable-list .dd-item > button {
+html .dd-item > button {
     display: block;
     position: relative;
     cursor: pointer;
@@ -81,7 +81,7 @@
     font-weight: bold;
 }
 
-.nestable-list .dd-item > button:before {
+html .dd-item > button:before {
     content: '+';
     display: block;
     position: absolute;
@@ -90,12 +90,12 @@
     text-indent: 0;
 }
 
-.nestable-list .dd-item > button[data-action="collapse"]:before {
+html .dd-item > button[data-action="collapse"]:before {
     content: '-';
 }
 
-.nestable-list .dd-placeholder,
-.nestable-list .dd-empty {
+html .dd-placeholder,
+html .dd-empty {
     margin: 5px 0;
     padding: 0;
     min-height: 30px;
@@ -105,7 +105,7 @@
     -moz-box-sizing: border-box;
 }
 
-.nestable-list .dd-empty {
+html .dd-empty {
     border: 1px dashed #bbb;
     min-height: 100px;
     background-color: #e5e5e5;
@@ -119,17 +119,17 @@
     background-position: 0 0, 30px 30px;
 }
 
-.nestable-list .dd-dragel {
+html .dd-dragel {
     position: absolute;
     pointer-events: none;
-    z-index: 9999;
+    z-index: 999900;
 }
 
-.nestable-list .dd-dragel > .dd-item .dd-handle {
+html .dd-dragel > .dd-item .dd-handle {
     margin-top: 0;
 }
 
-.nestable-list .dd-dragel .dd-handle {
+html .dd-dragel .dd-handle {
     -webkit-box-shadow: 2px 4px 6px 0 rgba(0, 0, 0, .1);
     box-shadow: 2px 4px 6px 0 rgba(0, 0, 0, .1);
 }
@@ -158,4 +158,8 @@
     top: 50%;
     left: 50%;
     margin: -20px 0 0 -20px;
+}
+
+.nestable-list .dd-handle:hover{
+	cursor: pointer;
 }

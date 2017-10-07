@@ -1,5 +1,5 @@
 /*!
- * wppfm_backup-list.js v1.0
+ * wppfm_backup-list.js v1.1
  * Part of the WP Product Feed Manager
  * Copyright 2017, Michel Jongbloed
  *
@@ -44,8 +44,8 @@ function wppfm_resetOptionSettings() {
 
 			var options = JSON.parse( optionsString );
 			
-			$jq( '#wppfm_ftp_passive_mode' ).prop( "checked", options[0] === "true" ? true : false );
 			$jq( '#wppfm_auto_feed_fix_mode' ).prop( "checked", options[1] === "true" ? true : false );
+			$jq( '#wppfm_debug_mode' ).prop( "checked", options[1] === "true" ? true : false );
 		}
 	} );
 }

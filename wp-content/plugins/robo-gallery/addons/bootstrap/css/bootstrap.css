@@ -6681,3 +6681,19 @@ body #post .rbs_block  {
   }
 }
 /*# sourceMappingURL=bootstrap.css.map */
+#post .rbs_block select.form-control{
+	width: auto;
+}
+
+@media (min-width: 767px) {
+	
+	#post .rbs_block select.form-control{
+		width: auto;
+		display: inline-block;
+	}
+    .selectwidthauto {
+         width:auto !important;
+         display: inline-block;
+    }
+
+}

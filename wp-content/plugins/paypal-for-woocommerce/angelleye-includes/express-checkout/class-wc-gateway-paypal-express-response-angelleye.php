@@ -15,12 +15,19 @@ class WC_Gateway_PayPal_Express_Response_AngellEYE {
                 $split_name = $parser->split_full_name($response['SHIPTONAME']);
                 $shipping_first_name = $split_name['fname'];
                 $shipping_last_name = $split_name['lname'];
+                $company = !empty($response['BUSINESS']) ? str_replace("\\","", $response['BUSINESS']) : '';
+                $phone = '';
+                if( !empty($response['SHIPTOPHONENUM']) ) {
+                    $phone = $response['SHIPTOPHONENUM'];
+                } elseif( !empty($response['PHONENUM']) ) {
+                    $phone = $response['PHONENUM'];
+                }
                 $details = array(
                     'first_name' => isset($shipping_first_name) ? $shipping_first_name : $response['FIRSTNAME'],
                     'last_name' => isset($shipping_last_name) ? $shipping_last_name : $response['LASTNAME'],
-                    'company' => isset($response['BUSINESS']) ? $response['BUSINESS'] : '',
+                    'company' => $company,
                     'email' => isset($response['EMAIL']) ? $response['EMAIL'] : '',
-                    'phone' => isset($response['PHONENUM']) ? $response['PHONENUM'] : '',
+                    'phone' => $phone,
                     'address_1' => isset($response['SHIPTOSTREET']) ? $response['SHIPTOSTREET'] : '',
                     'address_2' => isset($response['SHIPTOSTREET2']) ? $response['SHIPTOSTREET2'] : '',
                     'city' => isset($response['SHIPTOCITY']) ? $response['SHIPTOCITY'] : '',
@@ -35,16 +42,23 @@ class WC_Gateway_PayPal_Express_Response_AngellEYE {
         }
     }
 
-    public function ec_get_state_code($country_code, $state) {
+    public function ec_get_state_code($country, $state) {
         try {
-            if ($country_code !== 'US' && isset(WC()->countries->states[$country_code])) {
-                $local_states = WC()->countries->states[$country_code];
-                if (!empty($local_states) && in_array($state, $local_states)) {
-                    foreach ($local_states as $key => $val) {
-                        if ($val === $state) {
-                            return $key;
-                        }
-                    }
+            $valid_states = WC()->countries->get_states($country);
+            if (!empty($valid_states) && is_array($valid_states)) {
+                $valid_state_values = array_flip(array_map('strtolower', $valid_states));
+                if (isset($valid_state_values[strtolower($state)])) {
+                    $state_value = $valid_state_values[strtolower($state)];
+                    return $state_value;
+                }
+            } else {
+                return $state;
+            }
+            if (!empty($valid_states) && is_array($valid_states) && sizeof($valid_states) > 0) {
+                if (!in_array($state, array_keys($valid_states))) {
+                    return false;
+                } else {
+                    return $state;
                 }
             }
             return $state;
@@ -62,19 +76,19 @@ class WC_Gateway_PayPal_Express_Response_AngellEYE {
     }
 
     public function ec_is_response_success($paypal_response) {
-        if (strtoupper($paypal_response['ACK']) == 'SUCCESS') {
+        if (!empty($paypal_response['ACK']) && strtoupper($paypal_response['ACK']) == 'SUCCESS') {
             return true;
         }
     }
 
     public function ec_is_response_success_or_successwithwarning($paypal_response) {
-        if (strtoupper($paypal_response['ACK']) == 'SUCCESS' || strtoupper($paypal_response['ACK']) == "SUCCESSWITHWARNING") {
+        if ( !empty($paypal_response['ACK']) && strtoupper($paypal_response['ACK']) == 'SUCCESS' || strtoupper($paypal_response['ACK']) == "SUCCESSWITHWARNING") {
             return true;
         }
     }
 
     public function ec_is_response_successwithwarning($paypal_response) {
-        if (strtoupper($paypal_response['ACK']) == 'SUCCESSWITHWARNING') {
+        if ( !empty($paypal_response['ACK']) && strtoupper($paypal_response['ACK']) == 'SUCCESSWITHWARNING') {
             return true;
         }
     }

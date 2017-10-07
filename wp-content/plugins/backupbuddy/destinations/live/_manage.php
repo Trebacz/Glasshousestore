@@ -80,6 +80,40 @@ if ( isset( $completion_css ) ) {
 }
 
 
+
+function bb_show_unsent_files( $show_permissions = true ) {
+	// Set up ZipBuddy when within BackupBuddy
+	require_once( pb_backupbuddy::plugin_path() . '/lib/zipbuddy/zipbuddy.php' );
+	pb_backupbuddy::$classes['zipbuddy'] = new pluginbuddy_zipbuddy( backupbuddy_core::getBackupDirectory() );
+	
+	echo '<h3>Unsent Files Listing (except deleted):</h3>';
+	$catalog = backupbuddy_live_periodic::get_catalog();
+	$unsent = array();
+	foreach( $catalog as $file => $catalogItem ) {
+		if ( !isset( $catalogItem['s'] ) || ( 0 == $catalogItem['s'] ) ) {
+			if ( isset( $catalogItem['d'] ) && ( true === $catalogItem['d'] ) ) { // Don't list items pending delete since we will not send this anyways.
+				continue;
+			}
+			
+			$details = '';
+			if ( true === $show_permissions ) {
+				$stats = pluginbuddy_stat::stat( ABSPATH . $file );
+				if ( false !== $stats ) {
+					$mode_octal_four = $stats['mode_octal_four'];
+					$owner = $stats['uid'] . ':' . $stats['gid'];
+					$details = ' - Perm: ' . $mode_octal_four . ' - Owner: ' . $owner;
+				} else {
+					$details = ' - [UNKNOWN PERMISSIONS]';
+				}
+			}
+			
+			$unsent[] = $file . $details;
+		}
+	}
+	echo '<textarea readonly="readonly" style="width: 100%;" wrap="off" cols="65" rows="20">--- TOTAL PENDING SEND: ' . count( $unsent ) . " ---\n" . implode( "\n", $unsent ) . '</textarea>';
+	echo '<br><br><br>';
+}
+
 // RUN ACTIONS FROM BUTTON PRESS.
 if ( '' != pb_backupbuddy::_GET( 'live_action' ) ) {
 	pb_backupbuddy::verify_nonce();
@@ -188,19 +222,11 @@ if ( '' != pb_backupbuddy::_GET( 'live_action' ) ) {
 		
 	} elseif ( 'view_unsent_files' == $action ) {
 		
-		echo '<h3>Unsent Files Listing (except deleted):</h3>';
-		$catalog = backupbuddy_live_periodic::get_catalog();
-		$unsent = array();
-		foreach( $catalog as $file => $catalogItem ) {
-			if ( !isset( $catalogItem['s'] ) || ( 0 == $catalogItem['s'] ) ) {
-				if ( isset( $catalogItem['d'] ) && ( true === $catalogItem['d'] ) ) { // Don't list items pending delete since we will not send this anyways.
-					continue;
-				}
-				$unsent[] = $file;
-			}
-		}
-		echo '<textarea readonly="readonly" style="width: 100%;" wrap="off" cols="65" rows="20">--- TOTAL PENDING SEND: ' . count( $unsent ) . " ---\n" . implode( "\n", $unsent ) . '</textarea>';
-		echo '<br><br><br>';
+		bb_show_unsent_files( true );
+		
+	} elseif ( 'view_unsent_files_noperms' == $action ) {
+		
+		bb_show_unsent_files( false );
 		
 	} elseif ( 'view_signatures_raw' == $action ) {
 		
@@ -478,6 +504,10 @@ if ( '' != pb_backupbuddy::_GET( 'live_action' ) ) {
 		echo '<h3>Raw Stats:</h3>';
 		echo '<textarea readonly="readonly" style="width: 100%;" wrap="off" cols="65" rows="20">' . print_r( $stats, true ) . '</textarea>';
 		echo '<br><br><br>';
+	} elseif ( 'view_exclusions' == $action ) {
+		echo '<h3>Raw Calculated Exclusions for Stash Live:</h3>';
+		echo '<textarea readonly="readonly" style="width: 100%;" wrap="off" cols="65" rows="20">' . print_r( backupbuddy_live_periodic::getFullExcludes(), true ) . '</textarea>';
+		echo '<br><br><br>';
 	}
 	
 } // end if action.
@@ -568,7 +598,7 @@ if ( count( $cron_warnings ) > 2 ) {
 	$cronText = '';
 	$i = 0;
 	foreach( $crons as $time => $cron ) {
-		if ( $time > time() ) { // Not past due.
+		if ( ($time+60) > time() ) { // Not past due. 60sec wiggle room.
 			continue;
 		}
 		$i++;
@@ -578,7 +608,7 @@ if ( count( $cron_warnings ) > 2 ) {
 		}
 		$cronText .= 'Cron `' . $cron[0] . '` running `' . $cron[2] . '` should have ran `' . pb_backupbuddy::$format->time_ago( $time ) . '` ago.<br>';
 	}
-	pb_backupbuddy::alert( 'Warning #839984343: ' . count( $cron_warnings ) . ' cron(s) warnings were found (such as past due). _IF_ you encounter problems AND this persists there may be a problem with your WordPress cron (such as caused by a caching plugin). Potentially stuck crons:<br>' . $cronText );
+	pb_backupbuddy::alert( 'Warning #839984343: ' . count( $cron_warnings ) . ' cron(s) warnings were found (such as past due). _IF_ you encounter problems AND this persists there may be a problem with your WordPress cron (such as caused by a caching plugin). This can also be caused if there is very little site activity (not enough visitors). WordPress requires visitors to access the site to trigger scheduled activity. Use an uptime checker to help push this along if this is the case.uld be due to these files being large or a temporary transfer err Potentially stuck crons:<br>' . $cronText );
 }
 ?>
 
@@ -986,8 +1016,8 @@ if ( count( $cron_warnings ) > 2 ) {
 					</div>
 					<div class="backupbuddy-live-stats-total"></div>
 					<div class="backupbuddy-live-stats-action">
-						<a href="https://sync.ithemes.com/stash" target="_blank" class="backupbuddy-live-button primary"><?php _e( 'Manage Remote Files', 'it-l10n-backupbuddy' ); ?></a><br>
-						<a href="https://ithemes.com/backupbuddy-stash/" target="_blank" class="backupbuddy-live-button secondary need-more"><?php _e( 'Need More Storage?', 'it-l10n-backupbuddy' ); ?></a>
+						<a href="https://ithemes.com/backupbuddy-stash/" target="_blank" class="backupbuddy-live-button secondary need-more"><?php _e( 'Need More Storage?', 'it-l10n-backupbuddy' ); ?></a><br>
+						<a href="https://sync.ithemes.com/stash" target="_blank" class="backupbuddy-live-button primary"><?php _e( 'Manage Remote Files', 'it-l10n-backupbuddy' ); ?></a>
 					</div>
 				</div>
 			</div>
@@ -1161,7 +1191,9 @@ if ( count( $cron_warnings ) > 2 ) {
 	<a href="<?php echo pb_backupbuddy::nonce_url( $admin_url . '?page=pb_backupbuddy_live&live_action=view_state' ); ?>" class="button button-secondary button-tertiary">View Entire State</a>
 	<a href="<?php echo pb_backupbuddy::nonce_url( $admin_url . '?page=pb_backupbuddy_live&live_action=view_raw_settings' ); ?>" class="button button-secondary button-tertiary">View Settings</a>
 	<a href="<?php echo pb_backupbuddy::nonce_url( $admin_url . '?page=pb_backupbuddy_live&live_action=view_stats' ); ?>" class="button button-secondary button-tertiary">View Stats</a>
+	<a href="<?php echo pb_backupbuddy::nonce_url( $admin_url . '?page=pb_backupbuddy_live&live_action=view_exclusions' ); ?>" class="button button-secondary button-tertiary">View Calculated Exclusions</a>
 	<a href="<?php echo pb_backupbuddy::nonce_url( $admin_url . '?page=pb_backupbuddy_live&live_action=view_unsent_files' ); ?>" class="button button-secondary button-tertiary">View Unsent Files</a>
+	<a href="<?php echo pb_backupbuddy::nonce_url( $admin_url . '?page=pb_backupbuddy_live&live_action=view_unsent_files_noperms' ); ?>" class="button button-secondary button-tertiary">View Unsent Files (hide permissions info)</a>
 	
 	<h4>Pretty Data:</h4>
 	<a href="<?php echo pb_backupbuddy::nonce_url( $admin_url . '?page=pb_backupbuddy_live&live_action=view_signatures' ); ?>" class="button button-secondary button-tertiary">View Formatted Catalog Files</a>

@@ -1,18 +1,15 @@
 <?php
 
 /* * ******************************************************************
- * Version 1.4
- * Modified: 19-05-2017
+ * Version 1.5
+ * Modified: 18-06-2017
  * Copyright 2017 Accentio. All rights reserved.
  * License: None
  * By: Michel Jongbloed
  * ****************************************************************** */
 
 // Prevent direct access
-if ( !defined( 'ABSPATH' ) ) {
-	echo 'Hi!  I\'m just a plugin, there\'s not much I can do when called directly.';
-	exit;
-}
+if ( !defined( 'ABSPATH' ) ) exit;
 
 if ( !class_exists( 'WPPFM_Main_Admin_Page' ) ) :
 
@@ -34,10 +31,14 @@ if ( !class_exists( 'WPPFM_Main_Admin_Page' ) ) :
 		 * Collects the html code for the main page and displays it.
 		 */
 		public function show() {
+			
+			// update the database if required
+			$db_management = new WPPFM_Database();
+			$db_management->verify_db_version();
 
 			echo $this->admin_page_header();
 			
-			$stat = wppfm_validate();
+			$stat = wppfm_validate(); // ref HWOTBERH
 			
 			if ( 'valid' === $stat ) {
 				
@@ -89,13 +90,12 @@ if ( !class_exists( 'WPPFM_Main_Admin_Page' ) ) :
 		 * @return html string
 		 */
 		private function tabs() {
-
-			$html_code = '<h2 class="nav-tab-wrapper">';
-			$html_code .= '<a href="admin.php?page=wp-product-feed-manager" class="nav-tab nav-tab-active">' . __( 'Feeds List', 'wp-product-feed-manager' ) . '</a>';
-			$html_code .= '<a href="admin.php?page=wp-product-feed-manager-add-new-feed\" class="nav-tab">' . __( 'Add or Edit Feed', 'wp-product-feed-manager' ) . '</a>';
-			$html_code .= '</h2>';
-
-			return $html_code;
+			?>
+			<h2 class="nav-tab-wrapper">
+				<a href="admin.php?page=wp-product-feed-manager" class="nav-tab nav-tab-active"><?php _e( 'Feeds List', 'wp-product-feed-manager' ); ?></a>
+				<a href="admin.php?page=wp-product-feed-manager-add-new-feed" class="nav-tab"><?php _e( 'Add or Edit Feed', 'wp-product-feed-manager' ); ?></a>
+			</h2>
+			<?php
 		}
 
 		/**
@@ -104,10 +104,7 @@ if ( !class_exists( 'WPPFM_Main_Admin_Page' ) ) :
 		 * @return html string
 		 */
 		private function main_admin_page() {
-
-			$main_page_code = $this->main_admin_body_top();
-
-			return $main_page_code;
+			return $this->main_admin_body_top();
 		}
 		
 		/**
@@ -116,7 +113,6 @@ if ( !class_exists( 'WPPFM_Main_Admin_Page' ) ) :
 		 * @return html string
 		 */
 		private function no_woocommerce() {
-				
 			$message_code = '<div class="full-screen-message-field">';
 			$message_code .= '<p>*** This plugin only works in conjunction with the Woocommerce Plugin! ';
 			$message_code .= 'It seems you have not installed the Woocommerce Plugin yet, so please do so before using this Plugin. ***</p>';
@@ -132,19 +128,13 @@ if ( !class_exists( 'WPPFM_Main_Admin_Page' ) ) :
 		 * @return html
 		 */
 		private function main_admin_body_top() {
-
-			$html_code = $this->_list_table->display();
-
-			return $html_code;
+			return $this->_list_table->display();
 		}
 
 		private function main_admin_buttons() {
-
-			$html_code = '<div class="button-wrapper" id="page-bottom-buttons"><input class="button-primary" type="button" ' .
+			return '<div class="button-wrapper" id="page-bottom-buttons"><input class="button-primary" type="button" ' .
 			'onclick="parent.location=\'admin.php?page=wp-product-feed-manager-add-new-feed\'" name="new" value="' .
 			__( 'Add New Feed', 'wp-product-feed-manager' ) . '" id="add-new-feed-button" /></div>';
-
-			return $html_code;
 		}
 
 	}

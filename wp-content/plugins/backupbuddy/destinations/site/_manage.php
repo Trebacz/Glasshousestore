@@ -164,9 +164,17 @@ if ( false === $status ) {
 		<td><?php echo $deploy->_state['destination']['siteurl']; ?></td>
 		<?php if ( true === $siteUp ) { ?>
 			<td class="deploy-pushpull-wrap">
-				<a href="javascript:void(0);" class="deploy-push-text" onClick="jQuery( '.deploy-type-selected' ).removeClass( 'deploy-type-selected' ); jQuery(this).addClass( 'deploy-type-selected' ); jQuery('#deploy-pull-wrap').hide(); jQuery('#deploy-push-wrap').slideDown(); jQuery('#backupbuddy_deploy_direction').attr('data-direction','push' ); jQuery( '.database_contents_shortcuts-prefix' ).click(); jQuery( '.plugins_shortcuts-none' ).click();">Push to</a>
+				<?php if ( isset( $destination['disable_push'] ) && ( '1' == $destination['disable_push'] ) ) { ?>
+					<s><a href="javascript:void(0);" class="deploy-push-text" onClick="alert( 'This option is disabled in this destination\'s settings.' );">Push to</a></s>
+				<?php } else { ?>
+					<a href="javascript:void(0);" class="deploy-push-text" onClick="jQuery( '.deploy-type-selected' ).removeClass( 'deploy-type-selected' ); jQuery(this).addClass( 'deploy-type-selected' ); jQuery('#deploy-pull-wrap').hide(); jQuery('#deploy-push-wrap').slideDown(); jQuery('#backupbuddy_deploy_direction').attr('data-direction','push' ); jQuery( '.database_contents_shortcuts-prefix' ).click(); jQuery( '.plugins_shortcuts-none' ).click();">Push to</a>
+				<?php } ?>
 				&nbsp;|&nbsp;
-				<a href="javascript:void(0);" class="deploy-pull-text" onClick="jQuery( '.deploy-type-selected' ).removeClass( 'deploy-type-selected' ); jQuery(this).addClass( 'deploy-type-selected' ); jQuery('#deploy-push-wrap').hide(); jQuery('#deploy-pull-wrap').slideDown(); jQuery('#backupbuddy_deploy_direction').attr('data-direction','pull' ); jQuery( '.database_contents_shortcuts-prefix' ).click(); jQuery( '.plugins_shortcuts-none' ).click();">Pull from</a>
+				<?php if ( isset( $destination['disable_pull'] ) && ( '1' == $destination['disable_pull'] ) ) { ?>
+					<s><a href="javascript:void(0);" class="deploy-pull-text" onClick="alert( 'This option is disabled in this destination\'s settings.' );">Pull from</a></s>
+				<?php } else { ?>
+					<a href="javascript:void(0);" class="deploy-pull-text" onClick="jQuery( '.deploy-type-selected' ).removeClass( 'deploy-type-selected' ); jQuery(this).addClass( 'deploy-type-selected' ); jQuery('#deploy-push-wrap').hide(); jQuery('#deploy-pull-wrap').slideDown(); jQuery('#backupbuddy_deploy_direction').attr('data-direction','pull' ); jQuery( '.database_contents_shortcuts-prefix' ).click(); jQuery( '.plugins_shortcuts-none' ).click();">Pull from</a>
+				<?php } ?>
 			</td>
 		<?php } ?>
 	</tr>

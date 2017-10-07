@@ -23,9 +23,11 @@ function rbs_gallery_group_metabox() {
 		rbs_gallery_include('rbs_gallery_options_copy.php', ROBO_GALLERY_OPTIONS_PATH);	
 	} 
 
-	rbs_gallery_include('rbs_gallery_options_guides.php', ROBO_GALLERY_OPTIONS_PATH);
-
-	rbs_gallery_include('rbs_gallery_options_images.php', ROBO_GALLERY_OPTIONS_PATH);
+	rbs_gallery_include( array(
+        'voting.php',
+		'rbs_gallery_options_guides.php',
+		'rbs_gallery_options_images.php',
+	), ROBO_GALLERY_OPTIONS_PATH);
 
     if( rbs_gallery_is_edit_page('edit') ){
     	rbs_gallery_include( array( 

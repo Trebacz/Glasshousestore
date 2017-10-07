@@ -426,7 +426,7 @@ class pb_backupbuddy_destinations {
 			return false;
 		}
 		
-		pb_backupbuddy::status( 'details', 'Calling destination-specific send method.' );
+		pb_backupbuddy::status( 'details', 'Calling destination-specific send method `' . "{$destination['class']}::send" . '`.' );
 		global $pb_backupbuddy_destination_errors;
 		$pb_backupbuddy_destination_errors = array();
 		$result = call_user_func_array( "{$destination['class']}::send", array( $destination_settings, $file, $send_id, $delete_after ) );

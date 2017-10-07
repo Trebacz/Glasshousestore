@@ -1,5 +1,5 @@
 /*!
- * wppfm_settings-form.js v3.1
+ * wppfm_settings-form.js v3.2
  * Part of the WP Product Feed Manager
  * Copyright 2017, Michel Jongbloed
  *
@@ -9,16 +9,25 @@
 
 var $jq = jQuery.noConflict();
 
-function wppfm_ftp_mode_changed() {
-	wppfm_update_ftp_passive_mode( $jq( '#wppfm_ftp_passive_mode' ).is( ':checked' ), function( response ) { console.log( response ); } );
-}
-
 function wppfm_auto_feed_fix_changed() {
 	wppfm_auto_feed_fix_mode( $jq( '#wppfm_auto_feed_fix_mode' ).is( ':checked' ), function( response ) { console.log( response ); } );	
 }
 
+//function wppfm_debug_mode_changed() {
+//	console.log( "TRIGGERED2" );
+//	wppfm_debug_mode( $jq( '#wppfm_debug_mode' ).is( ':checked' ), function( response ) { console.log( response ); } );	
+//}
+
 function wppfm_third_party_attributes_changed() {
 	wppfm_change_third_party_attribute_keywords( $jq( '#wppfm_third_party_attr_keys' ).val(), function( response ) { console.log( response ); } );
+}
+
+function wppfm_reinitiate() {
+	wppfm_show_feed_spinner();
+	wppfm_reinitiate_plugin( function( response ) { 
+		console.log( response );
+		wppfm_hide_feed_spinner();
+	} );
 }
 
 function wppfm_backup() {

@@ -19,42 +19,42 @@ class RoboGalleryConfig {
 		$guides =  array(
 			array(
 				'link'=> 	'https://www.youtube.com/watch?v=3vBl9Ke6bsg',
-				'text'=> 	'How to install key?',
+				'text'=> 	__( 'How to install key?', 'robo-gallery' ),
 				'class'=> 	'green'
 			),
 			array(
 				'link'=> 	'https://www.youtube.com/watch?v=DdCpRuLFxzk',
-				'text'=> 	'How to make custom grid layout?',
+				'text'=> 	__( 'How to make custom grid layout?', 'robo-gallery' ),
 				'class'=> 	'violet'
 			),
 			array(
 				'link'=> 	'https://www.youtube.com/watch?v=-CuGOo7XRmQ',
-				'text'=> 	'New Categories Manager',
+				'text'=> 	__( 'New Categories Manager', 'robo-gallery' ),
 				'class'=> 	'green'
 			),
 			array(
 				'link'=> 	'https://www.youtube.com/watch?v=mZ_yOXkxRsk',
-				'text'=> 	'How to setup Polaroid style?',
+				'text'=> 	__( 'How to setup Polaroid style?', 'robo-gallery' ),
 				'class'=> 	'violet'
 			),
 			array(
 				'link'=> 	'https://www.youtube.com/watch?v=m9XIeqMnhYI',
-				'text'=> 	'Install and configuration guide',
+				'text'=> 	__( 'Install and configuration guide', 'robo-gallery' ),
 				'class'=> 	'green'
 			),
 			array(
 				'link'=> 	'https://www.youtube.com/watch?v=RrWn8tMuKsw',
-				'text'=> 	'How to manage gallery post?',
+				'text'=> 	__( 'How to manage gallery post?', 'robo-gallery' ),
 				'class'=> 	'violet'
 			),
 			array(
 				'link'=> 	'https://www.youtube.com/watch?v=fI3uYOlUbo4',
-				'text'=> 	'How to upload gallery images?',
+				'text'=> 	__( 'How to upload gallery images?', 'robo-gallery' ),
 				'class'=> 	'green'
 			),					
 			array(
 				'link'=> 	'https://www.youtube.com/watch?v=lxDR6E8erBA',
-				'text'=> 	'How to create shortcode?',
+				'text'=> 	__( 'How to create shortcode?', 'robo-gallery' ),
 				'class'=> 	'violet'
 			),
 		);

@@ -3,7 +3,7 @@
  Plugin Name: N-Media WooCommerce Personalized Product Meta Manager
 Plugin URI: http://najeebmedia.com/wordpress-plugin/woocommerce-personalized-product-option/
 Description: This plugin allow WooCommerce Store Admin to create unlimited input fields and files to attach with Product Page
-Version: 7.7
+Version: 7.9.5
 Author: Najeeb Ahmad
 Text Domain: nm-personalizedproduct
 Author URI: http://www.najeebmedia.com/

@@ -38,7 +38,8 @@ final class RequestUtil
     static function buildUrlForGetOrPut($userLocale, $host, $path, $params = null)
     {
         $url = self::buildUri($host, $path);
-        $url .= "?locale=" . rawurlencode($userLocale);
+        $url .= "?";
+        //$url .= "?locale=" . rawurlencode($userLocale);
 
         if ($params !== null) {
             foreach ($params as $key => $value) {
@@ -153,21 +154,32 @@ final class RequestUtil
      *
      * @throws Exception
      */
-    static function doPost($clientIdentifier, $accessToken, $userLocale, $host, $path, $params = null)
+    static function doPost($clientIdentifier, $accessToken, $userLocale, $host, $path, $params = null, $headerAPI = null, $contentType = '' )
     {
         Checker::argStringNonEmpty("accessToken", $accessToken);
 
         $url = self::buildUri($host, $path);
 
-        if ($params === null) $params = array();
-        $params['locale'] = $userLocale;
+        //if ($params === null) $params = array();
+        //$params['locale'] = $userLocale;
 
         $curl = self::mkCurlWithOAuth($clientIdentifier, $url, $accessToken);
-        $curl->set(CURLOPT_POST, true);
-        $curl->set(CURLOPT_POSTFIELDS, self::buildPostBody($params));
-
+        
         $curl->set(CURLOPT_RETURNTRANSFER, true);
-        return $curl->exec();
+        $curl->set(CURLOPT_POST, true);
+        
+        
+        
+        if ( null === $headerAPI ) {
+        	\pb_backupbuddy::status( 'details', 'Putting params in header.' );
+        	//error_log( 'A' . print_r( $params, true ) );
+        	$curl->set(CURLOPT_POSTFIELDS, json_encode($params));
+        } else {
+        	\pb_backupbuddy::status( 'details', 'Putting params in body.' );
+        	$curl->addHeader( $headerAPI );
+        }
+        
+        return $curl->exec( $contentType );
     }
 
     /**
@@ -188,12 +200,16 @@ final class RequestUtil
 
         $url = self::buildUri($host, $path);
 
-        if ($params === null) $params = array();
-        $params['locale'] = $userLocale;
+        //if ($params === null) $params = array();
+        //$params['locale'] = $userLocale;
 
         $curl = self::mkCurlWithAuth($clientIdentifier, $url, $authHeaderValue);
         $curl->set(CURLOPT_POST, true);
-        $curl->set(CURLOPT_POSTFIELDS, self::buildPostBody($params));
+        $body = self::buildPostBody($params);
+        //error_log( print_r( $body, true ) );
+        $curl->set(CURLOPT_POSTFIELDS, $body);
+        
+        $curl->addHeader("Content-Type: application/x-www-form-urlencoded;charset=UTF-8");
 
         $curl->set(CURLOPT_RETURNTRANSFER, true);
         return $curl->exec();

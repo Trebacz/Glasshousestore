@@ -9,10 +9,7 @@
  * ****************************************************************** */
 
 // Prevent direct access
-if ( !defined( 'ABSPATH' ) ) {
-	echo 'Hi!  I\'m just a plugin, there\'s not much I can do when called directly.';
-	exit;
-}
+if ( !defined( 'ABSPATH' ) ) exit;
 
 if ( !class_exists( 'WPPFM_Data_Class' ) ) :
 
@@ -166,141 +163,6 @@ if ( !class_exists( 'WPPFM_Data_Class' ) ) :
 			return $outputs;
 		}
 
-// obsolete 030217
-//		public function get_raw_data( $feed_id, $active_field_names, $category_mapping ) {
-//			
-//			$prep_meta_class = new WPPFM_Feed_Value_Editors_Class();
-//
-//			$post_fields			 = array();
-//			$meta_fields			 = array();
-//			$custom_fields			 = array();
-//			$active_custom_fields	 = array();
-//			$active_third_party_custom_fields = array();
-//			$result					 = array();
-//			$post_columns_string	 = '';
-//
-//			$colums_in_post_table	 = $this->_queries->get_columns_from_post_table(); // get all post table column names
-//			$all_custom_columns		 = $this->_queries->get_custom_product_attributes(); // get all custom name labels
-//			$third_party_custom_fields = $this->get_third_party_custom_fields();
-//			
-//			// convert the query results to an array with only the name labels
-//			foreach ( $colums_in_post_table as $column ) {
-//				array_push( $post_fields, $column->Field );
-//			} // $post_fields containing the required names from the post table
-//			foreach ( $all_custom_columns as $custom ) {
-//				array_push( $custom_fields, $custom->attribute_name );
-//			} // $custom_fields containing the custom names
-//			// filter the post columns, the meta columns and the custom columns to only those that are actually in use
-//			
-//			foreach ( $active_field_names as $column ) {
-//
-//				if ( in_array( $column, $post_fields ) && $column !== 'ID' ) { // because ID is always required, it's excluded here and hardcoded in the query
-//					$post_columns_string .= $column . ', '; // here a string is required to push in the query
-//				} elseif ( in_array( $column, $custom_fields ) ) {
-//
-//					array_push( $active_custom_fields, $column );
-//				} elseif ( in_array( $column, $third_party_custom_fields ) ) {
-//				
-//					array_push( $active_third_party_custom_fields, $column );
-//				} else {
-//
-//					array_push( $meta_fields, $column );
-//				}
-//			}
-//
-//			$category_string = $this->make_category_selection_string( $category_mapping );
-//
-//			$pcs = $post_columns_string ? substr( $post_columns_string, 0, -2 ) : '';
-//
-//			$post_data = $this->_queries->read_post_data( $pcs, $category_string );
-//
-//			// Memory-error: Het gaat hier nog fout bij grote selecties in de read_post_data en vooral als het PHP geheugen wat beperkt is.
-//			// Onderzoeken welke mogelijkheden ik heb om de read_post_data de gegevens in stukjes aan te laten leveren.
-//			// Check this out: http://www.seancolombo.com/2009/07/05/quick-tip-do-huge-mysql-queries-in-batches-when-using-php/
-//			// Wat ik dan zou moeten doen is waarschijnlijk de data in kleinere stukken. Hoeveel zal ik misschien afhankelijk moeten maken
-//			// van het beschikbare geheugen (via memory_get_usage()).
-//			
-//			foreach ( $post_data as $post_item ) {
-//
-//				$meta_ids = $this->get_meta_parent_ids( $post_item->ID );
-//
-//				array_unshift( $meta_ids, $post_item->ID );
-//
-//				$meta_data = $this->_queries->read_meta_data( $post_item->ID, $meta_ids, $meta_fields );
-//				
-//				foreach ( $meta_data as $meta ) {
-//
-//					$meta_value = $prep_meta_class->prep_meta_values( $meta );
-//					
-//					if ( array_key_exists( $meta->meta_key, $post_item ) ) {
-//
-//						$meta_key = $meta->meta_key;
-//
-//						if ( $post_item->$meta_key === '' ) {
-//							$post_item = (object) array_merge( (array) $post_item, array( $meta->meta_key => $meta_value ) );
-//						}
-//					} else {
-//						$post_item = (object) array_merge( (array) $post_item, array( $meta->meta_key => $meta_value ) );
-//					}
-//				}
-//
-//				foreach ( $active_custom_fields as $field ) {
-//					$post_item->{$field} = $this->get_custom_field_data( $post_item->ID, $field );
-//				}
-//				
-//				foreach ( $active_third_party_custom_fields as $third_party_field ) {
-//					$post_item->{$third_party_field} = $this->get_third_party_custom_field_data( $post_item->ID, $third_party_field );
-//				}
-//				
-//				// If required, use wordpress functions to add the correct data to the result
-//				if ( in_array( 'permalink', $active_field_names ) ) {
-//					$post_item->permalink = get_permalink( $post_item->ID );
-//				}
-//
-//				if ( in_array( 'attachment_url', $active_field_names ) ) {
-//					$post_item->attachment_url = wp_get_attachment_url( get_post_thumbnail_id( $post_item->ID ) );
-//				}
-//
-//				if ( in_array( 'product_cat', $active_field_names ) ) {
-//					$post_item->product_cat = WPPFM_Categories_Class::get_shop_categories( $post_item->ID );
-//				}
-//
-//				if ( in_array( 'product_cat_string', $active_field_names ) ) {
-//					$post_item->product_cat_string = WPPFM_Categories_Class::make_shop_category_string( $post_item->ID );
-//				}
-//				
-//				if ( in_array( 'last_update', $active_field_names ) ) {
-//					$post_item->last_update = date( 'Y-m-d h:i:s', time() );
-//				}
-//
-//				if ( in_array( '_wp_attachement_metadata', $active_field_names ) ) {
-//					$post_item->_wp_attachement_metadata = $this->get_product_image_galery( $post_item->ID );
-//				}
-//
-//				if ( in_array( 'product_tags', $active_field_names ) ) {
-//					$post_item->product_tags = $this->get_product_tags( $post_item->ID );
-//				}
-//
-//				if ( in_array( 'wc_currency', $active_field_names ) ) {
-//					$post_item->wc_currency = get_woocommerce_currency();
-//				}
-//
-//				if ( in_array( 'item_group_id', $active_field_names ) ) {
-//					$prdct = wc_get_product( $post_item->ID );
-//					$post_item->item_group_id = $prdct->product_type === 'variable' || $prdct->product_type === 'variation' ? 'GID' . $post_item->ID : '';
-//				}
-//				
-//				if ( in_array( 'shipping_class', $active_field_names ) ) {
-//					$prdct = wc_get_product( $post_item->ID );
-//					$post_item->shipping_class = $prdct->get_shipping_class();
-//				}
-//
-//				array_push( $result, (array) $post_item );
-//			}
-//			
-//			return $result;
-//		}
-
  		public function get_third_party_custom_fields() {
 			
 			$custom_fields = array();
@@ -399,6 +261,13 @@ if ( !class_exists( 'WPPFM_Data_Class' ) ) :
 		private function convert_data_to_feed_data( $data ) {
 
 			$feed = new stdClass();
+			
+			if ( $data[ 'title' ] === null || $data[ 'feed_description' ] === null || $data[ 'language' ] === null ) {
+				$queries = new WPPFM_Queries();
+				$msg = sprintf( "The feedmanager_product_feed table is not up to date and is missing one or more columns. The database currently contains these columne: %s", 
+					$queries->get_table_columns( "feedmanager_product_feed" ) );
+				wppfm_write_log_file($msg);
+			}
 
 			$feed->feedId			 = $data[ 'product_feed_id' ];
 			$feed->title			 = $data[ 'title' ];
@@ -406,12 +275,15 @@ if ( !class_exists( 'WPPFM_Data_Class' ) ) :
 			$feed->categoryMapping	 = $data[ 'category_mapping' ];
 			$feed->isAggregator		 = $data[ 'is_aggregator' ];
 			$feed->includeVariations = $data[ 'include_variations' ];
+			$feed->feed_title		 = $feed->feed_title !== null ? $data[ 'feed_title' ] : '';
+			$feed->feed_description	 = $feed->feed_description !== null ? $data[ 'feed_description' ] : '';
 			$feed->url				 = $data[ 'url' ];
 			$feed->dataSource		 = $data[ 'source' ];
 			$feed->channel			 = $data[ 'channel' ];
 			$feed->country			 = $data[ 'country' ];
 			$feed->status			 = $data[ 'status_id' ];
 			$feed->updateSchedule	 = $data[ 'schedule' ];
+			$feed->language			 = $feed->language !== null ? $data[ 'language' ] : '';
 
 			return $feed;
 		}

@@ -13,7 +13,7 @@
 */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
-
+//return '';
 $hover_group = new_cmb2_box( array(
     'id' 			=> ROBO_GALLERY_PREFIX . 'hover_metabox',
     'title' 		=> '<span class="dashicons dashicons-format-gallery"></span> '.__( 'Hover Options', 'rbs_gallery' ), 

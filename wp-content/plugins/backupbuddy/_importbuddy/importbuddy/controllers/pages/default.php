@@ -4,7 +4,6 @@ if ( ! defined( 'PB_IMPORTBUDDY' ) || ( true !== PB_IMPORTBUDDY ) ) {
 }
 
 
-
 /****** BEGIN AUTHENTICATION *****/
 //require_once( ABSPATH . 'importbuddy/classes/auth.php' );
 Auth::check();
@@ -14,9 +13,7 @@ if ( ( true === Auth::is_authenticated() ) && ( 'login' == pb_backupbuddy::_POST
 /****** END AUTHENTICATION *****/
 
 
-
 $mode = 'html';
-
 
 
 // Register PHP shutdown function to help catch and log fatal PHP errors during backup.
@@ -83,10 +80,7 @@ function shutdown_function() {
 } // End shutdown_function.
 
 
-
-
 // Handle AJAX.
-
 $ajax = '';
 if ( pb_backupbuddy::_POST( 'ajax' ) != '' ) {
 	$ajax = pb_backupbuddy::_POST( 'ajax' );
@@ -110,7 +104,6 @@ if ( $ajax != '' ) { // AJAX
 
 
 // Determine page to load.
-
 if ( pb_backupbuddy::_GET( 'page' ) != '' ) { // Named page.
 	
 	Auth::require_authentication(); // Die if not logged in.

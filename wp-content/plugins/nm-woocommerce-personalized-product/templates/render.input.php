@@ -34,12 +34,12 @@ echo '</style>';
 	echo '<input type="hidden" name="woo_option_price">';	// it will be populated while dynamic prices set in script.js
 	echo '<input type="hidden" id="_product_price" value="'.$product->get_price().'">';	// it is setting price to be used for dymanic prices in script.js
 	echo '<input type="hidden" id="_productmeta_id" value="'.$nmpersonalizedproduct -> productmeta_id.'">';
-	echo '<input type="hidden" id="_product_id" value="'.$product->get_id().'">';
+	echo '<input type="hidden" id="_product_id" value="'.nm_get_product_id($product).'">';
 	
 	echo '<input type="hidden" name="woo_onetime_fee">';	// it will be populated while dynamic prices set in script.js
 	echo '<input type="hidden" name="woo_file_cost">';	// to hold the file cost
 	
-	echo '<input type="hidden" name="add-to-cart" value="'.$product->get_id().'">';
+	echo '<input type="hidden" name="add-to-cart" value="'.nm_get_product_id($product).'">';
 	
 	$row_size = 0;
 	
@@ -327,6 +327,9 @@ echo '</style>';
 					break;
 						
 				case 'palettes':
+					if(isset($meta['disabletooltip']) && $meta['disabletooltip'] != 'on'){
+						wp_enqueue_script('jquery-ui-tooltip');
+					}
 					$default_selected = $meta['selected'];
 					$data_onetime = (isset( $meta['onetime'] ) ? $meta['onetime'] : '' );
 					$data_onetime_taxable = (isset( $meta['onetime_taxable'] ) ? $meta['onetime_taxable'] : '' );
@@ -335,6 +338,7 @@ echo '</style>';
 									'data-type'		=> $type,
 									'data-req'		=> $required,
 									'data-message'		=> $error_message,
+									'disabletooltip'		=> $meta['disabletooltip'],
 									'data-onetime'		=> $data_onetime,
 									'data-onetime-taxable'	=> $data_onetime_taxable);
 				

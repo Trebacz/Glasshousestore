@@ -1,5 +1,5 @@
 /*!
- * google-source.js v4.1
+ * google-source.js v4.2
  * Part of the WP Product Feed Manager
  * Copyright 2017, Michel Jongbloed
  *
@@ -259,8 +259,6 @@ function googleStaticFieldOptions( fieldName ) {
 }
 
 function switchToGoogleFeedFormMainInputs( isNew, channel ) {
-    var language = "en-US";
-                
     $jq( '#country-list-row' ).show();
     $jq( '#category-list-row' ).show();
 	$jq( '#google-feed-title-row' ).show();
@@ -268,7 +266,7 @@ function switchToGoogleFeedFormMainInputs( isNew, channel ) {
     //$jq( '#category-map' ).show();
     $jq( '#aggregator-selector-row' ).hide();
 
-    appendCategoryLists( parseInt( channel ), language, isNew );
+    appendCategoryLists( parseInt( channel ), "en-US", isNew );
 }
 
 function googleInputChanged( feedId, categoryChanged ) {

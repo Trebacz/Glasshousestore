@@ -170,4 +170,3 @@ if ( !defined( 'PB_IMPORTBUDDY' ) ) { // NOT IN IMPORTBUDDY:
 		echo '{Skipping Server Info. section based on querystring.}';
 	}
 }
-?>

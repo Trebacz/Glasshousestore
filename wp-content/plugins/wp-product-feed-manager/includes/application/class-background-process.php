@@ -317,6 +317,7 @@ if ( ! class_exists( 'WPPFM_Background_Process' ) ) {
 
 					if ( $this->time_exceeded() || $this->memory_exceeded() ) {
 						// Batch limits reached.
+						wppfm_show_wp_error( "Memory limit reached" );
 						break;
 					}
 				}

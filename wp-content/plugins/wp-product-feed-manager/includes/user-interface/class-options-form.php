@@ -1,8 +1,8 @@
 <?php
 
 /* * ******************************************************************
- * Version 2.2
- * Modified: 25-05-2017
+ * Version 2.3
+ * Modified: 20-08-2017
  * Copyright 2017 Accentio. All rights reserved.
  * License: None
  * By: Michel Jongbloed
@@ -54,28 +54,14 @@ if ( !class_exists( 'WPPFM_Options_Form' ) ) :
 		 * @since 1.5.0
 		 * @since 1.7.0 Added the backups table
 		 * @since 1.8.0 Added the third party attributes text field
+		 * @since 1.9.0 Added the Re-initialize button
 		 */
 		private function settings() {
 			$html_code = '';
-			
-			// ftp option is only required for the full version
-			if ( EDD_SL_ITEM_NAME === 'Woocommerce Product Feed Manager' ) {
-				$passive_option = get_option( 'wppfm_ftp_passive', true );
-				$passive_checked = true === $passive_option || $passive_option === 'true' ? ' checked ' : '';
-			
-				$html_code .= '<tr valign="top" class="">';
-				$html_code .= '<th scope="row" class="titledesc">' . __( 'FTP Passive Mode', 'wp-product-feed-manager' ) . '</th>';
-				$html_code .= '<td class="forminp forminp-checkbox">';
-				$html_code .= '<fieldset>';
-				$html_code .= '<legend class="screen-reader-text"><span>' . __( 'FTP Passive Mode', 'wp-product-feed-manager' ) . '</span></legend>';
-				$html_code .= '<label for="wppfm_ftp_passive_mode">';
-				$html_code .= '<input name="wppfm_ftp_passive_mode" id="wppfm_ftp_passive_mode" type="checkbox" class="" value="1"';
-				$html_code .= $passive_checked . '> ' . __( 'Use FTP Passive Mode when downloading channels (default on). Change this setting when you have trouble downloading a new channel.', 'wp-product-feed-manager') . '</label></fieldset>';
-				$html_code .= '</td></tr>';
-			}
+			$third_party_attribute_keywords = get_option( 'wppfm_third_party_attribute_keywords', '%_wpmr_%, %_cpf_%, %_unit%, %_bto_%' );
 
 			$auto_fix_feed_option = get_option( 'wppfm_auto_feed_fix', true );
-			$checked = true === $auto_fix_feed_option || $auto_fix_feed_option === 'true' ? ' checked ' : '';
+			$auto_feed_fix_checked = true === $auto_fix_feed_option || $auto_fix_feed_option === 'true' ? ' checked ' : '';
 
 			$html_code .= '<tr valign="top" class="">';
 			$html_code .= '<th scope="row" class="titledesc">' . __( 'Auto Feed Fix', 'wp-product-feed-manager' ) . '</th>';
@@ -84,11 +70,22 @@ if ( !class_exists( 'WPPFM_Options_Form' ) ) :
 			$html_code .= '<legend class="screen-reader-text"><span>' . __( 'Auto Feed Fix', 'wp-product-feed-manager' ) . '</span></legend>';
 			$html_code .= '<label for="wppfm_auto_feed_fix_mode">';
 			$html_code .= '<input name="wppfm_auto_feed_fix_mode" id="wppfm_auto_feed_fix_mode" type="checkbox" class="" value="1"';
-			$html_code .= $checked . '> ' . __( 'Automatically fix feeds that are failed (default on). Change this setting if a feed keeps failing.', 'wp-product-feed-manager') . '</label></fieldset>';
+			$html_code .= $auto_feed_fix_checked . '> ' . __( 'Automatically fix feeds that are failed (default on). Change this setting if a feed keeps failing.', 'wp-product-feed-manager') . '</label></fieldset>';
 			$html_code .= '</td></tr>';
-			
-			$third_party_attribute_keywords = get_option( 'wppfm_third_party_attribute_keywords', '_wpmr_%, _cpf_%, _unit%' );
 
+//			$debug_option = get_option( 'wppfm_debug_mode', false );
+//			$debug_option_checked = true === $debug_option || $debug_option === 'true' ? ' checked ' : '';
+//
+//			$html_code .= '<tr valign="top" class="">';
+//			$html_code .= '<th scope="row" class="titledesc">' . __( 'Debug Mode', 'wp-product-feed-manager' ) . '</th>';
+//			$html_code .= '<td class="forminp forminp-checkbox">';
+//			$html_code .= '<fieldset>';
+//			$html_code .= '<legend class="screen-reader-text"><span>' . __( 'Debug Mode', 'wp-product-feed-manager' ) . '</span></legend>';
+//			$html_code .= '<label for="wppfm_debug_mode">';
+//			$html_code .= '<input name="wppfm_debug_mode" id="wppfm_debug_mode" type="checkbox" value="1"';
+//			$html_code .= $debug_option_checked . '> ' . __( 'Switch this option only on request of the support team.', 'wp-product-feed-manager') . '</label></fieldset>';
+//			$html_code .= '</td></tr>';
+//
 			$html_code .= '<tr valign="top" class="">';
 			$html_code .= '<th scope="row" class="titledesc">' . __( 'Third Party Attributes', 'wp-product-feed-manager' ) . '</th>';
 			$html_code .= '<td class="forminp forminp-checkbox">';
@@ -97,6 +94,13 @@ if ( !class_exists( 'WPPFM_Options_Form' ) ) :
 			$html_code .= '<label for="wppfm_third_party_attr_keys">';
 			$html_code .= '<input name="wppfm_third_party_attr_keys" id="wppfm_third_party_attr_keys" type="text" class="" value="' . $third_party_attribute_keywords . '"> ';
 			$html_code .= __( 'Enter comma separated keywords and wildcards to use third party attributes.', 'wp-product-feed-manager') . '</label></fieldset>';
+			$html_code .= '</td></tr>';
+			
+			$html_code .= '<tr valign="top" class="">';
+			$html_code .= '<th scope="row" class="titledesc">' . __( 'Re-initialize', 'wp-product-feed-manager' ) . '</th>';
+			$html_code .= '<td class="forminp forminp-checkbox">';
+			$html_code .= '<input class="button-primary" type="button" name="reinitiate" value="' . __( 'Re-initiate plugin', 'wp-product-feed-manager' ) . '" id="wppfm-reinitiate-plugin-button" /> ';
+			$html_code .= __( 'Updates the tables if required, re-initiates the cron events and resets the stored license - does not delete your current feeds or settings.', 'wp-product-feed-manager' );
 			$html_code .= '</td></tr>';
 			
 			$html_code .= '<tr valign="top" class="">';

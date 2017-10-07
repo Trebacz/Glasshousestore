@@ -1,8 +1,8 @@
 <?php
 
 /* * ******************************************************************
- * Version 3.5
- * Modified: 05-06-2017
+ * Version 3.7
+ * Modified: 03-09-2017
  * Copyright 2017 Accentio. All rights reserved.
  * License: None
  * By: Michel Jongbloed
@@ -48,17 +48,13 @@ if ( !class_exists( 'WPPFM_Queries' ) ) :
 		}
 
 		public function make_list_of_active_feeds() {
-			$main_table		 = $this->_table_prefix . 'feedmanager_product_feed';
-			$status_table	 = $this->_table_prefix . 'feedmanager_feed_status';
-
 			return $this->_wpdb->get_results( "SELECT p.product_feed_id, p.title, p.url, p.updated, p.products, s.status AS status, s.color AS color "
-			. "FROM $main_table AS p "
-			. " INNER JOIN $status_table AS s on p.status_id = s.status_id" );
+			. "FROM {$this->_table_prefix}feedmanager_product_feed AS p "
+			. " INNER JOIN {$this->_table_prefix}feedmanager_feed_status AS s on p.status_id = s.status_id" );
 		}
 		
 		public function get_feed_row( $feed_id ) {
-			$main_table		 = $this->_table_prefix . 'feedmanager_product_feed';
-			return $this->_wpdb->get_row( "SELECT * FROM $main_table WHERE product_feed_id = $feed_id" );
+			return $this->_wpdb->get_row( "SELECT * FROM {$this->_table_prefix}feedmanager_product_feed WHERE product_feed_id = {$feed_id}" );
 		}
 
 		/**
@@ -67,23 +63,19 @@ if ( !class_exists( 'WPPFM_Queries' ) ) :
 		 * @return results of the query
 		 */
 		public function read_countries() {
-			$main_table = $this->_table_prefix . 'feedmanager_country';
-			return $this->_wpdb->get_results( "SELECT name_short, name FROM $main_table ORDER BY name", ARRAY_A );
+			return $this->_wpdb->get_results( "SELECT name_short, name FROM {$this->_table_prefix}feedmanager_country ORDER BY name", ARRAY_A );
 		}
 		
 		public function get_feedmanager_channel_table() {
-			$main_table = $this->_table_prefix . 'feedmanager_channel';
-			return $this->_wpdb->get_results( "SELECT * FROM $main_table", ARRAY_A );
+			return $this->_wpdb->get_results( "SELECT * FROM {$this->_table_prefix}feedmanager_channel", ARRAY_A );
 		}
 		
 		public function get_feedmanager_product_feed_table() {
-			$main_table = $this->_table_prefix . 'feedmanager_product_feed';
-			return $this->_wpdb->get_results( "SELECT * FROM $main_table", ARRAY_A );
+			return $this->_wpdb->get_results( "SELECT * FROM {$this->_table_prefix}feedmanager_product_feed", ARRAY_A );
 		}
 		
 		public function get_feedmanager_product_feedmeta_table() {
-			$main_table = $this->_table_prefix . 'feedmanager_product_feedmeta';
-			return $this->_wpdb->get_results( "SELECT * FROM $main_table", ARRAY_A );
+			return $this->_wpdb->get_results( "SELECT * FROM {$this->_table_prefix}feedmanager_product_feedmeta", ARRAY_A );
 		}
 
 		public function read_channels() {
@@ -92,20 +84,17 @@ if ( !class_exists( 'WPPFM_Queries' ) ) :
 		}
 
 		public function register_a_channel( $channel_short_name, $channel_id, $channel_name ) {
-			$main_table = $this->_table_prefix . 'feedmanager_channel';
-			return $this->_wpdb->query( "INSERT INTO $main_table (channel_id, name, short) VALUES
-				( $channel_id, '$channel_name', '$channel_short_name' )" );
+			return $this->_wpdb->query( $this->_wpdb->prepare( "INSERT INTO {$this->_table_prefix}feedmanager_channel (channel_id, name, short) VALUES
+				( %d, '%s', '%s' )", $channel_id, $channel_name, $channel_short_name ) );
 		}
 
 		public function get_channel_id( $channel_short_name ) {
-			$main_table = $this->_table_prefix . 'feedmanager_channel';
-			return $this->_wpdb->get_var( "SELECT channel_id FROM $main_table WHERE short = '$channel_short_name'" );
+			return $this->_wpdb->get_var( "SELECT channel_id FROM {$this->_table_prefix}feedmanager_channel WHERE short = '{$channel_short_name}'" );
 		}
 
 		public function get_channel_short_name_from_db( $channel_id ) {
 			if ( $channel_id !== 'undefined' ) { // make sure the selected channel is installed
-				$main_table = $this->_table_prefix . 'feedmanager_channel';
-				return $this->_wpdb->get_var( "SELECT short FROM $main_table WHERE channel_id = $channel_id" );
+				return $this->_wpdb->get_var( "SELECT short FROM {$this->_table_prefix}feedmanager_channel WHERE channel_id = {$channel_id}" );
 			} else { return false; }
 		}
 
@@ -115,42 +104,33 @@ if ( !class_exists( 'WPPFM_Queries' ) ) :
 		}
 
 		public function read_active_schedule_data() {
-			$main_table = $this->_table_prefix . 'feedmanager_product_feed';
-			return $this->_wpdb->get_results( "SELECT product_feed_id, updated, schedule FROM $main_table WHERE status_id=1", ARRAY_A );
+			return $this->_wpdb->get_results( "SELECT product_feed_id, updated, schedule FROM {$this->_table_prefix}feedmanager_product_feed WHERE status_id=1", ARRAY_A );
 		}
 		
 		public function read_failed_feeds() {
-			$main_table = $this->_table_prefix . 'feedmanager_product_feed';
-			return $this->_wpdb->get_results( "SELECT product_feed_id, updated, schedule FROM $main_table WHERE status_id=4 OR status_id=3", ARRAY_A );
+			return $this->_wpdb->get_results( "SELECT product_feed_id, updated, schedule FROM {$this->_table_prefix}feedmanager_product_feed WHERE status_id=4 OR status_id=3", ARRAY_A );
 		}
 
 		public function read_sources() {
-			$main_table = $this->_table_prefix . 'feedmanager_source';
-			return $this->_wpdb->get_results( "SELECT source_id, name FROM $main_table ORDER BY name", ARRAY_A );
+			return $this->_wpdb->get_results( "SELECT source_id, name FROM {$this->_table_prefix}feedmanager_source ORDER BY name", ARRAY_A );
 		}
 
 		public function get_feeds_from_specific_channel( $channel_id ) {
-			$main_table = $this->_table_prefix . 'feedmanager_product_feed';
-			return $this->_wpdb->get_results( "SELECT product_feed_id FROM $main_table WHERE channel_id = $channel_id", ARRAY_A );
+			return $this->_wpdb->get_results( "SELECT product_feed_id FROM {$this->_table_prefix}feedmanager_product_feed WHERE channel_id = {$channel_id}", ARRAY_A );
 		}
 
 		public function get_meta_parents( $feed_id ) {
-			$main_table = $this->_table_prefix . 'posts';
-			return $this->_wpdb->get_results( "SELECT ID FROM $main_table WHERE post_parent = $feed_id", ARRAY_A );
+			return $this->_wpdb->get_results( "SELECT ID FROM {$this->_table_prefix}posts WHERE post_parent = {$feed_id}", ARRAY_A );
 		}
 
 		public function read_feed( $feed_id ) {
-			$main_table		 = $this->_table_prefix . 'feedmanager_product_feed';
-			$countries_table = $this->_table_prefix . 'feedmanager_country';
-			$channel_table	 = $this->_table_prefix . 'feedmanager_channel';
-
 			$result = $this->_wpdb->get_results( "SELECT p.product_feed_id, p.source_id AS source, p.title, p.feed_title, p.feed_description, p.main_category, "
 			. "p.url, p.include_variations, p.is_aggregator, p.status_id, p.updated, p.schedule, c.name_short "
-			. "AS country, m.channel_id AS channel, p.status_id "
-			. "FROM $main_table AS p "
-			. "INNER JOIN $countries_table AS c ON p.country_id = c.country_id "
-			. "INNER JOIN $channel_table AS m ON p.channel_id = m.channel_id "
-			. "WHERE p.product_feed_id = $feed_id", ARRAY_A );
+			. "AS country, m.channel_id AS channel, p.status_id, p.language "
+			. "FROM {$this->_table_prefix}feedmanager_product_feed AS p "
+			. "INNER JOIN {$this->_table_prefix}feedmanager_country AS c ON p.country_id = c.country_id "
+			. "INNER JOIN {$this->_table_prefix}feedmanager_channel AS m ON p.channel_id = m.channel_id "
+			. "WHERE p.product_feed_id = {$feed_id}", ARRAY_A );
 
 			$category_mapping = $this->read_category_mapping( $feed_id );
 
@@ -164,8 +144,7 @@ if ( !class_exists( 'WPPFM_Queries' ) ) :
 		}
 		
 		public function read_category_mapping( $feed_id ) {
-			$meta_table		 = $this->_table_prefix . 'feedmanager_product_feedmeta';
-			return $this->_wpdb->get_results( "SELECT meta_value FROM $meta_table WHERE product_feed_id = $feed_id AND meta_key = 'category_mapping'", ARRAY_A );
+			return $this->_wpdb->get_results( "SELECT meta_value FROM {$this->_table_prefix}feedmanager_product_feedmeta WHERE product_feed_id = {$feed_id} AND meta_key = 'category_mapping'", ARRAY_A );
 		}
 
 		/**
@@ -241,8 +220,15 @@ if ( !class_exists( 'WPPFM_Queries' ) ) :
 			$data = array();
 
 			foreach ( $meta_columns as $column ) {
-				foreach( $record_ids as $rec_id ) {
+				
+				$taxonomy = get_taxonomy( $column );
+				$taxonomy_value = $taxonomy ? WPPFM_Taxonomies_Class::make_shop_taxonomies_string( $post_id, $taxonomy->name, ', ' ) : false;
 					
+				if ( $taxonomy_value ) {
+					array_push( $data, $this->make_meta_object( $column, $taxonomy_value, $post_id ) );
+				}
+
+				foreach( $record_ids as $rec_id ) {
 					$value = get_post_meta( $rec_id, $column, true );
 					
 					if ( $value ) {
@@ -327,8 +313,7 @@ if ( !class_exists( 'WPPFM_Queries' ) ) :
 		}
 
 		public function get_columns_from_post_table() {
-			$main_table = $this->_table_prefix . 'posts';
-			return $this->_wpdb->get_results( "SHOW COLUMNS FROM $main_table" );
+			return $this->_wpdb->get_results( "SHOW COLUMNS FROM {$this->_table_prefix}posts" );
 		}
 
 		public function get_custom_product_attributes() {
@@ -352,7 +337,7 @@ if ( !class_exists( 'WPPFM_Queries' ) ) :
 		}
 		
 		public function get_own_variable_product_attributes( $variable_id ) {
-			$keywords = get_option( 'wppfm_third_party_attribute_keywords', '_wpmr_%, _cpf_%, _unit%' );
+			$keywords = get_option( 'wppfm_third_party_attribute_keywords', '%_wpmr_%, %_cpf_%, %_unit%, %_bto_%' );
 			$wpmr_attributes = array();
 			
 			if ( $keywords ) {
@@ -373,11 +358,12 @@ if ( !class_exists( 'WPPFM_Queries' ) ) :
 			
 			return $wpmr_attributes;
 		}
-		
-		public function get_all_product_attributes() {
-			$main_table	 = $this->_wpdb->postmeta;
-			return $this->_wpdb->get_results( "SELECT DISTINCT meta_value FROM $main_table WHERE meta_key = '_product_attributes'" );
-		}
+
+// @since 1.9.0 230717		
+//		public function get_all_product_attributes() {
+//			$main_table	 = $this->_wpdb->postmeta;
+//			return $this->_wpdb->get_results( "SELECT DISTINCT meta_value FROM $main_table WHERE meta_key = '_product_attributes'" );
+//		}
 
 		public function get_current_feed_status( $feed_id ) {
 			$main_table = $this->_table_prefix . 'feedmanager_product_feed';
@@ -417,6 +403,7 @@ if ( !class_exists( 'WPPFM_Queries' ) ) :
 		 * @param (int) $feed_id
 		 * @param (int) $channel_id
 		 * @param (int) $country_id
+		 * @param (string) $feed_language		// @since 1.9.0
 		 * @param (int) $source_id
 		 * @param (string) $title
 		 * @param (string) $feed_title			// @since 1.8.0
@@ -425,13 +412,14 @@ if ( !class_exists( 'WPPFM_Queries' ) ) :
 		 * @param (int) $status
 		 * @return (int) nr of affected rows
 		 */
-		public function update_feed( $feed_id, $channel_id, $country_id, $source_id, $title, $feed_title, $feed_description, $main_category, $incl_variations, $is_aggregator,
+		public function update_feed( $feed_id, $channel_id, $country_id, $feed_language, $source_id, $title, $feed_title, $feed_description, $main_category, $incl_variations, $is_aggregator,
 							   $url, $status, $schedule ) {
 			
 			$main_table = $this->_table_prefix . 'feedmanager_product_feed';
 
 			$result = $this->_wpdb->update( $main_table, array(
 				'channel_id'			=> $channel_id,
+				'language'				=> $feed_language,
 				'include_variations'	=> $incl_variations,
 				'is_aggregator'			=> $is_aggregator,
 				'country_id'			=> $country_id,
@@ -446,6 +434,7 @@ if ( !class_exists( 'WPPFM_Queries' ) ) :
 				'updated'				=> date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ),
 			), array( 'product_feed_id' => $feed_id ), array(
 				'%d',
+				'%s',
 				'%d',
 				'%d',
 				'%d',
@@ -581,6 +570,7 @@ if ( !class_exists( 'WPPFM_Queries' ) ) :
 		 * 
 		 * @param int $channel_id
 		 * @param int $country_id
+		 * @param string $feed_language		// @since 1.9.0
 		 * @param int $source_id
 		 * @param string $title
 		 * @param string $feed_title		// @since 1.8.0
@@ -592,13 +582,14 @@ if ( !class_exists( 'WPPFM_Queries' ) ) :
 		 * @param string $schedule
 		 * @return integer containing the id of the new feed
 		 */
-		public function insert_feed( $channel_id, $country_id, $source_id, $title, $feed_title, $feed_description, $main_category, $incl_variations, $is_aggregator, $url,
+		public function insert_feed( $channel_id, $country_id, $feed_language, $source_id, $title, $feed_title, $feed_description, $main_category, $incl_variations, $is_aggregator, $url,
 							   $status, $schedule ) {
 
 			$main_table = $this->_table_prefix . 'feedmanager_product_feed';
 
 			$this->_wpdb->insert( $main_table, array(
 				'channel_id'			=> $channel_id,
+				'language'				=> $feed_language,
 				'include_variations'	=> $incl_variations,
 				'is_aggregator'			=> $is_aggregator,
 				'country_id'			=> $country_id,
@@ -614,6 +605,7 @@ if ( !class_exists( 'WPPFM_Queries' ) ) :
 				'products'				=> 0
 			), array(
 				'%d',
+				'%s',
 				'%d',
 				'%d',
 				'%d',
@@ -644,12 +636,16 @@ if ( !class_exists( 'WPPFM_Queries' ) ) :
 			$meta_table = $this->_table_prefix . 'feedmanager_product_feedmeta';
 			$channel_table = $this->_table_prefix . 'feedmanager_channel';
 			
-			$main_table_content = $this->make_table_backup_string( $this->_wpdb->get_results( "SELECT * FROM $main_table", ARRAY_N ) );
-			$meta_table_content = $this->make_table_backup_string( $this->_wpdb->get_results( "SELECT * FROM $meta_table", ARRAY_N ) );
-			$channel_table_content = $this->make_table_backup_string( $this->_wpdb->get_results( "SELECT * FROM $channel_table", ARRAY_N ) );
+			$main_table_columns = $this->_wpdb->get_col( "DESC {$main_table}", 0 );
+			$meta_table_columns = $this->_wpdb->get_col( "DESC {$meta_table}", 0 );
+			$channel_table_columns = $this->_wpdb->get_col( "DESC {$channel_table}", 0 );
+			
+			$main_table_content = $this->make_table_backup_string( $this->_wpdb->get_results( "SELECT * FROM $main_table", ARRAY_N ), $main_table_columns );
+			$meta_table_content = $this->make_table_backup_string( $this->_wpdb->get_results( "SELECT * FROM $meta_table", ARRAY_N ), $meta_table_columns );
+			$channel_table_content = $this->make_table_backup_string( $this->_wpdb->get_results( "SELECT * FROM $channel_table", ARRAY_N ), $channel_table_columns );
 
 			$db_version = get_option( 'wppfm_db_version' );
-			$ftp_passive = get_option( 'wppfm_ftp_passive', "true" );
+			$ftp_passive = "inactive";
 			$auto_fix = get_option( 'wppfm_auto_feed_fix', "true" );
 			$sep_string = '# backup string for database ->';
 			$time_stamp = current_time( 'timestamp' );
@@ -669,100 +665,96 @@ if ( !class_exists( 'WPPFM_Queries' ) ) :
 		 * @param array $table_queries
 		 */
 		public function restore_backup_data( $table_queries ) {
-			$product_feed_table_data = explode( PHP_EOL, $table_queries[0][1] );
-			$product_feedmeta_table_data = explode( PHP_EOL, $table_queries[1][1] );
-			$channel_table_data = explode( PHP_EOL, $table_queries[2][1] );
+			// retrieve the initial data strings
+			$product_feed_table_data = explode( " # ", $table_queries[0][1] );
+			$product_feedmeta_table_data = explode( " # ", $table_queries[1][1] );
+			$channel_table_data = explode( " # ", $table_queries[2][1] );
 			
+			// table names
 			$main_table = $this->_table_prefix . 'feedmanager_product_feed';
 			$meta_table = $this->_table_prefix . 'feedmanager_product_feedmeta';
 			$channel_table = $this->_table_prefix . 'feedmanager_channel';
 
+			// clear the current data
 			$this->_wpdb->query( "TRUNCATE TABLE $main_table" );
 			$this->_wpdb->query( "TRUNCATE TABLE $meta_table" );
 			$this->_wpdb->query( "TRUNCATE TABLE $channel_table" );
 			
-			foreach( $product_feed_table_data as $table_data ) {
+			// get the columns
+			$product_feed_table_columns = explode( ', ', $product_feed_table_data[0] );
+			$product_feedmeta_table_columns = explode( ', ', $product_feedmeta_table_data[0] );
+			$channel_table_columns = explode( ', ', $channel_table_data[0] );
+			
+			// get the data
+			$product_feed_table_queries = explode( PHP_EOL, $product_feed_table_data[1] );
+			$product_feedmeta_table_queries = explode( PHP_EOL, $product_feedmeta_table_data[1] );
+			$channel_table_queries = explode( PHP_EOL, $channel_table_data[1] );
+			
+			// restore the feedmanager_product_feed table
+			foreach( $product_feed_table_queries as $table_data ) {
 				$product_feed_data = explode( "\t", $table_data );
 
-				if( 16 === count( $product_feed_data ) ) {
-					$this->_wpdb->replace( $main_table, array(
-						'product_feed_id' => $product_feed_data[0],
-						'channel_id' => $product_feed_data[1],
-						'is_aggregator' => $product_feed_data[2],
-						'include_variations' => $product_feed_data[3],
-						'country_id' => $product_feed_data[4],
-						'source_id' => $product_feed_data[5],
-						'title' => $product_feed_data[6],
-						'feed_title' => $product_feed_data[7],
-						'feed_description' => $product_feed_data[8],
-						'main_category' => $product_feed_data[9],
-						'url' => $product_feed_data[10],
-						'status_id' => $product_feed_data[11],
-						'updated' => $product_feed_data[12],
-						'schedule' => $product_feed_data[13],
-						'products' => 0,
-						'timestamp' => $product_feed_data[15]
-					), array(
-						'%d',
-						'%d',
-						'%d',
-						'%d',
-						'%d',
-						'%d',
-						'%s',
-						'%s',
-						'%s',
-						'%s',
-						'%s',
-						'%d',
-						'%s',
-						'%s',
-						'%d',
-						'%s'
-					) );
+				if( count( $product_feed_table_columns ) === count( $product_feed_data ) ) {
+					$data = array();
+					
+					for( $i = 0; $i < count( $product_feed_data ); $i++ ) {
+						$data[$product_feed_table_columns[$i]] = $product_feed_data[$i];
+					}
+					
+					$this->_wpdb->replace( $main_table, $data );
 				}
 			}
 			
-			foreach( $product_feedmeta_table_data as $table_metadata ) {
+			// restore the feedmanager_product_feedmeta table
+			foreach( $product_feedmeta_table_queries as $table_metadata ) {
 				$product_feed_metadata = explode( "\t", $table_metadata );
 
-				if( 4 === count( $product_feed_metadata ) ) {
-					$this->_wpdb->replace( $meta_table, array(
-						'meta_id' => $product_feed_metadata[0],
-						'product_feed_id' => $product_feed_metadata[1],
-						'meta_key' => $product_feed_metadata[2],
-						'meta_value' => $product_feed_metadata[3]
-					), array(
-						'%d',
-						'%d',
-						'%s',
-						'%s'
-					) );
+				if( count( $product_feedmeta_table_columns ) === count( $product_feed_metadata ) ) {
+					$data = array();
+					
+					for( $i = 0; $i < count( $product_feed_metadata ); $i++ ) {
+						$data[$product_feedmeta_table_columns[$i]] = $product_feed_metadata[$i];
+					}
+					
+					$this->_wpdb->replace( $meta_table, $data );
 				}
 			}
 			
-			foreach( $channel_table_data as $table_channeldata ) {
+			// restore the feedmanager_channel table
+			foreach( $channel_table_queries as $table_channeldata ) {
 				$channel_data = explode( "\t", $table_channeldata );
 
-				if( 3 === count( $channel_data ) ) {
-					$this->_wpdb->replace( $channel_table, array(
-						'channel_id' => $channel_data[0],
-						'name' => $channel_data[1],
-						'short' => $channel_data[2]
-					), array(
-						'%d',
-						'%s',
-						'%s'
-					) );
+				if( count( $channel_table_columns ) === count( $channel_data ) ) {
+					$data = array();
+					
+					for( $i = 0; $i < count( $channel_data ); $i++ ) {
+						$data[$channel_table_columns[$i]] = $channel_data[$i];
+					}
+
+					$this->_wpdb->replace( $channel_table, $data );
 				}
 			}
+		}
+		
+		/**
+		 * Returns a string with all the column names from a specified table
+		 * 
+		 * @since 1.10.0
+		 * 
+		 * @param string $table_name
+		 * @return string with column names
+		 */
+		public function get_table_columns( $table_name ) {
+			$table = $this->_table_prefix . $table_name;
+			$column_names = $this->_wpdb->get_col( "DESC {$table}", 0 );
+			return implode( ', ', $column_names );
 		}
 
 		/**
 		 * Returns a tab separated string with the query results
 		 */
-		private function make_table_backup_string( $query_result ) {
-			$string = '';
+		private function make_table_backup_string( $query_result, $columns ) {
+			$string = implode($columns, ', ') . ' # ';
 			foreach( $query_result as $row ) { $string .= implode( "\t", $row )."\r\n"; }
 			return $string;
 		}

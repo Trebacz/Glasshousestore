@@ -40,10 +40,7 @@ $simpleVersion = pb_backupbuddy::$options['bb_version'];
 if ( strpos( pb_backupbuddy::$options['bb_version'], ' ' ) > 0 ) {
 	$simpleVersion = substr( pb_backupbuddy::$options['bb_version'], 0, strpos( pb_backupbuddy::$options['bb_version'], ' ' ) );
 }
-?>
-<!-- ImportBuddy version usage stats -->
-<!-- <img style="visibility: hidden;" src="https://t2k6r2ywpj.execute-api.us-east-1.amazonaws.com/v1/bb?u=<?php echo md5( site_url() ); ?>&v=<?php echo $simpleVersion; ?>&t=<?php echo microtime(true) ?>"> -->
-<?php
+
 
 // Instantiate restore class.
 require_once( pb_backupbuddy::plugin_path() . '/classes/restore.php' );
@@ -157,10 +154,6 @@ if ( 'true' == pb_backupbuddy::_GET( 'deploy' ) ) {
 	$nextStepNum = 4;
 	echo '<!-- AUTOPROCEED TO STEP ' . $nextStepNum . ' -->';
 	
-	
-	//echo '<script>console.log( "' . print_r( $restore->_state, true ) . '" );</script>';
-	
-	
 	// Write default state overrides.
 	global $importbuddy_file;
 	$importFileSerial = backupbuddy_core::get_serial_from_file( $importbuddy_file );
@@ -189,4 +182,3 @@ if ( 'true' == pb_backupbuddy::_GET( 'deploy' ) ) {
 
 pb_backupbuddy::flush();
 $in_page = true;
-include( '_stats.php' );

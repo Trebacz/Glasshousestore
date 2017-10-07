@@ -116,7 +116,7 @@ class pb_backupbuddy_destination_gdrive {
 		
 		pb_backupbuddy::status( 'details', 'Connecting to Google Drive.' );
 		self::$_client = new Google_Client();
-		self::$_client->setApplicationName( 'BackupBuddy v' + pb_backupbuddy::settings( 'version' ) );
+		self::$_client->setApplicationName( 'BackupBuddy v' . pb_backupbuddy::settings( 'version' ) );
 		self::$_client->addScope('https://www.googleapis.com/auth/drive');
 		$disable_gzip = $settings['disable_gzip'];
 		self::$_client->setClassConfig('Google_Http_Request', 'disable_gzip', $disable_gzip);
@@ -386,7 +386,7 @@ class pb_backupbuddy_destination_gdrive {
 			$uploadStatus = false;
 			while (!$uploadStatus && !feof($fs)) {
 				$chunk = fread($fs, $chunkSizeBytes);
-				pb_backupbuddy::status( 'details', 'Chunk of size `' . pb_backupbuddy::$format->file_size( $chunkSizeBytes ) . '` read into memory. Total bytes summed: `' . ( $settings['_media_progress'] + strlen( $chunk) ) . '` of filesize: `' . $fileSize . '`.' );
+				pb_backupbuddy::status( 'details', 'Chunk of size `' . pb_backupbuddy::$format->file_size( $chunkSizeBytes ) . '` read into memory. Total bytes summed: `' . ( (int)$settings['_media_progress'] + (int)strlen( $chunk) ) . '` of filesize: `' . $fileSize . '`.' );
 				pb_backupbuddy::status( 'details', 'Sending burst file data next. If next message is not "Burst file data sent" then the send likely timed out. Try reducing burst size. Sending now...' );
 				
 				// Send chunk of data.

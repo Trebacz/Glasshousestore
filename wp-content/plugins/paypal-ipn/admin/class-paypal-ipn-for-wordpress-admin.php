@@ -156,4 +156,13 @@ class AngellEYE_Paypal_Ipn_For_Wordpress_Admin {
         }
         return $actions;
     }
+    
+    public function paypal_ipn_for_wordpress_remove_postmeta($pid) {
+        global $wpdb;
+        if( get_post_type($pid) == 'paypal_ipn' || get_post_type($pid) == 'ipn_history' ) {
+            if ( $wpdb->get_var( $wpdb->prepare( "SELECT post_id FROM {$wpdb->postmeta} WHERE post_id = %d", $pid ) ) ) {
+                $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->postmeta} WHERE post_id = %d", $pid ) );
+            }
+        }
+    }
 }

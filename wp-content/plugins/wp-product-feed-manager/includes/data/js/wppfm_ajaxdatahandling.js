@@ -1,5 +1,5 @@
 /*!
- * ajaxdatahandling.js v2.1
+ * ajaxdatahandling.js v2.2
  * Part of the WP Product Feed Manager
  * Copyright 2017, Michel Jongbloed
  *
@@ -164,6 +164,7 @@ function wppfm_updateFeedToDb( feed, metaData, callback ) {
 			includeVariations: feed['includeVariations'],
 			isAggregator: feed['isAggregator'],
 			countryId: feed['country'],
+			language: feed['language'],
 			sourceId: feed['dataSource'],
 			title: feed['title'],
 			feedTitle: feed['feedTitle'],
@@ -267,21 +268,6 @@ function wppfm_logMessageOnServer( message, fileName, callback ) {
 	} );
 }
 
-function wppfm_update_ftp_passive_mode( selection, callback ) {
-
-	jQuery.post(
-		MyAjax.ajaxurl,
-		{
-			action: 'myajax-update-ftp-mode-selection',
-			ftp_selection: selection,
-			updateFeedDataNonce: MyAjax.setFTPModeNonce
-			
-		}, function ( response ) {
-
-		callback( response.trim() );
-	} );
-}
-
 function wppfm_auto_feed_fix_mode( selection, callback ) {
 
 	jQuery.post(
@@ -290,6 +276,21 @@ function wppfm_auto_feed_fix_mode( selection, callback ) {
 			action: 'myajax-auto-feed-fix-mode-selection',
 			fix_selection: selection,
 			updateAutoFeedFixNonce: MyAjax.setAutoFeedFixNonce
+			
+		}, function ( response ) {
+
+		callback( response.trim() );
+	} );
+}
+
+function wppfm_debug_mode( selection, callback ) {
+
+	jQuery.post(
+		MyAjax.ajaxurl,
+		{
+			action: 'myajax-debug-mode-selection',
+			debug_selection: selection,
+			debugNonce: MyAjax.setDebugNonce
 			
 		}, function ( response ) {
 
@@ -309,6 +310,19 @@ function wppfm_change_third_party_attribute_keywords( keywords, callback ) {
 	}, function( response ) {
 	
 		callback( response.trim() );
+	} );
+}
+
+function wppfm_reinitiate_plugin( callback ) {
+	jQuery.post(
+		MyAjax.ajaxurl,
+	{
+		action: 'myajax-reinitiate-plugin',
+		reInitiateNonce: MyAjax.setReInitiateNonce
+		
+	}, function( response ) {
+		
+		callback( response );
 	} );
 }
 

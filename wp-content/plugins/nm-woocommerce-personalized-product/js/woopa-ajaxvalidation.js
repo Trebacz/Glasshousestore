@@ -13,7 +13,7 @@ jQuery(function($) {
 
 function validate_cart_data(){
 	
-	var form_data = jQuery.parseJSON( woopa_vars.fields_meta );
+	var form_data = jQuery.parseJSON( woopa_vars.fields_meta.replace(/\\/g, "") );
 	var has_error = true;
 	var error_in = '';
 	

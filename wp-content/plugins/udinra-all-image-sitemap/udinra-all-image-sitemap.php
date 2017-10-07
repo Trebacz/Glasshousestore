@@ -4,7 +4,7 @@ Plugin Name: Udinra All Image Sitemap
 Plugin URI: https://udinra.com/downloads/udinra-image-sitemap-pro
 Description: Automatically generates Google Image Sitemap and submits it to Google,Bing and Ask.com.
 Author: Udinra
-Version: 3.5.1
+Version: 3.5.2
 Author URI: https://udinra.com
 */
 

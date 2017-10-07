@@ -111,7 +111,7 @@ if ( !class_exists( 'WPPFM_Feed_Form_Control' ) ) :
 		}
 		
 		public static function category_mapping_table() {
-			$shop_categories = WPPFM_Categories_Class::get_shop_categories_list();
+			$shop_categories = WPPFM_Taxonomies_Class::get_shop_categories_list();
 
 			$html_code = '<section id="category-map" style="display:none;">';
 			$html_code .= '<div id="category-mapping-header" class="header"><h3>' . __( 'Category Mapping', 'wp-product-feed-manager' ) . ':</h3></div>';

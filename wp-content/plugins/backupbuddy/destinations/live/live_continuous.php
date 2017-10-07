@@ -44,7 +44,6 @@ class backupbuddy_live_continuous {
 	);
 	private static $_postmeta_exclusions = array(
 		'pvc_views',
-		
 		'_edit_lock',
 		'views',
 		'option_overall_score',
@@ -80,6 +79,7 @@ class backupbuddy_live_continuous {
 		'_price_update_date',
 		'/_impressions/',
 		'snapImportedFBComments',
+		'/_count-views_.+/', // Adrotate plugin
 	);
 	
 	/* init()
@@ -102,6 +102,7 @@ class backupbuddy_live_continuous {
 			//pb_backupbuddy::status( 'details', 'Aborting continuous process as it is currently PAUSED based on settings.' );
 			return false;
 		}
+		
 		
 		// Comments
 		add_action( 'delete_comment',        array( 'backupbuddy_live_continuous', 'handle_comment' ) );
@@ -284,28 +285,7 @@ class backupbuddy_live_continuous {
 	
 	// Handle postmeta for a post changes.
 	public static function handle_post_postmeta( $meta_ids, $object_id, $meta_key, $meta_value ) {
-		$excludes = array_merge( self::$_postmeta_exclusions, (array)backupbuddy_live::getOption( 'postmeta_key_excludes', true ) );
-		foreach( $excludes as $exclude ) {
-			if ( $exclude{0} == '/' ) {
-				if ( preg_match( $exclude, $meta_key ) ) { // Excluding this key.
-					return;
-				}
-			} else {
-				if ( $meta_key == $exclude ) {
-					return;
-				}
-			}
-		}
-		
-		if ( in_array( $meta_key, $excludes ) ) {
-			return;	
-		}
-		if ( ! is_array( $meta_ids ) ) {
-			$meta_ids = array( $meta_ids );
-		}
-		foreach ( $meta_ids as $meta_id ) {
-			self::dbqueue( 'postmeta', 'meta_id', $meta_id );
-		}
+		self::handle_postmeta( $meta_ids, $object_id, $meta_key );
 	}
 	
 	

@@ -1,5 +1,5 @@
 /*!
- * feed-form-events.js v1.2
+ * feed-form-events.js v1.3
  * Part of the WP Product Feed Manager
  * Copyright 2017, Michel Jongbloed
  *
@@ -40,6 +40,8 @@ function wppfm_listen() {
 
         wppfm_mainInputChanged( false );
     } );
+	
+	$jq( '#language' ).change( function () { wppfm_feed_language_changed(); } );
 	
 	$jq( '#google-feed-title-selector' ).change( function() { wppfm_google_feed_title_changed(); } );
 	
@@ -82,11 +84,13 @@ function wppfm_listen() {
     
 	$jq( '#update-schedule-frequency' ).change( function () { wppfm_saveUpdateSchedule(); } );
 	
-	$jq( '#wppfm_ftp_passive_mode' ).change( function () { wppfm_ftp_mode_changed(); } );
-	
 	$jq( '#wppfm_auto_feed_fix_mode' ).change( function () { wppfm_auto_feed_fix_changed(); } );
 	
+	$jq( '#wppfm_debug_mode' ).change( function () { wppfm_debug_mode_changed(); } );
+	
 	$jq( '#wppfm_third_party_attr_keys' ).focusout( function() { wppfm_third_party_attributes_changed(); } );
+	
+	$jq( '#wppfm-reinitiate-plugin-button' ).click( function() { wppfm_reinitiate(); } );
     
     $jq( '.category-mapping-selector' ).change( function() {
         if ( $jq(this).is(":checked") ) { wppfm_activateFeedCategory( $jq(this).val() ); } 

@@ -20,8 +20,18 @@ class WC_Gateway_PayPal_Credit_Card_Rest_AngellEYE extends WC_Payment_Gateway_CC
         $this->woocommerce_paypal_supported_currencies = array('AUD', 'BRL', 'CAD', 'MXN', 'NZD', 'HKD', 'SGD', 'USD', 'EUR', 'JPY', 'NOK', 'CZK', 'DKK', 'HUF', 'ILS', 'MYR', 'PHP', 'PLN', 'SEK', 'CHF', 'TWD', 'THB', 'GBP');
         $this->method_description = __('PayPal direct credit card payments using the REST API.  This allows you to accept credit cards directly on the site without the need for the full Payments Pro.', 'paypal-for-woocommerce');
         $this->supports = array(
+            'subscriptions',
             'products',
-            'refunds'
+            'refunds',
+            'subscription_cancellation',
+            'subscription_reactivation',
+            'subscription_suspension',
+            'subscription_amount_changes',
+            'subscription_payment_method_change', // Subs 1.n compatibility.
+            'subscription_payment_method_change_customer',
+            'subscription_payment_method_change_admin',
+            'subscription_date_changes',
+            'multiple_subscriptions',
         );
         $this->init_form_fields();
         $this->init_settings();
@@ -32,22 +42,7 @@ class WC_Gateway_PayPal_Credit_Card_Rest_AngellEYE extends WC_Payment_Gateway_CC
         $this->icon = apply_filters('woocommerce_paypal_credit_card_rest_icon', $this->icon);
         $this->enable_tokenized_payments = $this->get_option('enable_tokenized_payments', 'no');
         if($this->enable_tokenized_payments == 'yes') {
-            $this->supports = array(
-                'subscriptions',
-                'products',
-                'refunds',
-                'subscription_cancellation',
-                'subscription_reactivation',
-                'subscription_suspension',
-                'subscription_amount_changes',
-                'subscription_payment_method_change', // Subs 1.n compatibility.
-                'subscription_payment_method_change_customer',
-                'subscription_payment_method_change_admin',
-                'subscription_date_changes',
-                'multiple_subscriptions',
-                'add_payment_method',
-                'tokenization'
-            );
+            $this->supports = array_merge($this->supports, array('add_payment_method','tokenization'));
         }
         $this->title = $this->get_option('title');
         $this->description = $this->get_option('description');
@@ -69,6 +64,7 @@ class WC_Gateway_PayPal_Credit_Card_Rest_AngellEYE extends WC_Payment_Gateway_CC
         add_action('admin_notices', array($this, 'checks'));
         add_filter( 'woocommerce_credit_card_form_fields', array($this, 'angelleye_paypal_credit_card_rest_credit_card_form_fields'), 10, 2);
         add_filter('woocommerce_settings_api_sanitized_fields_' . $this->id, array($this, 'angelleye_paypal_credit_card_rest_encrypt_gateway_api'), 10, 1);
+        do_action( 'angelleye_paypal_for_woocommerce_multi_account_api_' . $this->id, $this, null, null );
         $this->customer_id;
     }
 
@@ -144,7 +140,16 @@ class WC_Gateway_PayPal_Credit_Card_Rest_AngellEYE extends WC_Payment_Gateway_CC
         if ($this->description) {
             echo wpautop(wptexturize($this->description));
         }
-        parent::payment_fields();
+        if ( $this->supports( 'tokenization' ) && is_checkout() ) {
+            $this->tokenization_script();
+            $this->saved_payment_methods();
+            $this->form();
+            if( AngellEYE_Utility::is_cart_contains_subscription() == false ) {
+                $this->save_payment_method_checkbox();
+            }
+        } else {
+             $this->form();
+        }
         do_action('payment_fields_saved_payment_methods', $this);
     }
 
@@ -298,6 +303,7 @@ class WC_Gateway_PayPal_Credit_Card_Rest_AngellEYE extends WC_Payment_Gateway_CC
     }
 
     public function process_subscription_payment($order) {
+        $this->angelleye_reload_gateway_credentials_for_woo_subscription_renewal_order($order);
         $this->add_rest_api_utility();
         $card = $this->paypal_rest_api->get_posted_card();
         $this->paypal_rest_api->create_payment_with_zero_amount($order, $card);
@@ -328,5 +334,25 @@ class WC_Gateway_PayPal_Credit_Card_Rest_AngellEYE extends WC_Payment_Gateway_CC
             }
         }
         return $settings;
+    }
+    
+    public function angelleye_reload_gateway_credentials_for_woo_subscription_renewal_order($order) {
+        if( $this->testmode == false ) {
+            $order_id = version_compare(WC_VERSION, '3.0', '<') ? $order->id : $order->get_id();
+            if( $this->is_subscription($order_id) ) {
+                foreach ($order->get_items() as $cart_item_key => $values) {
+                    $product = $order->get_product_from_item($values);
+                    $product_id = $product->get_id();
+                    if( !empty($product_id) ) {
+                        $_enable_sandbox_mode = get_post_meta($product_id, '_enable_sandbox_mode', true);
+                        if ($_enable_sandbox_mode == 'yes') {
+                            $this->testmode = true;
+                            $this->rest_client_id = $this->get_option('rest_client_id_sandbox', false);
+                            $this->rest_secret_id = $this->get_option('rest_secret_id_sandbox', false);
+                        }
+                    }        
+                }
+            }
+        }
     }
 }

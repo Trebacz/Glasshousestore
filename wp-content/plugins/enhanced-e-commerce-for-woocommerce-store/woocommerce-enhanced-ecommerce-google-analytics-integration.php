@@ -1,6 +1,6 @@
 <?php
 
-/*  Copyright 2014 Tatvic
+/*  Copyright 2017 Tatvic
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License, version 2, as
@@ -21,13 +21,13 @@
   Description: Allows Enhanced E-commerce Google Analytics tracking code to be inserted into WooCommerce store pages.
   Author: Tatvic
   Author URI: http://www.tatvic.com
-  Version: 1.0.21.1
+  Version: 1.1.2
  */
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
-// Add the integration to WooCommerce
+// Add the integration to WooCommerce settings
 function wc_enhanced_ecommerce_google_analytics_add_integration($integrations) {
     global $woocommerce;
 

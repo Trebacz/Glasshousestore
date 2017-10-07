@@ -2,12 +2,12 @@
 
 /**
  * Plugin Name: WooCommerce Google Feed Manager
- * Plugin URI: http://www.wpmarketingrobot.com
+ * Plugin URI: https://www.wpmarketingrobot.com
  * Description: An easy to use WordPress plugin that generates and submits your product feeds to merchant centres.
- * Version: 1.8.1
- * Modified: 16-05-2017
+ * Version: 1.9.4
+ * Modified: 03-09-2017
  * Author: Michel Jongbloed
- * Author URI: http://www.wpmarketingrobot.com
+ * Author URI: https://www.wpmarketingrobot.com
  * Requires at least: 4.6
  * Tested up to: 4.8
  *
@@ -27,7 +27,7 @@ if ( !class_exists( 'WP_Product_Feed_Manager' ) ) :
 	 * The Main WP_Product_Feed_Manager Class
 	 * 
 	 * @class WP_Product_Feed_Manager
-	 * @version 1.8.1
+	 * @version 1.9.4
 	 */
 	final class WP_Product_Feed_Manager {
 		/* --------------------------------------------------------------------------------------------------*
@@ -37,7 +37,7 @@ if ( !class_exists( 'WP_Product_Feed_Manager' ) ) :
 		/**
 		 * @var string containing the version number of the plugin
 		 */
-		public $version = '1.8.1';
+		public $version = '1.9.4';
 
 		/**
 		 * @var string countaining the authors name
@@ -98,7 +98,7 @@ if ( !class_exists( 'WP_Product_Feed_Manager' ) ) :
 			// register my version
 			add_option( 'myplugin_version', MYPLUGIN_VERSION_NUM );
 
-			// set up auto updating
+			// set up auto updating ref HWOTBERH
 			$this->auto_updater();
 			
 			// register my schedule
@@ -124,9 +124,12 @@ if ( !class_exists( 'WP_Product_Feed_Manager' ) ) :
 
 			// Store the version of my plugin
 			if ( !defined( 'MYPLUGIN_VERSION_NUM' ) ) { define( 'MYPLUGIN_VERSION_NUM', $this->version ); }
+			
+			// Store the debug mode setting
+			if ( !defined( 'WPPFM_DEBUG_MODE' ) ) { define( 'WPPFM_DEBUG_MODE', get_option( 'wppfm_debug_mode', false ) ); }
 
 			// Store the url to wpmarketingrobot.com
-			if ( !defined( 'EDD_SL_STORE_URL' ) ) { define( 'EDD_SL_STORE_URL', 'http://www.wpmarketingrobot.com/' ); }
+			if ( !defined( 'EDD_SL_STORE_URL' ) ) { define( 'EDD_SL_STORE_URL', 'https://www.wpmarketingrobot.com/' ); }
 
 			// Store the plugin title
 			if ( !defined( 'EDD_SL_ITEM_NAME' ) ) { define( 'EDD_SL_ITEM_NAME', 'Woocommerce Google Feed Manager' ); }
@@ -182,7 +185,10 @@ if ( !class_exists( 'WP_Product_Feed_Manager' ) ) :
 		 */
 		private function includes() {
 			// include the wordpress pluggable.php file on forehand to prevent a "Call to undefined function wp_get_current_user()" error
-			require_once( ABSPATH . 'wp-includes/pluggable.php' );
+			// https://wp-types.com/forums/topic/mandrill-wp_mail-has-been-declared-by-another-process-or-plugin-need-fix/
+			if ( is_admin() && in_array (basename($_SERVER['PHP_SELF']), array('options-general.php') ) && isset( $_GET['page'] ) && $_GET['page'] == 'email_template' ) {
+				require_once( ABSPATH . 'wp-includes/pluggable.php' );
+			}
 
 			if ( is_admin() ) {
 				// include the admin menu and the includes file
@@ -203,6 +209,7 @@ if ( !class_exists( 'WP_Product_Feed_Manager' ) ) :
 		/**
 		 * Implements the auto update functions
 		 */
+		// ref HWOTBERH
 		private function auto_updater() {
 			if ( !class_exists( 'WPMR_Plugin_Updater' ) ) {
 				require_once ( 'includes/wpmr_plugin_updater.php' );

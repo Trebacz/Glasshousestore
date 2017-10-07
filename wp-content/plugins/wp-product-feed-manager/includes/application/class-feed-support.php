@@ -151,7 +151,7 @@ if ( !class_exists( 'WPPFM_Feed_Support_Class' ) ) :
 			return $result;
 		}
 
-		public function edit_value( $current_value, $edit_string, $combination_string, $combined_data_elements ) {
+		public function edit_value( $current_value, $edit_string, $combination_string, $combined_data_elements, $feed_language ) {
 			$value_editors = new WPPFM_Feed_Value_Editors_Class;
 
 			$query_split = explode( '#', $edit_string );
@@ -190,7 +190,7 @@ if ( !class_exists( 'WPPFM_Feed_Support_Class' ) ) :
 
 				case 'recalculate':
 
-					$result = $value_editors->recalculate_value( $query_split, $current_value, $combination_string, $combined_data_elements );
+					$result = $value_editors->recalculate_value( $query_split, $current_value, $combination_string, $combined_data_elements, $feed_language );
 					break;
 				
 				case 'convert to child-element':
@@ -254,6 +254,35 @@ if ( !class_exists( 'WPPFM_Feed_Support_Class' ) ) :
 			}
 			
 			return $new_title;
+		}
+		
+		/**
+		 * Adds multiple single draft image urls to the product, specific for the Ricardo.ch channel
+		 * 
+		 * @since 1.9.0
+		 * 
+		 * @param object $product
+		 * @param array $images
+		 */
+		public function process_ricardo_draftimages( &$product, $images ) {
+			for ( $i = 0; $i < 10; $i++ ) {
+				$product[ "DraftImages[$i]" ] = isset( $images[ $i ] ) ? $images[ $i ] : '';
+			}
+		}
+		
+		/**
+		 * Corrects issues where the active list is not the same as the data keys
+		 * 
+		 * @since 1.9.0
+		 * 
+		 * @param array $active_fields
+		 */
+		public function correct_active_fields_list( &$active_fields ) {
+			// correct for draft images in Ricardo.ch feed
+			if( ( $key = array_search( 'DraftImages', $active_fields ) ) !== false ) {
+				unset( $active_fields[$key] );
+				for ( $i = 0; $i < 10; $i++ ) { array_push( $active_fields, "DraftImages[$i]" ); }
+			}
 		}
 		
 	}

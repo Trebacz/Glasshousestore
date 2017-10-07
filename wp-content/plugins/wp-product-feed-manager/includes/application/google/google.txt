@@ -62,3 +62,11 @@
 62	4	tax-region
 63	4	tax-rate
 64	4	tax-tax_ship
+65	4	display_ads_id
+66	4	display_ads_similar_id
+67	4	display_ads_title
+68	4	display_ads_link
+69	4	display_ads_value
+70	4	excluded_destination
+71	4	adwords_grouping
+72	4	adwords_labels

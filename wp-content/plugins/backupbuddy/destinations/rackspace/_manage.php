@@ -11,7 +11,12 @@ if ( isset( $destination['disabled'] ) && ( '1' == $destination['disabled'] ) ) 
 	$rs_api_key = $destination['api_key'];
 	$rs_container = $destination['container'];
 	$rs_server = $destination['server'];
-	$directory = trim( $destination['directory'], '\\/' ) . '/';
+	
+	$directory = '';
+	if ( isset( $settings['directory'] ) && ( '' != $settings['directory'] ) ) {
+		$directory = trim( $settings['directory'], '\\/' ) . '/'; // Trailing slash. No leading slash.
+	}
+	
 	/*
 	if ( isset( $destination['server'] ) ) {
 		$rs_server = $destination['server'];

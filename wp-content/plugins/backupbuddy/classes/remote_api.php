@@ -131,7 +131,12 @@ class backupbuddy_remote_api {
 			}
 			//error_log( '3333Response: ' . $response['body'] );
 			if ( null === ( $return = json_decode( $response['body'], true ) ) ) {
-				return self::_error( 'Error #8001: Unable to decode json response. Verify remote site API URL `' . $remoteAPI['siteurl'] . '`, API key, and that the remote site has the API enabled in its wp-config.php by adding <i>define( \'BACKUPBUDDY_API_ENABLE\', true );</i> somewhere ABOVE the line "That\'s all, stop editing!". Return data: `' . htmlentities( stripslashes_deep( $response['body'] ) ) . '`.' );
+				$sanibody = htmlentities( stripslashes_deep( $response['body'] ) );
+				if ( false !== stripos( $sanibody, 'Request Entity Too Large' ) ) {
+					return self::_error( 'Error #8001b: Request Entity Too Large. The destination server says we sent too much data. Either change the Deployment Advanced Setting "Max Chunk Size" to a lower value or change the server configuration to accept a larger value. See the following webpage for the server solution for Apache, nginx, or IIS: https://craftcms.stackexchange.com/questions/2328/413-request-entity-too-large-error-with-uploading-a-file  ... Return data: `' . $sanibody . '`.' );
+				} else {
+					return self::_error( 'Error #8001: Unable to decode json response. Verify remote site API URL `' . $remoteAPI['siteurl'] . '`, API key, and that the remote site has the API enabled in its wp-config.php by adding <i>define( \'BACKUPBUDDY_API_ENABLE\', true );</i> somewhere ABOVE the line "That\'s all, stop editing!". Return data: `' . $sanibody . '`.' );
+				}
 			} else {
 				if ( ! isset( $return['success'] ) || ( true !== $return['success'] ) ) { // Fail.
 					$error = '';

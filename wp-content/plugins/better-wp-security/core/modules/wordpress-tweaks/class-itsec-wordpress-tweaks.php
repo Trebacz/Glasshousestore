@@ -70,7 +70,17 @@ final class ITSEC_WordPress_Tweaks {
 
 		$this->settings = ITSEC_Modules::get_settings( 'wordpress-tweaks' );
 
-		add_action( 'wp_print_scripts', array( $this, 'store_jquery_version' ) );
+
+		// Functional code for the valid_user_login_type setting.
+		if ( 'email' === $this->settings['valid_user_login_type'] ) {
+			add_action( 'login_init', array( $this, 'add_gettext_filter' ) );
+			add_filter( 'authenticate', array( $this, 'add_gettext_filter' ), 0 );
+			remove_filter( 'authenticate', 'wp_authenticate_username_password', 20 );
+		} else if ( 'username' === $this->settings['valid_user_login_type'] ) {
+			add_action( 'login_init', array( $this, 'add_gettext_filter' ) );
+			add_filter( 'authenticate', array( $this, 'add_gettext_filter' ), 0 );
+			remove_filter( 'authenticate', 'wp_authenticate_email_password', 20 );
+		}
 
 		// Functional code for the allow_xmlrpc_multiauth setting.
 		if ( defined( 'XMLRPC_REQUEST' ) && XMLRPC_REQUEST && ! $this->settings['allow_xmlrpc_multiauth'] ) {
@@ -97,10 +107,6 @@ final class ITSEC_WordPress_Tweaks {
 
 		add_filter( 'rest_dispatch_request', array( $this, 'filter_rest_dispatch_request' ), 10, 4 );
 
-		if ( $this->settings['safe_jquery'] ) {
-			add_action( 'wp_enqueue_scripts', array( $this, 'current_jquery' ) );
-		}
-
 		//Process remove login errors
 		if ( $this->settings['login_errors'] ) {
 			add_filter( 'login_errors', '__return_null' );
@@ -120,6 +126,48 @@ final class ITSEC_WordPress_Tweaks {
 			add_action( 'wp_enqueue_scripts', array( $this, 'add_block_tabnapping_script' ) );
 			add_action( 'admin_enqueue_scripts', array( $this, 'add_block_tabnapping_script' ) );
 		}
+	}
+
+	/**
+	 * Add filter for gettext to change text for the valid_user_login_type setting changes.
+	 *
+	 * @return null
+	 */
+	public function add_gettext_filter() {
+		if ( ! has_filter( 'gettext', array( $this, 'filter_gettext' ) ) ) {
+			add_filter( 'gettext', array( $this, 'filter_gettext' ), 20, 3 );
+		}
+	}
+
+	/**
+	 * Filter text for the valid_user_login_type setting changes.
+	 *
+	 * @param string $translation  Translated text.
+	 * @param string $text         Text to translate.
+	 * @param string $domain       Text domain. Unique identifier for retrieving translated strings.
+	 *
+	 * @return string
+	 */
+	public function filter_gettext( $translation, $text, $domain ) {
+		if ( 'default' !== $domain ) {
+			return $translation;
+		}
+
+		if ( 'Username or Email Address' === $text ) {
+			if ( 'email' === $this->settings['valid_user_login_type'] ) {
+				return esc_html__( 'Email Address', 'better-wp-security' );
+			} else if ( 'username' === $this->settings['valid_user_login_type'] ) {
+				return esc_html__( 'Username', 'better-wp-security' );
+			}
+		} else if ( '<strong>ERROR</strong>: Invalid username, email address or incorrect password.' === $text ) {
+			if ( 'email' === $this->settings['valid_user_login_type'] ) {
+				return __( '<strong>ERROR</strong>: Invalid email address or incorrect password.', 'better-wp-security' );
+			} else if ( 'username' === $this->settings['valid_user_login_type'] ) {
+				return __( '<strong>ERROR</strong>: Invalid username or incorrect password.', 'better-wp-security' );
+			}
+		}
+
+		return $translation;
 	}
 
 	/**
@@ -281,30 +329,6 @@ final class ITSEC_WordPress_Tweaks {
 	}
 
 	/**
-	 * Attempt to force the core version of jQuery to be loaded.
-	 *
-	 * This will deregister the current version of jQuery and re-enqueue with the core version of the script.
-	 *
-	 * This could probably be refactored to use the 'script_loader_src' filter.
-	 */
-	public function current_jquery() {
-
-		if ( ! is_admin() ) {
-
-			wp_deregister_script( 'jquery' );
-			wp_deregister_script( 'jquery-core' );
-
-			wp_register_script( 'jquery', false, array( 'jquery-core', 'jquery-migrate' ), '1.11.0' );
-			wp_register_script( 'jquery-core', '/' . WPINC . '/js/jquery/jquery.js', false, '1.11.0' );
-
-			wp_enqueue_script( 'jquery' );
-			wp_enqueue_script( 'jquery-core' );
-
-		}
-
-	}
-
-	/**
 	 * Redirects to 404 page if the requested author has 0 posts.
 	 *
 	 * @since 4.0
@@ -366,22 +390,6 @@ final class ITSEC_WordPress_Tweaks {
 
 		}
 
-	}
-
-	/**
-	 * Gets the version of jQuery enqueued
-	 */
-	function store_jquery_version() {
-		global $wp_scripts;
-
-		if ( ( is_home() || is_front_page() ) && is_user_logged_in() ) {
-			$stored_jquery_version = ITSEC_Modules::get_setting( 'wordpress-tweaks', 'jquery_version' );
-			$current_jquery_version = $wp_scripts->registered['jquery']->ver;
-
-			if ( $current_jquery_version !== $stored_jquery_version ) {
-				ITSEC_Modules::set_setting( 'wordpress-tweaks', 'jquery_version', $current_jquery_version );
-			}
-		}
 	}
 
 	/**

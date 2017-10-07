@@ -3,7 +3,7 @@ Contributors: nmedia
 Tags: woocommerce, pesonalized products, variations
 Donate link: http://www.najeebmedia.com/donate
 Requires at least: 3.5
-Tested up to: 4.6
+Tested up to: 4.8
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -19,10 +19,22 @@ WooCommerce Personalized Product Option Plugin allow site admin to add unlimited
 
 
 == Changelog ==
-
+= 7.9.5 June 24, 2017
+* Feature Added: Export Meta Issue Resolved
+= 7.9.4 June 21, 2017
+* Feature Added: Label option added for color palletes
+* Feature Added: Tooltips option for color palettes labels
+= 7.9.3 June 21, 2017
+* Bug fixed: Variable product price display issue fixed
+= 7.9.2 June 7, 2017 =
+* Bug fixed: File upload issue fixed for PHP 7.0
+= 7.9.1 June 5, 2017 =
+* Bug fixed: Slashes issue fixed in title. Like (It's a lable) can be used
+= 7.9 May 22, 2017 =
+* Featre Added: WC Old version compatibility added
+* Featre Added: Better UI for Import/Export Meta
 = 7.8 May 16, 2017 =
 * Feature Added: Horizontal Layout added for variations in Variation Quantity Field
-
 = 7.7 May 13, 2017 =
 * Bug fixed: validation issue fixed by addin esc_url, esc_attr functions
 * Bug fixed: Script properly enqueu for validation checking

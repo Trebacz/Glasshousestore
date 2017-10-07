@@ -10,16 +10,35 @@ $export_url = add_query_arg(array('nm_export' => 'ppom'));
 $import_url = add_query_arg(array('nm_import' => 'ppom','page' => 'nm-personalizedproduct'));
 
 echo '<hr/>';
-echo '<h3>'.__('Existing Product Meta', 'nm-personalizedproduct').'</h3>';
+echo '<div class="wrapper">';
+echo '<div class="col col-4">';
+echo '<h3  style="text-align: center; margin: 5px;">'.__('Export & Import Meta :', 'nm-personalizedproduct').'</h3>';
+echo '</div>';
 
-echo '<h4>'.__('Export & Import Meta', 'nm-personalizedproduct').'</h4>';
-echo '<a class="button nm-export" href="' . $export_url . '">' . __ ( 'Export All Meta', 'nm-personalizedproduct' ) . '</a>';
+echo '<div class="col col-3">';
+echo '<a class="btn btn-primary btn-sm" href="' . $export_url . '">' . __ ( 'Export All Meta', 'nm-personalizedproduct' ) . '</a>';
+echo '</div>';
+	
+echo '<div class="col col-5">';
 
 echo '<form method="post" action="admin-post.php" enctype="multipart/form-data">';
 echo '<input type="hidden" name="action" value="nm_importing_file_ppom" />';
-echo '<input type="file" name="ppom_csv">';
-echo '<input type="submit" class="button nm-export" value="'.__ ( 'Import Meta', 'nm-personalizedproduct' ).'">';
+
+echo '<label for="file-upload" class="btn btn-success btn-sm custom-file-upload" style="margin-right: 5px;">';
+echo '<span>Choose a file…</span>';
+echo '<input id="file-upload" type="file" name="ppom_csv" style="display: none;">';
+echo '</label>';
+
+echo '<input type="submit" class="btn btn-primary btn-sm" value="'.__ ( 'Import Meta', 'nm-personalizedproduct' ).'">';
 echo '</form>';
+
+echo '</div>'; //col-5 end
+echo '<div class="clear" ></div>';
+echo '</div>'; //wrapper end
+echo '<hr>';
+echo '<div class="wrapper">';
+echo '<h1 style="text-align: center;">'.__('Existing Product Meta', 'nm-personalizedproduct').'</h1>';
+echo '</div>'; //wrapper end
 ?>
 
 

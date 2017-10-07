@@ -3,7 +3,7 @@ Contributors: Wpmarketingrobot, Michel Jongbloed, AukeJomm
 Tags: Google Merchant Export, Product feed, woocommerce, Google product feed export, google, shopping, Google Adwords, Google Merchant, wooCommerce export, woocommerce variations, e-commerce, google merchant product feed, product variations, variations export, wp-e-commerce export, wp marketing robot
 Requires at least: 4.6
 Tested up to: 4.8
-Stable tag: 1.8.1
+Stable tag: 1.9.4
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -89,6 +89,27 @@ In case it does please do submit your feed in your Google Merchant center and ch
 3. Save and generate your feed
 
 == Changelog ==
+= 1.9.4 - 03/09/2017 =
+* Fixed an issue where filtering failed when the user would not enter an "or" input
+* Improved the backup process
+* Improved memory usages during feed generation
+* Fixed an issue where the min and max variation regular prices would not be configured according the the WooCommerce money settings
+* Fixed an issue with the duplicate function
+* Improved the database setup and update process
+* Added support for WooCommerce Composite Products
+* Improved the error handling messages for licensing activities
+* Added the wppfm_feed_item_value filter that allows users to edit the value of any item in a feed using this filter option
+* Added support for Google Dynamic Remarketing
+* Fixed an issue where the plugin would conflict with the Mandrill plugin
+* The output lists are now sorted alphabetically
+* Added support for user made taxonomies
+* Added a function that removes WordPress Gallery shortcode from the product description
+* Added a warning if a user uses prohibited characters in the feed name
+* Fixed an error that could cause calculations in a change value to produce a period as a decimal separator even though a comma is set as required decimal separator
+* Changed the Min and Max Variation prices that are not supported by WooCommerce anymore
+* Fixed an issue where the url of variable products from which some attributes where not set would not be correct
+* Prepaired the code to support the WooCommerce Product Feed Manager WPML Support plugin that adds WPML multilingual support the the plugin
+
 = 1.8.1 - 16/06/2017 =
 * Fixed an issue where an update of the database to the new specifications would only occur when visiting the feed update form so if an automatic feed update would be done before visiting the feed update form an error would occur as the database was not updated
 

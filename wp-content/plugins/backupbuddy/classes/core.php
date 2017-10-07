@@ -334,6 +334,13 @@ class backupbuddy_core {
 			}
 		} else {
 			$profileExclusions = $profile['excludes'];
+			foreach( $profileExclusions as &$profileExclusion ) { // Handle possible path abose $abspath in custom root.
+				$profileExclusion = trim( $profileExclusion );
+				if ( '' === $profileExclusion ) {
+					continue;
+				}
+				$profileExclusion = $abspath . $profileExclusion;
+			}
 		}
 		$excludes = array_merge( $excludes, $profileExclusions );
 		
@@ -1221,9 +1228,9 @@ class backupbuddy_core {
 			}
 			
 			if ( $importbuddy_pass_hash == '' ) {
-				$message = 'Warning #9032 - You have not set an ImportBuddy password on the BackupBuddy Settings page. Once this password is set a copy of the importbuddy.php file needed to restore your backup will be included in Full backup zip files for convenience. It may manually be downloaded from the Restore / Migrate page.';
+				$message = 'Warning #9032 - You have not set an ImportBuddy password on the BackupBuddy Settings page. A copy of the importbuddy.php file needed to restore your backup is included in Full backup zip files for convenience. Since a password is not a random one has been applied to this importbuddy.php so you will need to use the "Forgot Password" option if using it to restore.';
 				pb_backupbuddy::status( 'warning', $message );
-				return false;
+				$importbuddy_pass_hash = pb_backupbuddy::random_string( 45 ); // Random long hash for dummy password.
 			}
 		}
 		
@@ -1245,7 +1252,7 @@ class backupbuddy_core {
 			}
 		}
 
-		$output = preg_replace('/#VERSION#/', $version_string, $output, 1 ); // Only replaces first instance.
+		$output = preg_replace('/#VERSION#/', $version_string, $output, 2 ); // Only replaces first TWO instances.
 
 		// PACK IMPORTBUDDY
 		$_packdata = array( // NO TRAILING OR PRECEEDING SLASHES!
@@ -3244,17 +3251,21 @@ class backupbuddy_core {
 	 */
 	public static function truncate_file_beginning($filename,$maxfilesize,$keepPercent = 50 ){
 		@clearstatcache( true, $filename );
-		$size=filesize($filename);
+		if ( false === ( $size = @filesize( $filename ) ) ) {
+			return; // File did not exist/cannot access.
+		}
 		if ($size<$maxfilesize) return;
 		
 		pb_backupbuddy::status( 'details', 'Truncating LARGE file `' . $filename . '` of size `' . pb_backupbuddy::$format->file_size( $size ) . '` exceeding threshold, only keeping newest ' . $keepPercent . '%.' );
 		
 		$maxfilesize=$maxfilesize * ( $keepPercent / 100 ); // keep newest part up to cetain percent.
 		$fh=fopen($filename,"r+");
-		$start=ftell($fh);
+		if ( false === ( $start = @ftell($fh) ) ) {
+			return; // File did not exist/cannot access.
+		}
 		fseek( $fh, -$maxfilesize, SEEK_END ); // Seek to middle from the end.
 		$start = fgets( $fh ); // Get start position.
-		$length = ( $size - $start );
+		$length = ( (int)$size - (int)$start );
 		
 		// Catch instances where fread length parameter was coming in less than 0.
 		if ( $length < 1 ) {

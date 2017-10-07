@@ -116,20 +116,15 @@ function wppfm_staticValueChanged( id, level, combinationLevel ) {
 }
 
 function wppfm_changedOutputSelection( level ) {
-
 	if ( $jq( '#output-field-cntrl-' + level ).val() !== 'no-value' ) {
-
 		wppfm_activateOptionalFieldRow( level, $jq( '#output-field-cntrl-' + level ).val() );
 	}
 }
 
 function wppfm_hasExtraSourceRow( nrOfSources, value ) {
-
 	if ( value.length > 0 ) {
-
 		return value[nrOfSources - 1].hasOwnProperty( 'c' ) ? true : false;
 	} else {
-
 		return false;
 	}
 }
@@ -267,7 +262,7 @@ function wppfm_getFeedObject( feedId, callback ) {
 			
 			var newFeedObject = new Feed( data['product_feed_id'], data['title'], 
 				data['include_variations'], data['is_aggregator'], String( data['channel'] ), data['main_category'],
-				data['category_mapping'], data['url'], data['source'], data['country'], data['feed_title'], 
+				data['category_mapping'], data['url'], data['source'], data['country'], data['language'], data['feed_title'], 
 				data['feed_description'], data['schedule'], '', data['status_id'] );
 
 			callback( newFeedObject );

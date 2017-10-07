@@ -13,29 +13,86 @@
 // Prevent direct access
 if (!defined('ABSPATH')) exit;
 
+/**
+ * Returns the html for a standard WordPress error message
+ * 
+ * @param string $message
+ * @param bool $dismissible
+ * @param bool $permanent_dismissible
+ * @return html string
+ */
 function wppfm_show_wp_error( $message, $dismissible = false, $permanent_dismissible = false ) {
 	return wppfm_show_wp_message( $message, 'error', $dismissible, $permanent_dismissible );
 }
 
+/**
+ * Returns the html for a standard WordPress warning message
+ * 
+ * @param string $message
+ * @param bool $dismissible
+ * @param bool $permanent_dismissible
+ * @return html string
+ */
 function wppfm_show_wp_warning( $message, $dismissible = false, $permanent_dismissible = false ) {
 	return wppfm_show_wp_message( $message, 'warning', $dismissible, $permanent_dismissible );
 }
 
+/**
+ * Returns the html for a standard WordPress success message
+ * 
+ * @param string $message
+ * @param bool $dismissible
+ * @param bool $permanent_dismissible
+ * @return html string
+ */
 function wppfm_show_wp_success( $message, $dismissible = false, $permanent_dismissible = false ) {
 	return wppfm_show_wp_message( $message, 'success', $dismissible, $permanent_dismissible );
 }
 
+/**
+ * Returns the html for a standard WordPress info message
+ * 
+ * @param string $message
+ * @param bool $dismissible
+ * @param bool $permanent_dismissible
+ * @return html string
+ */
 function wppfm_show_wp_info( $message, $dismissible = false, $permanent_dismissible = false ) {
 	return wppfm_show_wp_message( $message, 'info', $dismissible, $permanent_dismissible );
 }
 
+/**
+ * Returns the html for a standard WordPress message
+ * 
+ * @param string $message
+ * @param string $type
+ * @param bool $dismissible
+ * @param bool $permanent_dismissible
+ * @return html string
+ */
 function wppfm_show_wp_message( $message, $type, $dismissible, $permanent_dismissible ) {
-	//$dism = $dismissible && !$permanent_dismissible ? ' is-dismissible' : '';
 	$dism = $dismissible ? ' is-dismissible' : '';
 	$perm_dism = $permanent_dismissible ? ' id="disposible-warning-message"' : '';
 	$dismiss_button = $permanent_dismissible ? '<button type="button" id="disposible-notice-button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>' : '';
 	
 	return '<div' . $perm_dism . ' class="notice notice-' . $type . $dism . '"><p>'  . $message . '</p>' . $dismiss_button . '</div>';
+}
+
+/**
+ * Shows an error message to the user and writes an error log based on the wp_error given
+ * 
+ * @since 1.9.3
+ * 
+ * @param wp_error object $response
+ * @param string $message
+ * @return html string
+ */
+function wppfm_handle_wp_errors_response( $response, $message ) {
+	$err_msgs = $response->get_error_messages();
+	$err_txt = !empty( $err_msgs ) ? implode( ' :: ', $err_msgs ) : 'error unknown!';
+
+	wppfm_write_log_file( $message . $err_txt );
+	return wppfm_show_wp_error( $message . " Error message: " . $response->get_error_message() );
 }
 
 /**
@@ -65,6 +122,28 @@ function wppfm_write_log_file( $error_message, $filename = 'error' ) {
 		wppfm_show_wp_error( __( "There was an error but I was unable to store the error message in the log file. The message was $error_message", 'wp-product-feed-manager' ) );
 	}
 }
+
+/**
+ * Writes a http_requests_error.log file in the plugin folder when there is a http request failed
+ * 
+ * @since 1.9.0
+ * 
+ * @param string $response
+ * @param array $args
+ * @param string $url
+ * @return string
+ */
+function wppfm_log_http_requests( $response, $args, $url ) {
+	if ( is_wp_error( $response ) && stripos( $this->_uri, '/wp-admin/admin.php?page=' . MYPLUGIN_PLUGIN_NAME ) !== false ) {
+		$logfile = MYPLUGIN_PLUGIN_DIR . 'http_request_error.log';
+		file_put_contents( $logfile, sprintf( "### %s, URL: %s\nREQUEST: %sRESPONSE: %s\n", date( 'c' ), $url, print_r( $args, true ), print_r( $response, true ) ), FILE_APPEND );
+	}
+	
+	return $response;
+}
+
+// hook into WP_Http::_dispatch_request()
+add_filter( 'http_response', 'wppfm_log_http_requests', 10, 3 );
 
 /**
  * allows safe debugging on a operational server of a user

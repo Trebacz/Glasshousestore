@@ -3,8 +3,8 @@ Contributors: angelleye
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RP48QUAJW2ZT4
 Tags: paypal, ipn, instant payment notification, automation
 Requires at least: 3.8
-Tested up to: 4.6.1
-Stable tag: 1.1.0
+Tested up to: 4.8
+Stable tag: 1.1.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -91,6 +91,20 @@ You can automate all sorts of things with IPN, so the list really goes on and on
 * Take a look at [this article I wrote covering the topic of general IPN testing and troubleshooting](https://www.angelleye.com/test-paypal-ipn/).  I think it will help!
 
 == Changelog ==
+
+= 1.1.2 - 09.21.2017 =
+
+* Fix - Resolves a PHP failure in some PHP versions related to timezone / timestamps in IPN data. ([#96](https://bitbucket.org/angelleye/paypal-ipn-for-wordpress/issues/96/version-111-breaks-wp-admin-browser))
+
+= 1.1.1 - 09.19.2017 =
+
+* Feature - New hooks for "ipn_response_verified" and "ipn_response_invalid". ([#87](https://bitbucket.org/angelleye/paypal-ipn-for-wordpress/issues/87/add-hooks-for-ipn-status))
+* Tweak - Adjusts URL forwarding filters to improve functionality. ([#84](https://bitbucket.org/angelleye/paypal-ipn-for-wordpress/issues/84/problems-with-forwarder-url-filter))
+* Tweak - Clean post-meta data when IPN records are deleated. [(#85](https://bitbucket.org/angelleye/paypal-ipn-for-wordpress/issues/85/database-cleanup))
+* Tweak - Tighter integration with PayPal Standard and PayPal Plus to avoid IPN conflicts. ([#86](https://bitbucket.org/angelleye/paypal-ipn-for-wordpress/issues/86/exclude-paypal-plus-and-paypal-standard))
+* Tweak - Adjusts date / time stamps for local server time. ([#88](https://bitbucket.org/angelleye/paypal-ipn-for-wordpress/issues/88/ipn-timestamp-local-time-option))
+* Tweak - Adjustments to avoid Google crawlers indexing IPN records. ([#93](https://bitbucket.org/angelleye/paypal-ipn-for-wordpress/issues/93/ipn-data-is-getting-indexed-by-search))
+
 
 = 1.1.0 - 10.12.2016 =
 * Feature - Adds premium extension library. ([#51](https://bitbucket.org/angelleye/paypal-ipn-for-wordpress/issues/51/plugin-directory))

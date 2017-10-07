@@ -1,8 +1,8 @@
 <?php
 
 /* * ******************************************************************
- * Version 4.4
- * Modified: 05-06-2017
+ * Version 4.5
+ * Modified: 05-08-2017
  * Copyright 2017 Accentio. All rights reserved.
  * License: None
  * By: Michel Jongbloed
@@ -18,11 +18,11 @@ if ( !class_exists( 'WPPFM_Google_Feed_Class' ) ) :
 	 * feed classes that generate feeds for a specific feed shop
 	 * 
 	 * @class WPPFM_Google_Feed_Class
-	 * @version 4.4
+	 * @version 4.5
 	 */
 	class WPPFM_Google_Feed_Class extends WPPFM_Feed_Master_Class {
 
-		private $_version = '4.4';
+		private $_version = '4.5';
 
 		/**
 		 * Class constructor
@@ -119,6 +119,8 @@ if ( !class_exists( 'WPPFM_Google_Feed_Class' ) ) :
 		}
 		
 		public function keys_that_have_sub_tags() { return array( 'installment', 'loyalty_points', 'shipping', 'tax' ); }
+		
+		public function keys_that_can_be_used_more_than_once() { return array( 'display_ads_similar_id', 'excluded_destination', 'adwords_labels' ); }
 		
 		public function add_xml_sub_tags( &$product ) {
 			$google_sub_tag_keys = array(

@@ -1,5 +1,5 @@
 /*!
- * object-feed.js v1.4
+ * object-feed.js v1.5
  * Part of the WP Product Feed Manager
  * Copyright 2017, Michel Jongbloed
  *
@@ -7,7 +7,7 @@
 
 "use strict";
 
-function Feed( feedId, title, includeVariations, aggregator, channel, mainCategory, categoryMappingString, url, dataSource, country, feedTitle, feedDescription, updateSchedule, feedFilter, status ) {
+function Feed( feedId, title, includeVariations, aggregator, channel, mainCategory, categoryMappingString, url, dataSource, country, language, feedTitle, feedDescription, updateSchedule, feedFilter, status ) {
 
     this.feedId = feedId;
     this.title = title;
@@ -21,6 +21,7 @@ function Feed( feedId, title, includeVariations, aggregator, channel, mainCatego
     this.dataSource = dataSource;
     this.channel = channel;
     this.country = channel !== '3' ? country : 'NL'; // for Beslist.nl only register the Netherlands
+	this.language = language;
     this.status = status;
     this.updateSchedule = updateSchedule;
 	this.feedFilter = feedFilter;
@@ -248,8 +249,6 @@ function setAttributesStaticValue( attributeId, level, combinationLevel, newValu
 
         this.attributes[attributeId]['isActive'] = false;
     }
-	
-	console.log(this.attributes[attributeId]['value']);
 }
 
 function setAttributesSourceValue( attributeId, sourceLevel, newSource ) {

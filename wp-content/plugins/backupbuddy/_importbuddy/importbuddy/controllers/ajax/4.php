@@ -50,7 +50,6 @@ if ( 'true' != pb_backupbuddy::_GET( 'deploy' ) ) { // deployment mode pre-loads
 }
 
 
-
 // Instantiate restore class.
 require_once( pb_backupbuddy::plugin_path() . '/classes/restore.php' );
 $restore = new backupbuddy_restore( 'restore', $restoreData );
@@ -87,7 +86,8 @@ if ( false === $restore->_state['restoreDatabase'] ) {
 			}
 		}
 	}
-
+	
+	
 	// Restore the database.
 	if ( 'true' == pb_backupbuddy::_GET( 'deploy' ) ) {
 		// Drop any previous incomplete deployment / rollback tables.
@@ -108,9 +108,7 @@ if ( false === $restore->_state['restoreDatabase'] ) {
 	
 	
 	pb_backupbuddy::status( 'details', 'About to restore database.' );
-	
 	$restoreResult = $restore->restoreDatabase( $restore->_state['databaseSettings']['tempPrefix'] );
-	
 	
 	
 	if ( 'true' == pb_backupbuddy::_GET( 'deploy' ) ) {
@@ -121,9 +119,6 @@ if ( false === $restore->_state['restoreDatabase'] ) {
 			$nextStepNum = 5;
 		}
 		echo '<!-- AUTOPROCEED TO STEP ' . $nextStepNum . ' -->';
-		
-		
-		//echo '<script>console.log( "' . print_r( $restore->_state, true ) . '" );</script>';
 		
 		
 		// Write default state overrides.

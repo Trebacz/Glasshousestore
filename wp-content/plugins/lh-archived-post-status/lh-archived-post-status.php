@@ -1,17 +1,18 @@
 <?php 
-/*
-Plugin Name: LH Archived Post Status
-Plugin URI: https://lhero.org/plugins/lh-archived-post-status/
-Description: Creates an archived post status. Content can be excluded from the main loop and feed (but visible with a message), or hidden entirely
-Version: 2.16
-Author: Peter Shaw
-Author URI: https://shawfactor.com/
-License:
-Released under the GPL license
-http://www.gnu.org/copyleft/gpl.html
-
-Copyright 2017  Peter Shaw  (email : pete@localhero.biz)
+/**
+ * Plugin Name: LH Archived Post Status
+ * Plugin URI: https://lhero.org/plugins/lh-archived-post-status/
+ * Description: Creates an archived post status. Content can be excluded from the main loop and feed (but visible with a message), or hidden entirely
+ * Version: 2.17
+ * Author: Peter Shaw
+ * Author URI: https://shawfactor.com/
+ * Text Domain: lh_archive_post_status
+ * License: GPL2+
+ * Domain Path: /languages/
 */
+
+
+if (!class_exists('LH_archived_post_status_plugin')) {
 
 class LH_archived_post_status_plugin {
 
@@ -292,7 +293,7 @@ echo date(get_option( 'date_format' ), strtotime($date));
 
 
 public function plugin_menu() {
-add_options_page('Archive options', 'Archiving', 'manage_options', $this->filename, array($this,"plugin_options"));
+add_options_page(__('Archive options', $this->namespace ), __('Archiving', $this->namespace ), 'manage_options', $this->filename, array($this,"plugin_options"));
 }
 
 
@@ -331,6 +332,11 @@ $options[ $this->publicly_available ] = $_POST[ $this->publicly_available ];
 
 }
 
+
+
+
+
+
 if( isset($_POST[ $this->title_label_field_name ])){
 $options[$this->title_label_field_name] = sanitize_text_field($_POST[ $this->title_label_field_name ]);
 }
@@ -361,54 +367,9 @@ $this->options = get_option($this->opt_name);
 
     // Now display the settings editing screen
 
-    echo '<div class="wrap">';
+include ('partials/option-settings.php');
 
-    // header
-
-    echo "<h1>" . __( 'LH Archive Post Type Settings', $this->namespace ) . "</h1>";
-
-    // settings form
-
-    
-    ?>
-
-<form name="form1" method="post" action="">
-<input type="hidden" name="<?php echo $this->hidden_field_name; ?>" value="Y">
-
-<p><label for="<?php echo $this->publicly_available; ?>"><?php _e("Can Archived Posts be read publicly:", $this->namespace); ?></label>
-<select name="<?php echo $this->publicly_available; ?>" id="<?php echo $this->publicly_available; ?>">
-<option value="1" <?php  if ($this->options[$this->publicly_available] == 1){ echo 'selected="selected"'; }  ?>>Yes - But not in the, main loop, frontpage, or feed</option>
-<option value="0" <?php  if ($this->options[$this->publicly_available] == 0){ echo 'selected="selected"';}  ?>>No - only logged in users can view archived posts</option>
-</select>
-</p>
-
-
-
-<p><strong><label for="<?php echo $this->title_label_field_name; ?>"><?php _e("Title Label:", $this->namespace); ?></label></strong><br/>
-<?php _e("This label will appear after the title for archived posts on the front end of your website", $this->namespace); ?><br/>
-<input type="text" name="<?php echo $this->title_label_field_name; ?>" id="<?php echo $this->title_label_field_name; ?>" value="<?php echo $this->options[$this->title_label_field_name] ; ?>" size="20" />
-</p>
-
-<p><label for="<?php echo $this->message_field_name; ?>"><?php _e("Archive Message:", $this->namespace); ?></label><br/>
-<?php
-$settings = array( 'media_buttons' => false );
-wp_editor( $this->options[$this->message_field_name], $this->message_field_name, $settings);
-?>
-</p>
-
-
-
-<p class="submit">
-<input type="submit" name="Submit" class="button-primary" value="<?php esc_attr_e('Save Changes') ?>" />
-</p>
-
-</form>
-
-
-
-</div>
-
-<?php
+ 
 }
 
 
@@ -747,6 +708,16 @@ return;
 }
 
 
+
+public function plugins_loaded(){
+
+
+load_plugin_textdomain( $this->namespace, false, basename( dirname( __FILE__ ) ) . '/languages' ); 
+
+}
+
+
+
 public function __construct() {
 
 $this->filename = plugin_basename( __FILE__ );
@@ -783,6 +754,10 @@ add_action( 'admin_footer-edit.php', array( $this, 'append_post_status_bulk_edit
 add_action( 'transition_post_status', array( $this, 'add_expiry_if_missing' ),10,3);
 
 
+//plugins loaded currently just translations
+add_action( 'plugins_loaded', array($this,"maybe_exclude_related"), 10, 1);
+
+
 }
 
 
@@ -803,6 +778,8 @@ delete_option( $option_name );
 
 
 register_uninstall_hook( __FILE__, 'lh_archived_post_status_uninstall' );
+
+}
 
 
 ?>

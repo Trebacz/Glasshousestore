@@ -240,6 +240,7 @@ $settings_form->add_setting( array(
 	'type'		=>		'textarea',
 	'name'		=>		'postmeta_key_excludes',
 	'title'		=>		__( 'Additional Postmeta Key Exclusions', 'it-l10n-backupbuddy' ),
+	'tip'		=>		__( 'Excludes certain postmeta updates to the postmeta keys database (beyond hard-coded defaults) from being immediately backed up upon change and instead only backed up during the periodic (typically daily) database snapshot. This is useful for options which are updates very often. Supports regex using preg_match(), wrapped with forward slashes /. Ex: To exclude postmeta entries that look like someplugin_oranges, someplugin_apples, someplugin_bananas, etc use: /someplugin_.+/', 'it-l10n-backupbuddy' ),
 	'row_class'	=>		'advanced-toggle',
 	'css'		=>		'width: 100%;',
 ) );
@@ -248,7 +249,7 @@ $settings_form->add_setting( array(
 	'name'		=>		'options_excludes',
 	'title'		=>		__( 'Additional Options Exclusions', 'it-l10n-backupbuddy' ),
 	'row_class'	=>		'',
-	'tip'		=>		__( 'Excludes certain options updates to the wp_options table (beyond hard-coded defaults) from being immediately backed up upon change and instead only backed up during the periodic (typically daily) database snapshot. This is useful for options which are updates very often. Supports regular expressions via preg_match().' ),
+	'tip'		=>		__( 'Excludes certain options updates to the wp_options table (beyond hard-coded defaults) from being immediately backed up upon change and instead only backed up during the periodic (typically daily) database snapshot. This is useful for options which are updates very often. Supports regex using preg_match(), wrapped with forward slashes /. Ex: To exclude options that look like someplugin_oranges, someplugin_apples, someplugin_bananas, etc use: /someplugin_.+/', 'it-l10n-backupbuddy' ),
 	'row_class'	=>		'advanced-toggle',
 	'css'		=>		'width: 100%;',
 ) );

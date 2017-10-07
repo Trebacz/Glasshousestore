@@ -124,4 +124,19 @@ class AngellEYE_Paypal_Ipn_For_Wordpress_Public {
         }
         return $posts;
     }
+    
+    public function paypal_ipn_for_wordpress_private_ipn_post() {
+        try {
+            if ( !is_admin() && ( is_post_type_archive( 'paypal_ipn' ) ||  is_tax( 'paypal_ipn_type' ) ) ) {
+                global $wp_query;
+                $wp_query->set_404();
+                status_header( 404 );
+                nocache_headers();
+                wp_redirect( home_url() );
+                exit();
+            }
+        } catch (Exception $ex) {
+
+        }
+    }
 }

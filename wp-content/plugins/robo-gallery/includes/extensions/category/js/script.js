@@ -4,19 +4,25 @@
         this.$edit = null;
         this.postId = null;
         this.postType = null;
+        window['catDialogClick'] = 0;
 
         this.init();
     }
     AttributeMetaBox.prototype = {
         init: function () {
             var self = this;
+            
+
 
             self.$edit = self.$element.find('button.edit');
             self.postId = self.$edit.data('post_id');
             self.postType = self.$edit.data('post_type');
 
             self.$edit.click(function() {
-                return self.edit();
+            	if( window['catDialogClick'] == 0 ){
+            		window['catDialogClick'] = 1;
+            		return self.edit();
+            	}
             });
         },
         edit: function () {
@@ -24,13 +30,17 @@
 
             new DialogEdit({
                 postType: this.postType,
-                callbackSave: function() { self.update(); }
+                callbackSave: function() { 
+                	self.update(); 
+               }
             });
 
             return false;
         },
         update: function () {
             var self = this;
+            
+            window['catDialogClick'] = 0;
 
             $.ajax({
                 url: hierarchyPostAttributes.ajaxUrl,
@@ -143,6 +153,7 @@
             }
         },
         destroy: function () {
+        	window['catDialogClick'] = 0;
             this.$element.dialog('close');
             this.$element.remove();
         }

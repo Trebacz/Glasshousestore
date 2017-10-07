@@ -337,10 +337,10 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 	  */
 	  function change_add_to_cart_text($button, $product){
 	  	
-	  	$selected_meta_id = get_post_meta ( $product->get_id(), '_product_meta_id', true );
+	  	$selected_meta_id = get_post_meta ( nm_get_product_id($product), '_product_meta_id', true );
 		
 		if ($selected_meta_id == 0 || $selected_meta_id == 'None'){
-			if( !$this -> check_meta_category($product->get_id()) ){
+			if( !$this -> check_meta_category(nm_get_product_id($product)) ){
 				return $button;
 			}
 		}
@@ -350,8 +350,8 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 		        if ($selected_meta_id) {
 		            // show qty +/- with button
 		            $button = sprintf( '<a href="%s" rel="nofollow" data-product_id="%s" data-product_sku="%s" class="button %s product_type_%s">%s</a>',
-						esc_url( get_permalink($product->get_id()) ),
-						esc_attr( $product->get_id() ),
+						esc_url( get_permalink(nm_get_product_id($product)) ),
+						esc_attr( nm_get_product_id($product) ),
 						esc_attr( $product->get_sku() ),
 						$product->is_purchasable() && $product->is_in_stock() ? 'add_to_cart_button' : '',
 						esc_attr( 'variable' ),
@@ -366,7 +366,7 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 	  
 	  function change_price_html($price, $product){
 	  	
-	  	$selected_meta_id = get_post_meta ( $product->get_id(), '_product_meta_id', true );
+	  	$selected_meta_id = get_post_meta ( nm_get_product_id($product), '_product_meta_id', true );
 		if ($selected_meta_id == 0 || $selected_meta_id == 'None')
 			return $price;
 			
@@ -599,7 +599,7 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 		wp_enqueue_script( 'woopa-ajax-validation', $this->plugin_meta['url'].'/js/woopa-ajaxvalidation.js', array('jquery'));
 			
 		$woopa_vars = array('fields_meta' => stripslashes($single_form -> the_meta),
-							'default_error_message'	=> __('it\'s a required field.', 'nm-personalizedproduct'));
+							'default_error_message'	=> __('it is a required field.', 'nm-personalizedproduct'));
 		wp_localize_script( 'woopa-ajax-validation', 'woopa_vars', $woopa_vars);
 		
 		
@@ -766,7 +766,7 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 		
 		$product_meta_data = array (); // this array is giong to be pushed into with data
 		
-		$all_files = '';
+		$all_files = array();
 		$price_matrix = '';
 		$var_price = 0;
 		$fixed_price = 0;
@@ -1049,7 +1049,7 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 	 */
 	function add_item_meta($item_meta, $existing_item_meta) {
 		
-		//nm_personalizedproduct_pa($existing_item_meta ['product_meta']['meta_data']);
+		// nm_personalizedproduct_pa($existing_item_meta ['product_meta']);
 		
 		if( ! isset($existing_item_meta['product_meta']) )
 			return $item_meta;
@@ -1313,16 +1313,13 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 		
 		global $wpdb;
 		$files_found = 0;
-		$order_items = $wpdb->get_results ( $wpdb->prepare ( "SELECT * FROM {$wpdb->prefix}woocommerce_order_items WHERE order_id = %d", $order->ID ) );
+		$order_items = $wpdb->get_results ( $wpdb->prepare ( "SELECT * FROM {$wpdb->prefix}woocommerce_order_items WHERE order_id = %d", nm_get_order_id($order) ) );
 		
-		$order = new WC_Order ( $order->ID );
-		//nm_personalizedproduct_pa($order);
+		$order = new WC_Order ( nm_get_order_id($order) );
+		// nm_personalizedproduct_pa($order);
 		if (sizeof ( $order->get_items () ) > 0) {
 			foreach ( $order->get_items () as $item ) {
 				
-				/* get_metadata( 'order_item', $item_id, $key, $single );
-				$all_files = wc_get_order_item_meta($item ['product_id'], 'Your title', true);
-				nm_personalizedproduct_pa($item); */
 				
 				$selected_meta_id = get_post_meta ( $item->get_product_id(), '_product_meta_id', true );
 			
@@ -1334,7 +1331,7 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 				$single_meta = $this -> get_product_meta ( $selected_meta_id);
 				$product_meta = json_decode ( $single_meta->the_meta );
 
-				//nm_personalizedproduct_pa($item);
+				// nm_personalizedproduct_pa($item);
 				if($product_meta){
 					
 					foreach ( $product_meta as $meta => $data ) {
@@ -1374,7 +1371,7 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 									
 									$src_file = '';
 									$org_path = $this -> get_file_dir_path () . $file;
-									$file_name = $order -> get_id() . '-' . $product_id . '-' . $file;		// from version 3.4
+									$file_name = nm_get_order_id($order) . '-' . $product_id . '-' . $file;		// from version 3.4
 									$confirmed_path = $this -> get_file_dir_path () . 'confirmed/' . $file_name;
 									if(file_exists($org_path)){
 										if(rename ( $org_path, $confirmed_path ))
@@ -1425,9 +1422,9 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 	function display_selected_files($order) {
 		// woo_pa($order);
 		global $wpdb;
-		$order_items = $wpdb->get_results ( $wpdb->prepare ( "SELECT * FROM {$wpdb->prefix}woocommerce_order_items WHERE order_id = %d", $order->ID ) );
+		$order_items = $wpdb->get_results ( $wpdb->prepare ( "SELECT * FROM {$wpdb->prefix}woocommerce_order_items WHERE order_id = %d", nm_get_order_id($order) ) );
 	
-		$order = new WC_Order ( $order->ID );
+		$order = new WC_Order ( nm_get_order_id($order) );
 	
 		if (sizeof ( $order->get_items () ) > 0) {
 			foreach ( $order->get_items () as $item ) {
@@ -2137,10 +2134,11 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 				// nm_personalizedproduct_pa($item);
 		
 				$selected_meta_id = get_post_meta ( $item ['product_id'], '_product_meta_id', true );
-				if ($selected_meta_id == 0 || $selected_meta_id == 'None')
-					continue;
-		
+				
 				$single_meta = $this -> get_product_meta ( $selected_meta_id);
+					
+				if ( $single_meta == NULL )
+					continue;
 				$product_meta = json_decode ( $single_meta->the_meta );
 		
 				// nm_personalizedproduct_pa($product_meta);
@@ -2179,7 +2177,7 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 									$src_file = $this -> get_file_dir_url () . $file;
 										
 									if(!file_exists($src_file)){
-										$file_name = $order -> get_id() . '-' . $product_id . '-' . $file;		// from version 3.4
+										$file_name = nm_get_order_id($order) . '-' . $product_id . '-' . $file;		// from version 3.4
 										$src_file = $this -> get_file_dir_url () . 'confirmed/' . $file_name;
 									}else{
 										$file_name = $file;

@@ -29,9 +29,10 @@ if ( 'add' == $mode ) {
 			<ol>
 				<li><a href="https://console.developers.google.com/project?authuser=0" target="_blank" class="button secondary-button" style="vertical-align: 0;">Open Google API Console in a new window</a> (If using a <a href="https://developers.google.com/identity/protocols/OAuth2ServiceAccount" target="_new">Service Account</a> for more tokens <a href="<?php echo pb_backupbuddy::ajax_url( 'destination_picker' ) . '&add=gdrive&account=service&callback_data=' . pb_backupbuddy::_GET( 'callback_data' ); ?>">click here</a>.)</li>
 				<li>In the new window select <span class="pb_label pb_label-subtle">Create Project</span> and name it something like "BackupBuddy" (If you have more than 50 sites please use Service Accounts above due to Google token limits) & <span class="pb_label pb_label-subtle">Create</span>. Wait for the next screen to display.</li>
-				<li>Under Google Apps APIs click the link for <span class="pb_label pb_label-subtle">Drive API</span>.</li>
-				<li>On the next screen, click the blue <span class="pb_label pb_label-subtle">Enable</span> button to enable its API.</li>
-				<li>From the upper left hamburger menu (<span class="dashicons dashicons-menu"></span>) select <span class="pb_label pb_label-subtle">API Manager &gt; Credentials</span>.</li>
+				<li>From the upper left hamburger menu (<span class="dashicons dashicons-menu"></span>) select <span class="pb_label pb_label-subtle">API Manager &gt; Library</span> or <a href="https://console.developers.google.com/apis/library" target="_blank">click here</a>.</li>
+				<li>Under Google Apps APIs click the link for <span class="pb_label pb_label-subtle">Drive API</span> or <a href="https://console.developers.google.com/apis/api/drive.googleapis.com/overview" target="_blank">click here</a>.</li>
+				<li>Click the blue <span class="pb_label pb_label-subtle">Enable</span> button to enable its API.</li>
+				<li>From the upper left hamburger menu (<span class="dashicons dashicons-menu"></span>) select <span class="pb_label pb_label-subtle">API Manager &gt; Credentials</span> or <a href="https://console.developers.google.com/apis/credentials" target="_blank">click here</a>.</li>
 				<li>Select the <span class="pb_label pb_label-subtle">Create Credentials</span> button then <span class="pb_label pb_label-subtle">OAuth client ID</span>.</li>
 				<li>Click the button to <span class="pb_label pb_label-subtle">Configure consent screen</span>.</li>
 				<li>On the next screen, type any name you would like into the <span class="pb_label pb_label-subtle">Product name shown to users</span> field and save the form. (nobody but you will ever see this information).</li>

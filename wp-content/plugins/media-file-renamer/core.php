@@ -8,6 +8,9 @@ class Meow_MFRH_Core {
 		$this->mfrh_admin = $mfrh_admin;
 		add_action( 'plugins_loaded', array( $this, 'init' ) );
 		add_action( 'plugins_loaded', array( $this, 'init_actions' ) );
+
+		// Support for additional plugins
+		add_action( 'wpml_loaded', array( $this, 'wpml_load' ) );
 	}
 
 	function init() {
@@ -15,11 +18,12 @@ class Meow_MFRH_Core {
 		include( 'mfrh_custom.php' );
 
     global $mfrh_version;
-		//load_plugin_textdomain( 'media-file-renamer', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+		load_plugin_textdomain( 'media-file-renamer', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 
 		add_action( 'admin_head', array( $this, 'admin_head' ) );
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 		add_action( 'wp_ajax_mfrh_rename_media', array( $this, 'wp_ajax_mfrh_rename_media' ) );
+		add_action( 'wp_ajax_mfrh_undo_media', array( $this, 'wp_ajax_mfrh_undo_media' ) );
 		add_filter( 'media_send_to_editor', array( $this, 'media_send_to_editor' ), 20, 3 );
 		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 		add_action( 'edit_attachment', array( $this, 'edit_attachment' ) );
@@ -38,8 +42,9 @@ class Meow_MFRH_Core {
 			add_action( 'manage_media_custom_column', array( $this, 'manage_media_custom_column' ), 10, 2 );
 		}
 
-		// Support for additional plugins
-		add_action( 'wpml_loaded', array( $this, 'wpml_load' ) );
+		// Media Library Bulk Actions
+		add_filter( 'bulk_actions-upload', array( $this, 'library_bulk_actions' ) );
+		add_filter( 'handle_bulk_actions-upload', array( $this, 'library_bulk_actions_handler' ), 10, 3 );
 	}
 
 	/**
@@ -76,6 +81,38 @@ class Meow_MFRH_Core {
 				</p></div>';
 			}
 		}
+	}
+
+	/**
+	 *
+	 * MEDIA LIBRARY
+	 *
+	 */
+
+	function library_bulk_actions( $bulk_actions ) {
+	  $bulk_actions['mfrh_lock_all'] = __( 'Lock (Renamer)', 'media-file-renamer');
+		$bulk_actions['mfrh_unlock_all'] = __( 'Unlock (Renamer)', 'media-file-renamer');
+		$bulk_actions['mfrh_rename_all'] = __( 'Rename (Renamer)', 'media-file-renamer');
+	  return $bulk_actions;
+	}
+
+	function library_bulk_actions_handler( $redirect_to, $doaction, $ids ) {
+		if ( $doaction == 'mfrh_lock_all' ) {
+			foreach ( $ids as $post_id ) {
+		    add_post_meta( $post_id, '_manual_file_renaming', true, true );
+		  }
+	  }
+		if ( $doaction == 'mfrh_unlock_all' ) {
+			foreach ( $ids as $post_id ) {
+		    delete_post_meta( $post_id, '_manual_file_renaming' );
+		  }
+	  }
+		if ( $doaction == 'mfrh_rename_all' ) {
+			foreach ( $ids as $post_id ) {
+				$this->rename_media( get_post( $post_id, ARRAY_A ), null );
+		  }
+	  }
+		return $redirect_to;
 	}
 
 	/**
@@ -175,6 +212,67 @@ class Meow_MFRH_Core {
 					mfrh_process_next();
 				});
 			}
+
+			function mfrh_process_next_undo() {
+				var data = { action: 'mfrh_undo_media', subaction: 'undoMediaId', id: ids[current - 1] };
+				jQuery('#mfrh_progression').text(current + "/" + ids.length);
+				jQuery.post(ajaxurl, data, function (response) {
+					if (++current <= ids.length) {
+						mfrh_process_next_undo();
+					}
+					else {
+						jQuery('#mfrh_progression').html("<?php echo __( "Done. Please <a href='?page=rename_media_files'>refresh</a> this page.", 'media-file-renamer' ); ?>");
+					}
+				});
+			}
+
+			function mfrh_undo_media(all) {
+				current = 1;
+				ids = [];
+				var data = { action: 'mfrh_undo_media', subaction: 'getMediaIds', all: all ? '1' : '0' };
+				jQuery('#mfrh_progression').text("<?php echo __( "Please wait...", 'media-file-renamer' ); ?>");
+				jQuery.post(ajaxurl, data, function (response) {
+					reply = jQuery.parseJSON(response);
+					ids = reply.ids;
+					jQuery('#mfrh_progression').html(current + "/" + ids.length);
+					mfrh_process_next_undo();
+				});
+			}
+
+			function mfrh_export_table(table) {
+				var table = jQuery(table);
+				var data = [];
+				// Header
+				table.find('thead tr').each(function(i, tr) {
+					var row = [];
+					jQuery(tr).find('th').each(function(i, td) {
+						var text = jQuery(td).text();
+						row.push(text);
+					});
+					data.push(row);
+				});
+				// Body
+				table.find('tbody tr').each(function(i, tr) {
+					var row = [];
+					jQuery(tr).find('td').each(function(i, td) {
+						var text = jQuery(td).text();
+						row.push(text);
+					});
+					data.push(row);
+				});
+				var csvContent = "data:text/csv;charset=utf-8,";
+				data.forEach(function(infoArray, index){
+					dataString = infoArray.join(",");
+					csvContent += index < data.length ? dataString+ "\n" : dataString;
+				});
+				var encodedUri = encodeURI(csvContent);
+				var link = document.createElement("a");
+				link.setAttribute("href", encodedUri);
+				link.setAttribute("download", "media-file-renamer.csv");
+				document.body.appendChild(link);
+				link.click();
+			}
+
 		</script>
 		<?php
 	}
@@ -192,7 +290,8 @@ class Meow_MFRH_Core {
 			global $wpdb;
 			$ids = $wpdb->get_col( "SELECT p.ID FROM $wpdb->posts p WHERE post_status = 'inherit' AND post_type = 'attachment'" );
 			if ( !$all ) {
-				$idsToRemove = $wpdb->get_col( "SELECT m.post_id FROM wp_postmeta m WHERE m.meta_key = '_manual_file_renaming' and m.meta_value = 1" );
+				$idsToRemove = $wpdb->get_col( "SELECT m.post_id FROM $wpdb->postmeta m
+					WHERE m.meta_key = '_manual_file_renaming' and m.meta_value = 1" );
 				$ids = array_values( array_diff( $ids, $idsToRemove ) );
 			}
 			else {
@@ -208,6 +307,30 @@ class Meow_MFRH_Core {
 		else if ( $subaction == 'renameMediaId' ) {
 			$id = intval( $_POST['id'] );
 			$this->rename_media( get_post( $id, ARRAY_A ), null );
+			echo 1;
+			die();
+		}
+		echo 0;
+		die();
+	}
+
+	 function wp_ajax_mfrh_undo_media() {
+		$subaction = $_POST['subaction'];
+		if ( $subaction == 'getMediaIds' ) {
+			global $wpdb;
+			$ids = $wpdb->get_col( "
+				SELECT p.ID FROM $wpdb->posts p
+				WHERE post_status = 'inherit' AND post_type = 'attachment'" );
+			$reply = array();
+			$reply['ids'] = $ids;
+			$reply['total'] = count( $ids );
+			echo json_encode( $reply );
+			die;
+		}
+		else if ( $subaction == 'undoMediaId' ) {
+			$id = intval( $_POST['id'] );
+			$original_filename = get_post_meta( $id, '_original_filename', true );
+			$this->rename_media( get_post( $id, ARRAY_A ), null, false, $original_filename );
 			echo 1;
 			die();
 		}
@@ -438,6 +561,10 @@ class Meow_MFRH_Core {
 		  echo '</p></div>';
 		}
 
+		if ( isset( $_GET ) && isset( $_GET['mfrh_unlockall'] ) ) {
+			$wpdb->query( "DELETE FROM $wpdb->postmeta WHERE meta_key = '_manual_file_renaming'" );
+		}
+
 		$checkFiles = null;
 		if ( isset( $_GET ) && isset( $_GET['mfrh_scancheck'] ) )
 			$checkFiles = $this->check_text();
@@ -461,11 +588,11 @@ class Meow_MFRH_Core {
 
 		<?php if ( get_option( 'mfrh_flagging' ) ): ?>
 			<p>
-				<b>There are <span class='mfrh-flagged' style='color: red;'><?php _e( $flagged ); ?></span> media files flagged for auto-renaming out of <?php _e( $total ); ?> in total.</b> Those are the files that couldn't be renamed on the fly when their names were updated. You can now rename those flagged media, or rename all of them (which will unlock them all and force their renaming). <span style='color: red; font-weight: bold;'>Please backup your uploads folder + DB before using this.</span>
+				<b>There are <span class='mfrh-flagged' style='color: red;'><?php _e( $flagged ); ?></span> media files flagged for auto-renaming out of <?php _e( $total ); ?> in total.</b> Those are the files that couldn't be renamed on the fly when their names were updated. You can now rename those flagged media, or rename all of them (which will unlock them all and force their renaming). <span style='color: red; font-weight: bold;'>Please backup your uploads folder + DB before using this.</span> If you don't know how, give a try to this: <a href='https://updraftplus.com/?afref=460' target='_blank'>UpdraftPlus</a>.
 			</p>
 		<?php else: ?>
 			<p>
-				You might have noticed that some of your media are locked by the file renamer, others are unlocked. Automatically, the plugin locks the media you renamed manually. By default, they are unlocked. Here, you have the choice of rename all the media in your DB or only the ones which are unlocked (to keep the files you renamed manually). <span style='color: red; font-weight: bold;'>Please backup your uploads folder + DB before using this.</span>
+				You might have noticed that some of your media are locked by the file renamer, others are unlocked. Automatically, the plugin locks the media you renamed manually. By default, they are unlocked. Here, you have the choice of rename all the media in your DB or only the ones which are unlocked (to keep the files you renamed manually). <span style='color: red; font-weight: bold;'>Please backup your uploads folder + DB before using this.</span> If you don't know how, give a try to this: <a href='https://updraftplus.com/?afref=460' target='_blank'>UpdraftPlus</a>.
 			</p>
 		<?php endif; ?>
 
@@ -479,9 +606,18 @@ class Meow_MFRH_Core {
 				style='margin-right: 0px;'><span class="dashicons dashicons-controls-play" style="position: relative; top: 3px; left: -2px;"></span>
 				<?php echo sprintf( __( "Unlock ALL & Rename [%d]", 'media-file-renamer' ), $all_media ); ?>
 			</a>
+			<span style='margin-right: 5px; margin-left: 5px;'>|</span>
 			<a href="?page=rename_media_files&mfrh_lockall" id='mfrh_lock_all_images' class='button-primary'
-				style='margin-right: 10px;'><span class="dashicons dashicons-controls-play" style="position: relative; top: 3px; left: -2px;"></span>
+				style='margin-right: 0px;'><span class="dashicons dashicons-controls-play" style="position: relative; top: 3px; left: -2px;"></span>
 				<?php echo sprintf( __( "Lock ALL [%d]", 'media-file-renamer' ), $all_media ); ?>
+			</a>
+			<a href="?page=rename_media_files&mfrh_unlockall" id='mfrh_unblock_all_images' class='button-primary'
+				style='margin-right: 0px;'><span class="dashicons dashicons-controls-play" style="position: relative; top: 3px; left: -2px;"></span>
+				<?php echo sprintf( __( "Unlock ALL [%d]", 'media-file-renamer' ), $all_media ); ?>
+			</a>
+			<a onclick='mfrh_undo_media()' id='mfrh_undo_all_images' class='button button-red'
+				style='margin-right: 0px; float: right;'><span class="dashicons dashicons-undo" style="position: relative; top: 3px; left: -2px;"></span>
+				<?php echo sprintf( __( "Undo ALL [%d]", 'media-file-renamer' ), $all_media ); ?>
 			</a>
 			<span id='mfrh_progression'></span>
 
@@ -528,27 +664,62 @@ class Meow_MFRH_Core {
 					else if ( $checkFiles == null ) {
 						?><tr><td colspan='4'><div style='width: 100%; text-align: center;'>
 							<a class='button-primary' href="?page=rename_media_files&mfrh_scancheck" style='margin-top: 15px; margin-bottom: 15px;'><span class="dashicons dashicons-admin-generic" style="position: relative; top: 3px; left: -2px;"></span>
-								<?php echo sprintf( __( "Scan All & Show Issues", 'media-file-renamer' ) ); ?>
+								<?php _e( "Scan All & Show Issues", 'media-file-renamer' ); ?>
 							</a>
 						</div></td><?php
 					}
 				?>
 			</tbody>
 		</table>
+
+		<h2>Before / After</h2>
+		<p>This is useful if you wish to create redirections from your old filenames to your new ones. The CSV file generated by Media File Renamer is compatible with the import function of the <a href="https://wordpress.org/plugins/redirection/" target="_blank">Redirection</a> plugin. The redirections with slugs are already automatically and natively handled by WordPress.</p>
+
+		<div style='margin-top: 12px; background: #FFF; padding: 5px; border-radius: 4px; height: 28px; box-shadow: 0px 0px 6px #C2C2C2;'>
+
+			<a href="?page=rename_media_files&mfrh_beforeafter_filenames" class='button-primary' style='margin-right: 0px;'>
+				<span class="dashicons dashicons-media-spreadsheet" style="position: relative; top: 3px; left: -2px;"></span>
+				<?php echo _e( "Display Filenames", 'media-file-renamer' ); ?>
+			</a>
+
+			<a onclick="mfrh_export_table('#mfrh-before-after')" class='button-primary' style='margin-right: 0px; float: right;'>
+				<span class="dashicons dashicons-arrow-down-alt" style="position: relative; top: 3px; left: -2px;"></span>
+				<?php echo _e( "Export as CSV", 'media-file-renamer' ); ?>
+			</a>
+
 		</div>
+
+		<table id='mfrh-before-after' class='wp-list-table widefat fixed media' style='margin-top: 15px;'>
+			<thead>
+				<tr><th><?php _e( 'Before', 'media-file-renamer' ); ?></th><th><?php _e( 'After', 'media-file-renamer' ); ?></th></tr>
+			</thead>
+			<tfoot>
+				<tr><th><?php _e( 'Before', 'media-file-renamer' ); ?></th><th><?php _e( 'After', 'media-file-renamer' ); ?></th></tr>
+			</tfoot>
+			<tbody>
+				<?php
+					if ( isset( $_GET['mfrh_beforeafter_filenames'] ) || isset( $_GET['mfrh_beforeafter_slugs'] ) ) {
+						global $wpdb;
+						$results = $wpdb->get_results( "
+							SELECT m.post_id as ID, m.meta_value as original_filename, m2.meta_value as current_filename
+							FROM {$wpdb->postmeta} m
+							JOIN {$wpdb->postmeta} m2 on m2.post_id = m.post_id AND m2.meta_key = '_wp_attached_file'
+							WHERE m.meta_key = '_original_filename'" );
+						foreach ( $results as $row ) {
+							$fullsize_path = wp_get_attachment_url( $row->ID );
+							$parts = pathinfo( $fullsize_path );
+							$shorten_url = trailingslashit( $parts['dirname'] ) . $row->original_filename;
+							if ( isset( $_GET['mfrh_beforeafter_filenames'] ) )
+								echo "<tr><td>{$shorten_url}</td><td>$fullsize_path</td></tr>";
+							else
+								echo "<tr><td>{$row->original_slug}</td><td>{$row->current_slug}</td></tr>";
+						}
+					}
+				?>
+			</tbody>
+		</table>
+
 		<?php
-
-		// FUTURE AND TODO
-		// This shows the previous/new slug and previous/new filename for export to CSV
-		// SELECT p.ID,
-		// MAX(CASE WHEN m.meta_key = '_wp_old_slug' THEN m.meta_value ELSE NULL END) original_slug,
-		// post_name current_slug,
-		// MAX(CASE WHEN m.meta_key = '_original_filename' THEN m.meta_value ELSE NULL END) original_filemame,
-		// MAX(CASE WHEN m.meta_key = '_wp_attached_file' THEN m.meta_value ELSE NULL END) current_filename
-		// FROM wp_posts p
-		// LEFT JOIN wp_postmeta m ON p.ID = m.post_id
-		// WHERE post_status = 'inherit' AND post_type = 'attachment'
-
 	}
 
 	/**
@@ -576,7 +747,7 @@ class Meow_MFRH_Core {
 
 	function save_post( $post_id ) {
 		$status = get_post_status( $post_id );
-		if ( !in_array( $status, array( 'publish', 'future', 'private' ) ) )
+		if ( !in_array( $status, array( 'publish', 'draft', 'future', 'private' ) ) )
 			return;
 		$this->rename_media_on_publish( $post_id );
 	}
@@ -650,7 +821,7 @@ class Meow_MFRH_Core {
 			error_log( $data );
 		if ( !get_option( 'mfrh_log' ) )
 			return;
-		$fh = fopen( trailingslashit( WP_PLUGIN_DIR ) . 'media-file-renamer/media-file-renamer.log', 'a' );
+		$fh = fopen( trailingslashit( dirname(__FILE__) ) . 'media-file-renamer.log', 'a' );
 		$date = date( "Y-m-d H:i:s" );
 		fwrite( $fh, "$date: {$data}\n" );
 		fclose( $fh );
@@ -785,13 +956,6 @@ class Meow_MFRH_Core {
 		$ext = $path_parts['extension'];
 
 		$this->log( "** Rename Media: " . $old_filename );
-
-		// Was renamed manually? Avoid renaming when title has been changed.
-		if ( !$this->is_real_media( $post['ID'] ) ) {
-			$this->log( "Attachment {$post['ID']} looks like a translation, better not to continue." );
-			delete_post_meta( $post['ID'], '_require_file_renaming' );
-			return $post;
-		}
 
 		// If this is being renamed based on the post the media is attached to.
 		$base_new_title = $post['post_title'];

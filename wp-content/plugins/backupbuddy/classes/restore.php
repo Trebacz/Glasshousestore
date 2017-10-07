@@ -379,11 +379,12 @@ class backupbuddy_restore {
 		$this->_state['databaseSettings']['sqlFiles'] = array();
 		
 		$possible_sql_file_paths = array( // Possible locations of .SQL file. Look for SQL files in root LAST in case user left files there.
-			$this->_state['restoreFileRoot'] . 'wp-content/uploads/temp_' . $this->_state['serial'] . '/',				// Full backup < v2.0.
-			$this->_state['restoreFileRoot'] . 'wp-content/uploads/backupbuddy_temp/' . $this->_state['serial'] . '/',	// Full backup >= v2.0.
-			$this->_state['tempPath'],																					// Determined from detecting DAT file. Should always be the location really... As of v4.1.
-			$this->_state['restoreFileRoot'],																			// Database backup < v2.0.
-			ABSPATH . 'wp-content/uploads/backupbuddy_temp/' . $this->_state['serial'] . '/',												// Manually extracted backup.
+			$this->_state['restoreFileRoot'] . 'wp-content/uploads/temp_' . $this->_state['serial'] . '/',              // Full backup < v2.0.
+			$this->_state['restoreFileRoot'] . 'wp-content/uploads/backupbuddy_temp/' . $this->_state['serial'] . '/',  // Full backup >= v2.0.
+			$this->_state['tempPath'],                                                                                  // Determined from detecting DAT file. Should always be the location really... As of v4.1.
+			$this->_state['restoreFileRoot'],                                                                           // Database backup < v2.0.
+			ABSPATH . 'wp-content/uploads/backupbuddy_temp/' . $this->_state['serial'] . '/',                           // Manually extracted backup.
+			ABSPATH,                                                                                                    // Manually unzipped db backup location.
 		);
 		$foundSQL = false;
 		

@@ -200,7 +200,7 @@ if ( ! isset( $options['type'] ) || ( isset( $options['type'] ) && ( ( 'db' == $
 	);
 }
 
-if ( ( 'files' == $options['type'] ) || ( 'media' == $options['type'] ) || ( 'themes' == $options['type'] ) || ( 'plugins' == $options['type'] ) ) {
+if ( isset( $options['type'] ) && ( ( 'files' == $options['type'] ) || ( 'media' == $options['type'] ) || ( 'themes' == $options['type'] ) || ( 'plugins' == $options['type'] ) ) ) {
 	$files = pb_backupbuddy::$classes['zipbuddy']->get_file_list( $file );
 	$count = count( $files );
 	if ( is_array( $files ) && ( $count > 0 ) ) {

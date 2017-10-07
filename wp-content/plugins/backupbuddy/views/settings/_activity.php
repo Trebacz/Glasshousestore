@@ -18,6 +18,9 @@ foreach( $notifications as $notification ) {
 		//$additionalData = '<textarea>' . print_r( $notification['data'], true ) . '</textarea>';
 		$additionalData = '<textarea class="backupbuddy-recent-activity-details" wrap="off">';
 		foreach( $notification['data'] as $thisKey => $thisData ) {
+			if ( is_array( $thisData ) ) {
+				$thisData = print_r( $thisData, true );
+			}
 			$additionalData .= str_pad( $thisKey, 15 ) . $thisData . "\n";
 		}
 		$additionalData .= '</textarea>';

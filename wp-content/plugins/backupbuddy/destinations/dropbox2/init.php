@@ -155,6 +155,7 @@ class pb_backupbuddy_destination_dropbox2 { // Ends with destination slug.
 				return false;
 			}
 			
+			
 			// Examine response from Dropbox.
 			if ( true === $result ) { // Upload success.
 				pb_backupbuddy::status( 'details', 'Chunk upload continuation success with valid offset.' );
@@ -171,7 +172,7 @@ class pb_backupbuddy_destination_dropbox2 { // Ends with destination slug.
 					pb_backupbuddy::status( 'error', 'Dropbox Error #8263836: ' . $e->getMessage() );
 					return false;
 				}
-				
+				pb_backupbuddy::status( 'details', 'Chunked upload finish results: `' . print_r( $result, true ) . '`.' );
 			}
 			
 			$send_time += microtime( true );
@@ -186,6 +187,7 @@ class pb_backupbuddy_destination_dropbox2 { // Ends with destination slug.
 			$chunked_destination_settings = $settings;
 			$chunked_destination_settings['_chunk_offset'] = $data_length;
 			$chunked_destination_settings['_chunk_sent_count']++;
+			$prevOffset = $chunked_destination_settings['_chunk_next_offset'];
 			$chunked_destination_settings['_chunk_next_offset'] = ( $data_length * $chunked_destination_settings['_chunk_sent_count'] ); // First chunk was sent initiationg multipart send.
 			$chunked_destination_settings['_chunk_transfer_speeds'][] = $chunk_transfer_speed;
 			
@@ -208,15 +210,15 @@ class pb_backupbuddy_destination_dropbox2 { // Ends with destination slug.
 				
 				$chunked_destination_settings['_chunk_upload_id'] = ''; // Unset since chunking finished.
 				try {
-					$result = self::$_dbxClient->chunkedUploadFinish( $settings['_chunk_upload_id'], $settings['directory'] . '/' . basename( $file ), dbx\WriteMode::add() );
+					$result = self::$_dbxClient->chunkedUploadFinish( $settings['_chunk_upload_id'], $settings['directory'] . '/' . basename( $file ), dbx\WriteMode::add(), filesize( $file ) );
 				} catch ( \Exception $e ) {
 					pb_backupbuddy::status( 'error', 'Dropbox Error #549838979: ' . $e->getMessage() );
 					return false;
 				}
 				pb_backupbuddy::status( 'details', 'Chunked upload finish results: `' . print_r( $result, true ) . '`.' );
 				$localSize = filesize( $settings['_chunk_file'] );
-				if ( $localSize != $result['bytes'] ) {
-					pb_backupbuddy::status( 'error', 'Error #8958944. Dropbox reported file size differs from local size. The file upload may have been corrupted. Local size: `' . $localSize . '`. Remote size: `' . $result['bytes'] . '`.' );
+				if ( $localSize != $result['size'] ) {
+					pb_backupbuddy::status( 'error', 'Error #8958944. Dropbox reported file size differs from local size. The file upload may have been corrupted. Local size: `' . $localSize . '`. Remote size: `' . $result['size'] . '`.' );
 					return false;
 				}
 				
@@ -344,7 +346,7 @@ class pb_backupbuddy_destination_dropbox2 { // Ends with destination slug.
 				pb_backupbuddy::status( 'details',  'About to put file `' . basename( $file ) . '` (' . pb_backupbuddy::$format->file_size( $file_size ) . ') to Dropbox (PHP 5.3+).' );
 				$send_time = -(microtime( true ));
 				try {
-					$result = self::$_dbxClient->uploadFile( $settings['directory'] . '/' . basename( $file ), dbx\WriteMode::add(), $f );
+					$result = self::$_dbxClient->uploadFile( $settings['directory'] . '/' . basename( $file ), dbx\WriteMode::add(), $f, $file_size );
 				} catch ( \Exception $e ) {
 					pb_backupbuddy::status( 'error', 'Dropbox Error: ' . $e->getMessage() );
 					return false;
@@ -484,9 +486,9 @@ class pb_backupbuddy_destination_dropbox2 { // Ends with destination slug.
 	
 	
 	
-	/*	listFiles()
+	/*	getFile()
 	 *	
-	 * List files in this destination & directory.
+	 * Download a file to local.
 	 *	
 	 *	@param		array			$settings			Destination settings.
 	 *	@param		string			$remote_file		Remote file to retrieve. Filename only. Directory, path, bucket, etc handled in $destination_settings.
@@ -570,11 +572,11 @@ class pb_backupbuddy_destination_dropbox2 { // Ends with destination slug.
 		foreach( $files as $file ) {
 			try {
 				if ( NULL === self::$_dbxClient->delete( $directory . '/' . $file ) ) {
-					$error = 'Error #94349843. Unable to delete file `' . $directory . '/' . $file . '`. Details: `' . $e->getMessage() . '`.';
+					$error = 'Error #94349843a. Unable to delete file `' . $directory . '/' . $file . '`. Details: `' . $e->getMessage() . '`.';
 					return $error;
 				}
 			} catch ( \Exception $e ) {
-				$error = 'Error #94349843. Unable to delete file `' . $directory . '/' . $file . '`. Details: `' . $e->getMessage() . '`.';
+				$error = 'Error #94349843b. Unable to delete file `' . $directory . '/' . $file . '`. Details: `' . $e->getMessage() . '`.';
 				pb_backupbuddy::status( 'error', $error );
 				return $error;
 			}

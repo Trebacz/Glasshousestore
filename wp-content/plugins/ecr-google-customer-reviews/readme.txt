@@ -2,8 +2,8 @@
 Contributors: ecreationsllc, natekinkead
 Tags: WooCommerce, Google Customer Reviews, Google Merchant, Google Trusted Sites, Opt-in, Badge, Google Rating Badge, GCR
 Requires at least: 3.0.0
-Tested up to: 4.8
-Stable tag: 1.0.4
+Tested up to: 4.8.1
+Stable tag: 1.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/quick-guide-gplv3.html
 

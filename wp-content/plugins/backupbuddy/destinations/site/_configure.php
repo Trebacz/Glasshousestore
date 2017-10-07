@@ -42,6 +42,28 @@ $settings_form->add_setting( array(
 	//'row_class'	=>		'advanced-toggle',
 ) );
 
+$settings_form->add_setting( array(
+	'type'		=>		'checkbox',
+	'name'		=>		'disable_push',
+	'options'		=>		array( 'unchecked' => '0', 'checked' => '1' ),
+	'title'		=>		__( 'Disable "Push to" button', 'it-l10n-backupbuddy' ),
+	'tip'		=>		__( '[Default: unchecked] - When checked, the "Push to" button will be disabled. This is useful for preventing accidental Pushes to the remote site.', 'it-l10n-backupbuddy' ),
+	'css'		=>		'',
+	'after'		=>		'<span class="description"> ' . __('Check to disable Pushing to other site.', 'it-l10n-backupbuddy' ) . '</span>',
+	'rules'		=>		'',
+) );
+
+$settings_form->add_setting( array(
+	'type'		=>		'checkbox',
+	'name'		=>		'disable_pull',
+	'options'		=>		array( 'unchecked' => '0', 'checked' => '1' ),
+	'title'		=>		__( 'Disable "Pull from" button', 'it-l10n-backupbuddy' ),
+	'tip'		=>		__( '[Default: unchecked] - When checked, the "Pull from" button will be disabled. This is useful for preventing accidental Pulls from the remote site.', 'it-l10n-backupbuddy' ),
+	'css'		=>		'',
+	'after'		=>		'<span class="description"> ' . __('Check to disable Pulling from other site.', 'it-l10n-backupbuddy' ) . '</span>',
+	'rules'		=>		'',
+) );
+
 
 $settings_form->add_setting( array(
 	'type'		=>		'title',

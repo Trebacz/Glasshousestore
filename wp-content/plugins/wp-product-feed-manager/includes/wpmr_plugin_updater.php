@@ -307,14 +307,17 @@ class WPMR_Plugin_Updater {
 
 		$request = wp_remote_post( $this->api_url, array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
 
-		if ( ! is_wp_error( $request ) ) {
+		if ( !is_wp_error( $request ) ) {
 			$request = json_decode( wp_remote_retrieve_body( $request ) );
+		} else {
+			echo wppfm_handle_wp_errors_response( $response, "Sorry but error 2135 occured." );
+			return false; 
 		}
 
 		if ( $request && isset( $request->sections ) ) {
 			$request->sections = maybe_unserialize( $request->sections );
 		} else {
-			$request = false;
+			return false;
 		}
 
 		return $request;
@@ -359,6 +362,9 @@ class WPMR_Plugin_Updater {
 
 			if ( ! is_wp_error( $request ) ) {
 				$version_info = json_decode( wp_remote_retrieve_body( $request ) );
+			} else {
+				echo wppfm_handle_wp_errors_response( $response, "Sorry but error 2136 occured." );
+				return false; 
 			}
 
 			if ( ! empty( $version_info ) && isset( $version_info->sections ) ) {

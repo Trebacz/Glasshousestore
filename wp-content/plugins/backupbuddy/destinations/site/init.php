@@ -14,17 +14,19 @@ class pb_backupbuddy_destination_site {
 	
 	// Default settings. Should be public static for auto-merging.
 	public static $default_settings = array(
-		'type'			=>		'site',	// MUST MATCH your destination slug.
-		'title'			=>		'',		// Required destination field.
+		'type'         =>		'site',	// MUST MATCH your destination slug.
+		'title'        =>		'',		// Required destination field.
 		'api_key'		=>		'',
 		'max_payload'	=>		'10',	// Max payload in MB to send per chunk. This WILL be read into memory.
-		'max_time'		=>		'30',	// Default max time in seconds to allow a send to run for. This should be set on the fly prior to calling send overriding this default.
+		'max_time'     =>		'30',	// Default max time in seconds to allow a send to run for. This should be set on the fly prior to calling send overriding this default.
 		'resume_point'	=>		'',		// fseek resume point (via ftell).
 		'chunks_total'	=>		1,
 		'chunks_sent'	=>		0,
-		'sendType'		=>		'',		// Set on the fly prior to calling send. Valid types: backup, media, theme, plugin. These determine the destination root location for a file.
+		'sendType'     =>		'',		// Set on the fly prior to calling send. Valid types: backup, media, theme, plugin. These determine the destination root location for a file.
 		'sendFilePath'	=>		'',		// Location to store file on remote server relative to the root storage location based on send type. Optional.
-		'disabled'					=>		'0',		// When 1, disable this destination.
+		'disable_push'	=>	'0',		// Disabled "Push to" button when 1.
+		'disable_pull' =>	'0',		// Disabled "Push to" button when 1.
+		'disabled'     =>		'0',		// When 1, disable this destination.
 	);
 	
 	private static $_timeStart = 0;

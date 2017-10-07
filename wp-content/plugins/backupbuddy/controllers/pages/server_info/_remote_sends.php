@@ -18,7 +18,7 @@ foreach( $send_fileoptions as $send_fileoption ) {
 	
 	pb_backupbuddy::status( 'details', 'About to load fileoptions data.' );
 	require_once( pb_backupbuddy::plugin_path() . '/classes/fileoptions.php' );
-	pb_backupbuddy::status( 'details', 'Fileoptions instance #23.' );
+	pb_backupbuddy::status( 'details', 'Fileoptions instance #233.' );
 	$fileoptions_obj = new pb_backupbuddy_fileoptions( backupbuddy_core::getLogDirectory() . 'fileoptions/send-' . $send_id . '.txt', $read_only = true, $ignore_lock = true, $create_file = false );
 	if ( true !== ( $result = $fileoptions_obj->is_ok() ) ) {
 		pb_backupbuddy::status( 'error', __('Fatal Error #9034.233239333. Unable to access fileoptions data.', 'it-l10n-backupbuddy' ) . ' Error: ' . $result );
@@ -61,8 +61,12 @@ foreach( $remote_sends as $send_id => $remote_send ) {
 	
 	
 	// Show file size (if available).
-	if ( isset( $remote_send['file_size'] ) ) {
-		$file_size = '<br><span class="description" style="margin-left: 10px;">Size: ' . pb_backupbuddy::$format->file_size( $remote_send['file_size'] ) . '</span>';
+	if ( isset( $remote_send['file_size'] ) && ( is_numeric( $remote_send['file_size'] )  ) ) {
+		if ( $remote_send['file_size'] < 0 ) {
+			$file_size = '';
+		} else {
+			$file_size = '<br><span class="description" style="margin-left: 10px;">Size: ' . pb_backupbuddy::$format->file_size( $remote_send['file_size'] ) . '</span>';
+		}
 	} else {
 		$file_size = '';
 	}
@@ -140,7 +144,12 @@ foreach( $remote_sends as $send_id => $remote_send ) {
 	}
 	
 	$trigger = ucfirst( $remote_send['trigger'] );
-	$base_file = basename( $remote_send['file'] );
+	//print_r( $remote_send['file'] );
+	if ( is_array( $remote_send['file'] ) ) {
+		$base_file = '-multiple files/dir-';
+	} else {
+		$base_file = basename( $remote_send['file'] );
+	}
 	if ( 'remote-send-test.php' == $base_file ) {
 		$base_file = __( 'Remote destination test', 'it-l10n-backupbuddy' ) . '<br><span class="description" style="margin-left: 10px;">(Send & delete test file remote-send-test.php)</span>';
 		$file_size = '';

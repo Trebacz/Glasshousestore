@@ -58,6 +58,9 @@ if ( !class_exists( 'WPPFM_Channel' ) ) :
 				new Channel( '16', 'facebook', 'Facebook' ),
 				new Channel( '17', 'bol', 'Bol.com' ),
 				new Channel( '18', 'adtraction', 'Adtraction' ),
+				new Channel( '19', 'ricardo', 'Ricardo.ch' ),
+				new Channel( '20', 'ebay', 'eBay' ),
+				new Channel( '21', 'shopzilla', 'Shopzilla' ),
 				new Channel( '998', 'marketingrobot_csv', 'Custom CSV Export' ),
 				new Channel( '999', 'marketingrobot', 'Custom XML Export')
 			);
@@ -155,7 +158,7 @@ if ( !class_exists( 'WPPFM_Channel' ) ) :
 			
 				$response = $this->get_channels_from_server();
 
-				if ( ! is_wp_error( $response ) ) {
+				if ( !is_wp_error( $response ) ) {
 
 					$available_channels = json_decode( $response['body'] );
 
@@ -173,6 +176,9 @@ if ( !class_exists( 'WPPFM_Channel' ) ) :
 
 						return $count;
 					}
+				} else {
+					echo wppfm_handle_wp_errors_response( $response, "Sorry but error 2141 occured. Please contact support@wpmarketingrobot.com for support on this issue." );
+					return false; 
 				}
 			}
 

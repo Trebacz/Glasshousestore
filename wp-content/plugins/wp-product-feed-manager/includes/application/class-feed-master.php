@@ -1,8 +1,8 @@
 <?php
 
 /* * ******************************************************************
- * Version 8.4
- * Modified: 02-06-2017
+ * Version 8.5
+ * Modified: 22-07-2017
  * Copyright 2017 Accentio. All rights reserved.
  * License: None
  * By: Michel Jongbloed
@@ -58,6 +58,9 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 		 */
 		protected $_ids_in_feed;
 		
+		/**
+		 * @var double
+		 */
 		protected $_multipl = 3.3;
 		
 		/**
@@ -90,9 +93,25 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 				$this->_feed->mainCategory = 'No Category Required';
 			}
 			
+			// some channels only accept category id numbers
+			if ( stripos( strrev( $this->_feed->mainCategory ), ')' ) === 0 ) {
+				$strt = stripos( $this->_feed->mainCategory, '(' ) + 1;
+				$end = stripos( $this->_feed->mainCategory, '(' ) - $strt;
+				$this->_feed->mainCategory = substr( $this->_feed->mainCategory, $strt, $end );
+			}
+			
 			$this->feed_class = new WPPFM_Google_Feed_Class();
+
+//			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { 
+//				wppfm_write_log_file( sprintf( "WP Memory Limit = %s, start memory usage = %s. FeedId = %s and the url to the feed = %s", 
+//					get_wp_memory_limit(), get_current_memory_usage(), $this->_feed->feedId, $this->_feed->url ), 'memory_usage' ); 
+//			}
 			
 			$result = $this->handle();
+
+//			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { 
+//				wppfm_write_log_file( sprintf( "Feed processing ended. End memory usage = %s", get_current_memory_usage() ), 'memory_usage' ); 
+//			}
 			
 			if ( !$silent && true !== $result ) echo $result;
 		}
@@ -119,7 +138,7 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 			$file_name = $this->_feed->title;
 			$feed_name = $file_name . '.' . $file_extention;
 			$feed_path = $this->get_file_path( $feed_name );
-			
+
 			// write the feed file
 			$result = $this->generate_feed_file( $feed_path, $file_extention ); // starts the generate_file_text function with the channel specific parameters
 
@@ -129,8 +148,6 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 			} else {
 				echo wppfm_show_wp_error( __( "There were problems with the feed generation. Please try again. If the issue persists, please issue a support ticket at wpmarketingrobot.com ", 'wp-product-feed-manager' ) );
 			}
-			
-			//echo "<script type='text/javascript'>wppfm_resetFeedList();</script>"; // call the javascript reset feed list function
 			
 			return $result;
 		}
@@ -242,7 +259,6 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 					$queries_class = new WPPFM_Queries();
 					$prep_meta_class = new WPPFM_Feed_Value_Editors_Class();
 					$feed_processor_class = new WPPFM_Feed_Processor_Class();
-					$data_class = new WPPFM_Data_Class();
 
 					if( $this->_feed->channel === '1' && !empty( $this->_feed->feedTitle ) ) {
 						fwrite( $feed, $this->feed_class->header( $this->_feed->feedTitle, $this->_feed->feedDescription ) );
@@ -254,7 +270,7 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 
 					$post_columns_query_string = $pre_data['database_fields']['post_column_string'] ? substr( $pre_data['database_fields']['post_column_string'], 0, -2 ) : '';
 
-					$query_batch_size = 1000;
+					$query_batch_size = apply_filters( 'wppfm_query_batch_size', 250 );
 					$time_limit = 30;
 					
 					$done = false;
@@ -269,6 +285,9 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 					while( !$done ) {
 						set_time_limit( $time_limit );
 						
+						// force the garbage cycles to clean up
+						gc_collect_cycles();
+						
 						if ( $last_fetched_post_id > $highest_post_id ) { $done = true; }
 					
 						$products = $queries_class->read_post_data( $post_columns_query_string, $selected_categories, $offset, $offset+$query_batch_size );
@@ -278,20 +297,24 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 						if ( $nr_products > 0 ) {
 							
 							foreach ( $products as $product ) {
-								
+								// WPML support
+								if( has_filter( 'wpml_translation' ) ) {
+									$product = apply_filters( 'wpml_translation', $product, $this->_feed->language );
+								}
+
 								// make sure no doubles are registered
 								if ( in_array( $product->ID, $this->_ids_in_feed ) ) { break; }
 								
 								// parent ids are required to get the main data from product variations
 								$meta_parent_ids = $this->get_meta_parent_ids( $product->ID );
-
+								
 								array_unshift( $meta_parent_ids, $product->ID ); // combine the product id with the parent ids
 
 								$meta_data = $queries_class->read_meta_data( $product->ID, $meta_parent_ids, 
 									$pre_data['database_fields']['meta_fields'] );
-				
+								
 								foreach ( $meta_data as $meta ) {
-									$meta_value = $prep_meta_class->prep_meta_values( $meta );
+									$meta_value = $prep_meta_class->prep_meta_values( $meta, $this->_feed->language );
 
 									if ( array_key_exists( $meta->meta_key, $product ) ) {
 										$meta_key = $meta->meta_key;
@@ -303,6 +326,9 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 										$product = (object) array_merge( (array) $product, array( $meta->meta_key => $meta_value ) );
 									}
 								}
+								
+								// free some valuable memory
+								$meta_data = null;
 
 								foreach ( $pre_data['database_fields']['active_custom_fields'] as $field ) {
 									$product->{$field} = $this->get_custom_field_data( $product->ID, $field );
@@ -312,15 +338,19 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 									$product->{$third_party_field} = $this->get_third_party_custom_field_data( $product->ID, $third_party_field );
 								}
 								
-								$this->add_procedural_data( $product, $pre_data['column_names'] );
+								$this->add_procedural_data( $product, $pre_data['column_names'], $this->_feed->language );
 
 								$product_data = $feed_processor_class->generate_product_data( $product, $this->_feed->includeVariations,
 									$pre_data['active_fields'], $this->_feed->attributes, $pre_data['filters'], $pre_data['field_relations'],
-									$channel_details['category_name'], $this->_feed->mainCategory, json_decode( $this->_feed->categoryMapping ), 'wppf', $file_extention);
+									$channel_details['category_name'], $this->_feed->mainCategory, json_decode( $this->_feed->categoryMapping ),
+									'wppf', $file_extention, $this->_feed->language );
 								
 								foreach ( $product_data as $data ) {
+									// The wppfm_feed_item_value filter allows users to modify the data that goes into the feed. The $data variable contains an array
+									// with all the data that goes into the feed, with the items name as key
+									$data = apply_filters( 'wppfm_feed_item_value', $data, $this->_feed->feedId, $product->ID );
+									
 									$product_text = '';
-
 									$product_text .= $this->generate_feed_text( $data, $channel_details, $file_extention, $pre_data['active_fields'] );
 
 									fwrite( $feed, $product_text );
@@ -328,6 +358,10 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 									$this->_product_counter++;
 								}
 								
+								// free some valuable memory
+								$product_data = null;
+								
+								// HWOTBERH
 								if ( $valid_lic && $this->_product_counter > $cat_val ) { 
 									$done = true;
 									break; 
@@ -336,7 +370,9 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 								array_push( $this->_ids_in_feed, $product->ID );
 								$last_fetched_post_id = $product->ID; // know where to start in the next read_post_data query
 							}
-
+							
+							$products = null;
+							
 							$offset = $last_fetched_post_id + 1;
 						} else {
 							$last_fetched_post_id += $query_batch_size;
@@ -355,8 +391,9 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 				
 				fclose( $feed );
 
+				$data_class = new WPPFM_Data_Class();
 				$data_class->set_nr_of_feed_products( $this->_feed->feedId, $this->_product_counter );
-				prep_registration_generation( $this->_product_counter );
+				prep_registration_generation( $this->_product_counter ); // ref HWOTBERH
 				
 				// restore the origional timeout setting
 				$stored_timeout = ini_get( 'max_execution_time' );
@@ -364,7 +401,6 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 				
 				return sprintf( __( 'Updated feed %s.%s successfully. The feed contains %d products.', 'wp-product-feed-manager' ), $this->_feed->title, $file_extention, $this->_product_counter );
 			} else {
-				
 				wppfm_write_log_file( "User could not access the $feed_path file because he misses the correct rights to acces the " . WPPFM_FEEDS_DIR . " folder." );
 				return sprintf( __( '1431 - Could not access the %s file. If you have the feed file open please close it and make sure you have admin rights to the %s folder.', 'wp-product-feed-manager' ). $feed_path, WPPFM_FEEDS_DIR );
 			}
@@ -414,6 +450,10 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 		 */
 		private function convert_data_to_csv( $data, $active_fields, $csv_separator ) {
 			if ( $data ) {
+				if( count( $data ) > count( $active_fields ) ) {
+					$support_class = new WPPFM_Feed_Support_Class();
+					$support_class->correct_active_fields_list( $active_fields );
+				}
 				// the first row in a csv file should contain the index, the following rows the data
 				return $this->_product_counter > 0 ? $this->make_comma_separated_string_from_data_array( $data, $active_fields, $csv_separator ) :
 					$this->make_csv_header_string( $active_fields, $csv_separator );
@@ -495,6 +535,7 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 		 * @return string
 		 */
 		protected function make_xml_string_row( $product, $category_name, $description_name, $channel ) {
+			
 			$product_node = function_exists( 'product_node_name' ) ? product_node_name( $channel ) : 'item';
 			$node_pre_tag = function_exists( 'get_node_pretag' ) ? get_node_pretag( $channel ) : 'g:';
 //			$this->feed_class->add_xml_sub_tags( $product );
@@ -525,7 +566,7 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 		 */
 		private function make_array_string( $key, $value, $google_node_pre_tag, $channel ) {
 			$xml_strings = '';
-
+			
 			for ( $i = 0; $i < count( $value ); $i++ ) {
 				$xml_key = $key === 'Extra_Afbeeldingen' ? 'Extra_Image_' . ( $i + 1 ) : $key; // required for Beslist.nl
 				$xml_strings .= $this->make_xml_string( $xml_key, $value[ $i ], '', '', $google_node_pre_tag, $channel );
@@ -546,9 +587,8 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 		 */
 		private function make_xml_string( $key, $value, $category_name, $description_name, $google_node_pre_tag, $channel ) {
 			$xml_string = '';
-			
-//			$xml_value = ! in_array( $key, $this->feed_class->keys_that_have_sub_tags() ) ? $this->convert_to_xml_value( $value ) : $value;
-			$xml_value = ! in_array( $key, $this->keys_that_have_sub_tags() ) ? $this->convert_to_xml_value( $value ) : $value;
+			$xml_value = !in_array( $key, $this->keys_that_have_sub_tags() ) ? $this->convert_to_xml_value( $value ) : $value;
+			$multiplacement_allowed = !in_array( $key, $this->keys_that_can_be_used_more_than_once() ) ? false : true;
 			
 			if ( substr( $xml_value, 0, 5 ) === '!sub:' ) {
 				$sub_array = explode( "|", $xml_value );
@@ -557,31 +597,65 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 				$sub_tag = $st[1];
 				$xml_value = "<$google_node_pre_tag$sub_tag>$sub_array[1]</$google_node_pre_tag$sub_tag>";
 			}
+			
+			if( $multiplacement_allowed && !is_array( $xml_value ) ) {
+				$xml_value = preg_split( '(\n|\r|\.|\,|\|)', $xml_value );
+			}
 
 			// LET OP!! Meer keys in de datastring zetten!!!
 			if ( $key === $category_name || $key === $description_name || $key === 'title' ) { // put the category and description in a ![CDATA[...]] bracket
 				$xml_value = $this->convert_to_character_data_string( $xml_value );
 			}
+
+			// as of October 2016 google removed the need for a g: suffix only for title and link. Facebook still requires it
+			if ( $key === 'title' || $key === 'link' ) { $google_node_pre_tag = $channel === '1' ? '' : $google_node_pre_tag; }
 			
 			if ( $key !== '' ) {
-				// as of October 2016 google removed the need for a g: suffix only for title and link. Facebook still requires it
-				if ( $key === 'title' || $key === 'link' ) { $google_node_pre_tag = $channel === '1' ? '' : $google_node_pre_tag; }
-
-				$not_allowed_characters	 = array( ' ', '-' );
-				$key					 = str_replace( $not_allowed_characters, '_', $key );
-
-				$xml_string = "<$google_node_pre_tag$key>$xml_value</$google_node_pre_tag$key>";
+				if( is_array( $xml_value ) && $multiplacement_allowed ) {
+					foreach( $xml_value as $value_item ) {
+						$xml_string .= $this->add_xml_string( $key, $value_item, $google_node_pre_tag );
+					}
+				} else {
+					$xml_string = $this->add_xml_string( $key, $xml_value, $google_node_pre_tag );
+				}
 			}
 
 			return $xml_string;
 		}
+
+		/**
+		 * Generates a single xml line string
+		 * 
+		 * @since 1.9.0
+		 * 
+		 * @param string $key
+		 * @param string $xml_value
+		 * @param string $google_node_pre_tag
+		 * @return string
+		 */
+		private function add_xml_string( $key, $xml_value, $google_node_pre_tag ) {
+			$not_allowed_characters	 = array( ' ', '-' );
+			$clean_key = str_replace( $not_allowed_characters, '_', $key );
+			return "<$google_node_pre_tag$clean_key>$xml_value</$google_node_pre_tag$clean_key>";
+		}
 		
 		/**
-		 * return an empty array
+		 * can be overridden by a channel specific function in its class-feed.php
+		 * 
+		 * $since 1.8.0
 		 * 
 		 * @return array
 		 */
 		protected function keys_that_have_sub_tags() { return array(); }
+		
+		/**
+		 * can be overridden by a channel specific function in its class-feed.php
+		 * 
+		 * $since 1.9.0
+		 * 
+		 * @return array
+		 */
+		protected function keys_that_can_be_used_more_than_once() { return array(); }
 
 		/**
 		 * replaces certain characters to get a valid xml value
@@ -633,7 +707,10 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 		 * @param object $product
 		 * @param array $active_field_names
 		 */
-		private function add_procedural_data( &$product, $active_field_names ) {
+		private function add_procedural_data( &$product, $active_field_names, $selected_language ) {
+			$woocommerce_product = wc_get_product( $product->ID );
+			$woocommerce_product_is_variation = $woocommerce_product && ( $woocommerce_product->is_type( 'variable' ) || $woocommerce_product->is_type( 'variation' ) ) ? true : false;
+			
 			if ( in_array( 'permalink', $active_field_names ) ) {
 				$product->permalink = get_permalink( $product->ID );
 			}
@@ -643,11 +720,11 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 			}
 
 			if ( in_array( 'product_cat', $active_field_names ) ) {
-				$product->product_cat = WPPFM_Categories_Class::get_shop_categories( $product->ID );
+				$product->product_cat = WPPFM_Taxonomies_Class::get_shop_categories( $product->ID );
 			}
 
 			if ( in_array( 'product_cat_string', $active_field_names ) ) {
-				$product->product_cat_string = WPPFM_Categories_Class::make_shop_category_string( $product->ID );
+				$product->product_cat_string = WPPFM_Taxonomies_Class::make_shop_taxonomies_string( $product->ID );
 			}
 
 			if ( in_array( 'last_update', $active_field_names ) ) {
@@ -664,12 +741,37 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 			}
 
 			if ( in_array( 'wc_currency', $active_field_names ) ) {
-				$product->wc_currency = get_woocommerce_currency();
+				// WPML support
+				$product->wc_currency = has_filter( 'wppfm_get_wpml_currency' ) 
+					? apply_filters( 'wppfm_get_wpml_currency', get_woocommerce_currency(), $selected_language ) : get_woocommerce_currency();
+			}
+			
+			if ( in_array( '_min_variation_price', $active_field_names ) ) {
+				$product->_min_variation_price = $woocommerce_product_is_variation ? prep_money_values( $woocommerce_product->get_variation_price() ) : '';
+			}
+			
+			if ( in_array( '_max_variation_price', $active_field_names ) ) {
+				$product->_max_variation_price = $woocommerce_product_is_variation ? prep_money_values( $woocommerce_product->get_variation_price( 'max' ) ) : '';
+			}
+			
+			if ( in_array( '_min_variation_regular_price', $active_field_names ) ) {
+				$product->_min_variation_regular_price = $woocommerce_product_is_variation ? prep_money_values( $woocommerce_product->get_variation_regular_price() ) : '';
+			}
+			
+			if ( in_array( '_max_variation_regular_price', $active_field_names ) ) {
+				$product->_max_variation_regular_price = $woocommerce_product_is_variation ? prep_money_values( $woocommerce_product->get_variation_regular_price( 'max' ) ) : '';
+			}
+			
+			if ( in_array( '_min_variation_sale_price', $active_field_names ) ) {
+				$product->_min_variation_sale_price = $woocommerce_product_is_variation ? prep_money_values( $woocommerce_product->get_variation_sale_price() ) : '';
+			}
+			
+			if ( in_array( '_max_variation_sale_price', $active_field_names ) ) {
+				$product->_max_variation_sale_price = $woocommerce_product_is_variation ? prep_money_values(  $woocommerce_product->get_variation_sale_price( 'max' ) ) : '';
 			}
 
 			if ( in_array( 'item_group_id', $active_field_names ) ) {
-				$prdct = wc_get_product( $product->ID );
-				if( $prdct ) { $product->item_group_id = $prdct->is_type( 'variable' ) || $prdct->is_type( 'variation' ) ? 'GID' . $product->ID : ''; }
+				$product->item_group_id = $woocommerce_product_is_variation ? 'GID' . $product->ID : '';
 
 // 070417
 //				if ( $prdct instanceof WC_Product_Simple || $prdct instanceof WC_Product_Variable ) {
@@ -680,14 +782,16 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 			}
 
 			if ( in_array( 'shipping_class', $active_field_names ) ) {
-				$prdct = wc_get_product( $product->ID );
-				if( $prdct ) { $product->shipping_class = $prdct->get_shipping_class(); }
+				if( $woocommerce_product ) { $product->shipping_class = $woocommerce_product->get_shipping_class(); }
 
-				// 070417
+// 070417
 //				if ( $prdct instanceof WC_Product_Simple || $prdct instanceof WC_Product_Variable ) {
 //					$product->shipping_class = $prdct->get_shipping_class(); 
 //				}
 			}
+			
+			// clean up some memory
+			$woocommerce_product = null;
 		}
 		
 		/**
@@ -1274,6 +1378,8 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 		
 		/**
 		 * get third party custom field data
+		 * 
+		 * @since 1.6.0
 		 * 
 		 * @param string $feed_id
 		 * @param string $field

@@ -39,7 +39,12 @@ function wppfm_mainInputChanged( categoryChanged ) {
 }
 
 function wppfm_file_name_changed() {
-	_feedHolder['title'] = $jq( '#file-name' ).val();
+	if ( !wppfm_contains_special_characters( $jq( '#file-name' ).val() ) ) {
+		_feedHolder['title'] = $jq( '#file-name' ).val();
+	} else {
+		alert( "You are using characters that are not allowed as file name!" );
+		$jq( '#file-name' ).val('');
+	}
 }
 
 function wppfm_freeCategoryChanged( type, id ) {
@@ -80,6 +85,7 @@ function wppfm_constructNewFeed() {
 	var variations = $jq( '#variations' ).is( ':checked' ) ? 1 : 0;
 	var aggregator = $jq( '#aggregator' ).is( ':checked' ) ? 1 : 0;
 	var country = $jq( '#countries' ).val();
+	var language = document.getElementById( 'language' ) === null ? '' : $jq( '#language' ).val();
 	var feedTitle = $jq( '#google-feed-title-selector' ).val();
 	var feedDescription = $jq( '#google-feed-description-selector' ).val();
 	var daysInterval = $jq( '#days-interval' ).val() !== '' ? $jq( '#days-interval' ).val() : '1';
@@ -97,7 +103,7 @@ function wppfm_constructNewFeed() {
 	wppfm_setScheduleSelector( daysInterval, frequency );
 	
 	// make a new feed object
-	_feedHolder = new Feed( -1, fileName, variations, aggregator, parseInt( channel ), mainCategory, categoryMapping, url, source, country, feedTitle, feedDescription, updates, feedFilter, status );
+	_feedHolder = new Feed( -1, fileName, variations, aggregator, parseInt( channel ), mainCategory, categoryMapping, url, source, country, language, feedTitle, feedDescription, updates, feedFilter, status );
 }
 
 function wppfm_finishOrUpdateFeedPage( categoryChanged ) {
@@ -113,6 +119,7 @@ function wppfm_finishOrUpdateFeedPage( categoryChanged ) {
 	_feedHolder['isAggregator'] = $jq( '#aggregator' ).is( ':checked' ) ? '1' : '0';
 	_feedHolder['feedTitle'] = $jq( '#google-feed-title-selector' ).val();
 	_feedHolder['feedDescription'] = $jq( '#google-feed-description-selector' ).val();
+	_feedHolder['language'] = document.getElementById( 'language' ) === null ? '' : $jq( '#language' ).val();
 
 	// get the output fields that can be used with the selected channel
 	wppfm_outputFields( -1, channel, function ( outputs ) {
@@ -325,6 +332,10 @@ function wppfm_google_feed_description_changed() {
 	_feedHolder['feedDescription'] = $jq( '#google-feed-description-selector' ).val();
 }
 
+function wppfm_feed_language_changed() {
+	_feedHolder['language'] = $jq( '#language' ).val();
+}
+
 function wppfm_setCategoryMap( mapping ) {
 
 	var map = JSON.parse( mapping );
@@ -519,8 +530,9 @@ function wppfm_variation_selection_changed() {
 	_feedHolder.changeIncludeVariations( $jq( '#variations' ).is(":checked") );
 }
 
+// ref HWOTBERH
 //function wppfm_variation_selection_changed() {
-//	alert( "The option to add product variations to the feed is not available in the free version. Unlock this option by upgrading to the Premium plugin. For more information goto http://www.wpmarketingrobot.com/." );
+//	alert( "The option to add product variations to the feed is not available in the free version. Unlock this option by upgrading to the Premium plugin. For more information goto https://www.wpmarketingrobot.com/." );
 //	_feedHolder.changeIncludeVariations( false );
 //	$jq( '#variations' ).prop( 'checked', false );
 //}
@@ -561,6 +573,8 @@ function wppfm_setChildrenToParentCategory( childId, level, parentCategory ) {
 
 function wppfm_fillFeedFields( isNew, categoryChanged ) {
 
+	var langElem = document.getElementById( 'language' );
+	
 	// if the category attribute has a value
 	if ( _feedHolder['mainCategory'] && isNew === false ) {
 
@@ -598,6 +612,11 @@ function wppfm_fillFeedFields( isNew, categoryChanged ) {
 	$jq( '#google-feed-title-selector' ).val( _feedHolder['feedTitle'] );
 	$jq( '#google-feed-description-selector' ).val( _feedHolder['feedDescription'] );
 	$jq( '#days-interval' ).val( schedule[0] );
+	
+	if ( langElem !== null ) { 
+		var langVal = _feedHolder['language'] !== '' ? _feedHolder['language'] : '0';
+		$jq( '#language' ).val( langVal ); 
+	}
 
 	// get the link to the update schedule selectors
 	var hrsSelector = document.getElementById( 'update-schedule-hours' );
@@ -663,7 +682,6 @@ function wppfm_editCategoryMapping( id ) {
 }
 
 function wppfm_activateOptionalFieldRow( level, name ) {
-
 	var attributeId = _feedHolder.getAttributeIdByName( name );
 
 	// register the new optional field as an active input
@@ -676,25 +694,44 @@ function wppfm_activateOptionalFieldRow( level, name ) {
 
 	// get the html code for the new source row that needs to be added to the form
 	var code = wppfm_fieldRow( _feedHolder['attributes'][attributeId], true );
+//	var doublesAllowed = '';
+	var ind = -1;
 
-	// reset the lists that contain the selected and non selected output fields
-	var ind = _undefinedRecommendedOutputs.indexOf( name );
+	// find the index of the selected item in the correct undefined outputs list
+	if ( level === 3 )
+		ind = _undefinedRecommendedOutputs.indexOf( name );
+	else if ( level === 4 )
+		ind = _undefinedOptionalOutputs.indexOf( name );
+	
+	// check if a list item can be used more than once
+//	if ( typeof wppfm_doublesFieldsAllowed === 'function' ) {
+//		doublesAllowed = wppfm_doublesFieldsAllowed();
+//		if ( doublesAllowed.indexOf( name ) > -1 ) { ind = -1; }
+//	}
+
+	// if it can not be used more than once, remove it from the undefined output list
 	if ( ind > -1 ) {
-		_undefinedRecommendedOutputs.splice( ind, 1 );
+		if ( level === 3 )
+			_undefinedRecommendedOutputs.splice( ind, 1 ); 
+		else if ( level === 4 )
+			_undefinedOptionalOutputs.splice( ind, 1 ); 
 	}
-	_definedRecommendedOutputs.push( _feedHolder['attributes'][attributeId]['fieldName'] );
-	_definedRecommendedOutputs.sort();
 
-	// reset the output selector
-	$jq( "#output-field-cntrl-" + level ).empty();
-	$jq( "#output-field-cntrl-" + level ).html( wppfm_outputFieldCntrl( level ) );
+	// store the removed item in the defined outputs list
+	if ( level === 3 ) {
+		_definedRecommendedOutputs.push( _feedHolder['attributes'][attributeId]['fieldName'] );
+		_definedRecommendedOutputs.sort();
+	} else if ( level === 4 ) {
+		_definedOptionalOutputs.push( _feedHolder['attributes'][attributeId]['fieldName'] );
+		_definedOptionalOutputs.sort();
+	}
+
+	$jq( "#output-field-cntrl-" + level + " option[value='" + name + "']" ).remove();
 
 	if ( level === 3 ) {
-
 		$jq( '#new-recommended-row' ).append( code );
 		$jq( '#new-recommended-row' ).show();
 	} else if ( level === 4 ) {
-
 		$jq( '#new-optional-row' ).append( code );
 	}
 }
@@ -743,7 +780,8 @@ function wppfm_setStaticValue( attributeId, conditionLevel, combinationLevel ) {
 
 	if ( staticValue === undefined ) {
 
-		staticValue = $jq( '#static-condition-input-' + attributeId + '-' + conditionLevel + '-' + combinationLevel + ' option:selected' ).text();
+		//staticValue = $jq( '#static-condition-input-' + attributeId + '-' + conditionLevel + '-' + combinationLevel + ' option:selected' ).text();
+		staticValue = $jq( '#static-condition-input-' + attributeId + '-' + conditionLevel + '-' + combinationLevel + ' option:selected' ).val();
 	}
 
 	// store the changed static value in the feed
@@ -756,7 +794,8 @@ function wppfm_setIdentifierExistsDependancies() {
 
 	if ( staticValue === undefined ) {
 
-		staticValue = $jq( '#static-condition-input-34-0 option:selected' ).text();
+//		staticValue = $jq( '#static-condition-input-34-0 option:selected' ).text();
+		staticValue = $jq( '#static-condition-input-34-0 option:selected' ).val();
 	}
 
 	switch ( staticValue ) {
@@ -1322,8 +1361,20 @@ function wppfm_removeValueQuery( rowId, sourceLevel, queryLevel ) {
 function wppfm_removeRow( rowId, fieldName ) {
 
 	var level = '0';
-	var recInd = _definedRecommendedOutputs.indexOf( fieldName );
-	var optInd = _definedOptionalOutputs.indexOf( fieldName );
+	// find the index of the selected item in the correct undefined outputs list
+	var ind = _definedRecommendedOutputs.indexOf( fieldName );
+	level = 3;
+	
+	if ( ind < 0 ) {
+		ind = _definedOptionalOutputs.indexOf( fieldName );
+		level = 4;
+	}
+	
+	// check if a list item can be used more than once
+//	if ( typeof wppfm_doublesFieldsAllowed === 'function' ) {
+//		doublesAllowed = wppfm_doublesFieldsAllowed();
+//		if ( doublesAllowed.indexOf( fieldName ) > -1 ) { ind = -1; }
+//	}
 
 	// deactivate the attribute
 	_feedHolder.deactivateAttribute( rowId );
@@ -1332,20 +1383,16 @@ function wppfm_removeRow( rowId, fieldName ) {
 	$jq( '#row-' + rowId ).remove();
 
 	// reset the lists that contain the selected and non selected output fields
-	if ( recInd > -1 ) {
-		_definedRecommendedOutputs.splice( recInd, 1 );
-		level = 3;
+	if( level === 3 ) {
+		_definedRecommendedOutputs.splice( ind, 1 );
 		_undefinedRecommendedOutputs.push( fieldName );
 		_undefinedRecommendedOutputs.sort();
-	}
-
-	if ( optInd > -1 ) {
-		_definedOptionalOutputs.splice( optInd, 1 );
-		level = 4;
+	} else if ( level === 4 ) {
+		_definedOptionalOutputs.splice( ind, 1 );
 		_undefinedOptionalOutputs.push( fieldName );
 		_undefinedOptionalOutputs.sort();
 	}
-
+	
 	$jq( "#output-field-cntrl-" + level ).empty();
 	$jq( "#output-field-cntrl-" + level ).html( wppfm_outputFieldCntrl( level ) );
 }
@@ -1581,7 +1628,8 @@ function wppfm_changedOutput( rowId, sourceLevel, advisedSource ) {
 			$jq( '#combined-wrapper-' + rowId + '-' + sourceLevel ).remove();
 
 			var staticValue = $jq( '#static-input-field-' + rowId + '-' + sourceLevel + '-' + combinationLevel ).val() ? $jq( '#static-input-field-' + rowId + '-' + sourceLevel + '-' + combinationLevel ).val() :
-				$jq( '#static-condition-input-' + rowId + '-' + sourceLevel + '-' + combinationLevel + ' option:selected' ).text();
+//				$jq( '#static-condition-input-' + rowId + '-' + sourceLevel + '-' + combinationLevel + ' option:selected' ).text();
+				$jq( '#static-condition-input-' + rowId + '-' + sourceLevel + '-' + combinationLevel + ' option:selected' ).val();
 
 			// set the attribute value in the feed on the standard value of the input field for when the user leaves it there
 			_feedHolder.setStaticAttributeValue( rowId, sourceLevel, combinationLevel, staticValue );
@@ -1972,7 +2020,6 @@ function wppfm_makeFieldsTable() {
 	wppfm_resetFields();
 
 	for ( var i = 0; i < _feedHolder['attributes'].length; i++ ) {
-
 		switch ( _feedHolder['attributes'][i]['fieldLevel'] ) {
 
 			case '1':
@@ -2137,19 +2184,16 @@ function wppfm_queryValueConditionChanged( rowId, sourceLevel, queryLevel, query
 }
 
 function wppfm_decrease_channel_updates_counter() {
-	
 	var oldValue = $jq( '.update-count' ).text();
 	var newValue = oldValue > 1 ? oldValue - 1 : '';
 	$jq( '.update-count' ).html( newValue );
 }
 
 function wppfm_getOutputFieldsList( level ) {
-
 	var htmlCode = '';
 	var list = [ ];
 
 	switch ( level ) {
-
 		case 3:
 			list = _undefinedRecommendedOutputs;
 			break;
@@ -2161,11 +2205,9 @@ function wppfm_getOutputFieldsList( level ) {
 		default:
 			break;
 	}
-
-	for ( var i = 0; i < list.length; i++ ) {
-
-		htmlCode += '<option value="' + list[i] + '">' + list[i] + '</option>';
-	}
+	
+	list.sort();
+	for ( var i = 0; i < list.length; i++ ) { htmlCode += '<option value="' + list[i] + '">' + list[i] + '</option>'; }
 
 	return htmlCode;
 }
@@ -2192,6 +2234,21 @@ function wppfm_hideFeedFormMainInputs() {
 	$jq( '#aggregator-selector-row' ).hide();
 	$jq( '#add-product-variations-row' ).hide();
 }
+
+// Ref HWOTBERH
+//function wppfm_editFeedFilter( ) {
+//	alert( "The Advanced Filter option is not available in the free version. Unlock the Advanced Filter option by upgrading to the Premium plugin. For more information goto http://www.wpmarketingrobot.com/." );
+//}
+//
+//function wppfm_makeFeedFilterWrapper( feedId, filter ) {
+//	var	htmlCode = 'All products from the selected Shop Categories will be included in the feed';
+//
+//	htmlCode += '<span id="filter-edit-text" style="display:initial;"> (<a class="edit-feed-filter wppfm-btn wppfm-btn-small" href="javascript:void(0)" id="edit-feed-filters-' + feedId;
+//	htmlCode += '" onclick="wppfm_editFeedFilter()">edit</a>)</span>';
+//	
+//	$jq( '.product-filter-condition-wrapper' ).html( htmlCode );
+//	$jq( '.main-product-filter-wrapper' ).show();
+//}
 
 function wppfm_getCombinedSeparatorList( selectedValue ) {
 

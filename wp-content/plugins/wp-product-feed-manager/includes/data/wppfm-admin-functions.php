@@ -78,17 +78,28 @@ function meta_key_is_money( $key ) {
  * Takes a value and formats it to a money value using the WooCommerce thousands separator, decimal separator and number of decimals values
  * 
  * @since 1.1.0
+ * @since 1.9.0 added WPML support
  * 
- * @param string	$money_value	The money value to be formated
+ * @param string	$money_value			The money value to be formated
+ * @param string	$feed_language			Selected Language in WPML addon, leave empty if no exchange rate correction is required @since 1.9.0
  * @return string	A formated money value
  */
-function prep_money_values( $money_value ) {
-	$mon_val = is_float( $money_value ) ? $money_value : floatval( $money_value );
-	$number_decimals = absint( get_option( 'woocommerce_price_num_decimals', 2 ) );
-	$decimal_point = get_option( 'woocommerce_price_decimal_sep' );
+function prep_money_values( $money_value, $feed_language = '' ) {
 	$thousand_separator = get_option( 'woocommerce_price_thousand_sep' );
 
-	return number_format( $mon_val, $number_decimals, $decimal_point, $thousand_separator );
+	if( !is_float( $money_value ) ) {
+		$val = numberformat_parse( $money_value );
+		$money_value = floatval( $val );
+	}
+	
+	if( has_filter( 'wppfm_wpml_exchange_money_values' ) ) {
+		return apply_filters( 'wppfm_wpml_exchange_money_values', $money_value, $feed_language );
+	} else {
+		$number_decimals = absint( get_option( 'woocommerce_price_num_decimals', 2 ) );
+		$decimal_point = get_option( 'woocommerce_price_decimal_sep' );
+
+		return number_format( $money_value, $number_decimals, $decimal_point, $thousand_separator );
+	}
 }
 
 /**
@@ -98,6 +109,7 @@ function prep_money_values( $money_value ) {
  * 
  * @param int $products
  */
+// ref HWOTBERH
 function prep_registration_generation( $products ) {
 	if ( date( 'Ymd' ) !== get_option( 'wppfm_prep_check' ) ) {
 		$params = array(
@@ -123,4 +135,74 @@ function prep_registration_generation( $products ) {
  */
 function wppfm_check_backup_status() {
 	if ( !WPPFM_Db_Management::invalid_backup_exist() ) return true;
+}
+
+/**
+ * Forces the database to load and update and adds the auto update cron event if it does not exists
+ * 
+ * @since 1.9.0
+ * 
+ * @return boolean
+ */
+function wppfm_reinitiate_plugin() {
+	if ( !wp_get_schedule( 'wppfm_feed_update_schedule' ) ) {
+		// add the schedule cron
+		wp_schedule_event( time(), 'hourly', 'wppfm_feed_update_schedule' );
+		add_action( 'wppfm_feed_update_schedule', 'activate_feed_update_schedules' );
+	}
+
+	// remakes the database
+	$db = new WPPFM_Database();
+	$db->force_reinitiate_db();
+	
+	// resets the license nr
+	delete_option( 'wppfm_lic_status' );
+	delete_option( 'wppfm_lic_status_date' );
+	delete_option( 'wppfm_lic_key' );
+	
+	return true;
+}
+
+/**
+ * Converts any number string to a string with a number that has no thousands separator 
+ * and a period as decimal separator
+ * 
+ * @param string $number_string
+ * @return string
+ */
+function numberformat_parse( $number_string ) {
+	$decimal_separator = get_option( 'woocommerce_price_decimal_sep' );
+	$thousand_separator = get_option( 'woocommerce_price_thousand_sep' );
+	
+	// convert a number string that is a actual standard number format whilst the woocommerce options are not standard
+	// to the woocommerce standard. This sometimes happens with meta values
+	if( strpos( $number_string, $decimal_separator ) === false ) {
+		$number_string = strpos( $number_string, $thousand_separator ) === false ? $number_string : str_replace( $thousand_separator, $decimal_separator, $number_string );
+	}
+	
+	$no_thousands_sep = str_replace( $thousand_separator, '', $number_string );
+	return $decimal_separator !== '.' ? str_replace( $decimal_separator, '.', $no_thousands_sep ) : $no_thousands_sep;
+}
+
+/**
+ * Returns the memory limit that is set for Wordpress
+ * 
+ * @since 1.10.0
+ * 
+ * @return string
+ */
+function get_wp_memory_limit() {
+	return (int) ini_get('memory_limit') . "M";
+}
+
+/**
+ * Returns the current memory usage
+ * 
+ * @since 1.10.0
+ * 
+ * @return string
+ */
+function get_current_memory_usage() {
+	$mem_usage = memory_get_usage( true );
+	return round( $mem_usage / 1024 / 1024, 2) . "M";
 }

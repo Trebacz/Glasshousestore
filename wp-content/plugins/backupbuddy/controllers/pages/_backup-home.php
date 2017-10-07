@@ -18,12 +18,8 @@ if ( false !== ( $latestVersion = backupbuddy_core::determineLatestVersion() ) )
 		pb_backupbuddy::disalert( $hash, $message );
 	}
 }
-?>
 
 
-
-
-<?php
 backupbuddy_core::versions_confirm();
 echo '<!-- BB-versions_confirm done-->';
 
@@ -51,8 +47,8 @@ print_r( $preflight_checks );
 echo '</pre></div>';
 
 
-echo '<!-- BB-listing backups -->';
+echo '<!-- BB-listing backups-PRE -->';
 $view_data['backups'] = backupbuddy_core::backups_list( 'default' );
+echo '<!-- BB-listing backups-POST -->';
 $view_data['disableBackingUp'] = $disableBackingUp;
 pb_backupbuddy::load_view( '_backup-home', $view_data );
-?>

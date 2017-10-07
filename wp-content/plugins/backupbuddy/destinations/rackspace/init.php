@@ -73,7 +73,10 @@ class pb_backupbuddy_destination_rackspace { // Change class name end to match d
 			return false;
 		}
 		
-		$directory = trim( $settings['directory'], '\\/' ) . '/'; // Trailing slash. No leading slash.
+		$directory = '';
+		if ( isset( $settings['directory'] ) && ( '' != $settings['directory'] ) ) {
+			$directory = trim( $settings['directory'], '\\/' ) . '/'; // Trailing slash. No leading slash.
+		}
 		
 		// Set container
 		@$conn->create_container( $rs_container ); // Create container if it does not exist.

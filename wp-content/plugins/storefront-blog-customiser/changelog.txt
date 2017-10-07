@@ -1,7 +1,10 @@
 *** Storefront Blog Customiser Changelog ***
 
+2017.09.21 - version 1.2.2
+* Fix - Also apply custom display layout to search results.
+
 2016.05.12 - version 1.2.1
- * Fix - Customizer error.
+* Fix - Customizer error.
 
 2016.05.09 - version 1.2.0
 * New - Post meta can now be hidden.

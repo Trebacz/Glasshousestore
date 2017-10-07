@@ -168,7 +168,8 @@
 	Full backup types can no longer auto-exclude media due to current technical limitations.
 8.0.1.0 - 2017-06-30 - Dustin Bolton
 	Fixed BackupBuddy welcome banner showing on plugin activate screen.
-	Rackspace destination: Added support for directory paths.
+	FEATURE:
+		Rackspace destination: Added support for directory paths.
 	Stash Live live database backup now excludes options updates to "wordfence_syncAttackDataAttempts" option due to rapid updates.
 	Updated Google Drive setup instructions to reflect Google's UI changes.
 	Fixed undefined index $client_id and $client_secret for Google Drive destination.
@@ -179,4 +180,91 @@
 8.0.1.2 - 2017-07-10 - Dustin Bolton
 	Rackspace Remote Destination: Fixed support for storing into directories and browsing directories.
 	Rackspace Remote Destination: Fixed table listing size.
+8.0.1.3 - 2017-07-12 - Dustin Bolton
+	Added additional status logging and error checking for fread'ing file contents for S3 (v2) and S3 (V3) destinations.
+	Recent Sends listing table now limits the maximum displayed to the most recent 100 items to prevent page load issues. New constant: RECENT_SENDS_MAX_LISTING_COUNT.
+	Stash Live: View unsent files now optionally shows file permissions and ownership for each pending file by default.
+8.0.1.4 - 2017-07-18 - Dustin Bolton
+	Full backups now contain a copy of importbuddy.php even if password is not set. In this case the user will need to use the "Forgot Password" option to use this importbuddy.php.
+	importbuddy: Lack of json_decode() function now displays error message.
+	Rackspace remote destination: Fixed uncaught exception when directory value is blank.
+	Misc logging improvements.
+8.0.1.5 - 2017-07-20 - Dustin Bolton
+	Added additional default exclusions for 3rd party files/directories.
+	Stash Live: Added default postmeta exclusion for Adrotate plugin: /_count-views_.+/
+	Rackspace destination: Fixed file listing not showing when no directory is set.
+	FEATURE:
+		Deployment: Added new option to disable Pushing to or Pulling from a site in the destination's configuration options. Useful for preventing accidental deployments in the wrong direction.
+8.0.1.6 - 2017-07-24 - Dustin Bolton
+	Fixed multiple "A non-numeric value encountered " errors due to PHP 7.1.
+	Added additional Backup page logging to detect failure point.
+8.0.1.7 - 2017-07-28 - Dustin Bolton
+	Deployment: Fixed issue where importbuddy step 5 (migrating URLs/paths) step chunking would result in premature 'finished' signal for Deployment resulting in it stopping before database migration and cleanup would run. Symptoms would be incomplete database contents migration and .maintenance file lingering.
+8.0.1.8 - 2017-08-02 - Dustin Bolton
+	Fixed Deployment typo.
+	Deployment: Added new Error #8001b if 413 request entity too large error is returned during deployment: Request Entity Too Large. The destination server says we sent too much data. Either change the Deployment Advanced Setting "Max Chunk Size" to a lower value or change the server configuration to accept a larger value. See the following webpage for the server solution for Apache, nginx, or IIS: https://craftcms.stackexchange.com/questions/2328/413-request-entity-too-large-error-with-uploading-a-file
+	S33 destination fixed array declaration using bracket form instead of array().
+	Improved Live action handling function for postmeta.
+8.0.1.9 - 2017-08-10 - Dustin Bolton
+	Stash Live: Added errors and warnings if adjusted max execution time falls below certain thresholds.
+	Stash Live: If adjusted max execution time falls below 5 seconds, including wiggle room buffer, adjust back up to 5 seconds to give things a chance. Throws error.
+	Stash Live: 5002 error now logs last send filename that failed and how long ago that was.
+	Transient housekeeping cleanup currently capped at 1000 per run as a temporary workaround for high memory usage on sites with massive numbers of transients.
+8.0.1.10 - 2017-08-28 - Dustin Bolton
+	Added 60-second wiggle room for detecting stuck crons.
+	Fixed undefined index type in integrity scan.
+	Stash Live: Added additional information about low site activity being a potential cause of crons being behind.
+	Stash Live: Fixed Stash Live-specific file exclusions not applying since 8.0. Caused by core exclusion function not applying abspath before relative paths.
+8.1.0.0 - 2017-09-29 - Dustin Bolton
+	importbuddy.php: Now detects unexpected leading whitespace (newlines, etc) at the beginning of importbuddy.php, removed them, and re-writes a valid importbuddy.php. Fixes error about whitespace already being sent and authentication breakage.
+	ENHANCEMENT:
+		Dropbox (v2) Remote Destination: Fixed use of retired v1 Dropbox API calls. Dropbox no longer provides an official comparible PHP SDK.
+	importbuddy: Fixed detection of database sql files location when a database backup was manually unzipped.
+	QUICK RELEASE UPDATES 8.0.1.0-8.0.1.11.
+	mysqlbuddy now logs if $ignore_existing is enabled for troubleshooting as this suppresses error logging.
+	Added additional logging of zip time elapsed to periodic status display to better see how much time has passed: Ex: "Temporary ZIP file size: 34.64 MB. Approximate speed: 12.24 MB/sec. Elapsed: 2.83 secs."
+	Extended archive limits of destinations supporting full and database archive limits to also include themes, plugins, media, and files.
+	ImportBuddy password hash now using underscores "_" instead of right parentheses ")" due to false positives with ModSecurity. Ticket #70795.
+	Renamed temporarily created recurse() function to bb_recurse() to avoid conflict.
+	Full backup types can no longer auto-exclude media due to current technical limitations.
+	Fixed BackupBuddy welcome banner showing on plugin activate screen.
+	FEATURE:
+		Rackspace destination: Added support for directory paths.
+	Stash Live live database backup now excludes options updates to "wordfence_syncAttackDataAttempts" option due to rapid updates.
+	Updated Google Drive setup instructions to reflect Google's UI changes.
+	Fixed undefined index $client_id and $client_secret for Google Drive destination.
+	Fixed global exclusions not being applied to schedule backups.
+	If Full profile type was auto-excluding media then this is now forced off upon upgrade.
+	Fixed Deployment confirmation not cleaning up some tables due to housekeeping cleanup_temp_tables rename to remove_temp_tables().
+	Rackspace Remote Destination: Fixed support for storing into directories and browsing directories.
+	Rackspace Remote Destination: Fixed table listing size.
+	Added additional status logging and error checking for fread'ing file contents for S3 (v2) and S3 (V3) destinations.
+	Recent Sends listing table now limits the maximum displayed to the most recent 100 items to prevent page load issues. New constant: RECENT_SENDS_MAX_LISTING_COUNT.
+	Stash Live: View unsent files now optionally shows file permissions and ownership for each pending file by default.
+	Full backups now contain a copy of importbuddy.php even if password is not set. In this case the user will need to use the "Forgot Password" option to use this importbuddy.php.
+	importbuddy: Lack of json_decode() function now displays error message.
+	Rackspace remote destination: Fixed uncaught exception when directory value is blank.
+	Misc logging improvements.
+	Added additional default exclusions for 3rd party files/directories.
+	Stash Live: Added default postmeta exclusion for Adrotate plugin: /_count-views_.+/
+	Rackspace destination: Fixed file listing not showing when no directory is set.
+	FEATURE:
+		Deployment: Added new option to disable Pushing to or Pulling from a site in the destination's configuration options. Useful for preventing accidental deployments in the wrong direction.
+	Fixed multiple "A non-numeric value encountered " errors due to PHP 7.1.
+	Added additional Backup page logging to detect failure point.
+	Deployment: Fixed issue where importbuddy step 5 (migrating URLs/paths) step chunking would result in premature 'finished' signal for Deployment resulting in it stopping before database migration and cleanup would run. Symptoms would be incomplete database contents migration and .maintenance file lingering.
+	Fixed Deployment typo.
+	Deployment: Added new Error #8001b if 413 request entity too large error is returned during deployment: Request Entity Too Large. The destination server says we sent too much data. Either change the Deployment Advanced Setting "Max Chunk Size" to a lower value or change the server configuration to accept a larger value. See the following webpage for the server solution for Apache, nginx, or IIS: https://craftcms.stackexchange.com/questions/2328/413-request-entity-too-large-error-with-uploading-a-file
+	S33 destination fixed array declaration using bracket form instead of array().
+	Improved Live action handling function for postmeta.
+	Stash Live: Added errors and warnings if adjusted max execution time falls below certain thresholds.
+	Stash Live: If adjusted max execution time falls below 5 seconds, including wiggle room buffer, adjust back up to 5 seconds to give things a chance. Throws error.
+	Stash Live: 5002 error now logs last send filename that failed and how long ago that was.
+	Transient housekeeping cleanup currently capped at 1000 per run as a temporary workaround for high memory usage on sites with massive numbers of transients.
+	Added 60-second wiggle room for detecting stuck crons.
+	Fixed undefined index type in integrity scan.
+	Stash Live: Added additional information about low site activity being a potential cause of crons being behind.
+	Stash Live: Fixed Stash Live-specific file exclusions not applying since 8.0. Caused by core exclusion function not applying abspath before relative paths.
+	importbuddy: Removed old unused debugging files and cleaned up file formatting.
+	Misc plugin cleanup.
 	

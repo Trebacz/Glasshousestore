@@ -171,10 +171,7 @@ function preflightScan() {
 
 
 
-
 pb_backupbuddy::load_view( 'home', $data );
 
 // LOG IMPORTBUDDY VERSION INFORMATION
 pb_backupbuddy::status( 'details', 'Running ImportBuddy v' . pb_backupbuddy::$options['bb_version'] . '.' );
-
-?>

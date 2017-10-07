@@ -238,7 +238,7 @@ jQuery('#backupbuddy_messages').bind( 'backupbuddy_finishAction', function(e, js
 
 
 jQuery('#backupbuddy_messages').bind( 'backupbuddy_deployFinished', function(e, json) {
-	backupbuddy_log( 'Deployment finished.' );
+	backupbuddy_log( 'Deployment finished (backupbuddy).' );
 	//jQuery( '#backup-function-deploy_runningImportBuddy-secondary' ).slideDown();
 	setTimeout(function(){
 		backupbuddy_finishbackup();

@@ -46,21 +46,20 @@ if ( 'delete_backup' == pb_backupbuddy::_POST( 'bulk_action' ) ) {
 $files_result = pb_backupbuddy_destinations::listFiles( $destination );
 
 $backup_files = array();
-foreach( (array)$files_result['contents'] as $file ) { // Loop through files looking for backups.
-	
-	if ( $file['is_dir'] == '1' ) { // Do NOT display subdirectories.
+foreach( $files_result['entries'] as $file ) { // Loop through files looking for backups.
+	if ( $file['.tag'] == 'folder' ) { // Do NOT display subdirectories.
 		continue;
 	}
 	
-	$filename = str_ireplace( $files_result['path'] . '/', '', $file['path'] ); // Remove path from filename.
-	if ( isset( $file['client_mtime'] ) ) {
-		$last_modified = strtotime( $file['client_mtime'] );
+	$filename = $file['name']; //str_ireplace( $destination['path'] . '/', '', $file['path_lower'] ); // Remove path from filename.
+	if ( isset( $file['client_modified'] ) ) {
+		$last_modified = strtotime( $file['client_modified'] );
 		//$last_modified = pb_backupbuddy::$format->date( pb_backupbuddy::$format->localize_time( $last_modified ) ) . '<br /><span class="description">(' . pb_backupbuddy::$format->time_ago( $last_modified ) . ' ago)</span>';
 	} else {
 		$last_modified = '<i>' . __( 'Unknown', 'it-l10n-backupbuddy' ) . '</i>';
 	}
 	
-	$size = $file['bytes'];
+	$size = $file['size'];
 	
 	if ( false !== stristr( $filename, '-db-' ) ) {
 		$backup_type ='Database';

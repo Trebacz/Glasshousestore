@@ -1,5 +1,9 @@
 *** WooCommerce Predictive Search Changelog ***
 
+= 4.4.1 - 2017/08/03 =
+* Tweak - Update sync code to also check for outofstock products on post meta as well as post term
+* Tweak - Test for compatibility with WordPress version 4.8.1 
+
 = 4.4.0 - 2017/07/12 =
 * Feature - Added Set Default Category option on Shortcode. Can now set a Category to show as the default (instead of All) on the shortcode search box.
 * Tweak - Registry event - Send Error Email - for each sync Object data so that it does not send email error although Synced full database

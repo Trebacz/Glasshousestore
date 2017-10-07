@@ -9,7 +9,13 @@ class Meow_MFRH_Admin extends MeowApps_Admin {
 		if ( is_admin() ) {
 			add_action( 'admin_menu', array( $this, 'app_menu' ) );
 			add_action( 'admin_notices', array( $this, 'admin_notices' ) );
+			add_filter( 'updraftplus_com_link', array( $this, 'updraftplus_com_link' ) );
 		}
+	}
+
+	function updraftplus_com_link( $url ) {
+		$url = $url . "?afref=460";
+		return $url;
 	}
 
 	function admin_notices() {
@@ -25,11 +31,23 @@ class Meow_MFRH_Admin extends MeowApps_Admin {
 		$sync_alt = get_option( 'mfrh_sync_alt' );
 		$sync_meta_title = get_option( 'mfrh_sync_media_title' );
 
+		$force_rename = get_option( 'mfrh_force_rename', false );
+		$numbered_files = get_option( 'mfrh_numbered_files', false );
+
+		if ( $force_rename && $numbered_files ) {
+			update_option( 'mfrh_force_rename', false, false );
+			?>
+	    <div class="notice notice-warning is-dismissible">
+	      <p><?php _e( 'Force Rename and Numbered Files cannot be used at the same time. Please use Force Rename only when you are trying to repair a broken install. For now, Force Rename has been disabled.', 'media-file-renamer' ); ?></p>
+	    </div>
+	    <?php
+		}
+
 		if ( $sync_alt && $method == 'alt_text' ) {
 			update_option( 'mfrh_sync_alt', false, false );
 			?>
 	    <div class="notice notice-warning is-dismissible">
-	        <p><?php _e( 'The option Sync ALT was turned off since it does not make sense to have it with this Auto-Rename mode.', 'media-file-renamer' ); ?></p>
+	      <p><?php _e( 'The option Sync ALT was turned off since it does not make sense to have it with this Auto-Rename mode.', 'media-file-renamer' ); ?></p>
 	    </div>
 	    <?php
 		}
@@ -153,6 +171,11 @@ class Meow_MFRH_Admin extends MeowApps_Admin {
 					<h3>How to use</h3>
 					<div class="inside">
 						<?php echo _e( 'This plugin works out of the box, the default settings are the best for most installs. However, you should have a look at the <a target="_blank" href="https://meowapps.com/media-file-renamer/">tutorial</a>.', 'media-file-renamer' ) ?>
+						<p class="submit">
+							<a class="button button-primary" href="upload.php?page=rename_media_files">
+								<?php echo _e( "Access the Renamer Dashboard", 'media-file-renamer' ); ?>
+							</a>
+						</p>
 					</div>
 				</div>
 			</div>
@@ -342,7 +365,7 @@ class Meow_MFRH_Admin extends MeowApps_Admin {
   }
 
 	function admin_force_rename_callback( $args ) {
-    $value = get_option( 'mfrh_force_rename', null );
+    $value = get_option( 'mfrh_force_rename', false );
 		$html = '<input ' . disabled( $this->is_registered(), false, false ) . ' ' . disabled( $this->is_registered(), false, false ) . ' type="checkbox" id="mfrh_force_rename" name="mfrh_force_rename" value="1" ' .
 			checked( 1, get_option( 'mfrh_force_rename' ), false ) . '/>';
     $html .= __( '<label>Enabled</label><br/><small>Update the references to the file even if the file renaming itself was not successful. You might want to use that option if your install is broken and you are trying to link your Media to files for which the filenames has been altered (after a migration for exemple)</small>', 'media-file-renamer' );

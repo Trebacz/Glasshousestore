@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 /**
  *
@@ -71,6 +71,7 @@ class AngellEYE_Paypal_Ipn_For_Wordpress_Post_types {
             'query_var' => true,
             'rewrite' => array('slug' => 'paypal_ipn'),
             'update_count_callback' => '_update_generic_term_count'
+            
                 ))
         );
     }
@@ -159,7 +160,6 @@ class AngellEYE_Paypal_Ipn_For_Wordpress_Post_types {
      */
     public static function paypal_ipn_for_wordpress_ipn_filter() {
         global $typenow, $wp_query;
-
         if ($typenow == 'paypal_ipn') {
             ?>
             <select name="test_ipn" class="dropdown_post_status">
@@ -180,47 +180,52 @@ class AngellEYE_Paypal_Ipn_For_Wordpress_Post_types {
             $taxonomy = 'paypal_ipn_type';
             $term = isset($wp_query->query['paypal_ipn_type']) ? $wp_query->query['paypal_ipn_type'] : '';
             $business_taxonomy = get_taxonomy($taxonomy);
-            wp_dropdown_categories(array(
-                'show_option_all' => __("Show all Payment Statuses", 'paypal-ipn'),
-                'taxonomy' => $taxonomy,
-                'name' => 'paypal_ipn_type',
-                'orderby' => 'name',
-                'selected' => $term,
-                'hierarchical' => true,
-                'depth' => 3,
-                'show_count' => true, // Show # listings in parens
-                'hide_empty' => true,
-            ));
+            if( !empty($term) ) {
+                wp_dropdown_categories(array(
+                    'show_option_all' => __("Show all Payment Statuses", 'paypal-ipn'),
+                    'taxonomy' => $taxonomy,
+                    'name' => 'paypal_ipn_type',
+                    'orderby' => 'name',
+                    'selected' => $term,
+                    'hierarchical' => true,
+                    'depth' => 3,
+                    'show_count' => true, // Show # listings in parens
+                    'hide_empty' => true,
+                ));
+            }
 
             // Forwarder URL Filter
-            $ipn_url_name_array = array();
-            
+            $paypal_ipn_forwarder_url_name_array = array();
             global $wpdb;
-            $mata_key = 'ipn_url_name';
+            $mata_key = 'paypal_ipn_forwarder_url_name';
             $posts = $wpdb->get_results($wpdb->prepare("SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = %s", $mata_key), ARRAY_A);
 
             if ($posts) {
                 foreach ($posts as $post) {
-                    $ipn_url_name = get_post_meta($post['post_id'], 'ipn_url_name', true);
-                    $ipn_url_name_array[$ipn_url_name] = $ipn_url_name;
-                }
-            }
-            
-            $forwarder_url_filter = '<select name="ipn_url_name" class="dropdown_ipn_url_name" id="ipn_url_name"><option value="-1">Show All Forwarder URL</option>';
-            
-            if (isset($ipn_url_name_array) && !empty($ipn_url_name_array) && is_array($ipn_url_name_array) && count($ipn_url_name_array) > 0) {
-                foreach ($ipn_url_name_array as $key => $value) {
-                    if (isset($_GET['ipn_url_name']) && $_GET['ipn_url_name'] == $value) {
-                        $selected_status = 'selected';
-                    } else {
-                        $selected_status = '';
+                    $paypal_ipn_forwarder_url_name = get_post_meta($post['post_id'], 'paypal_ipn_forwarder_url_name', true);
+                    if( !empty($paypal_ipn_forwarder_url_name) ) {
+                        foreach ($paypal_ipn_forwarder_url_name as $key => $value) {
+                            $paypal_ipn_forwarder_url_name_array[$value] = $value;
+                        }
                     }
-                    $forwarder_url_filter .= '<option ' . $selected_status . ' value="' . esc_html($value) . '">' . esc_html($value) . '</option>';
+                    
                 }
-            }
+           
+                $forwarder_url_filter = '<select name="paypal_ipn_forwarder_url_name" class="dropdown_ipn_url_name" id="ipn_url_name"><option value="-1">Show All Forwarder URL</option>';
             
-            $forwarder_url_filter .= '</select>';
-            echo $forwarder_url_filter;
+                if (isset($paypal_ipn_forwarder_url_name_array) && !empty($paypal_ipn_forwarder_url_name_array) && is_array($paypal_ipn_forwarder_url_name_array) && count($paypal_ipn_forwarder_url_name_array) > 0) {
+                    foreach ($paypal_ipn_forwarder_url_name_array as $key => $value) {
+                        if (isset($_GET['paypal_ipn_forwarder_url_name']) && $_GET['paypal_ipn_forwarder_url_name'] == $value) {
+                            $selected_status = 'selected';
+                        } else {
+                            $selected_status = '';
+                        }
+                        $forwarder_url_filter .= '<option ' . $selected_status . ' value="' . esc_html($value) . '">' . esc_html($value) . '</option>';
+                    }
+                }
+                $forwarder_url_filter .= '</select>';
+                echo $forwarder_url_filter;
+            }
         }
     }
 
@@ -613,18 +618,54 @@ class AngellEYE_Paypal_Ipn_For_Wordpress_Post_types {
                 $term = get_term_by('id', $qv['paypal_ipn_type'], 'paypal_ipn_type');
                 $qv['paypal_ipn_type'] = ($term ? $term->slug : '');
             }
-            if (isset($_GET['ipn_url_name']) && !empty($_GET['ipn_url_name']) && $_GET['ipn_url_name'] != -1) {
-                $query->query_vars['meta_key'] = 'ipn_url_name';
-                $query->query_vars['meta_value'] = $_GET['ipn_url_name'];
+            if (isset($_GET['paypal_ipn_forwarder_url_name']) && !empty($_GET['paypal_ipn_forwarder_url_name']) && $_GET['paypal_ipn_forwarder_url_name'] != -1) {
+                $query->query_vars['meta_query'] = array(
+                        'relation' => 'OR',
+                        array(
+                                'key'     => 'paypal_ipn_forwarder_url_name',
+                                'value'   => $_GET['paypal_ipn_forwarder_url_name'],
+                                'compare' => 'LIKE'
+                        )
+                );
             }
         }
     }
     
     public static function paypal_ipn_for_wordpress_date_parsing($date){
-	$date = preg_replace('/[(]+[^*]+/', '', $date);
-	echo date('M j Y h:i:s a', strtotime($date));
+	$string = preg_replace('/[(]+[^*]+/', '', $date);
+        $date_format = get_option( 'date_format' );
+        $time_format = get_option('time_format');
+        if( !empty($date_format) && !empty($time_format) ) {
+            $format = $date_format .' '. $time_format;
+        } else {
+            $format = 'Y-m-d H:i:s';
+        }
+        $current_offset = get_option('gmt_offset');
+        $tzstring = get_option('timezone_string');
+        $check_zone_info = true;
+        // Remove old Etc mappings. Fallback to gmt_offset.
+        if ( false !== strpos($tzstring,'Etc/GMT') ) {
+            $tzstring = '';
+        }
+        if ( empty($tzstring) ) { // Create a UTC+- zone if no timezone string exists
+            $check_zone_info = false;
+            if ( 0 == $current_offset )
+                $tzstring = 'UTC+0';
+            elseif ($current_offset < 0)
+                $tzstring = 'UTC' . $current_offset;
+            else
+                $tzstring = 'UTC+' . $current_offset;
+        }
+        $allowed_zones = timezone_identifiers_list();
+        if ( in_array( $tzstring, $allowed_zones) ) {
+            $tz = new DateTimeZone($tzstring);
+        } else {
+            $tz = new DateTimeZone('UTC');
+        }
+        $dt = new DateTime($string);	
+        $dt->setTimezone($tz);
+        echo $dt->format($format);
     }
-
 }
 
 AngellEYE_Paypal_Ipn_For_Wordpress_Post_types::init();

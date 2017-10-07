@@ -436,7 +436,7 @@ class backupbuddy_housekeeping {
 		$sql = "SELECT `option_name` AS `name`, `option_value` AS `value`
 			  FROM  `" . $wpdb->options . "`
 			  WHERE `option_name` LIKE '%transient_%'
-			  ORDER BY `option_name`";
+			  ORDER BY `option_name` LIMIT 1000"; // Currently capping at 1000 per cleanup to prevent using too much memory.
 		
 		$results = $wpdb->get_results( $sql );
 		$transients = array();

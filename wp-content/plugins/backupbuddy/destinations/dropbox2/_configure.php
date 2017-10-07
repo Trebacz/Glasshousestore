@@ -96,7 +96,6 @@ if ( 'add' == $mode ) { // ADD mode.
 } // End checking mode.
 
 
-
 // Display configuration form.
 if ( true === $show_config_form ) {
 	
@@ -106,19 +105,13 @@ if ( true === $show_config_form ) {
 			'type'		=>		'plaintext',
 			'name'		=>		'plaintext_owner',
 			'title'		=>		__( 'Dropbox Owner', 'it-l10n-backupbuddy' ),
-			'default'	=>		$accountInfo['display_name'] . ' (UID: ' . $accountInfo['uid'] . ') [<a href="' . $accountInfo['referral_link'] . '" target="_blank">' . __('Referral Link', 'it-l10n-backupbuddy' ) .'</a>]',
+			'default'	=>		$accountInfo['name']['display_name'] . ' [<a href="' . $accountInfo['referral_link'] . '" target="_blank">' . __('Referral Link', 'it-l10n-backupbuddy' ) .'</a>]',
 		) );
 		$settings_form->add_setting( array(
 			'type'		=>		'plaintext',
 			'name'		=>		'plaintext_email',
 			'title'		=>		__( 'Email', 'it-l10n-backupbuddy' ),
 			'default'	=>		$accountInfo['email'],
-		) );
-		$settings_form->add_setting( array(
-			'type'		=>		'plaintext',
-			'name'		=>		'plaintext_quotausage',
-			'title'		=>		__('Quota Usage', 'it-l10n-backupbuddy' ),
-			'default'	=>		pb_backupbuddy::$format->file_size( $accountInfo['quota_info']['normal'] ) . ' normal + ' . pb_backupbuddy::$format->file_size( $accountInfo['quota_info']['shared'] ) . ' shared out of ' . pb_backupbuddy::$format->file_size( $accountInfo['quota_info']['quota'] ) . ' (' . round( ( ( $accountInfo['quota_info']['normal']+$accountInfo['quota_info']['shared'] ) / $accountInfo['quota_info']['quota'] ) * 100, 2 ) . '%)',
 		) );
 	}
 	

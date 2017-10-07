@@ -152,7 +152,7 @@ class AngellEYE_Paypal_Ipn_For_Wordpress_Paypal_Helper {
      * @param array $posted
      * return boolean
      */
-    public function successful_request($IPN_status, $ipn_url_name) {
+    public function successful_request($IPN_status) {
 
         $ipn_response = !empty($_POST) ? $_POST : false;
         
@@ -165,12 +165,17 @@ class AngellEYE_Paypal_Ipn_For_Wordpress_Paypal_Helper {
         }
 
         $ipn_response['IPN_status'] = ( $IPN_status == true ) ? 'Verified' : 'Invalid';
-        $ipn_response['ipn_url_name'] = ( $ipn_url_name == false ) ? 'PayPal' : $ipn_url_name;
 
         if ('yes' == $this->debug) {
             $this->log->add('paypal', 'Payment IPN_status: ' . $IPN_status);
         }
 
+        if( $IPN_status == true ) {
+            do_action('paypal_ipn_for_wordpress_ipn_response_verified', $ipn_response);
+        } else {
+            do_action('paypal_ipn_for_wordpress_ipn_response_invalid', $ipn_response);
+        }
+        
         $txn_type = (isset($ipn_response['txn_type'])) ? $ipn_response['txn_type'] : '';
         $reason_code = (isset($ipn_response['reason_code'])) ? $ipn_response['reason_code'] : '';
         $payment_status = (isset($ipn_response['payment_status'])) ? $ipn_response['payment_status'] : '';
@@ -180,7 +185,6 @@ class AngellEYE_Paypal_Ipn_For_Wordpress_Paypal_Helper {
         if (strtoupper($transaction_type) == 'ADAPTIVE PAYMENT PREAPPROVAL' || strtoupper($transaction_type) == 'ADAPTIVE PAYMENT PAY' || !empty($account_key)) {
             $posted = $this->decodePayPalIPN();
             $posted['IPN_status'] = $ipn_response['IPN_status'];
-            $posted['ipn_url_name'] = $ipn_response['ipn_url_name'];
             $posted = stripslashes_deep($posted);
         } else {
             $posted = stripslashes_deep($ipn_response);
@@ -221,7 +225,6 @@ class AngellEYE_Paypal_Ipn_For_Wordpress_Paypal_Helper {
                     'residence_country' => $posted['residence_country'],
                     'ipn_track_id' => $posted['ipn_track_id'],
                     'IPN_status' => $ipn_response['IPN_status'],
-                    'ipn_url_name' => $ipn_response['ipn_url_name']
                 );
 
                 $this->successfull_request_handler($postedmasspay);
@@ -423,13 +426,15 @@ class AngellEYE_Paypal_Ipn_For_Wordpress_Paypal_Helper {
                 $post_status = 'Not-Available';
             }
 
-            if ($this->paypal_ipn_for_wordpress_exist_post_by_title($paypal_txn_id) == false) {
+            $post_id = $this->paypal_ipn_for_wordpress_exist_post_by_title($paypal_txn_id);
+            if ($post_id == false) {
 
                 $insert_ipn_array = array(
                     'ID' => '',
                     'post_type' => 'paypal_ipn', // Custom Post Type Slug
                     'post_status' => $post_status,
                     'post_title' => $paypal_txn_id,
+                    'post_author' => 0
                 );
 
                 $post_id = wp_insert_post($insert_ipn_array);
@@ -453,6 +458,9 @@ class AngellEYE_Paypal_Ipn_For_Wordpress_Paypal_Helper {
 
                 $this->ipn_response_postmeta_handler($post_id, $posted);
             }
+            
+            do_action('paypal_ipn_for_wordpress_ipn_smarter_forwarding_handler', $posted, $post_id);
+            
         }
     }
 
@@ -462,6 +470,7 @@ class AngellEYE_Paypal_Ipn_For_Wordpress_Paypal_Helper {
      * @access   public
      */
     public function ipn_response_postmeta_handler($post_id, $posted) {
+        
         update_post_meta($post_id, 'ipn data serialized', $posted);
         foreach ($posted as $metakey => $metavalue)
             update_post_meta($post_id, $metakey, $metavalue);

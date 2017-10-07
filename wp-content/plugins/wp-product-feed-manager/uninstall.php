@@ -1,8 +1,8 @@
 <?php
 
 /* * ******************************************************************
- * Version 3.2
- * Modified: 25-05-2017
+ * Version 3.1
+ * Modified: 20-08-2017
  * Copyright 2017 Accentio. All rights reserved.
  * License: None
  * By: Michel Jongbloed
@@ -76,8 +76,9 @@ function unregister_plugin() {
 	delete_option( 'wppfm_lic_key' );
 	delete_option( 'wppfm_channel_update_check_date' );
 	delete_option( 'wppfm_channels_to_update' );
-	delete_option( 'wppfm_ftp_passive' );
+	delete_option( 'wppfm_ftp_passive' ); // depricated as of 1.9.3
 	delete_option( 'wppfm_auto_feed_fix' );
+	delete_option( 'wppfm_debug_mode' );
 	delete_option( 'wppfm_third_party_attribute_keywords' );
 
 	if ( $license ) { // if the plugin is a licensed version then deactivate it on the license server
@@ -90,7 +91,7 @@ function unregister_plugin() {
 		);
 
 		// Call the custom API.
-		wp_remote_post( 'http://www.wpmarketingrobot.com/', array(
+		wp_remote_post( 'https://www.wpmarketingrobot.com/', array(
 			'timeout'   => 15,
 			'sslverify' => false,
 			'body'      => $api_params

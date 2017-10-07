@@ -35,7 +35,7 @@ if ( !class_exists( 'WPPFM_Add_Feed_Page' ) ) :
 
 			echo $this->admin_page_header();
 
-			if ( 'valid' === wppfm_validate() ) {
+			if ( 'valid' === wppfm_validate() ) { // ref HWOTBERH
 
 				echo $this->message_field();
 

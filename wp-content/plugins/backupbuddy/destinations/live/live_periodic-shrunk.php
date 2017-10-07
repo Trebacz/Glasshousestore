@@ -1893,7 +1893,7 @@ class backupbuddy_live_periodic {
 					$totalTables++;
 					$basename = basename( $file['Key'] );
 					
-					// Ignore underscore-prefixed live db data. Do not audit these. Skip.
+					// Ignore underscore-prefixed live db data (delta sql files). Do not audit these. Skip. iThemes server clears old delta files based on snapshot request timestamp.
 					if ( '_' == substr( $basename, 0, 1 ) ) {
 						$serialSkips++;
 						continue;

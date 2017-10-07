@@ -1,18 +1,15 @@
 <?php
 
 /* * ******************************************************************
- * Version 1.2
- * Modified: 03-06-2017
+ * Version 2.0
+ * Modified: 26-08-2017
  * Copyright 2017 Accentio. All rights reserved.
  * License: None
  * By: Michel Jongbloed
  * ****************************************************************** */
 
 // Prevent direct access
-if ( !defined( 'ABSPATH' ) ) {
-	echo 'Hi!  I\'m just a plugin, there\'s not much I can do when called directly.';
-	exit;
-}
+if ( !defined( 'ABSPATH' ) ) exit;
 
 if ( !class_exists( 'WPPFM_Database' ) ) :
 
@@ -27,9 +24,9 @@ if ( !class_exists( 'WPPFM_Database' ) ) :
 		 * Attributes
 		 * -------------------------------------------------------------------------------------------------- */
 
-		private $_version = '1.1.0'; // as of plugin version 1.8.0
+		private $_version = '1.2.1'; // as of plugin version 1.9.3
 		private $_wpdb;
-		private $_charset_collate = null;
+		private $_charset_collate = '';
 		private $_image_folder;
 
 		/**
@@ -47,7 +44,9 @@ if ( !class_exists( 'WPPFM_Database' ) ) :
 			$this->_wpdb = &$wpdb;
 
 			// set the charset for the new database tables
-			$this->_charset_collate = $wpdb->get_charset_collate();
+			if ( $this->_wpdb->has_cap( 'collation' ) ) {
+				$this->_charset_collate = $wpdb->get_charset_collate();
+			}
 
 			// url to the image folder
 			$this->_image_folder = esc_url( MYPLUGIN_PLUGIN_URL . '/images/' );
@@ -58,24 +57,12 @@ if ( !class_exists( 'WPPFM_Database' ) ) :
 		 */
 		public function make() {
 			// make the tables
-			$this->channel_table();
-			$this->country_table();
-			$this->feed_table();
-			$this->feedmeta_table();
-			$this->status_table();
-			$this->categories_table();
-			$this->sources_table();
-			$this->error_table();
-			
-			// update the db version
-			update_option( 'wppfm_db_version', $this->_version );
+			$this->make_or_update_the_tables();
 
 			// fill the tables with preset data
-			$this->fill_channel_table();
-			$this->fill_country_table();
-			$this->fill_merchant_table();
-			$this->fill_status_table();
-			$this->fill_categories_table();
+			$this->fill_the_tables();
+			
+			do_action( 'wppfm_installed' );
 		}
 		
 		/**
@@ -85,7 +72,18 @@ if ( !class_exists( 'WPPFM_Database' ) ) :
 		 */
 		public function verify_db_version() {
 			$actual_db_version = get_option( 'wppfm_db_version' ) ? get_option( 'wppfm_db_version' ) : $this->get_current_db_version();
-			if ( $actual_db_version < $this->_version ) { $this->update_database(); }
+			if ( $actual_db_version < $this->_version ) { $this->make_or_update_the_tables(); }
+
+			do_action( 'wppfm_db_verified' );
+		}
+		
+		/**
+		 * Forces a database update
+		 * 
+		 * @since 1.9.0
+		 */
+		public function force_reinitiate_db() {
+			$this->make_or_update_the_tables();
 		}
 		
 		public function reset_channel_registration() {
@@ -97,7 +95,40 @@ if ( !class_exists( 'WPPFM_Database' ) ) :
 		 * -------------------------------------------------------------------------------------------------- */
 
 		private function includes() {
+			// required for dbDelta
 			require_once ( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		}
+
+		/**
+		 * makes or updates the required database tables
+		 * 
+		 * @since 1.9.2
+		 */
+		private function make_or_update_the_tables() {
+			$this->channel_table();
+			$this->country_table();
+			$this->feed_table();
+			$this->feedmeta_table();
+			$this->status_table();
+			$this->categories_table();
+			$this->sources_table();
+			$this->error_table();
+			
+			// store the db version
+			update_option( 'wppfm_db_version', $this->_version );
+		}
+
+		/**
+		 * fill the tables with preset data
+		 * 
+		 * @since 1.9.2
+		 */
+		private function fill_the_tables() {
+			$this->fill_channel_table();
+			$this->fill_country_table();
+			$this->fill_merchant_table();
+			$this->fill_status_table();
+			$this->fill_categories_table();
 		}
 
 		/**
@@ -106,29 +137,28 @@ if ( !class_exists( 'WPPFM_Database' ) ) :
 		private function feed_table() {
 			$table_name = $this->_wpdb->prefix . 'feedmanager_product_feed';
 
-			if ( !WPPFM_Db_Management::table_exists( $table_name ) ) {
-				$sql = "CREATE TABLE $table_name (
-               product_feed_id		int				NOT NULL AUTO_INCREMENT,
-               channel_id			smallint		NOT NULL,
-			   is_aggregator		smallint		NOT NULL				   DEFAULT 0,
-			   include_variations	smallint		NOT NULL				   DEFAULT 0,
-               country_id			smallint		NOT NULL				   DEFAULT 233,
-               source_id			smallint		NOT NULL,
-               title				varchar(100)	NOT NULL UNIQUE            DEFAULT '',
-               feed_title			varchar(100),
-               feed_description		varchar(500),
-               main_category		varchar(250)	NOT NULL                   DEFAULT '',
-               url					varchar(250)	NOT NULL                   DEFAULT '',
-               status_id			smallint		NOT NULL                   DEFAULT 1,
-               updated				datetime		NOT NULL,
-               schedule				varchar(50)		NOT NULL                   DEFAULT '1:00:00',
-               products				int				NOT NULL                   DEFAULT 1,
-               timestamp			timestamp								   DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-               CONSTRAINT prod_pk PRIMARY KEY (product_feed_id)
-            ) " . $this->_charset_collate . ";";
+			$sql = "CREATE TABLE $table_name (
+				product_feed_id int NOT NULL AUTO_INCREMENT,
+				channel_id smallint NOT NULL,
+				language varchar(7),
+				is_aggregator smallint NOT NULL DEFAULT 0,
+				include_variations smallint NOT NULL DEFAULT 0,
+				country_id smallint NOT NULL DEFAULT 233,
+				source_id smallint NOT NULL,
+				title varchar(100) NOT NULL UNIQUE DEFAULT '',
+				feed_title varchar(100),
+				feed_description varchar(500),
+				main_category varchar(250) NOT NULL DEFAULT '',
+				url varchar(250) NOT NULL DEFAULT '',
+				status_id smallint NOT NULL DEFAULT 1,
+				updated datetime NOT NULL,
+				schedule varchar(50) NOT NULL DEFAULT '1:00:00',
+				products int NOT NULL DEFAULT 1,
+				timestamp timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+				PRIMARY KEY  (product_feed_id)
+			) " . $this->_charset_collate . ";";
 
-				dbDelta( $sql );
-			}
+			dbDelta( $sql );
 		}
 
 		/**
@@ -137,17 +167,17 @@ if ( !class_exists( 'WPPFM_Database' ) ) :
 		private function feedmeta_table() {
 			$table_name = $this->_wpdb->prefix . 'feedmanager_product_feedmeta';
 
-			if ( !WPPFM_Db_Management::table_exists( $table_name ) ) {
-				$sql = "CREATE TABLE $table_name (
-               meta_id           int            NOT NULL AUTO_INCREMENT,
-               product_feed_id   int            NOT NULL,
-               meta_key          varchar(255),
-               meta_value        longtext,
-               CONSTRAINT prodmeta_pk PRIMARY KEY (meta_id)
-            ) " . $this->_charset_collate . ";";
+			$sql = "CREATE TABLE $table_name (
+				meta_id int NOT NULL AUTO_INCREMENT,
+				product_feed_id int NOT NULL,
+				meta_key varchar(255),
+				meta_value longtext,
+				PRIMARY KEY  (meta_id),
+				KEY product_feed_id (product_feed_id),
+				KEY meta_key (meta_key)
+			) " . $this->_charset_collate . ";";
 
-				dbDelta( $sql );
-			}
+			dbDelta( $sql );
 		}
 
 		/**
@@ -156,16 +186,14 @@ if ( !class_exists( 'WPPFM_Database' ) ) :
 		private function status_table() {
 			$table_name = $this->_wpdb->prefix . 'feedmanager_feed_status';
 
-			if ( !WPPFM_Db_Management::table_exists( $table_name ) ) {
-				$sql = "CREATE TABLE $table_name (
-               status_id         smallint       NOT NULL,
-               status            varchar(20)    NOT NULL UNIQUE            DEFAULT 'OK',
-               color             char(7)        NOT NULL UNIQUE,
-               CONSTRAINT merc_pk PRIMARY KEY (status_id)
-            ) " . $this->_charset_collate . ";";
+			$sql = "CREATE TABLE $table_name (
+				status_id smallint NOT NULL,
+				status varchar(20) NOT NULL UNIQUE DEFAULT 'OK',
+				color char(7)NOT NULL UNIQUE,
+				PRIMARY KEY  (status_id)
+			) " . $this->_charset_collate . ";";
 
-				dbDelta( $sql );
-			}
+			dbDelta( $sql );
 		}
 
 		/**
@@ -174,16 +202,14 @@ if ( !class_exists( 'WPPFM_Database' ) ) :
 		private function channel_table() {
 			$table_name = $this->_wpdb->prefix . 'feedmanager_channel';
 
-			if ( !WPPFM_Db_Management::table_exists( $table_name ) ) {
-				$sql = "CREATE TABLE $table_name (
-               channel_id        int            NOT NULL				   DEFAULT 0,
-               name              varchar(100)   NOT NULL UNIQUE            DEFAULT '',
-               short             varchar(50)    NOT NULL UNIQUE            DEFAULT '',
-               CONSTRAINT merc_pk PRIMARY KEY (channel_id)
-            ) " . $this->_charset_collate . ";";
+			$sql = "CREATE TABLE $table_name (
+				channel_id int NOT NULL DEFAULT 0,
+				name varchar(100) NOT NULL UNIQUE DEFAULT '',
+				short varchar(50) NOT NULL UNIQUE DEFAULT '',
+				PRIMARY KEY  (channel_id)
+			) " . $this->_charset_collate . ";";
 
-				dbDelta( $sql );
-			}
+			dbDelta( $sql );
 		}
 
 		/**
@@ -192,16 +218,14 @@ if ( !class_exists( 'WPPFM_Database' ) ) :
 		private function country_table() {
 			$table_name = $this->_wpdb->prefix . 'feedmanager_country';
 
-			if ( !WPPFM_Db_Management::table_exists( $table_name ) ) {
-				$sql = "CREATE TABLE $table_name (
-               country_id        int            NOT NULL AUTO_INCREMENT,
-               name_short        varchar(3)     NOT NULL UNIQUE            DEFAULT '',
-               name              varchar(100)   NOT NULL UNIQUE            DEFAULT '',
-               CONSTRAINT countr_pk PRIMARY KEY (country_id)
-            ) " . $this->_charset_collate . ";";
+			$sql = "CREATE TABLE $table_name (
+				country_id int NOT NULL AUTO_INCREMENT,
+				name_short varchar(3) NOT NULL UNIQUE DEFAULT '',
+				name varchar(100) NOT NULL UNIQUE DEFAULT '',
+				PRIMARY KEY  (country_id)
+			) " . $this->_charset_collate . ";";
 
-				dbDelta( $sql );
-			}
+			dbDelta( $sql );
 		}
 
 		/**
@@ -210,15 +234,13 @@ if ( !class_exists( 'WPPFM_Database' ) ) :
 		private function sources_table() {
 			$table_name = $this->_wpdb->prefix . 'feedmanager_source';
 
-			if ( !WPPFM_Db_Management::table_exists( $table_name ) ) {
-				$sql = "CREATE TABLE $table_name (
-               source_id         int            NOT NULL AUTO_INCREMENT,
-               name              varchar(100)   NOT NULL UNIQUE            DEFAULT '',
-               CONSTRAINT source_pk PRIMARY KEY (source_id)
-            ) " . $this->_charset_collate . ";";
+			$sql = "CREATE TABLE $table_name (
+				source_id int NOT NULL UNIQUE,
+				name varchar(100) NOT NULL UNIQUE DEFAULT '',
+				PRIMARY KEY  (source_id)
+			) " . $this->_charset_collate . ";";
 
-				dbDelta( $sql );
-			}
+			dbDelta( $sql );
 		}
 
 		/**
@@ -231,32 +253,28 @@ if ( !class_exists( 'WPPFM_Database' ) ) :
 			// I can quickly restore this table in the database if required
 			// CREATE TABLE wp_feedmanager_errors ( product_id int NOT NULL, error_id int NOT NULL, error_message varchar(500)	NOT NULL, action_message varchar(1000), timestamp timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, CONSTRAINT source_pk PRIMARY KEY (product_id) );
 
-			if ( !WPPFM_Db_Management::table_exists( $table_name ) ) {
-				$sql = "CREATE TABLE $table_name (
-               product_id        int            NOT NULL,
-               error_id          int			NOT NULL,
-               error_message     varchar(500)	NOT NULL,
-               action_message    varchar(1000),
-               timestamp         timestamp      DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-               CONSTRAINT source_pk PRIMARY KEY (product_id)
-            ) " . $this->_charset_collate . ";";
+			$sql = "CREATE TABLE $table_name (
+				product_id int NOT NULL,
+				error_id int NOT NULL,
+				error_message varchar(500) NOT NULL,
+				action_message varchar(1000),
+				timestamp timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+				PRIMARY KEY  (product_id)
+			) " . $this->_charset_collate . ";";
 
-				dbDelta( $sql );
-			}
+			dbDelta( $sql );
 		}
 
 		private function categories_table() {
 			$table_name = $this->_wpdb->prefix . 'feedmanager_field_categories';
 
-			if ( !WPPFM_Db_Management::table_exists( $table_name ) ) {
-				$sql = "CREATE TABLE $table_name (
-               category_id       int            NOT NULL,
-               category_label    varchar(100)   NOT NULL,
-               CONSTRAINT cache_pk PRIMARY KEY (category_id)
-            ) " . $this->_charset_collate . ";";
+			$sql = "CREATE TABLE $table_name (
+				category_id int NOT NULL,
+				category_label varchar(100) NOT NULL,
+				PRIMARY KEY  (category_id)
+			) " . $this->_charset_collate . ";";
 
-				dbDelta( $sql );
-			}
+			dbDelta( $sql );
 		}
 
 		/**
@@ -322,7 +340,7 @@ if ( !class_exists( 'WPPFM_Database' ) ) :
 			// only fill the table if its still empty
 			if ( $count == 0 ) {
 				$sql = "INSERT INTO $table_name
-               (name) VALUES ('Woocommerce')";
+               (source_id, name) VALUES ('1', 'Woocommerce')";
 
 				$this->_wpdb->query( $sql );
 			}
@@ -362,22 +380,6 @@ if ( !class_exists( 'WPPFM_Database' ) ) :
 			}
 		}
 		
-// 240317
-//		private function update_db_version() {
-//			
-//			$table_name = $this->_wpdb->prefix . 'feedmanager_product_feedmeta';
-//
-//			$version_is_stored = $this->_wpdb->get_var( "SELECT COUNT(*) FROM $table_name WHERE product_feed_id = 0" );
-//			
-//			if ( $version_is_stored > 0 ) {
-//
-//				$this->_wpdb->update( $table_name, array( 'meta_value' => $this->_version ), array( 'product_feed_id' => 0 ), '%s' );
-//			} else {
-//				
-//				$this->_wpdb->query( "INSERT INTO $table_name (product_feed_id, meta_key, meta_value) VALUES (0, 'version', '$this->_version')" );
-//			}
-//		}
-		
 		/**
 		 * Gets the current database version from the database
 		 * 
@@ -410,35 +412,6 @@ if ( !class_exists( 'WPPFM_Database' ) ) :
 					$data_class->register_channel( $channel_short_name, $channel_data );
 				}
 			}
-		}
-		
-		private function update_database() {
-			$table_name = $this->_wpdb->prefix . 'feedmanager_product_feed';
-			
-			//
-			// Update from version 0.1.1 to 1.0.0
-			//
-			if ( ! $this->column_exists_in_table( $table_name, 'include_variations' )  ) {
-				$sql100 = "ALTER TABLE $table_name ADD include_variations smallint(6) NOT NULL DEFAULT 0 AFTER is_aggregator";
-				$this->_wpdb->query( $sql100 );
-			}
-			
-			//
-			// Update from version 1.0.0 to 1.1.0
-			//
-			if ( ! $this->column_exists_in_table( $table_name, 'feed_title' )  ) {
-				$sql110a = "ALTER TABLE $table_name ADD feed_description varchar(100) AFTER title";
-				$this->_wpdb->query( $sql110a );
-				$sql110b = "ALTER TABLE $table_name ADD feed_title varchar(500) AFTER title";
-				$this->_wpdb->query( $sql110b );
-			}
-			
-			//$this->update_db_version();
-			update_option( 'wppfm_db_version', $this->_version );
-		}
-	
-		private function column_exists_in_table( $table_name, $column_name ) {
-			return $this->_wpdb->get_var( "SHOW COLUMNS FROM $table_name LIKE '$column_name'" );
 		}
 	}
 

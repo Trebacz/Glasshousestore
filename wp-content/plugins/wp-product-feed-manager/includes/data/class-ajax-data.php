@@ -1,8 +1,8 @@
 <?php
 
 /* * ******************************************************************
- * Version 1.3
- * Modified: 05-06-2017
+ * Version 1.5
+ * Modified: 20-08-2017
  * Copyright 2017 Accentio. All rights reserved.
  * License: None
  * By: Michel Jongbloed
@@ -79,7 +79,7 @@ if ( !class_exists( 'WPPFM_Ajax_Data_Class' ) ) :
 		public function myajax_get_settings_options() {
 
 			if ( $this->safe_ajax_call( filter_input( INPUT_POST, 'postSetupOptionsNonce' ), 'myajax-setting-options-nonce' ) ) {
-				$options = [ get_option( 'wppfm_ftp_passive' ), get_option( 'wppfm_auto_feed_fix' ) ];
+				$options = [ get_option( 'wppfm_auto_feed_fix' ), get_option( 'wppfm_debug_mode' ) ];
 				echo json_encode( $options );
 			}
 
@@ -143,11 +143,12 @@ if ( !class_exists( 'WPPFM_Ajax_Data_Class' ) ) :
 						
 						$custom_product_attributes = $this->_queries->get_custom_product_attributes();
 						$custom_product_fields = $this->_queries->get_custom_product_fields();
-						$product_attributes = $this->_queries->get_all_product_attributes();
+//	230717				$product_attributes = $this->_queries->get_all_product_attributes();
+						$product_taxonomies = get_taxonomies();
 						$third_party_custom_fields = $data_class->get_third_party_custom_fields();
 						
 						echo json_encode( $this->combine_custom_attributes_and_feeds( $custom_product_attributes, 
-							$custom_product_fields, $product_attributes, $third_party_custom_fields ) );
+							$custom_product_fields, $product_taxonomies, $third_party_custom_fields ) );
 						break;
 
 					default:
@@ -219,6 +220,7 @@ if ( !class_exists( 'WPPFM_Ajax_Data_Class' ) ) :
 				$is_aggregator		= filter_input( INPUT_POST, 'isAggregator' );
 				$incl_variations	= filter_input( INPUT_POST, 'includeVariations' );
 				$country_code		= filter_input( INPUT_POST, 'countryId' );
+				$feed_language		= filter_input( INPUT_POST, 'language' );		    // @since 1.9.0
 				$source_id			= filter_input( INPUT_POST, 'sourceId' );
 				$title				= filter_input( INPUT_POST, 'title' );
 				$feed_title			= filter_input( INPUT_POST, 'feedTitle' );			// @since 1.8.0
@@ -238,10 +240,10 @@ if ( !class_exists( 'WPPFM_Ajax_Data_Class' ) ) :
 
 				// insert or update the feed
 				if ( $feed_id < 0 ) {
-					$resulting_feed_id	 = $this->_queries->insert_feed( $channel_id, $country_id, $source_id, $title, $feed_title, $feed_description, $main_category, $incl_variations, $is_aggregator, $url, $status, $schedule );
+					$resulting_feed_id	 = $this->_queries->insert_feed( $channel_id, $country_id, $feed_language, $source_id, $title, $feed_title, $feed_description, $main_category, $incl_variations, $is_aggregator, $url, $status, $schedule );
 					$response			 = $resulting_feed_id;
 				} else {
-					$update_result	 = $this->_queries->update_feed( $feed_id, $channel_id, $country_id, $source_id, $title, $feed_title, $feed_description, $main_category, $incl_variations, $is_aggregator, $url, $status, $schedule );
+					$update_result	 = $this->_queries->update_feed( $feed_id, $channel_id, $country_id, $feed_language, $source_id, $title, $feed_title, $feed_description, $main_category, $incl_variations, $is_aggregator, $url, $status, $schedule );
 					$response		 = $update_result ? $feed_id : 0;
 				}
 
@@ -377,8 +379,8 @@ if ( !class_exists( 'WPPFM_Ajax_Data_Class' ) ) :
 			exit;
 		}
 
-		private function combine_custom_attributes_and_feeds( $attributes, $feeds, $product_attributes, $third_party_fields ) {
-			$keywords = explode( ', ', get_option( 'wppfm_third_party_attribute_keywords', '_wpmr_%, _cpf_%, _unit%' ) );
+		private function combine_custom_attributes_and_feeds( $attributes, $feeds, $product_taxonomies, $third_party_fields ) {
+			$keywords = explode( ', ', get_option( 'wppfm_third_party_attribute_keywords', '%_wpmr_%, %_cpf_%, %_unit%, %_bto_%' ) );
 			$prev_dup_array = array(); // used to prevent doubles
 			
 			foreach ( $feeds as $feed ) {
@@ -396,24 +398,32 @@ if ( !class_exists( 'WPPFM_Ajax_Data_Class' ) ) :
 				array_push( $prev_dup_array, $obj->attribute_label );
 			}
 
-			foreach ($product_attributes as $attribute_string){
-				$attribute_object = maybe_unserialize( $attribute_string->meta_value );
+			foreach ($product_taxonomies as $taxonomy){
+				if ( !in_array( $taxonomy, $prev_dup_array ) ) {
+					$obj = new stdClass();
+					$obj->attribute_name = $taxonomy;
+					$obj->attribute_label = $taxonomy;
 
-				if( $attribute_object && ( is_object( $attribute_object ) || is_array( $attribute_object ) ) ) {
-
-					foreach ( $attribute_object as $attribute ) {
-						if ( !in_array( $attribute['name'], $prev_dup_array ) ) {
-							$obj = new stdClass();
-							$obj->attribute_name = $attribute['name'];
-							$obj->attribute_label = $attribute['name'];
-
-							array_push( $attributes, $obj );
-							array_push( $prev_dup_array, $attribute['name'] );
-						}
-					}
-				} else {
-					if ( $attribute_object ) { wppfm_write_log_file( $attribute_object , 'debug' ); }
+					array_push( $attributes, $obj );
+					array_push( $prev_dup_array, $taxonomy );
 				}
+//				$attribute_object = maybe_unserialize( $attribute_string->meta_value );
+//
+//				if( $attribute_object && ( is_object( $attribute_object ) || is_array( $attribute_object ) ) ) {
+//
+//					foreach ( $attribute_object as $attribute ) {
+//						if ( !in_array( $attribute['name'], $prev_dup_array ) ) {
+//							$obj = new stdClass();
+//							$obj->attribute_name = $attribute['name'];
+//							$obj->attribute_label = $attribute['name'];
+//
+//							array_push( $attributes, $obj );
+//							array_push( $prev_dup_array, $attribute['name'] );
+//						}
+//					}
+//				} else {
+//					if ( $attribute_object ) { wppfm_write_log_file( $attribute_object , 'debug' ); }
+//				}
 			}
 			
 			foreach ( $third_party_fields as $field_label ) {

@@ -38,7 +38,7 @@ function jt_cmb2_render_rbsselect_field_callback( $field, $value, $object_id, $o
 		      	echo $field_type_object->select(array(
 					'name'  		=> $field_type_object->_name(),
 					'id'    		=> $field_type_object->_id(),
-					'class'   		=> 'rbs_select selectpicker'.($field->args('depends') && count($field->args('depends'))?' rbs_action_element_select':''),
+					'class'   		=> 'rbs_select form-control '.($field->args('depends') && count($field->args('depends'))?' rbs_action_element_select':''),  //selectpicker
 					'options' 		=> rbs_rbsselect_get_options( $field->args('options'),  $value, $field->args('content') ),
 					'data-depends'	=> $field->args('depends') && count($field->args('depends')) ? 1 : 0 ,
 					'desc'    		=> $field_type_object->_desc( true ),

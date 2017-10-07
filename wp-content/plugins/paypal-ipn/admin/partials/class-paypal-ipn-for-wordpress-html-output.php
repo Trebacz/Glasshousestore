@@ -455,6 +455,7 @@ class AngellEYE_Paypal_Ipn_For_Wordpress_Html_output {
         // Now save the options
         foreach ($update_options as $name => $value) {
             update_option($name, $value);
+            echo '<div id="message" class="updated inline"><p><strong>Your settings have been saved.</strong></p></div>';
         }
 
         return true;

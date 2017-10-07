@@ -44,7 +44,7 @@ function wppfm_add_feed_manager_menu( $channel_updated = false ) {
 
 	if( !wppfm_check_backup_status() ) {
 		echo wppfm_show_wp_warning( __( "Due to the latest update your Feed Manager backups are no longer valid! 
-			Please open the Feed Manager Settings page, remove all your current backups and make a new one.", 'wp-product-feed-manager' ), true );
+			Please open the Feed Manager Settings page, remove all your backups in and make a new one.", 'wp-product-feed-manager' ), true );
 	}
 	
 // Obsolete 170217
@@ -76,6 +76,7 @@ function wppfm_options_page() {
 	$add_options_page->show();
 }
 
+// ref HWOTBERH
 function wppfm_validate() {
 	if ( get_option( 'wppfm_lic_status' ) === 'valid' ) {
 		
@@ -130,7 +131,7 @@ function wppfm_activate_license() {
 	if( isset( $_POST['wppfm_license_activate'] ) ) {
 
 		// run a quick security check 
-	 	if( ! check_admin_referer( 'wppfm_lic_nonce', 'wppfm_lic_nonce' ) ) {
+	 	if( !check_admin_referer( 'wppfm_lic_nonce', 'wppfm_lic_nonce' ) ) {
 			return false; // get out if we didn't click the Activate button
 		}
 
@@ -153,7 +154,10 @@ function wppfm_activate_license() {
 		) );
 
 		// make sure the response came back okay
-		if ( is_wp_error( $response ) ) { return false;	}
+		if ( is_wp_error( $response ) ) { 
+			wppfm_handle_wp_errors_response( $response, "Error 2121. Activating your license failed. Please contact support@wpmarketingrobot.com for support on this issue." );
+			return false; 
+		}
 
 		// decode the license data
 		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
@@ -175,6 +179,9 @@ add_action('admin_init', 'wppfm_activate_license');
 
 function wppfm_check_license( $license ) {
 
+	// return false if no license is given
+	if ( !$license ) { return false; }
+	
 	$item_name = urlencode( EDD_SL_ITEM_NAME );
 	$api_params = array(
 		'edd_action' => 'check_license',
@@ -184,7 +191,10 @@ function wppfm_check_license( $license ) {
 
 	$response = wp_remote_get( add_query_arg( $api_params, EDD_SL_STORE_URL ), array( 'timeout' => 15, 'sslverify' => false ) );
 
-	if ( is_wp_error( $response ) ) { return false; }
+	if ( is_wp_error( $response ) ) {
+		wppfm_handle_wp_errors_response( $response, "Error 2122. Checking your license failed. Please contact support@wpmarketingrobot.com for support on this issue." );
+		return false; 
+	}
 	
 	$license_data = json_decode( wp_remote_retrieve_body( $response ) );
 	

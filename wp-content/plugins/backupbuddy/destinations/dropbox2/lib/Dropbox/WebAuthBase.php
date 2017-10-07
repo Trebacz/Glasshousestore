@@ -14,7 +14,7 @@ class WebAuthBase extends AuthBase
         return RequestUtil::buildUrlForGetOrPut(
             $this->userLocale,
             $this->appInfo->getHost()->getWeb(),
-            "1/oauth2/authorize",
+            "oauth2/authorize",
             array(
                 "client_id" => $this->appInfo->getKey(),
                 "response_type" => "code",
@@ -33,8 +33,10 @@ class WebAuthBase extends AuthBase
         $response = RequestUtil::doPostWithSpecificAuth(
             $this->clientIdentifier, $authHeaderValue, $this->userLocale,
             $this->appInfo->getHost()->getApi(),
-            "1/oauth2/token",
+            "oauth2/token",
             array(
+            	 //"client_id" => $this->appInfo->getKey(),
+            	 //"client_secret" => $this->appInfo->getSecret(),
                 "grant_type" => "authorization_code",
                 "code" => $code,
                 "redirect_uri" => $originalRedirectUri,

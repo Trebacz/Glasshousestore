@@ -7,8 +7,8 @@ Author URI: http://www.tatvic.com/
 Author: Tatvic
 Requires at least: 3.6
 Tested up to: 4.8
-Stable tag: 1.0.21.1
-Version: 1.0.21.1
+Stable tag: 1.1.2
+Version: 1.1.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -55,10 +55,10 @@ We have recently launched an Advanced Google Analytics Plugin for WooCommerce wh
 == Note : ==
 == Our plugin does not support the below features out of the box ==
 * Highly Customized store
-* Child/Custom Themes
 * Product types other than Simple Product
 * Store with the Subscription product for Orders.
 * Ecommerce Pages with Shortcodes
+* For the Child theme support; kindly contact us at analytics2(at)tatvic(dot)com
 
 == Installation ==
 1. Download the plugin file to your computer and unzip it
@@ -141,11 +141,15 @@ Configuring goals are out of the scope of our plugin. Our plugin is designed to 
 
 = Does your Plugin support Product Refund? =
 
-Our existing plugin does not track product refund data, however you can buy our <a href="https://codecanyon.net/item/actionable-google-analytics-for-woocommerce/9899552" target="_blank">paid plugin</a> to get access to product Refund data 
+Our existing plugin does not track product refund data, however you can buy our <a href="https://codecanyon.net/item/actionable-google-analytics-for-woocommerce/9899552?ref=tatvic" target="_blank">paid plugin</a> to get access to product Refund data 
 
 = Does your plugin supports Multilingual Wordpress site? =
 
 Our plugin does not support Multilingual Wordpress site.
+
+= Does your plugin supports Child/Custom Theme? =
+
+For the Child/Custom theme support; kindly contact us at analytics2(at)tatvic(dot)com.
 
 = How to verify if you have implemented the Plugin well? =
 
@@ -227,3 +231,12 @@ Important Note: When you update the plugin, please save your settings again.
 
  = 1.0.21.1 - 13/07/2017 =
  * Minor Changes.
+
+ = 1.1.0 - 08/08/2017 =
+ * Minor Bug Fixes & Optimization.
+
+ = 1.1.1 - 04/09/2017 =
+ * Minor Optimization on Order-Received Page.
+
+ = 1.1.2 - 05/09/2017 =
+ * Quick Fix of Minor Bugs.

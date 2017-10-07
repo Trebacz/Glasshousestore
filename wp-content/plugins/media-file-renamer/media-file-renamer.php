@@ -3,7 +3,7 @@
 Plugin Name: Media File Renamer
 Plugin URI: http://meowapps.com
 Description: Auto-rename the files when titles are modified and update and the references (links). Manual Rename is a Pro option. Please read the description.
-Version: 3.6.0
+Version: 3.6.7
 Author: Jordy Meow
 Author URI: http://meowapps.com
 Text Domain: media-file-renamer
@@ -18,10 +18,18 @@ Originally developed for two of my websites:
 - Haikyo (http://haikyo.org)
 */
 
+if ( class_exists( 'Meow_MFRH_Core' ) ) {
+  function mfrh_admin_notices() {
+    echo '<div class="error"><p>Thanks for installing the Pro version of Media File Renamer :) However, the free version is still enabled. Please disable or uninstall it.</p></div>';
+  }
+  add_action( 'admin_notices', 'mfrh_admin_notices' );
+  return;
+}
+
 if ( is_admin() ) {
 
   global $mfrh_version;
-  $mfrh_version = '3.6.0';
+  $mfrh_version = '3.6.7';
 
   // Admin
   require( 'mfrh_admin.php');

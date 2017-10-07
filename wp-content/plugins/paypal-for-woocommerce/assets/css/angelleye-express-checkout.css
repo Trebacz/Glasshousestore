@@ -11,7 +11,7 @@
     float: left;   
 }
 .express-checkout .ex-show-address-fields {
-    float: right
+    width: 100%;
 }
 .express-checkout .express-provided.hidden {
     display: none !important
@@ -19,8 +19,13 @@
 .express-checkout #order_payment_heading {
     display: none;
 }
-.express-checkout.express-hide-terms .terms label[for="terms"],
-.express-checkout.express-hide-terms .terms #terms {
+.express-checkout .wc-terms-and-conditions {
+   width: 100%; 
+}
+.express-checkout #ship-to-different-address {
+    display: none;
+}
+.express-checkout.express-hide-terms .wc-terms-and-conditions {
     display: none !important
 }
 .express-checkout #payment .payment_methods {
@@ -163,6 +168,13 @@ form div.angelleye_ec_save_to_accoount_box p.form-row.woocommerce-SavedPaymentMe
     clear: both;
     float: left;
 }
+.single_add_to_cart_button.paypal_checkout_button.paypal_checkout_button_cc {
+    border: none !important;
+}
+.single_add_to_cart_button.paypal_checkout_button.paypal_checkout_button_cc::before {
+    content: unset !important;
+    font-family: inherit !important;
+}
 @media only screen 
   and (min-device-width: 320px) 
   and (max-device-width: 1024px) {
@@ -176,4 +188,40 @@ form div.angelleye_ec_save_to_accoount_box p.form-row.woocommerce-SavedPaymentMe
       .angelleye_button_single a.paypal_checkout_button img.ppcreditlogo.ec_checkout_page_button_type_pc {
           margin: 0px;
       }
+}
+
+.angelleye-woocommerce-customer-details-email::before {
+    font-family: WooCommerce;
+    speak: none;
+    font-weight: 400;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    margin-right: .618em;
+    content: "\e02d";
+    text-decoration: none;
+    margin-left: -1.5em;
+    line-height: 1.75;
+    position: absolute;
+}
+.angelleye-woocommerce-customer-details-phone, .angelleye-woocommerce-customer-details-email {
+        margin-bottom: 0;
+        padding-left: 1.5em;
+}
+
+.angelleye-woocommerce-customer-details-phone::before {
+    font-family: WooCommerce;
+    speak: none;
+    font-weight: 400;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    margin-right: .618em;
+    content: "\e037";
+    text-decoration: none;
+    margin-left: -1.5em;
+    line-height: 1.75;
+    position: absolute;
 }

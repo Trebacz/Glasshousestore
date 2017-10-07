@@ -11,7 +11,6 @@ echo "<script>bb_showStep( 'migratingDatabase' );</script>";
 pb_backupbuddy::flush();
 
 
-
 // Final functions to run after DB migration is done. In function since this is called both in standard and at end of deployment.
 function finalActions( $restore ) {
 	
@@ -55,7 +54,6 @@ function finalActions( $restore ) {
 	pb_backupbuddy::status( 'details', 'Finished final actions function.' );
 	
 } // End finalActions().
-
 
 
 if ( 'true' != pb_backupbuddy::_GET( 'deploy' ) ) { // deployment mode pre-loads state data in a file instead of passing via post.
@@ -109,11 +107,6 @@ if ( 'true' != pb_backupbuddy::_GET( 'deploy' ) ) { // We dont accept submitted 
 	}
 }
 
-/*
-echo '<pre>';
-print_r( $restore->_state );
-echo '</pre>';
-*/
 
 // Parse submitted options/settings.
 function parse_options( $restoreData ) {
@@ -165,7 +158,6 @@ if ( TRUE !== $restore->_state['databaseSettings']['migrateDatabase'] ) {
 	require_once( 'importbuddy/classes/_migrate_database.php' );
 	$migrate = new backupbuddy_migrateDB( 'standalone', $restore->_state, $networkPrefix = '', $overridePrefix );
 	$migrateResults = $migrate->migrate();
-	
 	
 	
 	if ( 'true' == pb_backupbuddy::_GET( 'deploy' ) ) {
@@ -228,7 +220,6 @@ if ( TRUE !== $restore->_state['databaseSettings']['migrateDatabase'] ) {
 }
 
 
-
 if ( 'true' == pb_backupbuddy::_GET( 'deploy' ) ) {
 	
 	// Write default state overrides.
@@ -247,8 +238,12 @@ if ( 'true' == pb_backupbuddy::_GET( 'deploy' ) ) {
 	}
 	fclose( $file_handle );
 	
-	pb_backupbuddy::status( 'message', 'Deployment finished.' );
-	pb_backupbuddy::status( 'deployFinished', 'Finished.' );
+	if ( 6 == $nextStepNum ) {
+		pb_backupbuddy::status( 'message', 'Deployment finished (importbuddy).' );
+		pb_backupbuddy::status( 'deployFinished', 'Finished.' );
+	} else {
+		pb_backupbuddy::status( 'details', 'Chunking database migration so about to run step `' . $nextStepNum . '`.' );
+	}
 	?>
 	<form method="post" action="?ajax=<?php echo $nextStepNum; ?>&v=<?php echo pb_backupbuddy::_GET( 'v' ); ?>&deploy=true&direction=<?php echo pb_backupbuddy::_GET( 'direction' ); ?>&display_mode=embed" id="deploy-autoProceed">
 		<input type="hidden" name="restoreData" value="<?php echo base64_encode( urlencode( json_encode( $restore->_state ) ) ); ?>">

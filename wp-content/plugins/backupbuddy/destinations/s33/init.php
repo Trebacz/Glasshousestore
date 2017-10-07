@@ -327,9 +327,12 @@ class pb_backupbuddy_destination_s33 { // Change class name end to match destina
 					'ContentLength' => $contentLength,
 				);
 				if ( $contentLength > 0 ) {
-					$uploadArr['Body'] = fread( $f, $contentLength );
+					if ( FALSE === ( $uploadArr['Body'] = fread( $f, $contentLength ) ) ) {
+						pb_backupbuddy::status( 'error', 'Error #3498348934: Failed freading file object. Check file permissions (and existance) of file.' );
+					}
 				} else { // File is 0 bytes. Empty body.
 					$uploadArr['Body'] = '';
+					pb_backupbuddy::status( 'details', 'NOTE: Usung empty file body due to part content length of zero.' );
 				}
 				//pb_backupbuddy::status( 'details', 'Send array: `' . print_r( $uploadArr, true ) . '`.' );
 				//error_log( print_r( $uploadArr, true ) );
@@ -923,10 +926,10 @@ class pb_backupbuddy_destination_s33 { // Change class name end to match destina
 		$settings = self::_init( $settings );
 		pb_backupbuddy::status( 'details', 'Getting download URL.' );
 		
-		$command = self::$_client->getCommand('GetObject', [
+		$command = self::$_client->getCommand('GetObject', array(
 			'Bucket' => $settings['bucket'],
 			'Key'    => $settings['directory'] . $remoteFile,
-		]);
+		));
 		
 		try {
 			$request = self::$_client->createPresignedRequest( $command, '+60 minutes' );

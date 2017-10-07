@@ -36,12 +36,14 @@ function wppfm_staticInputSelect( rowId, level, combinationLevel, options, selec
 
     for ( var i = 0; i < options.length; i++ ) {
 
-        if ( options[i] !== selected ) {
-
-            htmlCode += '<option value="' + options[i] + '">' + options[i].replace( '_', ' ' ) + '</option>';
+		// some channels use a key and value combination for the static values
+		var key = typeof options[i] !== 'object' ? options[i] : options[i]['id'];
+		var value = typeof options[i] !== 'object' ? options[i] : options[i]['value'];
+		
+		if ( key !== selected ) {
+            htmlCode += '<option value="' + key + '">' + value.replace( '_', ' ' ) + '</option>';
         } else {
-
-            htmlCode += '<option value="' + options[i] + '" selected>' + options[i].replace( '_', ' ' ) + '</option>';
+            htmlCode += '<option value="' + key + '" selected>' + value.replace( '_', ' ' ) + '</option>';
         }
     }
 

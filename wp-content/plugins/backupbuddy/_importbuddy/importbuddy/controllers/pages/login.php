@@ -1,11 +1,15 @@
 <script>jQuery( '#pageTitle' ).html( 'Authentication Required' );</script>
 <?php
-
-
 if ( pb_backupbuddy::_POST( 'password' ) != '' ) {
 	global $pb_login_attempts;
 	pb_backupbuddy::alert( 'Invalid password. Please enter the password you provided within BackupBuddy Settings. Attempt #' . $pb_login_attempts . '.' );
 	echo '<br>';
+}
+
+if ( ! is_callable( 'json_decode' ) ) {
+	$message = 'Error #84398434: Missing required PHP function json_decode(). Your PHP version is too old or damaged. It is NOT compatible with WordPress as it is. Please contact your host to fix this.';
+	pb_backupbuddy::status( 'error', $message );
+	pb_backupbuddy::alert( $message, true );
 }
 ?>
 

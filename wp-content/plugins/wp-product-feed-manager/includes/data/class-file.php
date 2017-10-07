@@ -45,7 +45,6 @@ if ( !class_exists( 'WPPFM_File_Class' ) ) :
 		 * @return array containing the categories
 		 */
 		public function get_categories_for_list( $channel_id, $search_level, $parent_category, $language_code ) {
-
 			$channel_class = new WPPFM_Channel();
 
 			$last_cat		 = '';
@@ -55,20 +54,16 @@ if ( !class_exists( 'WPPFM_File_Class' ) ) :
 			$path = WPPFM_CHANNEL_DATA_DIR . "/$channel_name/taxonomy.$language_code.txt";
 
 			if ( file_exists( $path ) ) {
-
 				$input = file($path);
 				
 				$file = fopen( $path, 'r' )
 				or die( __( 'Unable to open the file containing the categories' ) );
 				
 				// step over the first lines that do not contain categories
-				while ( strpos( fgets( $file ), '#' ) ) {
-					
-				}
+				while ( strpos( fgets( $file ), '#' ) ) { }
 				
 				// step through all the lines in the file
 				while ( !feof( $file ) ) {
-					
 					// get the line
 					$line = trim( fgets( $file ) );
 
@@ -76,15 +71,11 @@ if ( !class_exists( 'WPPFM_File_Class' ) ) :
 					$category_line_array = explode( '>', $line );
 					
 					if ( $search_level === 0 ) {
-
 						if ( trim( $category_line_array [ $search_level ] ) !== $last_cat ) {
-
 							array_push( $categories, trim( $category_line_array [ $search_level ] ) );
-
 							$last_cat = trim( $category_line_array [ $search_level ] );
 						}
 					} elseif ( count( $category_line_array ) > $search_level && $search_level > 0 && trim( $category_line_array [ $search_level - 1 ] ) === trim( $parent_category ) ) {
-
 						if ( trim( $category_line_array [ $search_level ] ) !== $last_cat ) {
 
 							array_push( $categories, trim( $category_line_array [ $search_level ] ) );

@@ -44,6 +44,8 @@ class backupbuddy_live_periodic {
 	const CLOSE_CATALOG_WHEN_SENDING_FILESIZE = 1048576; // If sending a file of this size or greater then we will close out the catalog (and unlock) to prevent locking too long.
 	const MINIMUM_SIZE_THRESHOLD_FOR_SPEED_CALC = 512000; // When calculating send speed, if a file is smaller then this amount then we assume this mimimum size so we can calculate a better estimate.
 	const MAX_DAILY_STATS_DAYS = 14; // Number of days to keep daily transfer stats for.
+	const MIN_ADJUSTED_MAX_RUNTIME_BEFORE_WARNING = 28; // If adjusted max runtime is less than x seconds then log a WARNING.
+	const MIN_ADJUSTED_MAX_RUNTIME_BEFORE_ERROR = 18; // If adjusted max runtime is less than x seconds then log an ERROR.
 	
 	private static $_stateObj;
 	private static $_state;
@@ -76,17 +78,19 @@ class backupbuddy_live_periodic {
 		'files_pending_delete'    => 0,
 		'daily'                   => array(),
 		
-		'last_remote_snapshot'    => 0,	// Timestamp of the last time a remote snapshot was triggered to begin.
-		'last_remote_snapshot_id' => '', // Snapshot ID of last remote snapshot triggered.
-		'last_remote_snapshot_response' => '', // Server response from last remote snapshot ran.
+		'last_remote_snapshot'               => 0, // Timestamp of the last time a remote snapshot was triggered to begin.
+		'last_remote_snapshot_id'            => '', // Snapshot ID of last remote snapshot triggered.
+		'last_remote_snapshot_response'      => '', // Server response from last remote snapshot ran.
 		'last_remote_snapshot_response_time' => 0, // Time of last server response.
-		'last_remote_snapshot_trigger'    => '',	// automatic, manual, unknown, or blank for none so far.
-		'last_db_snapshot'        => 0,	// Timestamp of last db snapshot that completed db dump. NOT when files actually finished sending.
-		'last_file_audit_finish'  => 0,	// Timestamp of the last completition of file audit (checks for remote files that should not exist + updates 'v' key timestamp when remote file was verified to exist).
-		'last_file_audit_start'   => 0,	// Timestamp of the last start of file audit.
-		'last_filesend_startat'   => 0,	// Position to pick up sending files at to prevent duplicate from race conditions.
-		'last_kick_request'       => 0,	// Last time the cron kicker was contacted.
-		'recent_send_fails'       => 0,	// Number of recent remote send failures. If this gets too high we give up sending until next restart of the periodic process.
+		'last_remote_snapshot_trigger'       => '', // automatic, manual, unknown, or blank for none so far.
+		'last_db_snapshot'                   => 0, // Timestamp of last db snapshot that completed db dump. NOT when files actually finished sending.
+		'last_file_audit_finish'             => 0, // Timestamp of the last completition of file audit (checks for remote files that should not exist + updates 'v' key timestamp when remote file was verified to exist).
+		'last_file_audit_start'   => 0, // Timestamp of the last start of file audit.
+		'last_filesend_startat'   => 0, // Position to pick up sending files at to prevent duplicate from race conditions.
+		'last_kick_request'       => 0, // Last time the cron kicker was contacted.
+		'recent_send_fails'       => 0, // Number of recent remote send failures. If this gets too high we give up sending until next restart of the periodic process.
+		'last_send_fail'          => 0, // Timestamp of last send failure.
+		'last_send_fail_file'     => '', // Filename of last send failure.
 		'wait_on_transfers_start' => 0, // Timestamp we began waiting on transfers to finish before snapshot.
 		'first_activity'          => 0, // Timestamp of very first Live activity.
 		'last_activity'           => 0,	// Timestamp of last periodic activity.
@@ -95,8 +99,8 @@ class backupbuddy_live_periodic {
 	);
 	
 	private static $_statsDailyDefaults = array(
-		'd_t'                   => 0, // Database total number of .sql files sent.
-		'd_s'                   => 0, // Database bytes sent.
+		'd_t'                    => 0, // Database total number of .sql files sent.
+		'd_s'                    => 0, // Database bytes sent.
 		'f_t'                    => 0, // Files total number sent (excluding .sql db files).
 		'f_s'                    => 0, // Files total bytes send (excluding .sql db files).
 	);
@@ -475,6 +479,8 @@ class backupbuddy_live_periodic {
 		pb_backupbuddy::status( 'details', 'BackupBuddy v' . pb_backupbuddy::settings( 'version' ) . ' Live Daily Initialization -- ' . pb_backupbuddy::$format->date( pb_backupbuddy::$format->localize_time( time() ) ) . '.' );
 		
 		self::$_state['stats']['recent_send_fails'] = 0; // Reset daily fail count.
+		self::$_state['stats']['last_send_fail'] = 0; // Reset daily fail stats,
+		self::$_state['stats']['last_send_fail_file'] = ''; // Reset daily fail stats.
 		self::reset_send_attempts(); // Reset 't' key for all items in catalog so we can try again. NOTE: Also saves state and catalog.
 		
 		self::$_state['stats']['wait_on_transfers_start'] = 0; // Reset daily time we started waiting on unfinished transfers.
@@ -692,6 +698,9 @@ class backupbuddy_live_periodic {
 				
 				// Increment try count for transfer attempts and save.
 				$tableDetails['t']++;
+				if ( is_string( self::$_tablesObj ) ) { // Somehow this is sometimes a string. Try to reload.
+					self::_load_tables();
+				}
 				self::$_tablesObj->save();
 				
 				// Send file. AFTER success sending this Stash2/Stash3 destination will automatically trigger the live_periodic processing _IF_ multipart send. If success or fail the we come back here to potentially send more files in the same PHP pass so small files don't each need their own PHP page run.  Unless the process has restarted then this will still be the 'next' function to run.
@@ -735,6 +744,8 @@ class backupbuddy_live_periodic {
 				} elseif ( false === $result ) {
 					$sendsFailed++;
 					self::$_state['stats']['recent_send_fails']++;
+					self::$_state['stats']['last_send_fail'] = time();
+					self::$_state['stats']['last_send_fail_file'] = $tableFile;
 					$result_status = 'Failure sending in single/first pass. See log above for error details. Failed sends today: `' . self::$_state['stats']['recent_send_fails'] . '`.';
 				} elseif ( is_array( $result ) ) {
 					$sendsMultiparted++;
@@ -1053,6 +1064,26 @@ class backupbuddy_live_periodic {
 	
 	
 	
+	/* getFullExcludes()
+	 *
+	 * Get the full list of exclusions, including all defaults, global, Stash Live, etc all combines and uniqued.
+	 *
+	 */
+	public static function getFullExcludes() {
+		// Get Live-specific excludes.
+		$excludes = backupbuddy_live::getOption( 'file_excludes', true );
+		
+		// Add standard BB excludes we always apply.
+		$excludes = array_unique( array_merge(
+			self::$_default_excludes,
+			backupbuddy_core::get_directory_exclusions( pb_backupbuddy::$options['profiles'][0], $trim_suffix = false, $serial = '' ),
+			backupbuddy_core::get_directory_exclusions( array( 'excludes' => $excludes ), $trim_suffix = false, $serial = '' )
+		) );
+		
+		return $excludes;
+	}
+	
+	
 	/* _update_files_list()
 	 *
 	 * Generate list of files to add/update/delete.
@@ -1080,15 +1111,7 @@ class backupbuddy_live_periodic {
 			self::$_state['stats']['files_total_size'] = 0;
 		}
 		
-		// Get Live-specific excludes.
-		$excludes = backupbuddy_live::getOption( 'file_excludes', true );
-		
-		// Add standard BB excludes we always apply.
-		$excludes = array_unique( array_merge(
-				self::$_default_excludes,
-				backupbuddy_core::get_directory_exclusions( pb_backupbuddy::$options['profiles'][0], $trim_suffix = false, $serial = '' ),
-				backupbuddy_core::get_directory_exclusions( array( 'excludes' => $excludes ), $trim_suffix = false, $serial = '' )
-			) );
+		$excludes = self::getFullExcludes();
 		pb_backupbuddy::status( 'details', 'Excluding directories: `' . implode( ', ', $excludes ) . '`.' );
 		
 		// Generate list of files.
@@ -1108,7 +1131,12 @@ class backupbuddy_live_periodic {
 		$destination_settings = self::get_destination_settings();
 		pb_backupbuddy::status( 'details', 'Starting deep file scan.' );
 		$max_time = $destination_settings['_max_time'] - self::TIME_WIGGLE_ROOM;
-		$files = pb_backupbuddy::$filesystem->deepscandir( $root, $excludes, $startAt, $items, $start_time, ( $max_time - 8 ) ); // Additional 5 seconds so that we can add files into catalog after this completes.
+		$adjusted_max_time = ( $max_time - 8 ); // Additional 5 seconds so that we can add files into catalog after this completes.
+		if ( $adjusted_max_time < 5 ) {
+			pb_backupbuddy::status( 'error', 'Error #3893983: Adjusted max execution time minus wiggle room fell below 5 second thresold. Bumped to 5 seconds. Stash Live max execution time limit is either too low or host PHP max execution time limit is far too low. Suggest 30 second minimum. Final adjusted value: `' . $adjusted_max_time . '`.' );
+			$adjusted_max_time = 5;
+		}
+		$files = pb_backupbuddy::$filesystem->deepscandir( $root, $excludes, $startAt, $items, $start_time, $adjusted_max_time );
 		if ( ! is_array( $files ) ) {
 			backupbuddy_core::addNotification( 'live_error', 'BackupBuddy Stash Live Error', $files );
 			pb_backupbuddy::status( 'error', 'Error #84393434: Halting Stash Live due to error returned by deepscandir: `' . $files . '`.' );
@@ -1672,7 +1700,7 @@ class backupbuddy_live_periodic {
 			
 			// If too many remote sends have failed today then give up for now since something is likely wrong.
 			if ( self::$_state['stats']['recent_send_fails'] > $destination_settings['max_daily_failures'] ) {
-				$error = 'Error #5002: Too many file transfer failures have occurred so stopping transfers. We will automatically try again in 12 hours. Verify there are no remote file transfer problems. Check recently send file logs on Remote Destinations page. Don\'t want to wait? Pause Files process then select \'Reset Send Attempts\' under \'Advanced Troubleshooting Options\'.';
+				$error = 'Error #5002: Too many file transfer failures have occurred so stopping transfers. We will automatically try again in 12 hours. Verify there are no remote file transfer problems. Check recently send file logs on Remote Destinations page. Don\'t want to wait? Pause Files process then select \'Reset Send Attempts\' under \'Advanced Troubleshooting Options\'.  Time since last send file: `' . pb_backupbuddy::$format->time_ago( self::$_state['stats']['last_send_fail'] ) . '`. File: `' . self::$_state['stats']['last_send_fail_file'] . '`.';
 				backupbuddy_core::addNotification( 'live_error', 'BackupBuddy Stash Live Error', $error );
 				self::$_state['step']['last_status'] =  $error;
 				pb_backupbuddy::status( 'error', $error );
@@ -1767,6 +1795,8 @@ class backupbuddy_live_periodic {
 						}
 					} elseif ( false === $result ) {
 						self::$_state['stats']['recent_send_fails']++;
+						self::$_state['stats']['last_send_fail'] = time();
+						self::$_state['stats']['last_send_fail_file'] = $full_file;
 						$result_status = 'Failure sending in single/first pass. See log above for error details. Failed sends today: `' . self::$_state['stats']['recent_send_fails'] . '`.';
 					} elseif ( is_array( $result ) ) {
 						$result_status = 'Chunking commenced. Ending sends for this pass.';
@@ -2062,6 +2092,13 @@ class backupbuddy_live_periodic {
 		$settings = pb_backupbuddy_destination_live::_formatSettings( pb_backupbuddy::$options['remote_destinations'][ backupbuddy_live::getLiveID() ] );
 		
 		$settings['_max_time'] = backupbuddy_core::adjustedMaxExecutionTime( $settings['max_time'] );
+		
+		if ( $settings['_max_time'] < self::MIN_ADJUSTED_MAX_RUNTIME_BEFORE_WARNING ) {
+			pb_backupbuddy::status( 'warning', 'Warning #893483984: Adjusted max execution time below warning threshold of `' . self::MIN_ADJUSTED_MAX_RUNTIME_BEFORE_WARNING . '` seconds. Check destination max runtime setting and/or host PHP max execution time limit. Destination setting: `' . $settings['max_time'] . '`. Adjusted: `' . backupbuddy_core::adjustedMaxExecutionTime( $settings['max_time'] ) . '`.' );
+		}
+		if ( $settings['_max_time'] < self::MIN_ADJUSTED_MAX_RUNTIME_BEFORE_ERROR ) {
+			pb_backupbuddy::status( 'warning', 'Error #438949843: Adjusted max execution time below error threshold of `' . self::MIN_ADJUSTED_MAX_RUNTIME_BEFORE_ERROR . '` seconds. Check destination max runtime setting and/or host PHP max execution time limit. Destination setting: `' . $settings['max_time'] . '`. Adjusted: `' . backupbuddy_core::adjustedMaxExecutionTime( $settings['max_time'] ) . '`.' );
+		}
 		
 		return $settings;
 		
@@ -2804,6 +2841,8 @@ class backupbuddy_live_periodic {
 		}
 		
 		self::$_state['stats']['recent_send_fails'] = 0;
+		self::$_state['stats']['last_send_fail'] = 0;
+		self::$_state['stats']['last_send_fail_file'] ='';
 		
 		self::$_catalogObj->save();
 		self::$_stateObj->save();

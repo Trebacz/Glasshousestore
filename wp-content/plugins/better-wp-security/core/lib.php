@@ -312,6 +312,21 @@ final class ITSEC_Lib {
 			return $GLOBALS['__itsec_remote_ip'];
 		}
 
+
+		$ip = apply_filters( 'itsec-get-ip', false );
+
+		if ( false !== $ip ) {
+			$ip = filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE | FILTER_FLAG_NO_PRIV_RANGE );
+
+			if ( ! empty( $ip ) ) {
+				$GLOBALS['__itsec_remote_ip'] = $ip;
+				return $ip;
+			}
+		}
+
+		unset( $ip );
+
+
 		if ( ITSEC_Modules::get_setting( 'global', 'proxy_override' ) ) {
 			$GLOBALS['__itsec_remote_ip'] = $_SERVER['REMOTE_ADDR'];
 			return $GLOBALS['__itsec_remote_ip'];
@@ -588,29 +603,6 @@ final class ITSEC_Lib {
 	public static function is_login_page() {
 
 		return in_array( $GLOBALS['pagenow'], array( 'wp-login.php', 'wp-register.php' ) );
-
-	}
-
-	/**
-	 * Checks jQuery version.
-	 *
-	 * Checks if the jquery version saved is vulnerable to http://bugs.jquery.com/ticket/9521
-	 *
-	 * @since 4.0.0
-	 *
-	 * @return mixed|bool true if known safe false if unsafe or null if untested
-	 */
-	public static function is_jquery_version_safe() {
-
-		$jquery_version = ITSEC_Modules::get_setting( 'wordpress-tweaks', 'jquery_version' );
-
-		if ( ! empty( $jquery_version ) && version_compare( $jquery_version, '1.6.3', '>=' ) ) {
-
-			return true;
-
-		}
-
-		return false;
 
 	}
 
@@ -1002,7 +994,6 @@ final class ITSEC_Lib {
 	 */
 	public static function get_url_path( $url, $prefix = '' ) {
 		$path = (string) parse_url( $url, PHP_URL_PATH );
-		$path = preg_replace( '|//+|', '/', $path );
 		$path = untrailingslashit( $path );
 
 		if ( ! empty( $prefix ) && 0 === strpos( $path, $prefix ) ) {
@@ -1021,7 +1012,8 @@ final class ITSEC_Lib {
 	 */
 	public static function get_request_path() {
 		if ( ! isset( $GLOBALS['__itsec_lib_get_request_path'] ) ) {
-			$GLOBALS['__itsec_lib_get_request_path'] = self::get_url_path( $_SERVER['REQUEST_URI'], self::get_home_root() );
+			$request_uri = preg_replace( '|//+|', '/', $_SERVER['REQUEST_URI'] );
+			$GLOBALS['__itsec_lib_get_request_path'] = self::get_url_path( $request_uri, self::get_home_root() );
 		}
 
 		return $GLOBALS['__itsec_lib_get_request_path'];
@@ -1041,21 +1033,26 @@ final class ITSEC_Lib {
 
 		/** @var \wpdb $wpdb */
 		global $wpdb;
+		$main_options = $wpdb->base_prefix . 'options';
 
 		$lock = "itsec-lock-{$name}";
 		$now = ITSEC_Core::get_current_time_gmt();
 		$release_at = $now + $expires_in;
 
-		if ( empty( $wpdb->sitemeta ) ) {
-			$result = $wpdb->query( $wpdb->prepare( "INSERT IGNORE INTO `$wpdb->options` (`option_name`, `option_value`, `autoload`) VALUES (%s, %s, 'no') /* LOCK */", $lock, $release_at ) );
+		if ( is_multisite() ) {
+			$result = $wpdb->query( $wpdb->prepare( "INSERT IGNORE INTO `{$main_options}` (`option_name`, `option_value`, `autoload`) VALUES (%s, %s, 'no') /* LOCK */", $lock, $release_at ) );
 		} else {
-			$result = $wpdb->query( $wpdb->prepare( "INSERT IGNORE INTO `$wpdb->sitemeta` (`site_id`, `meta_key`, `meta_value`) VALUES (%d, %s, %s) /* LOCK */", $wpdb->siteid, $lock, $release_at ) );
+			$result = $wpdb->query( $wpdb->prepare( "INSERT IGNORE INTO `$wpdb->options` (`option_name`, `option_value`, `autoload`) VALUES (%s, %s, 'no') /* LOCK */", $lock, $release_at ) );
 		}
 
 		// The lock exists. See if it has expired.
 		if ( ! $result ) {
 
-			$locked_until = get_site_option( $lock );
+			if ( is_multisite() && get_current_blog_id() !== 1 ) {
+				$locked_until = $wpdb->get_var( $wpdb->prepare( "SELECT `option_value` FROM {$main_options} WHERE `option_name` = %s", $main_options ) );
+			} else {
+				$locked_until = get_option( $lock );
+			}
 
 			if ( ! $locked_until ) {
 				// Can't write or read the lock. Bail due to an unknown and hopefully temporary error.
@@ -1069,7 +1066,28 @@ final class ITSEC_Lib {
 		}
 
 		// Ensure that the lock is set properly by triggering all the regular actions and filters.
-		update_site_option( $lock, $release_at );
+		if ( ! is_multisite() || get_current_blog_id() === 1 ) {
+			update_option( $lock, $release_at );
+		} else {
+			$wpdb->update( $main_options, array( 'option_value' => $release_at ), array( 'option_name' => $lock ) );
+
+			if ( function_exists( 'wp_cache_switch_to_blog' ) ) {
+				// Update persistent object caches
+				$current = get_current_blog_id();
+				wp_cache_switch_to_blog( 1 );
+
+				$alloptions = wp_cache_get( 'alloptions' );
+
+				if ( is_array( $alloptions ) && isset( $alloptions[ $lock ] ) ) {
+					$alloptions[ $lock ] = $release_at;
+					wp_cache_set( 'alloptions', $alloptions, 'options' );
+				} else {
+					wp_cache_set( $lock, $release_at, 'options' );
+				}
+
+				wp_cache_switch_to_blog( $current );
+			}
+		}
 
 		return true;
 	}
@@ -1082,6 +1100,143 @@ final class ITSEC_Lib {
 	 * @param string $name The lock name.
 	 */
 	public static function release_lock( $name ) {
-		delete_site_option( "itsec-lock-{$name}" );
+
+		$lock = "itsec-lock-{$name}";
+
+		if ( is_multisite() && get_current_blog_id() !== 1 ) {
+
+			/** @var \wpdb $wpdb */
+			global $wpdb;
+			$main_options = $wpdb->base_prefix . 'options';
+
+			$wpdb->delete( $main_options, array( 'option_name' => $lock ) );
+
+			if ( function_exists( 'wp_cache_switch_to_blog' ) ) {
+				// Update persistent object caches
+				$current = get_current_blog_id();
+				wp_cache_switch_to_blog( 1 );
+
+				$alloptions = wp_cache_get( 'alloptions' );
+
+				if ( is_array( $alloptions ) && isset( $alloptions[ $lock ] ) ) {
+					unset( $alloptions[$lock] );
+					wp_cache_set( 'alloptions', $alloptions, 'options' );
+				} else {
+					wp_cache_delete( $lock, 'options' );
+				}
+
+				wp_cache_switch_to_blog( $current );
+			}
+		} else {
+			delete_option( $lock );
+		}
+	}
+
+	/**
+	 * Clear any expired locks.
+	 *
+	 * The vast majority of locks should be cleared by the same process that acquires them, however, this will clear locks that remain
+	 * due to a time out or fatal error.
+	 *
+	 * @since 3.8.0
+	 */
+	public static function delete_expired_locks() {
+
+		/** @var \wpdb $wpdb */
+		global $wpdb;
+		$main_options = $wpdb->base_prefix . 'options';
+
+		$rows = $wpdb->get_results( $wpdb->prepare(
+			"SELECT `option_name` FROM {$main_options} WHERE `option_name` LIKE %s AND `option_value` < %d",
+			$wpdb->esc_like( 'itsec-lock-' ) . '%', ITSEC_Core::get_current_time_gmt()
+		) );
+
+		if ( $rows ) {
+			if ( is_multisite() && get_current_blog_id() !== 1 ) {
+				if ( function_exists( 'wp_cache_switch_to_blog' ) ) {
+					// Update persistent object caches
+					$current = get_current_blog_id();
+					wp_cache_switch_to_blog( 1 );
+
+					$alloptions = wp_cache_get( 'alloptions' );
+					$set_all = false;
+
+					foreach ( $rows as $row ) {
+						$lock = $row->option_name;
+
+						if ( is_array( $alloptions ) && isset( $alloptions[ $lock ] ) ) {
+							unset( $alloptions[$lock] );
+							$set_all = true;
+						} else {
+							wp_cache_delete( $lock, 'options' );
+						}
+					}
+
+					if ( $set_all ) {
+						wp_cache_set( 'alloptions', $alloptions );
+					}
+
+					wp_cache_switch_to_blog( $current );
+				}
+
+				$wpdb->query( $wpdb->prepare(
+					"DELETE FROM {$main_options} WHERE `option_name` LIKE %s AND `option_value` < %d",
+					$wpdb->esc_like( 'itsec-lock-' ) . '%', ITSEC_Core::get_current_time_gmt()
+				) );
+			} else {
+				foreach ( $rows as $row ) {
+					delete_option( $row->option_name );
+				}
+			}
+		}
+	}
+
+	/**
+	 * Replace a tag with a given value.
+	 *
+	 * Will look in the content for a tag matching the {{ $tag_name }} pattern.
+	 *
+	 * @param string $content
+	 * @param string $tag
+	 * @param string $replacement
+	 *
+	 * @return string
+	 */
+	public static function replace_tag( $content, $tag, $replacement ) {
+		return preg_replace( '/{{ \$' . preg_quote( $tag, '/' ) . ' }}/', $replacement, $content );
+	}
+
+	/**
+	 * Replace multiple tags.
+	 *
+	 * @param string $content
+	 * @param array  $tags Array of tag names to replacements.
+	 *
+	 * @return string
+	 */
+	public static function replace_tags( $content, $tags ) {
+		foreach ( $tags as $tag => $replacement ) {
+			$content = self::replace_tag( $content, $tag, $replacement );
+		}
+
+		return $content;
+	}
+
+	/**
+	 * Get a percentage value indicating the probability that the site supports SSL.
+	 *
+	 * The need for a probability value is that a site could appear to support SSL yet the certificate is self-signed.
+	 *
+	 * @return int
+	 */
+	public static function get_ssl_support_probability() {
+		if ( is_ssl() ) {
+			$probability = 50; // The site appears to be on an SSL connection but it could be self-signed or otherwise
+			                   // not valid to a visitor.
+		} else {
+			$probability = 0;
+		}
+
+		return apply_filters( 'itsec-ssl-support-probability', $probability );
 	}
 }

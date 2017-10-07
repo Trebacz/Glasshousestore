@@ -13,7 +13,7 @@ function wc_predictive_install(){
 
 	delete_option('woocommerce_search_lite_clean_on_deletion');
 
-	update_option('wc_predictive_search_version', '4.4.0');
+	update_option('wc_predictive_search_version', '4.4.1');
 
 	global $wc_predictive_search_admin_init;
 	delete_metadata( 'user', 0, $wc_predictive_search_admin_init->plugin_name . '-' . 'plugin_framework_global_box' . '-' . 'opened', '', true );
@@ -330,7 +330,7 @@ function woo_predictive_search_pro_upgrade_plugin () {
 		include( WOOPS_DIR. '/includes/updates/update-4.2.0.php' );
 	}
 
-	update_option('wc_predictive_search_version', '4.4.0');
+	update_option('wc_predictive_search_version', '4.4.1');
 }
 
 function woo_predictive_search_check_pin() {

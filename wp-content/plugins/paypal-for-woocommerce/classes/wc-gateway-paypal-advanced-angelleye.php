@@ -16,8 +16,18 @@ class WC_Gateway_PayPal_Advanced_AngellEYE extends WC_Payment_Gateway {
         $this->secure_token_id = '';
         $this->securetoken = '';
         $this->supports = array(
+            'subscriptions',
             'products',
-            'refunds'
+            'refunds',
+            'subscription_cancellation',
+            'subscription_reactivation',
+            'subscription_suspension',
+            'subscription_amount_changes',
+            'subscription_payment_method_change', // Subs 1.n compatibility.
+            'subscription_payment_method_change_customer',
+            'subscription_payment_method_change_admin',
+            'subscription_date_changes',
+            'multiple_subscriptions',
         );
 
         // Load the form fields.
@@ -28,24 +38,10 @@ class WC_Gateway_PayPal_Advanced_AngellEYE extends WC_Payment_Gateway {
 
         $this->enable_tokenized_payments = $this->get_option('enable_tokenized_payments', 'no');
         if ($this->enable_tokenized_payments == 'yes' && !is_add_payment_method_page()) {
-            $this->supports = array(
-                'subscriptions',
-                'products',
-                'refunds',
-                'subscription_cancellation',
-                'subscription_reactivation',
-                'subscription_suspension',
-                'subscription_amount_changes',
-                'subscription_payment_method_change', // Subs 1.n compatibility.
-                'subscription_payment_method_change_customer',
-                'subscription_payment_method_change_admin',
-                'subscription_date_changes',
-                'multiple_subscriptions',
-                'add_payment_method',
-                'tokenization'
-            );
+            $this->supports = array_merge($this->supports, array('add_payment_method','tokenization'));
         }
-        $this->enabled = 'yes' === $this->get_option('enabled', 'no');
+        $this->is_enabled = 'yes' === $this->get_option('enabled', 'no');
+        $this->enabled = $this->get_option('enabled', 'no');
         $this->title = $this->get_option('title');
         $this->description = $this->get_option('description');
         $this->testmode = 'yes' === $this->get_option('testmode', 'yes');
@@ -68,7 +64,7 @@ class WC_Gateway_PayPal_Advanced_AngellEYE extends WC_Payment_Gateway {
         $this->loginid = $this->get_option('loginid');
         $this->user = $this->get_option('user', $this->loginid);
         $this->mobilemode = $this->get_option('mobilemode', 'yes');
-        if (is_ssl()) {
+        if ( is_ssl() || get_option( 'woocommerce_force_ssl_checkout' ) == 'yes' ) {
             $this->icon = preg_replace("/^http:/i", "https:", $this->icon);
         }
         $this->icon = apply_filters('woocommerce_paypal_advanced_icon', $this->icon);
@@ -96,6 +92,7 @@ class WC_Gateway_PayPal_Advanced_AngellEYE extends WC_Payment_Gateway {
         add_action('woocommerce_api_wc_gateway_paypal_advanced_angelleye', array($this, 'relay_response'));
         add_filter('woocommerce_settings_api_sanitized_fields_' . $this->id, array($this, 'angelleye_paypal_advanced_encrypt_gateway_api'), 10, 1);
         $this->customer_id;
+        do_action( 'angelleye_paypal_for_woocommerce_multi_account_api_' . $this->id, $this, null, null );
     }
 
     /**
@@ -104,7 +101,7 @@ class WC_Gateway_PayPal_Advanced_AngellEYE extends WC_Payment_Gateway {
      * @return void
      * */
     public function checks() {
-        if (!$this->is_valid_currency() || $this->enabled == false) {
+        if (!$this->is_valid_currency() || $this->is_enabled == false) {
             return;
         }
         if (!$this->loginid) {
@@ -146,7 +143,7 @@ class WC_Gateway_PayPal_Advanced_AngellEYE extends WC_Payment_Gateway {
      * @param int $order_id
      * @return result code of the inquiry transaction
      */
-    private function inquiry_transaction($order, $order_id) {
+    public function inquiry_transaction($order, $order_id) {
 
         //inquire transaction, whether it is really paid or not
         $paypal_args = array(
@@ -578,20 +575,12 @@ class WC_Gateway_PayPal_Advanced_AngellEYE extends WC_Payment_Gateway {
             if (sizeof($order->get_items()) > 0 && $order->get_subtotal() > 0) {
                 foreach ($order->get_items() as $item) {
                     if ($item['qty']) {
-
                         $product = $order->get_product_from_item($item);
-
                         $item_name = $item['name'];
-
-                        //create order meta object and get the meta data as string
-                        $item_meta = new WC_order_item_meta($item['item_meta']);
-                        if ($length_error == 0 && $meta = $item_meta->display(true, true)) {
-                            $item_name .= ' (' . $meta . ')';
-                            $item_name = $this->paypal_advanced_item_name($item_name);
-                        }
                         $paypal_args['L_NAME' . $item_loop . '[' . strlen($item_name) . ']'] = $item_name;
-                        if ($product->get_sku())
+                        if (is_object($product)) {
                             $paypal_args['L_SKU' . $item_loop] = $product->get_sku();
+                        }
                         $paypal_args['L_QTY' . $item_loop] = $item['qty'];
                         $paypal_args['L_COST' . $item_loop] = $order->get_item_total($item, false, false); /* No Tax , No Round) */
                         $paypal_args['L_TAXAMT' . $item_loop] = $order->get_item_tax($item, false); /* No Round it */
@@ -691,7 +680,7 @@ class WC_Gateway_PayPal_Advanced_AngellEYE extends WC_Payment_Gateway {
     public function is_available() {
 
         //if enabled checkbox is checked
-        if ($this->enabled == true) {
+        if ($this->is_enabled == true) {
             if (!in_array(get_woocommerce_currency(), apply_filters('woocommerce_paypal_advanced_allowed_currencies', array('USD', 'CAD')))) {
                 return false;
             }
@@ -824,6 +813,7 @@ class WC_Gateway_PayPal_Advanced_AngellEYE extends WC_Payment_Gateway {
             'transtype' => array(
                 'title' => __('Transaction Type', 'paypal-for-woocommerce'),
                 'type' => 'select',
+                'class'    => 'wc-enhanced-select',
                 'label' => __('Transaction Type', 'paypal-for-woocommerce'),
                 'default' => 'S',
                 'description' => '',
@@ -832,6 +822,7 @@ class WC_Gateway_PayPal_Advanced_AngellEYE extends WC_Payment_Gateway {
             'layout' => array(
                 'title' => __('Layout', 'paypal-for-woocommerce'),
                 'type' => 'select',
+                'class'    => 'wc-enhanced-select',
                 'label' => __('Layout', 'paypal-for-woocommerce'),
                 'default' => 'C',
                 'description' => __('Layouts A and B redirect to PayPal\'s website for the user to pay. <br/>Layout C (recommended) is a secure PayPal-hosted page but is embedded on your site using an iFrame.', 'paypal-for-woocommerce'),
@@ -930,9 +921,11 @@ class WC_Gateway_PayPal_Advanced_AngellEYE extends WC_Payment_Gateway {
         if ($this->supports('tokenization') && is_checkout()) {
             $this->tokenization_script();
             $this->saved_payment_methods();
-            $this->save_payment_method_checkbox();
-            do_action('payment_fields_saved_payment_methods', $this);
+            if( AngellEYE_Utility::is_cart_contains_subscription() == false ) {
+                $this->save_payment_method_checkbox();
+            }
         }
+        do_action('payment_fields_saved_payment_methods', $this);
     }
 
     /**
@@ -954,6 +947,7 @@ class WC_Gateway_PayPal_Advanced_AngellEYE extends WC_Payment_Gateway {
         }
         if ((!empty($_POST['wc-paypal_advanced-payment-token']) && $_POST['wc-paypal_advanced-payment-token'] != 'new') || $this->is_renewal($order_id)) {
             if ($this->is_renewal($order_id)) {
+                $this->angelleye_reload_gateway_credentials_for_woo_subscription_renewal_order($order);
                 $payment_tokens_id = get_post_meta($order_id, '_payment_tokens_id', true);
             } else {
                 $token_id = wc_clean($_POST['wc-paypal_advanced-payment-token']);
@@ -1083,8 +1077,8 @@ class WC_Gateway_PayPal_Advanced_AngellEYE extends WC_Payment_Gateway {
         }
 
         if ($refund_result_arr['RESULT'] == 0) {
-
             $order->add_order_note(sprintf(__('Successfully Refunded - Refund Transaction ID: %s', 'paypal-for-woocommerce'), $refund_result_arr['PNREF']));
+            update_post_meta($order_id, 'Refund Transaction ID', $refund_result_arr['PNREF']);
         } else {
 
             $order->add_order_note(sprintf(__('Refund Failed - Refund Transaction ID: %s, Error Msg: %s', 'paypal-for-woocommerce'), $refund_result_arr['PNREF'], $refund_result_arr['RESPMSG']));
@@ -1104,7 +1098,7 @@ class WC_Gateway_PayPal_Advanced_AngellEYE extends WC_Payment_Gateway {
     public function receipt_page($order_id) {
 
         //get the mode
-        $PF_MODE = $this->testmode == 'yes' ? 'TEST' : 'LIVE';
+        $PF_MODE = $this->testmode == true ? 'TEST' : 'LIVE';
         //create order object
         $order = new WC_Order($order_id);
 
@@ -1274,11 +1268,6 @@ class WC_Gateway_PayPal_Advanced_AngellEYE extends WC_Payment_Gateway {
                     if ($item['qty']) {
                         $product = $order->get_product_from_item($item);
                         $item_name = $item['name'];
-                        $item_meta = new WC_order_item_meta($item['item_meta']);
-                        if ($length_error == 0 && $meta = $item_meta->display(true, true)) {
-                            $item_name .= ' (' . $meta . ')';
-                            $item_name = $this->paypal_advanced_item_name($item_name);
-                        }
                         $paypal_args['L_NAME' . $item_loop . '[' . strlen($item_name) . ']'] = $item_name;
                         if ($product->get_sku()) {
                             $paypal_args['L_SKU' . $item_loop] = $product->get_sku();
@@ -1469,6 +1458,24 @@ class WC_Gateway_PayPal_Advanced_AngellEYE extends WC_Payment_Gateway {
     
     public function is_renewal($order_id) {
         return ( function_exists('wcs_order_contains_subscription') && wcs_order_contains_renewal($order_id)  );
+    }
+    
+    public function angelleye_reload_gateway_credentials_for_woo_subscription_renewal_order($order) {
+        if( $this->testmode == false ) {
+            $order_id = version_compare(WC_VERSION, '3.0', '<') ? $order->id : $order->get_id();
+            if( $this->is_subscription($order_id) ) {
+                foreach ($order->get_items() as $cart_item_key => $values) {
+                    $product = $order->get_product_from_item($values);
+                    $product_id = $product->get_id();
+                    if( !empty($product_id) ) {
+                        $_enable_sandbox_mode = get_post_meta($product_id, '_enable_sandbox_mode', true);
+                        if ($_enable_sandbox_mode == 'yes') {
+                            $this->testmode = true;
+                        }
+                    }        
+                }
+            }
+        }
     }
 
 }

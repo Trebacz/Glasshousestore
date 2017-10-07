@@ -6318,7 +6318,7 @@ msgstr "Aktivt tema skiljer sig åt så distribution av temat är inaktiverad."
 
 #: destinations/site/_pushpull_foot.php:172
 #@ LIONS
-msgid "Source Media / Atachments"
+msgid "Source Media / Attachments"
 msgstr "Käll- Media / Tillbehör "
 
 #: destinations/site/_pushpull_foot.php:182

@@ -1,19 +1,23 @@
 <?php
-/* ImportBuddy Restore & Migration Tool - iThemes.com
- * @author Dustin Bolton
+/* ATTENTION: IF YOU ARE READING THIS WHILE TRYING TO LOAD IMPORTBUDDY TO RESTORE YOUR SITE: Your server is not properly handling PHP files. Contact your hosting provider to fix this. Notify them that PHP files are not executing and instead are outputting their code contents. */
+
+
+/* <!-- ImportBuddy Restore & Migration Tool - iThemes.com
+ * @version #VERSION#
+ * @author iThemes.com
+ * @developer Dustin Bolton
+ * @created Feb 11, 2010
  *
- * ATTENTION: IF YOU ARE READING THIS WHILE TRYING TO LOAD IMPORTBUDDY TO RESTORE YOUR SITE:
- * Your server is not properly handling PHP files. Contact your hosting provider to fix this.
- * Notify them that PHP files are not executing and instead are outputting their code contents.
- *
- * <!--
+ * #############################################################################################
+ * #                                                                                           #
+ * # THERE ARE NO USER-EDITABLE PORTIONS OF THIS FILE! DO NOT EDIT UNLESS DIRECTED BY SUPPORT! #
+ * #                                                                                           #
+ * #############################################################################################
  *
  */
 
 
-
 define( 'PB_PASSWORD', '#PASSWORD#' ); // Update this portion with the hashed password to override a forgotten password.
-
 
 
 $php_minimum = '5.1'; // User's PHP must be equal or newer to this version.
@@ -26,18 +30,15 @@ if ( version_compare( PHP_VERSION, $php_minimum ) < 0 ) {
 
 global $importbuddy_file;
 $importbuddy_file = basename( __FILE__ ); // filename of importbuddy.php (or whatever it is named).
-
 global $wp_version;
 $wp_version = '4.4'; // Spoof a version for new wp-db class.
-
 $abspath = rtrim( dirname( __FILE__ ), '\\/' ) . '/';
+
 define( 'ABSPATH', $abspath );
 define( 'WP_CONTENT_DIR', $abspath . 'wp-content' );
 define( 'PB_BB_VERSION', '#VERSION#' );
-
-// Used by wpdb class.
-define('DB_CHARSET', 'utf8'); // Default only. Overriden later if needed.
-define('DB_COLLATE', ''); // Default only. Overriden alter if needed.
+define('DB_CHARSET', 'utf8'); // Default only. Overriden later if needed. Used by wpdb class.
+define('DB_COLLATE', ''); // Default only. Overriden alter if needed. Used by wpdb class.
 
 @date_default_timezone_set( @date_default_timezone_get() ); // Prevents date() from throwing a warning if the default timezone has not been set. Run prior to any file_exists()!
 
@@ -59,19 +60,34 @@ if (
 
 // If inside BB install then die. Else unpack importbuddy if needed.
 if ( @file_exists( @dirname( @dirname( __FILE__ ) ) . '/backupbuddy.php' ) ) {
-	
 	die( '<html>Access Denied</html>' );
-	
 }
 
 
 // Unpack importbuddy files into importbuddy directory. Does this when importbuddy directory does not exist OR if now request GET or POST params are sent (aka the first page only).
 if ( ! file_exists( ABSPATH . 'importbuddy' ) || ( ( count( $_GET ) == 0 ) && ( count( $_POST ) == 0 ) ) ) {
 	
+	$importbuddy_contents = '';
+	if ( false === ( $importbuddy_contents = file_get_contents( __FILE__ ) ) ) {
+		die( 'Error #8494834: Unable to read in importbuddy file `' . __FILE__ . '` for validating.' );
+	}
+	
 	// Make sure this file is complete and contains all the packed data to the end before proceeding.
-	if ( false === strpos( file_get_contents( __FILE__ ), '###PACKDATA' . ',END' ) ) { // Concat here so we don't false positive on this line when searching.
+	if ( false === strpos( $importbuddy_contents, '###PACKDATA' . ',END' ) ) { // Concat here so we don't false positive on this line when searching.
 		die( 'ERROR: It appears your `' . __FILE__ . '` file is incomplete.  It may have not finished downloading or uploading completely.  Please try re-downloading the script from within BackupBuddy in WordPress (do not just copy the file from the plugin directory) and re-uploading it.' );
 	}
+	
+	// Make sure no leading whitespace. Some servers introduce this to the beginning, breaking authentication due to output before auth headers being sent.
+	if ( ltrim( $importbuddy_contents ) !== $importbuddy_contents ) {
+		if ( false === ( file_put_contents( __FILE__, ltrim( $importbuddy_contents ) ) ) ) {
+			die( 'Error #84394834: Your importbuddy file `' . __FILE__ . '` file contains leading whitespace/newslines and the script could not re-write it to fix it for you (possibly due to permissions). Please re-download it or manually edit to make sure it begins with <?php with no spaces or newlines/enters before it.' );
+		} else { // Re-wrote file.
+			sleep( 1 );
+			die( '<meta http-equiv="refresh" content="1">Refreshing... Removed unexpected leading whitespace found in importbuddy.php file.' );
+		}
+	}
+	
+	$importbuddy_contents = '';
 	
 	$unpack_importbuddy = true;
 	if ( file_exists( ABSPATH . 'importbuddy' ) ) { // ImportBuddy directory already exists. We may need to re-unpack it if this file has been updated since.
@@ -97,7 +113,6 @@ global $wpdb;
 //$wpdb = new wpdb();
 
 
-
 if ( isset( $_GET['api'] ) && ( $_GET['api'] != '' ) ) { // API ACCESS
 	if ( $_GET['api'] == 'ping' ) {
 		die( 'pong' );
@@ -111,7 +126,6 @@ if ( isset( $_GET['api'] ) && ( $_GET['api'] != '' ) ) { // API ACCESS
 		require_once( ABSPATH . 'importbuddy/init.php' );
 	}
 }
-
 
 
 function recursive_unlink( $path ) {

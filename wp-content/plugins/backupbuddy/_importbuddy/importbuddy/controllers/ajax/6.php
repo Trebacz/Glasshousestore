@@ -10,7 +10,6 @@ echo "<script>bb_showStep( 'cleanupSettings' );</script>";
 pb_backupbuddy::flush();
 
 
-
 if ( 'true' != pb_backupbuddy::_GET( 'deploy' ) ) { // deployment mode pre-loads state data in a file instead of passing via post.
 	// Parse submitted restoreData restore state from previous step.
 	$restoreData = pb_backupbuddy::_POST( 'restoreData' );
@@ -73,7 +72,6 @@ if ( 'true' == pb_backupbuddy::_GET( 'deploy' ) ) {
 echo "<script>bb_showStep( 'finished', " . json_encode( $restore->_state ) . " );</script>";
 
 
-
 // Replaces sleeping 6 seconds. More reliable but uses lots of CPU.
 $stop_time_limit = 6;
 pb_backupbuddy::status( 'details', 'Beggining `' . $stop_time_limit . '` second sleep while files delete.' );
@@ -86,12 +84,8 @@ while( $t < $stop_time_limit ) {
 }
 
 
-
-
 cleanup( $restore->_state, $restore );
-
 echo $footer; // We must preload the footer file contents since we are about to delete it.
-
 
 
 // Parse submitted options/settings.
@@ -138,7 +132,6 @@ function parse_options( $restoreData ) {
 	
 	return $restoreData;
 }
-
 
 
 /*	cleanup()
@@ -241,7 +234,6 @@ function remove_file( $file, $description, $error_on_missing = false ) {
 		}
 	}
 } // End remove_file().
-
 
 
 die(); // Don't want to accidently go back to any files which may be gone.

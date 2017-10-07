@@ -57,7 +57,7 @@ class NM_Palettes_wooproduct extends NM_Inputs_wooproduct{
 					'options' => array (
 								'type' => 'paired',
 								'title' => __ ( 'Add colors', 'nm-personalizedproduct' ),
-								'desc' => __ ( 'Type color code with price (optionally)', 'nm-personalizedproduct' )
+								'desc' => __ ( 'Type color code with price (optionally). To write label, use #colorcode - White', 'nm-personalizedproduct' )
 					),
 					'onetime' => array (
 								'type' => 'checkbox',
@@ -74,6 +74,12 @@ class NM_Palettes_wooproduct extends NM_Inputs_wooproduct{
 							'type' => 'text',
 							'title' => __ ( 'Selected color', 'nm-personalizedproduct' ),
 							'desc' => __ ( 'Type color code (given above) if you want already selected.', 'nm-personalizedproduct' ) 
+					),
+					
+					'disabletooltip' => array (
+							'type' => 'checkbox',
+							'title' => __ ( 'Disable Tooltips', 'nm-personalizedproduct' ),
+							'desc' => __ ( 'Select this if you want to display labels in colorboxes.', 'nm-personalizedproduct' ) 
 					),
 					
 					'required' => array (
@@ -114,6 +120,13 @@ class NM_Palettes_wooproduct extends NM_Inputs_wooproduct{
 		$_html = '';
 		foreach($options as $opt)
 		{
+			// First Separate color code and label
+			$color_label_arr = explode('-', $opt['option']);
+			$color_code = trim($color_label_arr[0]);
+			$color_label = '';
+			if(isset($color_label_arr[1])){
+				$color_label = trim($color_label_arr[1]);
+			}
 
 			if($opt['price']){
 				$output	=  wc_price($opt['price']);
@@ -131,10 +144,36 @@ class NM_Palettes_wooproduct extends NM_Inputs_wooproduct{
 			}
 		
 			$_html .= ' value="'.$opt['option'].'" '.checked($default, $opt['option'], false).'>';
-			$_html .= '<div class="palette-box" style="background-color:'.trim($opt['option']).';">'.$output.'</div>';
+			
+			if(isset($args['disabletooltip']) && $args['disabletooltip'] != 'on'){
+				$_html .= '<div class="palette-box" title="'.$color_label.'" style="background-color:'.trim($color_code).';">'.$output.'</div>';
+			} else {
+				$_html .= '<div class="palette-box" title="'.$color_label.'" style="background-color:'.trim($color_code).';">'.$color_label.'<br>'.$output.'</div>';
+			}
+			
 		
 			$_html .= '</label>';
 		}
+		if(isset($args['disabletooltip']) && $args['disabletooltip'] != 'on'){
+			$_html .= '<script>
+				jQuery( document ).ready(function(){
+				    jQuery( ".nm-color-palette " ).tooltip({
+				      position: {
+				        my: "center bottom-20",
+				        at: "center top",
+				        using: function( position, feedback ) {
+				          jQuery( this ).css( position );
+				          jQuery( "<div>" )
+				            .addClass( "arrow" )
+				            .addClass( feedback.vertical )
+				            .addClass( feedback.horizontal )
+				            .appendTo( this );
+				        }
+				      }
+				    });
+				});
+			</script>';
+		}		
 		
 		echo $_html;
 	}

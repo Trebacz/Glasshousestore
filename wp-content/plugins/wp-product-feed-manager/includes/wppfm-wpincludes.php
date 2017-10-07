@@ -19,7 +19,7 @@ if (!defined('ABSPATH')) exit;
  * @since 1.0.0
  */
 function include_classes() {
-    if (WP_DEBUG) { require_once ( 'setup/class-prepare-taxonomy.php' ); }
+    if (defined( 'WP_DEBUG' ) && WP_DEBUG) { require_once ( 'setup/class-prepare-taxonomy.php' ); }
 
 	if (!class_exists('WPPFM_Schedules')) { require_once ( __DIR__ . '/application/class-scheduled-tasks.php' ); }
 
@@ -39,7 +39,7 @@ function include_classes() {
 
 	if (!class_exists('WPPFM_Data_Class')) { require_once ( __DIR__ . '/data/class-data.php' ); }
 
-    if (!class_exists('WPPFM_Categories_Class')) { require_once ( __DIR__ . '/data/class-categories.php' ); }
+    if (!class_exists('WPPFM_Taxonomies_Class')) { require_once ( __DIR__ . '/data/class-taxonomies.php' ); }
 
     if (!class_exists('WPPFM_Feed_Support_Class')) { require_once ( __DIR__ . '/application/class-feed-support.php' ); }
 
@@ -101,4 +101,13 @@ function include_channels() {
 	if ( !class_exists( 'WPPFM_Google_Feed_Class' ) ) {
 		require_once ( __DIR__ . '/application/google/class-feed.php' );
 	}
+}
+
+/**
+ * Register all available filters
+ * 
+ * @since 1.9.0
+ */
+function initialize_filters() {
+	
 }

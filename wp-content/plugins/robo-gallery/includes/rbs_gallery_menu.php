@@ -34,7 +34,7 @@ if(!function_exists('robo_gallery_fix_menu')){
 	add_action( 'init', 'robo_gallery_fix_menu' );
 }
 
-if(!function_exists('robo_gallery_settings_submenu_page')){
+if(!function_exists('robo_gallery_settings_submenu_page') && 2==3){
 	add_action('admin_menu', 'robo_gallery_settings_submenu_page');
 	function robo_gallery_settings_submenu_page() {
 		add_submenu_page( 'edit.php?post_type=robo_gallery_table', 'Settings Robo Gallery', 'Settings', 'manage_options', 'robo-gallery-settings', 'robo_gallery_settings_submenu_page_render' );
@@ -46,7 +46,7 @@ if(!function_exists('robo_gallery_settings_submenu_page')){
 	add_action( 'admin_init', 'robo_gallery_settings_init' );
 	function robo_gallery_settings_init() {
 		register_setting( 'rbs_gallery_settings', ROBO_GALLERY_PREFIX.'jqueryVersion' );
-		register_setting( 'rbs_gallery_settings', ROBO_GALLERY_PREFIX.'switchStyle' );
+		/*register_setting( 'rbs_gallery_settings', ROBO_GALLERY_PREFIX.'switchStyle' );*/
 		register_setting( 'rbs_gallery_settings', ROBO_GALLERY_PREFIX.'delay' );
 		register_setting( 'rbs_gallery_settings', ROBO_GALLERY_PREFIX.'postShowText' );
 		register_setting( 'rbs_gallery_settings', ROBO_GALLERY_PREFIX.'debugEnable' );
@@ -68,6 +68,20 @@ if(!function_exists('robo_gallery_about_submenu_page')){
 		rbs_gallery_include('rbs_gallery_about.php', ROBO_GALLERY_INCLUDES_PATH);
 	}
 }
+
+
+if(!function_exists('robo_gallery_cat_submenu_page') && 2==3){
+	add_action('admin_menu', 'robo_gallery_cat_submenu_page');
+	function robo_gallery_cat_submenu_page() {
+		add_submenu_page( 'edit.php?post_type=robo_gallery_table', 'Category Robo Gallery', 'Category', 'manage_options', 'robo-gallery-cat', 'robo_gallery_cat_submenu_page_render' );
+	}
+	function robo_gallery_cat_submenu_page_render(){
+		rbs_gallery_include('categoryPage/category.class.php', ROBO_GALLERY_EXTENSIONS_PATH);
+		//rbs_gallery_include('category.class.php',  plugin_dir_path( __FILE__ ) );
+		new ROBO_GALLERY_CATEGORY_PAGE( ROBO_GALLERY_TYPE_POST );
+	}
+}
+
 
 if(!function_exists('robo_gallery_support_submenu_page')){
 	add_action('admin_menu', 'robo_gallery_support_submenu_page');

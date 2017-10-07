@@ -117,32 +117,28 @@ class WC_Gateway_PayPal_Pro_AngellEYE extends WC_Payment_Gateway_CC {
         
         //fix ssl for image icon
         $this->icon = $this->get_option('card_icon', plugins_url('/assets/images/cards.png', plugin_basename(dirname(__FILE__))));
-        if (is_ssl()) {
+        if ( is_ssl() || get_option( 'woocommerce_force_ssl_checkout' ) == 'yes' ) {
             $this->icon = preg_replace("/^http:/i", "https:", $this->icon);
         }
         $this->icon = apply_filters('woocommerce_paypal_pro_icon', $this->icon);
         $this->supports = array(
+            'subscriptions',
             'products',
-            'refunds'
+            'refunds',
+            'subscription_cancellation',
+            'subscription_reactivation',
+            'subscription_suspension',
+            'subscription_amount_changes',
+            'subscription_payment_method_change', // Subs 1.n compatibility.
+            'subscription_payment_method_change_customer',
+            'subscription_payment_method_change_admin',
+            'subscription_date_changes',
+            'multiple_subscriptions',
+            'add_payment_method',
         );
         $this->enable_tokenized_payments = $this->get_option('enable_tokenized_payments', 'no');
         if($this->enable_tokenized_payments == 'yes') {
-            $this->supports = array(
-                'subscriptions',
-                'products',
-                'refunds',
-                'subscription_cancellation',
-                'subscription_reactivation',
-                'subscription_suspension',
-                'subscription_amount_changes',
-                'subscription_payment_method_change', // Subs 1.n compatibility.
-                'subscription_payment_method_change_customer',
-                'subscription_payment_method_change_admin',
-                'subscription_date_changes',
-                'multiple_subscriptions',
-                'add_payment_method',
-                'tokenization'
-            );
+            $this->supports = array_merge($this->supports, array('add_payment_method','tokenization'));
         }
         $this->Force_tls_one_point_two = get_option('Force_tls_one_point_two', 'no');
         $this->credit_card_month_field = $this->get_option('credit_card_month_field', 'names');
@@ -179,6 +175,7 @@ class WC_Gateway_PayPal_Pro_AngellEYE extends WC_Payment_Gateway_CC {
             require_once( PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/classes/wc-gateway-calculations-angelleye.php' );
             $this->calculation_angelleye = new WC_Gateway_Calculation_AngellEYE();
         }
+        do_action( 'angelleye_paypal_for_woocommerce_multi_account_api_' . $this->id, $this, null, null );
     }
 
     /**
@@ -356,7 +353,7 @@ class WC_Gateway_PayPal_Pro_AngellEYE extends WC_Payment_Gateway_CC {
                 'label' => '',
                 'description' => __('Choose how you would like to handle orders when Fraud Management Filters are flagged.', 'paypal-for-woocommerce'),
                 'type' => 'select',
-                'class' => '',
+                'class'    => 'wc-enhanced-select',
                 'options' => array(
                     'ignore_warnings_and_proceed_as_usual' => __('Ignore warnings and proceed as usual.', 'paypal-for-woocommerce'),
                     'place_order_on_hold_for_further_review' => __('Place order On Hold for further review.', 'paypal-for-woocommerce'),
@@ -482,7 +479,16 @@ class WC_Gateway_PayPal_Pro_AngellEYE extends WC_Payment_Gateway_CC {
                 echo '</p>';
             }
         }
-        parent::payment_fields();
+       if ( $this->supports( 'tokenization' ) && is_checkout() ) {
+            $this->tokenization_script();
+            $this->saved_payment_methods();
+            $this->form();
+            if( AngellEYE_Utility::is_cart_contains_subscription() == false ) {
+                $this->save_payment_method_checkbox();
+            }
+        } else {
+             $this->form();
+        }
         do_action('payment_fields_saved_payment_methods', $this);
     }
 
@@ -1221,25 +1227,41 @@ class WC_Gateway_PayPal_Pro_AngellEYE extends WC_Payment_Gateway_CC {
                 if($this->fraud_management_filters == 'place_order_on_hold_for_further_review' && $PayPalResult['L_ERRORCODE0'] == '11610') {
                     $error = !empty($PayPalResult['L_LONGMESSAGE0']) ? $PayPalResult['L_LONGMESSAGE0'] : $PayPalResult['L_SHORTMESSAGE0'];
                     $order->update_status('on-hold', $error);
+                    $old_wc = version_compare(WC_VERSION, '3.0', '<');
+                    if ( $old_wc ) {
+                        if ( ! get_post_meta( $order_id, '_order_stock_reduced', true ) ) {
+                            $order->reduce_order_stock();
+                        } 
+                    } else {
+                        wc_maybe_reduce_stock_levels( $order_id );
+                    }
                 } elseif ($PayPalResult['L_ERRORCODE0'] == '10574') {
                     $error = !empty($PayPalResult['L_LONGMESSAGE0']) ? $PayPalResult['L_LONGMESSAGE0'] : $PayPalResult['L_SHORTMESSAGE0'];
                     $order->add_order_note('ERROR MESSAGE: ' . $error);
-                    $order->payment_complete($PayPalResult['TRANSACTIONID']);
+                    $this->angelleye_update_status($order, $PayPalResult['TRANSACTIONID']);
                 } elseif (!empty($PayPalResult['L_ERRORCODE0'])) {
                     $error = !empty($PayPalResult['L_LONGMESSAGE0']) ? $PayPalResult['L_LONGMESSAGE0'] : $PayPalResult['L_SHORTMESSAGE0'];
                     $order->add_order_note('ERROR MESSAGE: ' . $error);
                     $order->update_status('on-hold', $error);
+                    $old_wc = version_compare(WC_VERSION, '3.0', '<');
+                    if ( $old_wc ) {
+                        if ( ! get_post_meta( $order_id, '_order_stock_reduced', true ) ) {
+                            $order->reduce_order_stock();
+                        } 
+                    } else {
+                        wc_maybe_reduce_stock_levels( $order_id );
+                    }
                 } else {
-                    $order->payment_complete($PayPalResult['TRANSACTIONID']);
+                    $this->angelleye_update_status($order, $PayPalResult['TRANSACTIONID']);
                 }
             } else {
-                $order->payment_complete($PayPalResult['TRANSACTIONID']);
+                $this->angelleye_update_status($order, $PayPalResult['TRANSACTIONID']);
             }
             
             if ($this->payment_action == "Authorization") {
                 if ($old_wc) {
                     update_post_meta($order_id, '_first_transaction_id', $PayPalResult['TRANSACTIONID']);
-            } else {
+                } else {
                     update_post_meta($order->get_id(), '_first_transaction_id', $PayPalResult['TRANSACTIONID']);
                 }
                 $payment_order_meta = array('_transaction_id' => $PayPalResult['TRANSACTIONID'], '_payment_action' => $this->payment_action);
@@ -1247,7 +1269,7 @@ class WC_Gateway_PayPal_Pro_AngellEYE extends WC_Payment_Gateway_CC {
                 AngellEYE_Utility::angelleye_paypal_for_woocommerce_add_paypal_transaction($PayPalResult, $order, $this->payment_action);
                 $angelleye_utility = new AngellEYE_Utility(null, null);
                 $angelleye_utility->angelleye_get_transactionDetails($PayPalResult['TRANSACTIONID']);
-                $order->payment_complete($PayPalResult['TRANSACTIONID']);
+                $this->angelleye_update_status($order, $PayPalResult['TRANSACTIONID']);
                 $order->add_order_note('Payment Action: ' . $this->payment_action);
             }
 
@@ -1300,9 +1322,7 @@ class WC_Gateway_PayPal_Pro_AngellEYE extends WC_Payment_Gateway_CC {
 
             $pc_display_type_error = apply_filters('ae_ppddp_error_exception', $pc_display_type_error, $error_code, $long_message);
             $pc_display_type_notice = apply_filters('ae_ppddp_error_user_display_message', $pc_display_type_notice, $error_code, $long_message);
-            wc_add_notice($pc_display_type_notice, "error");
             throw new Exception($pc_display_type_error);
-
             return;
         }
     }
@@ -1413,13 +1433,12 @@ class WC_Gateway_PayPal_Pro_AngellEYE extends WC_Payment_Gateway_CC {
         $this->log('Refund Response: ' . print_r($PayPal->NVPToArray($PayPal->MaskAPIResult($PayPalResponse)), true));
 
         if ($PayPal->APICallSuccessful($PayPalResult['ACK'])) {
+            update_post_meta($order_id, 'Refund Transaction ID', $PayPalResult['REFUNDTRANSACTIONID']);
             $order->add_order_note('Refund Transaction ID:' . $PayPalResult['REFUNDTRANSACTIONID']);
-
             $max_remaining_refund = wc_format_decimal($order->get_total() - $order->get_total_refunded());
             if (!$max_remaining_refund > 0) {
                 $order->update_status('refunded');
             }
-
             if (ob_get_length()) ob_end_clean();
             return true;
         } else {
@@ -1711,6 +1730,7 @@ class WC_Gateway_PayPal_Pro_AngellEYE extends WC_Payment_Gateway_CC {
     }
 
     public function process_subscription_payment($order) {
+       $this->angelleye_reload_gateway_credentials_for_woo_subscription_renewal_order($order);
         if (!class_exists('Angelleye_PayPal')) {
              require_once( PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/classes/lib/angelleye/paypal-php-library/includes/paypal.class.php');
         }
@@ -1719,7 +1739,7 @@ class WC_Gateway_PayPal_Pro_AngellEYE extends WC_Payment_Gateway_CC {
         }
         $this->calculation_angelleye = new WC_Gateway_Calculation_AngellEYE();
         $PayPalConfig = array(
-            'Sandbox' => $this->testmode == 'yes' ? TRUE : FALSE,
+            'Sandbox' => $this->testmode,
             'APIUsername' => $this->api_username,
             'APIPassword' => $this->api_password,
             'APISignature' => $this->api_signature,
@@ -1881,7 +1901,7 @@ class WC_Gateway_PayPal_Pro_AngellEYE extends WC_Payment_Gateway_CC {
             $cvv2_response_order_note .= $cvv2_response_code;
             $cvv2_response_order_note .= $cvv2_response_message != '' ? ' - ' . $cvv2_response_message : '';
             $order->add_order_note($cvv2_response_order_note);
-            $is_sandbox = $this->testmode == 'yes' ? true : false;
+            $is_sandbox = $this->testmode;
             update_post_meta($order_id, 'is_sandbox', $is_sandbox);
             if ($this->payment_action == "Sale") {
                 $this->save_payment_token($order, $PayPalResult['TRANSACTIONID']);
@@ -1895,6 +1915,14 @@ class WC_Gateway_PayPal_Pro_AngellEYE extends WC_Payment_Gateway_CC {
                 $angelleye_utility = new AngellEYE_Utility(null, null);
                 $angelleye_utility->angelleye_get_transactionDetails($PayPalResult['TRANSACTIONID']);
                 $order->update_status('on-hold');
+                $old_wc = version_compare(WC_VERSION, '3.0', '<');
+                if ( $old_wc ) {
+                    if ( ! get_post_meta( $order_id, '_order_stock_reduced', true ) ) {
+                        $order->reduce_order_stock();
+                    } 
+                } else {
+                    wc_maybe_reduce_stock_levels( $order_id );
+                }
                 $order->add_order_note('Payment Action: ' . $this->payment_action);
             }
             return true;
@@ -1958,6 +1986,42 @@ class WC_Gateway_PayPal_Pro_AngellEYE extends WC_Payment_Gateway_CC {
         return ( function_exists('wcs_order_contains_subscription') && ( wcs_order_contains_subscription($order_id) || wcs_is_subscription($order_id) || wcs_order_contains_renewal($order_id) ) );
     }
 
+    public function angelleye_update_status($order, $transaction_id ) {
+        if( $this->payment_action == 'Sale') {
+            $order->payment_complete($transaction_id);
+        } else {
+            $order_id = version_compare(WC_VERSION, '3.0', '<') ? $order->id : $order->get_id();
+            $old_wc = version_compare(WC_VERSION, '3.0', '<');
+            if ( $old_wc ) {
+                if ( ! get_post_meta( $order_id, '_order_stock_reduced', true ) ) {
+                    $order->reduce_order_stock();
+                } 
+            } else {
+                wc_maybe_reduce_stock_levels( $order_id );
+            }
+            $order->update_status('on-hold');
+        }
+    }
     
+    public function angelleye_reload_gateway_credentials_for_woo_subscription_renewal_order($order) {
+        if( $this->testmode == false ) {
+            $order_id = version_compare(WC_VERSION, '3.0', '<') ? $order->id : $order->get_id();
+            if( $this->is_subscription($order_id) ) {
+                foreach ($order->get_items() as $cart_item_key => $values) {
+                    $product = $order->get_product_from_item($values);
+                    $product_id = $product->get_id();
+                    if( !empty($product_id) ) {
+                        $_enable_sandbox_mode = get_post_meta($product_id, '_enable_sandbox_mode', true);
+                        if ($_enable_sandbox_mode == 'yes') {
+                            $this->testmode = true;
+                            $this->api_username = $this->get_option('sandbox_api_username');
+                            $this->api_password = $this->get_option('sandbox_api_password');
+                            $this->api_signature = $this->get_option('sandbox_api_signature');
+                        }
+                    }        
+                }
+            }
+        }
+    }
     
 }

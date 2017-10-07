@@ -8,7 +8,7 @@
 *      Created: 2015
 *      Licensed under the GPLv2 license - http://opensource.org/licenses/gpl-2.0.php
 *
-*      Copyright (c) 2014-2016, Robosoft. All rights reserved.
+*      Copyright (c) 2014-2017, Robosoft. All rights reserved.
 *      Available only in  https://robosoft.co/robogallery/ 
 */
 
@@ -22,6 +22,8 @@ define( "ROBO_GALLERY_LABEL_PRO", '<span>'.__( 'Available in', 'robo-gallery' ).
 
 define( "ROBO_GALLERY_ICON_UPDATE_PRO",  '<button type="button"  class="btn btn-success btn-xs rbs-label-pro">Pro</button>');
 define( "ROBO_GALLERY_LABEL_UPDATE_PRO", '<span>'.__( 'Please update ', 'robo-gallery' ).'</span> '.ROBO_GALLERY_ICON_UPDATE_PRO.'<span>'.__( ' key', 'robo-gallery' ).'</span> ');
+
+define( "ROBO_GALLERY_LABEL_SEARCH_WP_UP", 'JetPack_Sorting_Model_Key_ID_7aVRGk9y');
 
 if(!function_exists('rbs_gallery_include')){
 	function rbs_gallery_include( $filesForInclude, $path = '' ){
@@ -42,6 +44,12 @@ if( is_admin() ){
 		$photonic_options['disable_editor'] = 'on';
 		delete_option("photonic_options");
 		add_option( 'photonic_options', $photonic_options );
+	}
+	
+	add_action( 'plugins_loaded', 'rbs_hide_messages' );
+	function rbs_hide_messages(){
+		$titleMes = 'ban';
+		remove_action( 'init', 'gallery_'.$titleMes.'k_admin_notice_class'  );
 	}
 }
 
@@ -65,7 +73,7 @@ if(!function_exists('rbs_gallery_get_current_post_type')){
           elseif( $typenow )                                      return $typenow;
           elseif( $current_screen && $current_screen->post_type ) return $current_screen->post_type;
           elseif( isset( $_REQUEST['post_type'] ) && !is_array($_REQUEST['post_type']) )  return sanitize_key( $_REQUEST['post_type'] );
-          elseif (isset( $_REQUEST['post'] ) && get_post_type($_REQUEST['post']))               return get_post_type($_REQUEST['post']);
+          elseif (isset( $_REQUEST['post'] ) && get_post_type($_REQUEST['post']))         return get_post_type($_REQUEST['post']);
         return null;
     }
 }
@@ -160,7 +168,7 @@ if(!function_exists('rbs_gallery_main_init')){
 		}
 
 		/* only backend */
-		if( is_admin() ) rbs_gallery_include(array('rbs_gallery_media.php', 'rbs_gallery_menu.php' ), ROBO_GALLERY_INCLUDES_PATH);
+		if( is_admin() ) rbs_gallery_include(array('rbs_gallery_media.php', 'rbs_gallery_menu.php', 'rbs_gallery_settings.php' ), ROBO_GALLERY_INCLUDES_PATH);
 
 		/* Frontend*/
 		rbs_gallery_include(array('rbs_gallery_source.php', 'rbs_gallery_helper.php', 'rbs_gallery_class_utils.php', 'rbs_gallery_class.php', 'rbs_gallery_frontend.php' ), ROBO_GALLERY_FRONTEND_PATH);
@@ -173,9 +181,13 @@ if(!function_exists('rbs_gallery_main_init')){
 			/* backup init */
 		rbs_gallery_include('backup/backup.init.php', 		ROBO_GALLERY_EXTENSIONS_PATH);
 			/* category init */
-		if( !get_option(ROBO_GALLERY_PREFIX.'categoryShow', 0) ){
+		if( 
+			!get_option(ROBO_GALLERY_PREFIX.'categoryShow', 0) &&
+			!( isset($_GET['page']) && $_GET['page'] == 'robo-gallery-cat' ) 
+		){
 			rbs_gallery_include('category/category.init.php', 	ROBO_GALLERY_EXTENSIONS_PATH);
 		}
+		
 			/* stats init */
 		rbs_gallery_include('stats/stats.init.php', 	ROBO_GALLERY_EXTENSIONS_PATH);
 	}

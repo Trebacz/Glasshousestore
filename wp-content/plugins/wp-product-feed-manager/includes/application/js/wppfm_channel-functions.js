@@ -1,12 +1,10 @@
 /*!
- * channel-functions.js v1.4
+ * channel-functions.js v1.5
  * Part of the WP Product Feed Manager
- * Copyright 2016, Michel Jongbloed
- *
+ * Copyright 2017, Michel Jongbloed
  */
 
 "use strict";
-
 
 var $jq = jQuery.noConflict();
 
@@ -38,6 +36,9 @@ function wppfm_showChannelInputs( channel, isNew ) {
 		'16':'switchToFacebookFeedFormMainInputs',
 		'17':'switchToBolFeedFormMainInputs',
 		'18':'switchToAdtractionFeedFormMainInputs',
+		'19':'switchToRicardoFeedFormMainInputs',
+		'20':'switchToEbayFeedFormMainInputs',
+		'21':'switchToShopzillaFeedFormMainInputs',
 		'998':'switchToMarketingrobotCsvFeedFormMainInputs',
 		'999':'switchToMarketingrobotFeedFormMainInputs'
 	};
@@ -108,6 +109,9 @@ function wppfm_reactOnChannelInputChanged( channel, feedId, categoryChanged ) {
 		'16':'facebookInputChanged',
 		'17':'bolInputChanged',
 		'18':'adtractionInputChanged',
+		'19':'ricardoInputChanged',
+		'20':'ebayInputChanged',
+		'21':'shopzillaInputChanged',
 		'998':'marketingrobotCsvInputChanged',
 		'999':'marketingrobotInputChanged'
 	};	
@@ -135,11 +139,13 @@ function wppfm_getChannelFeedType( channel ) {
         case '7': // connexity
         case '9': // nextag
         case '12': // koopjespakker.nl
+		case '21': // shopzilla
             return 'txt';
             break;
 			
 		case '15': // Commerce Connector
 		case '17': // Bol.com
+		case '19': // Ricardo.ch
 		case '998': // Custom CSV Feed.com
 			return 'csv'; 
             
@@ -172,6 +178,10 @@ function wppfm_channelCountryCode( channel ) {
 			
 		case '14': // Zbozi
 			language = 'cs-CZ';
+			break;
+			
+		case '19': // Ricardo.ch
+			language = 'de-CH';
 			break;
 	}
 	
@@ -289,7 +299,10 @@ function wppfm_getAdvisedInputs( channel ) {
 		'15':'woocommerceToComconFields',
 		'16':'woocommerceToFacebookFields',
 		'17':'woocommerceToBolFields',
-		'18':'woocommerceToAdtractionFields'
+		'18':'woocommerceToAdtractionFields',
+		'19':'woocommerceToRicardoFields',
+		'20':'woocommerceToeBayFields',
+		'21':'woocommerceToShopzillaFields'
 	};
 
 	if ( fName.hasOwnProperty( channel ) ) {
@@ -426,7 +439,10 @@ function wppfm_restrictedStaticFields( channel, fieldName ) {
 		'15':'comconStaticFieldOptions',
 		'16':'facebookStaticFieldOptions',
 		'17':'bolStaticFieldOptions',
-		'18':'adtractionStaticFieldOptions'
+		'18':'adtractionStaticFieldOptions',
+		'19':'ricardoStaticFieldOptions',
+		'20':'ebayStaticFieldOptions',
+		'21':'shopzillaStaticFieldOptions'
 	};
 
 	if ( fName.hasOwnProperty( channel ) ) {
@@ -451,114 +467,100 @@ function wppfm_setChannelRelatedPresets( outputsField, channel ) {
 	switch ( channel ) {
 
 		case '1': // Google
-
 			if ( outputsField['field_label'] === 'condition' || outputsField['field_label'] === 'availability'
 				|| outputsField['field_label'] === 'identifier_exists' || outputsField['field_label'] === 'adult'
 				|| outputsField['field_label'] === 'price' ) {
 
 				// only switch to the 'preset' value if no user value is set
-				if ( !outputsField['value'] ) {
-
-					outputsField['value'] = setGooglePresets( outputsField['field_label'] );
-				}
+				if ( !outputsField['value'] ) { outputsField['value'] = setGooglePresets( outputsField['field_label'] ); }
 			}
 			break;
 
 		case '2': // Bing
-
 			if ( outputsField['field_label'] === 'seller_name' ) {
-
 				// only switch to the 'preset' value if no user value is set
-				if ( !outputsField['value'] ) {
-
-					outputsField['value'] = setBingPresets( outputsField['field_label'] );
-				}
+				if ( !outputsField['value'] ) { outputsField['value'] = setBingPresets( outputsField['field_label'] ); }
 			}
 			break;
 
 		case '3': // Beslist
-
 			if ( outputsField['field_label'] === 'Conditie' || outputsField['field_label'] === 'Levertijd' ) {
-
 				// only switch to the 'preset' value if no user value is set
-				if ( !outputsField['value'] ) {
-
-					outputsField['value'] = setBeslisPresets( outputsField['field_label'] );
-				}
+				if ( !outputsField['value'] ) { outputsField['value'] = setBeslisPresets( outputsField['field_label'] ); }
 			}
 			break;
 
 		case '13': // Avant Link
-
 			if ( outputsField['field_label'] === 'condition' || outputsField['field_label'] === 'availability'
 				|| outputsField['field_label'] === 'identifier_exists' ) {
 
 				// only switch to the 'preset' value if no user value is set
-				if ( !outputsField['value'] ) {
-
-					outputsField['value'] = setAvantLinkPresets( outputsField['field_label'] );
-				}
+				if ( !outputsField['value'] ) { outputsField['value'] = setAvantLinkPresets( outputsField['field_label'] ); }
 			}
 			break;
 
 		case '14': // Zbozi
-
 			if ( outputsField['field_label'] === 'EROTIC' || outputsField['field_label'] === 'VISIBILITY' ) {
-
 				// only switch to the 'preset' value if no user value is set
-				if ( !outputsField['value'] ) {
-
-					outputsField['value'] = setZboziPresets( outputsField['field_label'] );
-				}
+				if ( !outputsField['value'] ) { outputsField['value'] = setZboziPresets( outputsField['field_label'] ); }
 			}
 			break;
 
 		case '15': // Commerce Connector
-
 			if ( outputsField['field_label'] === 'Delivery time' ) {
-
 				// only switch to the 'preset' value if no user value is set
-				if ( !outputsField['value'] ) {
-
-					outputsField['value'] = setComconPresets( outputsField['field_label'] );
-				}
+				if ( !outputsField['value'] ) { outputsField['value'] = setComconPresets( outputsField['field_label'] ); }
 			}
 			break;
 
 		case '16': // Facebook
-
 			if ( outputsField['field_label'] === 'condition' || outputsField['field_label'] === 'availability'
 				|| outputsField['field_label'] === 'price' ) {
 
 				// only switch to the 'preset' value if no user value is set
-				if ( !outputsField['value'] ) {
-
-					outputsField['value'] = setFacebookPresets( outputsField['field_label'] );
-				}
+				if ( !outputsField['value'] ) { outputsField['value'] = setFacebookPresets( outputsField['field_label'] ); }
 			}
 			break;
 
 		case '17': // Bol.com
-
 			if ( outputsField['field_label'] === 'Condition' || outputsField['field_label'] === 'Deliverycode' ) {
-
 				// only switch to the 'preset' value if no user value is set
-				if ( !outputsField['value'] ) {
-
-					outputsField['value'] = setBolPresets( outputsField['field_label'] );
-				}
+				if ( !outputsField['value'] ) { outputsField['value'] = setBolPresets( outputsField['field_label'] ); }
 			}
 			break;
 
 		case '18': // Adtraction
-
 			if ( outputsField['field_label'] === 'instock' ) {
+				// only switch to the 'preset' value if no user value is set
+				if ( !outputsField['value'] ) { outputsField['value'] = setAdtractionPresets( outputsField['field_label'] ); }
+			}
+			break;
+
+		case '19': // Ricardo
+			if ( outputsField['field_label'] === 'Descriptions[0].LanguageNr' || outputsField['field_label'] === 'Increment'
+				|| outputsField['field_label'] === 'AvailabilityId' || outputsField['field_label'] === 'Condition' ) {
 
 				// only switch to the 'preset' value if no user value is set
-				if ( !outputsField['value'] ) {
+				if ( !outputsField['value'] ) { outputsField['value'] = setRicardoPresets( outputsField['field_label'] ); }
+			}
+			break;
 
-					outputsField['value'] = setAdtractionPresets( outputsField['field_label'] );
-				}
+		case '20': // eBay
+
+//			if ( outputsField['field_label'] === 'instock' ) {
+//
+//				// only switch to the 'preset' value if no user value is set
+//				if ( !outputsField['value'] ) {
+//
+//					outputsField['value'] = setEbayPresets( outputsField['field_label'] );
+//				}
+//			}
+			break;
+
+		case '21': // Shopzilla
+			if ( outputsField['field_label'] === 'Availability' || outputsField['field_label'] === 'Condition' ) {
+				// only switch to the 'preset' value if no user value is set
+				if ( !outputsField['value'] ) { outputsField['value'] = setShopzillaPresets( outputsField['field_label'] ); }
 			}
 			break;
 
@@ -594,4 +596,15 @@ function setAttributeStatus( fieldLevel, fieldValue ) {
     if ( fieldValue ) { return true; }
     
     return false;
+}
+
+function wppfm_channelUsesMultidimensionalStaticFieldOptions( channel ) {
+	switch(channel) {
+		
+		case '19': // Ricardo.ch
+			return true;
+			
+		default:
+			return false;
+	}
 }

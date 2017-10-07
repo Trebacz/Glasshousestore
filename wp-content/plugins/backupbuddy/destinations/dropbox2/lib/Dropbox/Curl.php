@@ -64,10 +64,15 @@ final class Curl
         $this->headers[] = $header;
     }
 
-    function exec()
+    function exec( $contentType = '' )
     {
+    		if ( '' == $contentType ) {
+    			//$contentType = 'application/json';
+    		}
+		$this->headers = array_merge( $this->headers, array( 'Content-Type: '. $contentType) );
+		
         $this->set(CURLOPT_HTTPHEADER, $this->headers);
-
+        \pb_backupbuddy::status('details', 'About to Curl.php curl_exec() in exec.' );
         $body = curl_exec($this->handle);
         if ($body === false) {
             throw new Exception_NetworkIO("Error executing HTTP request: " . curl_error($this->handle));
@@ -76,6 +81,10 @@ final class Curl
         $statusCode = curl_getinfo($this->handle, CURLINFO_HTTP_CODE);
 
         return new HttpResponse($statusCode, $body);
+    }
+    
+    function get( $option ) {
+    	
     }
 
     /**

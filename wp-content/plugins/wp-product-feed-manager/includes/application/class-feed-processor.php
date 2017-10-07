@@ -1,8 +1,8 @@
 <?php
 
 /* * ******************************************************************
- * Version 5.3
- * Modified: 03-06-2017
+ * Version 5.5
+ * Modified: 03-09-2017
  * Copyright 2017 Accentio. All rights reserved.
  * License: None
  * By: Michel Jongbloed
@@ -38,9 +38,7 @@ if ( !class_exists( 'WPPFM_Feed_Processor_Class' ) ) :
 		}
 		
 		public function generate_product_data( $product, $include_variations, $active_fields, $meta_data, $feed_filter,
-			$field_relation_table, $main_category_field_title, $main_category, $category_mapping, $fm_lim, $file_extention ) {
-
-			$data_class = new WPPFM_Data_Class ();
+			$field_relation_table, $main_category_field_title, $main_category, $category_mapping, $fm_lim, $file_extention, $feed_language ) {
 
 			$feed_products_array = array();
 			$fm_lim .= 'm_lic_s';
@@ -50,11 +48,13 @@ if ( !class_exists( 'WPPFM_Feed_Processor_Class' ) ) :
 			
 			// make sure its a valid woocommerce product
 			if ( $prdct instanceof WC_Product_Simple || $prdct instanceof WC_Product_Variable 
-				|| $prdct instanceof WC_Product_External || $prdct instanceof WC_Product_Grouped ) {
+				|| $prdct instanceof WC_Product_External || $prdct instanceof WC_Product_Grouped
+				|| $prdct instanceof WC_Product_Composite ) {
 
 				// include variations when applicable
 				if ( $include_variations === '1' && $prdct !== null && $prdct->is_type( 'variable' ) ) {
 
+					$data_class = new WPPFM_Data_Class ();
 					$vars = $prdct->get_available_variations(); // get the woocommerce variations data
 
 					foreach ($vars as $var) {
@@ -64,7 +64,8 @@ if ( !class_exists( 'WPPFM_Feed_Processor_Class' ) ) :
 							$wpmr_variation_attributes = $data_class->get_own_variation_data( $var[ 'variation_id' ] );
 
 							$feed_product_object = $this->process_product( $product, $var, $wpmr_variation_attributes, $active_fields, 
-								$meta_data, $feed_filter, $field_relation_table, $main_category_field_title, $main_category, $category_mapping, $file_extention );
+								$meta_data, $feed_filter, $field_relation_table, $main_category_field_title, $main_category, $category_mapping, 
+								$file_extention, $feed_language );
 
 							if ( $feed_product_object ) {
 
@@ -73,6 +74,8 @@ if ( !class_exists( 'WPPFM_Feed_Processor_Class' ) ) :
 								// and push the feed_object in the feed_data_array
 								array_push( $feed_products_array, $feed_product_object );
 								array_push( $this->_ids_in_feed, $reg_id );
+								
+								$feed_product_object = null;
 							}
 						}
 					}
@@ -83,123 +86,41 @@ if ( !class_exists( 'WPPFM_Feed_Processor_Class' ) ) :
 					if ( ! in_array( $product->ID, $this->_ids_in_feed ) ) {
 
 						$feed_product_object = $this->process_product( $product, null, null, $active_fields, $meta_data, $feed_filter, 
-							$field_relation_table, $main_category_field_title, $main_category, $category_mapping, $file_extention );
+							$field_relation_table, $main_category_field_title, $main_category, $category_mapping, 
+							$file_extention, $feed_language );
 
 						if ( $feed_product_object ) {
 							// register this product as handled
 							array_push( $this->_ids_in_feed, $product->ID );
 							array_push( $feed_products_array, $feed_product_object );
+							
+							$feed_product_object = null;
 						}
 					}
 				}
 			}
 
-			return get_option( $fm_lim . 'tatus' ) === 'val' . 'id' ? $feed_products_array : [];
+			return get_option( $fm_lim . 'tatus' ) === 'val' . 'id' ? $feed_products_array : []; // ref HWOTBERH
 		}
-
-		/**
-		 * Returns an array containing the data required to make the xml text.
-		 * 
-		 * This array contains one sub-array for each product and the sub-array contains a key->value combination
-		 * where the key is the title of the product data that should be placed in the feed, and the data contains
-		 * the data belonging to that key.
-		 * 
-		 * The output of this function grabs the input data and calculates the output based on filters, static data,
-		 * adviced data, edit values, alternative sources and combined sources that the user has set in the feed form.
-		 * 
-		 * @param {int} $feed_id
-		 * @param {array} $active_fields contains all active fields
-		 * @param {array} $meta_data
-		 * @param {array} $field_relation_table contains the relation between a feed item title and its database column
-		 * @param {array} $data
-		 * @param {string} $main_category_field_title each channel uses an other title to store the category. This parm contains that title
-		 * @param {string} $main_category
-		 * @param {array} $category_mapping
-		 * @return array with the data required to make the xml text
-		 */
-// obsolete as of version 1.6.0
-//		public function generate_feed_data( $feed_id, $include_variations, $active_fields, $meta_data, $field_relation_table, $feed_filter, $product,
-//									  $main_category_field_title, $main_category, $category_mapping ) {
-//
-//			$data_class = new WPPFM_Data_Class ();
-//
-//			// the feed_data_array is the placeholder for the complete feed data containing all the rows with fields
-//			// that should be placed in the xml text
-//			$feed_products_array	 = array();
-//			$feed_product_object	 = array();
-//			$this->_product_counter	 = 0;
-//			$data_class->set_nr_of_feed_products( $feed_id, -1 );
-//
-//			// process each product
-//			foreach ( $data as $product ) {
-//
-//				$prdct = wc_get_product($product[ 'ID' ]);
-//
-//				// include variations
-//				if ( $include_variations === '1' && $prdct->product_type === 'variable' ) {
-//
-//					$vars = $prdct->get_available_variations(); // get the woocommerce variations data
-//					
-//					foreach ($vars as $var) {
-//
-//						if ( $var[ 'variation_is_active' ] && ! in_array( $var[ 'variation_id' ], $this->_ids_in_feed ) ) {
-//							
-//							$wpmr_variation_attributes = $data_class->get_own_variation_data( $var[ 'variation_id' ] );
-//
-//							$feed_product_object = $this->process_product( $product, $var, $wpmr_variation_attributes, $active_fields, $meta_data, $feed_filter, $field_relation_table, $main_category_field_title, $main_category, $category_mapping );
-//							
-//							if ( $feed_product_object ) {
-//								
-//								$reg_id = $var['variation_id'] ? $var['variation_id'] : $prdct->id; 
-//								
-//								// and push the feed_object in the feed_data_array
-//								array_push( $feed_products_array, $feed_product_object );
-//								array_push( $this->_ids_in_feed, $reg_id );
-//							}
-//						}
-//					}
-//				} elseif ( $prdct->product_type !== 'variation' ) { // do not include the variations of this product
-//					
-//					$var = null;
-//					
-//					// prevent doubles in the feed
-//					if ( ! in_array( $product['ID'], $this->_ids_in_feed ) ) {
-//						
-//						$wpmr_variation_attributes = null;
-//
-//						$feed_product_object = $this->process_product( $product, $var, $wpmr_variation_attributes, $active_fields, $meta_data, $feed_filter, $field_relation_table, $main_category_field_title, $main_category, $category_mapping );
-//						
-//						if ( $feed_product_object ) {
-//							// and push the feed_object in the feed_data_array
-//							array_push( $feed_products_array, $feed_product_object );
-//							array_push( $this->_ids_in_feed, $product['ID'] );
-//						}
-//					}
-//				}
-//
-//			}
-//
-//			$data_class->set_nr_of_feed_products( $feed_id, $this->_product_counter );
-//
-//			return $feed_products_array;
-//		}
 
 		/**
 		 * Processes a data row
 		 * 
 		 * Returns an key=>value array with all fields and data of one specific product
 		 */
-		private function process_product( $product_object, $product_variation_data, $wpmr_variation_data, $active_fields, $meta_data, $feed_filter, $field_relation_table,
-									$main_category_feed_title, $main_category, $category_mapping, $file_extention ) {
+		private function process_product( $product_object, $product_variation_data, $wpmr_variation_data, &$active_fields, $meta_data, $feed_filter, $field_relation_table,
+									$main_category_feed_title, $main_category, $category_mapping, $file_extention, $feed_language ) {
 			
 			// the product variable is the placeholder for one row in the feed_data_array
 			$product = array();
 			$product_data = (array)$product_object;
 			$product_parent_id = $product_data['ID'];
 			
+			$product_object = null; // clear some memory
+			
 			if ( $product_variation_data || $wpmr_variation_data ) {
 				// get correct variation data
-				WPPFM_Variations_Class::fill_product_data_with_variation_data( $product_data, $product_variation_data, $wpmr_variation_data );
+				WPPFM_Variations_Class::fill_product_data_with_variation_data( $product_data, $product_variation_data, $wpmr_variation_data, $feed_language );
 			}
 			
 			$row_category	 = $this->get_mapped_category( $product_parent_id, $main_category, $category_mapping );
@@ -212,15 +133,22 @@ if ( !class_exists( 'WPPFM_Feed_Processor_Class' ) ) :
 				foreach ( $active_fields as $field ) {
 					
 					$field_meta_data = $this->get_meta_data_from_specific_field( $field, $meta_data );
-
+					
 					// get the field data based on the user settings
-					$feed_object = $this->process_product_field( $product_data, $field_meta_data, $field_relation_table, $main_category_feed_title, $row_category );
+					$feed_object = $this->process_product_field( $product_data, $field_meta_data, $field_relation_table, $main_category_feed_title, $row_category, $feed_language );
 					
 					$key = key( $feed_object );
 
 					// for an xml file only add fields that contain data
 					if ( !empty( $feed_object[ $key ] ) || $file_extention !== 'xml' ) {
-						$product[ $key ] = $feed_object[ $key ];
+						
+						// catch the DraftImages key for the Ricardo.ch channel
+						if ( $key !== 'DraftImages' ) {
+							$product[ $key ] = $feed_object[ $key ];
+						} else {
+							$support_class = new WPPFM_Feed_Support_Class();
+							$support_class->process_ricardo_draftimages( $product, $feed_object[ $key ] );
+						}
 					}
 				}
 
@@ -272,9 +200,10 @@ if ( !class_exists( 'WPPFM_Feed_Processor_Class' ) ) :
 		 * Returns an key=>value array of a specific product field where the key contains the field name and the value the field value
 		 */
 		private function process_product_field( $product_data, $field_meta_data, $field_relation_table,
-										  $main_category_feed_title, $row_category ) {
+										  $main_category_feed_title, $row_category, $feed_language ) {
 			
-			$product_object[ $field_meta_data->fieldName ] = $this->get_correct_field_value( $field_meta_data, $product_data, $field_relation_table, $main_category_feed_title, $row_category );
+			$product_object[ $field_meta_data->fieldName ] = $this->get_correct_field_value( $field_meta_data, $product_data, $field_relation_table, 
+				$main_category_feed_title, $row_category, $feed_language );
 			
 			return $product_object;
 		}
@@ -284,11 +213,11 @@ if ( !class_exists( 'WPPFM_Feed_Processor_Class' ) ) :
 		 * 
 		 */
 		private function get_correct_field_value( $field_meta_data, $product_data, $field_relation_table,
-													 $main_category_feed_title, $row_category ) {
+													 $main_category_feed_title, $row_category, $feed_language ) {
 			
 			$end_row_value = '';
 			$this->_nr_thats_selected = 0;
-
+			
 			// do not process category strings, but only fields that are requested
 			if ( key_exists( 'fieldName', $field_meta_data ) && $field_meta_data->fieldName !== $main_category_feed_title 
 				&& $this->meta_data_contains_category_data( $field_meta_data ) === false ) {
@@ -327,9 +256,9 @@ if ( !class_exists( 'WPPFM_Feed_Processor_Class' ) ) :
 						$combination_string = false;
 						$is_money = false;
 					}
-
-					$row_value = $this->get_edited_end_row_value( $value_object->v, $end_row_value, $product_data, $combination_string );
-					$end_row_value = !$is_money ? $row_value : prep_money_values( $row_value );
+					
+					$row_value = !$is_money ? $end_row_value : prep_money_values( $end_row_value );
+					$end_row_value = $this->get_edited_end_row_value( $value_object->v, $row_value, $product_data, $combination_string, $feed_language );
 				}
 			} else {
 				$end_row_value = $row_category;
@@ -348,31 +277,22 @@ if ( !class_exists( 'WPPFM_Feed_Processor_Class' ) ) :
 		private function get_correct_end_row_value( $value, $product_data, $advised_source ) {
 
 			$end_row_value = '';
-			
-			// De meta data is als volgt opgeslagen:
-			// 
-			// {
-			//    "m":[{"s":{"source":"combined","f":"_min_variation_price|1#static#GBP"},
-			//    "c":[{"1":"0#_min_variation_price#5"}]},{"s":{"source":"_regular_price"}}], 
-			//    "v":[{"1":"change#recalculate#multiply#0,9"}]
-			// }
-			// 
-			// Wat nu nog fout gaat is dat als het filter waar is, de combined value niet goed gaat.
-			
-			// Hier gaat iets nog niet goed met de telling van de _nr_thats_selected variabele
+			$nr_values = count( $value ); // added @since 1.9.4
+			$value_counter = 1; // added @since 1.9.4
 
 			foreach ( $value as $filter ) {
-				
-				$val = json_encode($filter);
-
 				if ( $this->get_filter_status( $filter, $product_data ) === true && $end_row_value === '' ) {
 
 					$end_row_value = $this->get_row_source_data( $filter, $product_data, $advised_source );
 					break;
 				} else {
+					// no "or else" value seems to be selected
+					if ( $value_counter >= $nr_values ) { return $end_row_value; } // added @since 1.9.4
 					
 					$this->_nr_thats_selected++;
 				}
+				
+				$value_counter++; // added @since 1.9.4
 			}
 
 			// not found a condition that was correct so lets take the "for all other products" data to fetch the correct row_value
@@ -391,7 +311,6 @@ if ( !class_exists( 'WPPFM_Feed_Processor_Class' ) ) :
 			if ( key_exists( 's', $filter ) ) {
 
 				if ( key_exists( 'static', $filter->s ) ) {
-
 					$row_source_data = $filter->s->static;
 				} elseif ( key_exists( 'source', $filter->s ) ) {
 
@@ -428,8 +347,7 @@ if ( !class_exists( 'WPPFM_Feed_Processor_Class' ) ) :
 			}
 		}
 
-		private function get_edited_end_row_value( $change_parameters, $origional_output, $product_data, $combination_string ) {
-			
+		private function get_edited_end_row_value( $change_parameters, $origional_output, $product_data, $combination_string, $feed_language ) {
 			$result_is_filtered = false;
 			$y = 0;
 
@@ -442,7 +360,8 @@ if ( !class_exists( 'WPPFM_Feed_Processor_Class' ) ) :
 					if ( $filter_result === true ) {
 
 						$combined_data_elements = $combination_string ? $this->get_combined_elements( $product_data, $combination_string ) : '';
-						$final_output = $this->_support_class->edit_value( $origional_output, $change_parameters[ $i ]->{$i + 1}, $combination_string, $combined_data_elements );
+						$final_output = $this->_support_class->edit_value( $origional_output, $change_parameters[ $i ]->{$i + 1}, $combination_string, 
+							$combined_data_elements, $feed_language );
 
 						$result_is_filtered = true;
 					}
@@ -453,7 +372,8 @@ if ( !class_exists( 'WPPFM_Feed_Processor_Class' ) ) :
 			
 			if ( $result_is_filtered === false ) {
 				$combined_data_elements = $combination_string ? $this->get_combined_elements( $product_data, $combination_string ) : '';
-				$final_output = $this->_support_class->edit_value( $origional_output, $change_parameters[ $y ]->{$y + 1}, $combination_string, $combined_data_elements );
+				$final_output = $this->_support_class->edit_value( $origional_output, $change_parameters[ $y ]->{$y + 1}, $combination_string, 
+					$combined_data_elements, $feed_language );
 			}
 
 			return $final_output;
@@ -501,13 +421,13 @@ if ( !class_exists( 'WPPFM_Feed_Processor_Class' ) ) :
 
 		private function get_mapped_category( $id, $main_category, $category_mapping ) {
 
-			$yoast_primary_category = WPPFM_Categories_Class::get_yoast_primary_cat( $id );
+			$yoast_primary_category = WPPFM_Taxonomies_Class::get_yoast_primary_cat( $id );
 			$yoast_cat_is_selected = $yoast_primary_category ? $this->_support_class->category_is_selected( $yoast_primary_category[0]->term_id, $category_mapping ) : false;
 			
 			$product_categories	= $yoast_primary_category && false !== $yoast_cat_is_selected ? $yoast_primary_category :
 				wp_get_post_terms( $id, 'product_cat', array( 'taxonomy' => 'product_cat' ) ); // get the categories from a specific product in the shop
 			
-			if ( $product_categories && ! is_wp_error( $product_categories ) ) {
+			if ( $product_categories && !is_wp_error( $product_categories ) ) {
 
 				// loop through each category
 				foreach ( $product_categories as $category ) {
@@ -517,7 +437,6 @@ if ( !class_exists( 'WPPFM_Feed_Processor_Class' ) ) :
 					
 					// only add this product when at least one of the categories is selected in the category mapping
 					if ( $shop_category_id !== false ) {
-			
 // 010517
 //						if ( $yoast_cat_is_selected ) {
 //							$prim_cat_name = $yoast_primary_category[0]->name;
@@ -533,10 +452,10 @@ if ( !class_exists( 'WPPFM_Feed_Processor_Class' ) ) :
 								return $main_category;
 
 							case 'wp_ownCategory':
-								return WPPFM_Categories_Class::get_shop_categories($id, ' > ');
+								return WPPFM_Taxonomies_Class::get_shop_categories($id, ' > ');
 								
 								// 080117
-								//return WPPFM_Categories_Class::make_shop_category_string_from_selected_category( $product_categories, $category->term_id, '' );
+								//return WPPFM_Taxonomies_Class::make_shop_category_string_from_selected_category( $product_categories, $category->term_id, '' );
 
 							default:
 								return $category_mapping[ $shop_category_id ]->feedCategories;
@@ -544,6 +463,9 @@ if ( !class_exists( 'WPPFM_Feed_Processor_Class' ) ) :
 					}
 				}
 			} else {
+				if ( is_wp_error( $product_categories ) ) {
+					echo wppfm_handle_wp_errors_response( $product_categories, "Sorry but error 2131 occured. Please try to refreh the page and contact support@wpmarketingrobot.com for support if the issue persists." );
+				}
 				
 				return false;
 			}

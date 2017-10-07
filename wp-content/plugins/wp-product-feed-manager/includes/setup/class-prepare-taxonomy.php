@@ -207,11 +207,65 @@ if ( !class_exists( 'WPPFM_Prepare_Taxonomy_Class' ) ) :
 				fputs( $fhw, trim( $newline ) . "\r\n" );
 			}
 		}
+		
+		public function prepare_ricardo_category_file() {
+
+			$path	 = WPPFM_CHANNEL_DATA_DIR . "/ricardo/taxonomy_source.fr-CH.txt";
+			$rpath	 = WPPFM_CHANNEL_DATA_DIR . "/ricardo/taxonomy.fr-CH.txt";
+
+			$fhr = fopen( $path, 'r' );
+			$fhw = fopen( $rpath, 'w' );
+
+			while ( !feof( $fhr ) ) {
+
+				$line = trim( fgets( $fhr ) );
+				
+				$first_tab_pos = strpos( $line, "\t" );
+				// get the number
+				$cat_nr = substr( $line, 0, $first_tab_pos );
+				
+				// remove the number
+				$line = str_replace( $cat_nr . "\t", '', $line );
+
+				if ( strpos( $line, "\t" ) !== false ) {
+
+					$newline = str_replace( "\t", ' > ', $line );
+				} else {
+
+					$newline = $line;
+				}
+				
+				$newline = trim( $newline, ' > ' );
+
+				fputs( $fhw, trim( $newline . ' (' . $cat_nr . ')' ) . "\r\n" );
+			}
+			
+		}
+		
+		public function prepare_ebay_category_file() {
+
+			$path	 = WPPFM_CHANNEL_DATA_DIR . "/ebay/taxonomy_source.en-US.txt";
+			$rpath	 = WPPFM_CHANNEL_DATA_DIR . "/ebay/taxonomy.en-US.txt";
+
+			$fhr = fopen( $path, 'r' );
+			$fhw = fopen( $rpath, 'w' );
+
+			while ( !feof( $fhr ) ) {
+
+				$line = trim( fgets( $fhr ) );
+				
+				$line_items = explode( ";", $line );
+				
+				if ( $line_items[0] && $line_items[1] ) {
+					fputs( $fhw, trim( $line_items[1] . ' (' . $line_items[0] . ')' ) . "\r\n" );
+				}
+			}
+		}
 
 		public function prepare_koopjespakker_category_file() {
 
-			$path	 = WPPFM_CHANNEL_DATA_DIR . "/koopjespakker/taxonomy.nl-NL.txt";
-			$rpath	 = WPPFM_CHANNEL_DATA_DIR . "/koopjespakker/taxonomy_new.nl-NL.txt";
+			$path	 = WPPFM_CHANNEL_DATA_DIR . "/koopjespakker/taxonomy.en-US.txt";
+			$rpath	 = WPPFM_CHANNEL_DATA_DIR . "/koopjespakker/taxonomy_new.en-US.txt";
 
 			$fhr = fopen( $path, 'r' );
 			$fhw = fopen( $rpath, 'w' );

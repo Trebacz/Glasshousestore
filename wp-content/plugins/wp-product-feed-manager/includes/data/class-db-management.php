@@ -1,8 +1,8 @@
 <?php
 
 /* * ******************************************************************
- * Version 1.1
- * Modified: 09-06-2017
+ * Version 1.2
+ * Modified: 20-08-2017
  * Copyright 2017 Accentio. All rights reserved.
  * License: None
  * By: Michel Jongbloed
@@ -57,7 +57,7 @@ if ( !class_exists( 'WPPFM_Db_Management' ) ) :
 			$feed_data->url = 'No feed generated';
 			
 			// store a copy of the new feed
-			$new_feed_id = $queries_class->insert_feed( $feed_data->channel_id, $feed_data->country_id, 
+			$new_feed_id = $queries_class->insert_feed( $feed_data->channel_id, $feed_data->country_id, $feed_data->language,
 				$feed_data->source_id, $feed_data->title, $feed_data->feed_title, $feed_data->feed_description, $feed_data->main_category, $feed_data->include_variations, 
 				$feed_data->is_aggregator, $feed_data->url, $feed_data->status_id, $feed_data->schedule );
 			
@@ -154,11 +154,6 @@ if ( !class_exists( 'WPPFM_Db_Management' ) ) :
 				
 				// remove the version
 				$backup_string = self::remove_left_data_part( $backup_string );
-				
-				// reset the ftp passive setting
-				$ftp_passive_setting = ltrim( $backup_string, '#' );
-				$ftp_passive_setting = substr( $ftp_passive_setting, 0, strpos( $ftp_passive_setting, '#' ) );
-				update_option( 'wppfm_ftp_passive', $ftp_passive_setting );
 				
 				// remove the ftp passive setting
 				$backup_string = self::remove_left_data_part( $backup_string );

@@ -19,15 +19,18 @@ if ( !class_exists( 'WPPFM_Add_Options_Page' ) ) :
 	class WPPFM_Add_Options_Page extends WPPFM_Admin_Page {
 
 		private $_options_form;
+		// @private storage of scripts version
 		private $_version_stamp;
+		// @private register minified scripts
 		private $_js_min;
 
 		public function __construct() {
 
 			parent::__construct();
 
-			$this->_version_stamp	 = WP_DEBUG ? time() : MYPLUGIN_VERSION_NUM;
-			$this->_js_min			 = WP_DEBUG ? '' : '.min';
+			$premium_version_nr		 = EDD_SL_ITEM_NAME === 'WP Product Feed Manager' ? 'fr-' : 'pr-'; // prefix for version stamp depending on premium or free version
+			$this->_version_stamp	 = defined( 'WP_DEBUG' ) && WP_DEBUG ? time() : $premium_version_nr . MYPLUGIN_VERSION_NUM;
+			$this->_js_min			 = defined( 'WP_DEBUG' ) && WP_DEBUG ? '' : '.min';
 
 			$this->prepare_options_form();
 		}
@@ -42,7 +45,7 @@ if ( !class_exists( 'WPPFM_Add_Options_Page' ) ) :
 
 			echo $this->message_field();
 
-			if ( 'valid' === wppfm_validate() ) {
+			if ( 'valid' === wppfm_validate() ) { // ref HWOTBERH
 
 				echo $this->options_page_body();
 			} else {
@@ -54,14 +57,17 @@ if ( !class_exists( 'WPPFM_Add_Options_Page' ) ) :
 		}
 
 		private function options_page_header() {
-			echo '<div class="wrap">
-			<div class="feed-spinner" id="feed-spinner" style="display:none;">
-				<img id="img-spinner" src="' . $this->spinner_gif . '" alt="Loading" />
-			</div>
-			<div class="main-wrapper header-wrapper" id="header-wrapper">
-			<div class="header-text"><h1>' . __( 'Feed Manager Settings', 'wp-product-feed-manager' ) . '</h1></div>
-			<div class="logo"></div>
-			</div>';
+			return 
+			'
+		<div class="wrap">
+		<div class="feed-spinner" id="feed-spinner" style="display:none;">
+			<img id="img-spinner" src="' . $this->spinner_gif . '" alt="Loading" />
+		</div>
+		<div class="main-wrapper header-wrapper" id="header-wrapper">
+		<div class="header-text"><h1>' . __( 'Feed Manager Settings', 'wp-product-feed-manager' ) . '</h1></div>
+		<div class="logo"></div>
+		</div>
+		';
 		}
 		
 		private function options_page_body() { $this->_options_form->display(); }
@@ -86,17 +92,18 @@ if ( !class_exists( 'WPPFM_Add_Options_Page' ) ) :
 				'restoreBackupNonce'			=> wp_create_nonce( 'myajax-restore-backup-nonce' ),
 				'duplicateBackupNonce'			=> wp_create_nonce( 'myajax-duplicate-backup-nonce' ),
 				'postBackupListNonce'			=> wp_create_nonce( 'myajax-backups-list-nonce' ),
-				'postSetupOptionsNonce'			=> wp_create_nonce( 'myajax-setting-options-nonce' )
+				'postSetupOptionsNonce'			=> wp_create_nonce( 'myajax-setting-options-nonce' ),
+				'setReInitiateNonce'			=> wp_create_nonce( 'myajax-reinitiate-nonce' )
 			));
 			
-			wp_enqueue_script( 'wppfm_data-handling-script', esc_url( MYPLUGIN_PLUGIN_URL . '/includes/data/js/wppfm_ajaxdatahandling.js' ), array( 'jquery' ), $this->_version_stamp );
-			wp_enqueue_script( 'wppfm_setting-form-script', esc_url( MYPLUGIN_PLUGIN_URL . '/includes/user-interface/js/wppfm_setting-form.js' ), array( 'jquery' ), $this->_version_stamp );
-			wp_enqueue_script( 'wppfm_event-listener-script', esc_url( MYPLUGIN_PLUGIN_URL . '/includes/user-interface/js/wppfm_feed-form-events.js' ), array( 'jquery' ), $this->_version_stamp );
-			wp_enqueue_script( 'wppfm_form-support-script', esc_url( MYPLUGIN_PLUGIN_URL . '/includes/user-interface/js/wppfm_support' . $this->_js_min . '.js' ), array( 'jquery' ), $this->_version_stamp );
-			wp_enqueue_script( 'wppfm_backup-list-script', esc_url( MYPLUGIN_PLUGIN_URL . '/includes/user-interface/js/wppfm_backup-list' . $this->_js_min . '.js' ), array( 'jquery' ), $this->_version_stamp );
+			wp_enqueue_script( 'wppfm_data-handling-script', esc_url( MYPLUGIN_PLUGIN_URL . '/includes/data/js/wppfm_ajaxdatahandling' . $this->_js_min . '.js' ), array( 'jquery' ), $this->_version_stamp, true );
+			wp_enqueue_script( 'wppfm_setting-form-script', esc_url( MYPLUGIN_PLUGIN_URL . '/includes/user-interface/js/wppfm_setting-form' . $this->_js_min . '.js' ), array( 'jquery' ), $this->_version_stamp, true );
+			wp_enqueue_script( 'wppfm_event-listener-script', esc_url( MYPLUGIN_PLUGIN_URL . '/includes/user-interface/js/wppfm_feed-form-events' . $this->_js_min . '.js' ), array( 'jquery' ), $this->_version_stamp, true );
+			wp_enqueue_script( 'wppfm_form-support-script', esc_url( MYPLUGIN_PLUGIN_URL . '/includes/user-interface/js/wppfm_support' . $this->_js_min . '.js' ), array( 'jquery' ), $this->_version_stamp, true );
+			wp_enqueue_script( 'wppfm_backup-list-script', esc_url( MYPLUGIN_PLUGIN_URL . '/includes/user-interface/js/wppfm_backup-list' . $this->_js_min . '.js' ), array( 'jquery' ), $this->_version_stamp, true );
 		}
 	}	
 
-     // end of WPPFM_Add_Feed_Page class
+     // end of WPPFM_Add_Options_Page class
 
 endif;

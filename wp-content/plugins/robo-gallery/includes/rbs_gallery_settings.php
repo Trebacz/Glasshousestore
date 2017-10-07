@@ -13,19 +13,116 @@
 */
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-wp_enqueue_style ( 	'robosoft-gallery-about', ROBO_GALLERY_URL.'css/admin/about.css', array( ), ROBO_GALLERY_VERSION );
-?>
-<div class="wrap">
-	<h1><?php _e('Robo Gallery', 'robo-gallery'); ?></h1>
-	<h2><?php _e('Compatibility Settings', 'robo-gallery'); ?></h2>
+class Robo_Gallery_Settings {
 
-	<form method="post" action="options.php" novalidate="novalidate">
-		<?php 
-		settings_fields( 'rbs_gallery_settings' ); 
-		do_settings_sections( 'rbs_gallery_settings' ); 
-		 ?>
-		<table class="form-table">
+	private $active_tab = '';
+
+	function __construct(){
+		$this->init();
+	}
+
+
+	function init(){
+		$this->hooks();
+	}
+
+	function hooks(){
+		
+		add_action( 'admin_init', array( $this, 'settings') );
+		add_action('admin_menu', array( $this, 'menu') ) ;
+	}
+
+	function menu(){
+		add_submenu_page( 'edit.php?post_type=robo_gallery_table', 'Settings Robo Gallery', 'Settings', 'manage_options', 'robo-gallery-settings', array( $this, 'page') );
+	}
+
+
+	function settings(){
+		register_setting( 'robo_gallery_settings_comp', ROBO_GALLERY_PREFIX.'categoryShow' );
+		register_setting( 'robo_gallery_settings_comp', ROBO_GALLERY_PREFIX.'jqueryVersion' );
+		register_setting( 'robo_gallery_settings_comp', ROBO_GALLERY_PREFIX.'fontLoad' );
+		register_setting( 'robo_gallery_settings_comp', ROBO_GALLERY_PREFIX.'delay' );
+		register_setting( 'robo_gallery_settings_comp', ROBO_GALLERY_PREFIX.'debugEnable' );
+		register_setting( 'robo_gallery_settings_comp', ROBO_GALLERY_PREFIX.'expressPanel' );
+
+		register_setting( 'robo_gallery_settings_post', ROBO_GALLERY_PREFIX.'postShowText' );
+		register_setting( 'robo_gallery_settings_post', ROBO_GALLERY_PREFIX.'cloneBlock' );
+		
+		register_setting( 'robo_gallery_settings_seo', ROBO_GALLERY_PREFIX.'seo' );
+		
+	}
+
+	function tabs( ){
+		echo '
+		<h2 class="nav-tab-wrapper">
+		    <a href="edit.php?post_type=robo_gallery_table&page=robo-gallery-settings&tab=comp" class="nav-tab '.( $this->active_tab == 'comp' ? 'nav-tab-active' : '' ).'">
+		    	'.__('Compatibility Settings', 'robo-gallery').'
+		    </a>
+		    <a href="edit.php?post_type=robo_gallery_table&page=robo-gallery-settings&tab=post" class="nav-tab '.( $this->active_tab == 'post' ? 'nav-tab-active' : '' ).'">
+		    	'.__('Create Post Settings', 'robo-gallery').'
+		    </a>
+		    <a href="edit.php?post_type=robo_gallery_table&page=robo-gallery-settings&tab=seo" class="nav-tab '.( $this->active_tab == 'seo' ? 'nav-tab-active' : '' ).'">
+		    	'.__('SEO Optimization', 'robo-gallery').'
+		    </a>
+		</h2>';
+	}
+
+
+
+	function enqueue(){
+		wp_enqueue_style ( 	'robosoft-gallery-about', ROBO_GALLERY_URL.'css/admin/about.css', array( ), ROBO_GALLERY_VERSION );		
+	}
+
+
+	function page(){
+		
+		$this->enqueue();
+
+		$this->active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'comp';
+
+		echo '
+		<div class="wrap">
+			<h1>'.__('Robo Gallery', 'robo-gallery').'</h1>';
+
+		$this->tabs();
+
+		echo '<form method="post" action="options.php?tab='.$this->active_tab.'">';
+
 			
+			
+			settings_errors();
+			
+			echo '<table class="form-table">';
+
+		    if( $this->active_tab == 'comp' ) {
+		    	settings_fields( 'robo_gallery_settings_comp' ); 
+				do_settings_sections( 'robo_gallery_settings_comp' ); 
+		        $this->compOptions();
+		    } elseif( $this->active_tab == 'post' ) {
+		    	settings_fields( 'robo_gallery_settings_post' ); 
+				do_settings_sections( 'robo_gallery_settings_post' ); 
+		        $this->postOptions();
+		    } else {
+		    	settings_fields( 'robo_gallery_settings_seo' ); 
+				do_settings_sections( 'robo_gallery_settings_seo' ); 
+		        $this->seoOptions();
+		    } 
+		    
+		    echo '</table>';
+
+			submit_button();
+
+		echo '
+			</form>
+		</div>
+		<div class="rbs_about_string2">Copyright &copy; 2014 - 2017 <a href="https://robosoft.co/robogallery">RoboSoft</a> All Rights Reserved</div>';
+
+	}
+
+
+
+	function compOptions(){
+		 ?>
 			<tr>
 				<th scope="row"><?php _e('Categories Manager', 'robo-gallery'); ?></th>
 				<td>
@@ -75,20 +172,7 @@ wp_enqueue_style ( 	'robosoft-gallery-about', ROBO_GALLERY_URL.'css/admin/about.
 					</fieldset>
 				</td>
 			</tr>
-			<tr>
-				<th scope="row"><?php _e('Switch Style', 'robo-gallery'); ?></th>
-				<td>
-					<fieldset>
-						<legend class="screen-reader-text"><span><?php _e('Switch Style', 'robo-gallery'); ?></span></legend>
-						<label title='<?php _e('Modern', 'robo-gallery'); ?>'>
-							<input type='radio' name='<?php echo ROBO_GALLERY_PREFIX.'switchStyle'; ?>' value='0' <?php if( !get_option(ROBO_GALLERY_PREFIX.'switchStyle', '') ) echo " checked='checked'";?> /> <?php _e('Modern', 'robo-gallery'); ?>
-						</label><br />
-						<label title='<?php _e('Classic', 'robo-gallery'); ?>'>
-							<input type='radio' name='<?php echo ROBO_GALLERY_PREFIX.'switchStyle'; ?>' value='1' <?php if( get_option(ROBO_GALLERY_PREFIX.'switchStyle')=='1' ) echo " checked='checked'";?>  /> <?php _e('Classic', 'robo-gallery'); ?>
-						</label><br />			
-					</fieldset>
-				</td>
-			</tr>
+			
 			<tr>
 				<th scope="row"><?php _e('Size Calculations Delay', 'robo-gallery'); ?></th>
 				<td>
@@ -124,10 +208,12 @@ wp_enqueue_style ( 	'robosoft-gallery-about', ROBO_GALLERY_URL.'css/admin/about.
 					</fieldset>
 				</td>
 			</tr>
+		<?php
+	}
 
-			<tr>
-				<th colspan="2"><h2><?php _e('Create Post Settings', 'robo-gallery'); ?></h2></th>
-			</tr>
+
+	function postOptions(){
+		?>
 			<tr>
 				<th scope="row"><?php _e('Text Block', 'robo-gallery'); ?></th>
 				<td>
@@ -157,10 +243,12 @@ wp_enqueue_style ( 	'robosoft-gallery-about', ROBO_GALLERY_URL.'css/admin/about.
 					</fieldset>
 				</td>
 			</tr>
+		<?php
+	}
 
-			<tr>
-				<th colspan="2"><h2><?php _e('SEO Optimization', 'robo-gallery'); ?></h2></th>
-			</tr>
+
+	function seoOptions(){
+		?>
 			<tr>
 				<th scope="row"><?php _e('Add SEO content', 'robo-gallery'); ?></th>
 				<td>
@@ -182,12 +270,9 @@ wp_enqueue_style ( 	'robosoft-gallery-about', ROBO_GALLERY_URL.'css/admin/about.
 				</td>
 			</tr>
 
-		</table>
+		<?php
+	}
 
-		<p class="submit">
-			<input type="submit" name="submit" id="submit" class="button button-primary" value="<?php _e('Save Changes', 'robo-gallery'); ?>"  />
-		</p>
-
-	</form>
-</div>
-<div class="rbs_about_string2">Copyright &copy; 2014 - 2017 <a href="https://robosoft.co/robogallery">RoboSoft</a> All Rights Reserved</div>
+}
+		
+$settings = new Robo_Gallery_Settings();

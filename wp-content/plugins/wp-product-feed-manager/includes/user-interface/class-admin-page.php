@@ -86,6 +86,7 @@ if ( !class_exists( 'WPPFM_Admin_Page' ) ) :
       ';
 		}
 
+		// ref HWOTBERH
 		protected function licensing_field( $stat )  {
 
 			$license = get_option( 'wppfm_lic_key' );

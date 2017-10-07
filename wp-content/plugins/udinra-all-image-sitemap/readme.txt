@@ -3,8 +3,8 @@ Contributors: Udinra
 Donate link: https://paypal.me/AshaUpadhyay
 Tags: xml sitemaps, google sitemaps, image sitemap, seo, search engines, sitemap,google image sitemap,wordpress seo,image seo
 Requires at least: 3.0
-Tested up to: 4.7.3
-Stable tag: 3.5.1
+Tested up to: 4.8.1
+Stable tag: 3.5.2
 License: GPLv2 or later
 
 Automatically creates Image sitemap and pings Google,Bing and Ask.com
@@ -15,7 +15,7 @@ Automatically creates Image sitemap and pings Google,Bing and Ask.com
 <ul>
 <li>Generates ALT text if there is none must for Image SEO</li>
 <li>Support WordPress Multisite installation</li>
-<li>Index sitemap functionality to help large sites</li>
+<li>Index sitemap functionality to help large sites. <a href="https://support.google.com/webmasters/answer/75712?hl=en">Google recommending Index Sitemap</a></li>
 <li>Control Sitemap generation frequency</li>
 <li>Pings Search Engines</li>
 </ul>
@@ -31,6 +31,7 @@ Automatically creates Image sitemap and pings Google,Bing and Ask.com
 You can buy Pro Version at <a href="https://udinra.com/downloads/udinra-image-sitemap-pro">Udinra Image Sitemap Pro</a>
 <br>
 <strong>Why use Image Sitemap?</strong>
+<a href="https://support.google.com/webmasters/answer/178636?hl=en">Image Sitemap details by Google</a>
 https://www.youtube.com/watch?v=PSy1K4S1asM
 <br />
 <strong>Other Sitemap Plugins</strong>
@@ -60,6 +61,10 @@ https://udinra.com/docs/category/image-sitemap-pro
 3. Sitemap Page
 
 == Changelog ==
+
+= 3.5.2 = 
+
+Intermediate release to prepare ground for next big release
 
 = 3.5.1 =
 
