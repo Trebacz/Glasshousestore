@@ -2377,8 +2377,8 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
 		}
 
 		if ($ajax_processing)
-		{			
-			$logger = create_function('$m', 'echo "<div class=\\"progress-msg\\">$m</div>\\n"; flush();');
+		{
+            $logger = create_function('$m', 'printf("<div class=\\"progress-msg\\">[%s] $m</div>\\n", date("H:i:s")); flush();');
 		}
 		else
 		{
@@ -2387,7 +2387,11 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
 
 		PMXI_Plugin::$session->set('start_time', (empty(PMXI_Plugin::$session->start_time)) ? time() : PMXI_Plugin::$session->start_time);
 
-		wp_cache_flush();
+        $is_reset_cache = apply_filters('wp_all_import_reset_cache_before_import', true, $import_id);
+
+        if ($is_reset_cache){
+            wp_cache_flush();
+        }
 
 		wp_defer_term_counting(true);
 		wp_defer_comment_counting(true);

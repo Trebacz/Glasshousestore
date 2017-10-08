@@ -2761,6 +2761,20 @@ p.upgrade_link {
 	color: #777;
 }
 
+.wpallimport-plugin .new_element_ico{
+	padding: 10px 10px 10px 40px;
+	color: #777;
+	position: relative;
+}
+.wpallimport-plugin .new_element_ico::before{
+	font-family: "dashicons";
+	content: "\f464";
+	font-size: 33px;
+	position: absolute;
+	top: 25px;
+	left: 0;
+	color: #ccc;
+}
 /*--------------------------------------------------------------------------
 *
 *	XML & CSV 

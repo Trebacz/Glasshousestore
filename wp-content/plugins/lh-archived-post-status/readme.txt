@@ -127,3 +127,6 @@ If you want to customise the display that shortcode has plenty of arguments. The
 
 **2.17 October 04, 2017**
 * Various improvements
+
+**2.18 October 08, 2017**
+* Bug Fix

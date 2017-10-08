@@ -6,7 +6,7 @@ if ( ! function_exists('get_file_curl') ):
 		
 		if ( ! preg_match('%^(http|ftp)s?://%i', $url) ) return;
 
-		$response = wp_remote_get($url);			
+		$response = wp_remote_get($url);
 
 		if ( ! is_wp_error($response) and ( ! isset($response['response']['code']) or isset($response['response']['code']) and ! in_array($response['response']['code'], array(401, 403, 404))) ) 
 		{
@@ -30,7 +30,7 @@ if ( ! function_exists('get_file_curl') ):
 			    fclose($fp);
 			}													
 			
-		    if ( preg_match('%\W(svg)$%i', basename($fullpath)) or preg_match('%\W(jpg|jpeg|gif|png)$%i', basename($fullpath)) and ( ! ($image_info = apply_filters('pmxi_getimagesize', @getimagesize($fullpath), $fullpath)) or ! in_array($image_info[2], array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG)) ) )
+		    if ( preg_match('%\W(svg)$%i', basename($fullpath)) or preg_match('%\W(jpg|jpeg|gif|png)$%i', basename($fullpath)) and ( ! ($image_info = apply_filters('pmxi_getimagesize', @getimagesize($fullpath), $fullpath)) or ! in_array($image_info[2], array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_BMP)) ) )
 			{			
 				$result = pmxi_curl_download($url, $fullpath, $to_variable);	
 				if ( ! $result and $iteration === false)
@@ -51,10 +51,10 @@ if ( ! function_exists('get_file_curl') ):
 			if ($curl === false and $iteration === false)
 			{
 				$new_url = wp_all_import_translate_uri($url);
-				return ($new_url !== $url) ? get_file_curl($new_url, $fullpath, $to_variable, true) : ( is_wp_error($response) ? $response : false );
+				return ($new_url !== $url) ? get_file_curl($new_url, $fullpath, $to_variable, true) : ( is_wp_error($response) ? $response : false );								
 			}
 
-			return ($curl === false) ? ( is_wp_error($response) ? $response : false ) : $curl;
+			return ($curl === false) ? ( is_wp_error($response) ? $response : false ) : $curl;			
 
 		}
 		
@@ -117,7 +117,11 @@ if ( ! function_exists('curl_exec_follow') ):
 	      if (!empty($url_data['user']) and !empty($url_data['pass'])){
 	      	curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY );
 			curl_setopt($ch, CURLOPT_USERPWD, $url_data['user']. ":" . $url_data['pass']); 
-			$newurl = $url_data['scheme'] . '://' . $url_data['host'] . $url_data['path'];
+			$newurl = $url_data['scheme'] . '://' . $url_data['host'];
+            if (!empty($url_data['port'])){
+                $newurl .= ':' . $url_data['port'];
+            }
+            $newurl .= $url_data['path'];
 			if (!empty($url_data['query']))
 			{
 				$newurl .= '?' . $url_data['query'];	
