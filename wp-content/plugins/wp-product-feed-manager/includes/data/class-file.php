@@ -229,7 +229,7 @@ if ( !class_exists( 'WPPFM_File_Class' ) ) :
 
 			if ( $channel_short_name === 'google' ) {
 
-				$free_version_google_folder = MYPLUGIN_PLUGIN_DIR . 'includes/application/google';
+				$free_version_google_folder = WPPFM_PLUGIN_DIR . 'includes/application/google';
 
 				if ( file_exists( $free_version_google_folder ) && is_dir( $free_version_google_folder ) ) {
 

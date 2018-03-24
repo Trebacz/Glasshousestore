@@ -3,47 +3,53 @@ Contributors: Udinra
 Donate link: https://paypal.me/AshaUpadhyay
 Tags: xml sitemaps, google sitemaps, image sitemap, seo, search engines, sitemap,google image sitemap,wordpress seo,image seo
 Requires at least: 3.0
-Tested up to: 4.8.1
-Stable tag: 3.5.2
+Tested up to: 4.9.4
+Stable tag: 3.6.1
 License: GPLv2 or later
 
-Automatically creates Image sitemap and pings Google,Bing and Ask.com
+Automatically creates XML and Image sitemap and pings Google,Bing and Ask.com
 
 == Description ==
 
 <strong>Features</strong>
 <ul>
+<li>Supports XML Sitemap and Image Sitemap. So no need to use two sitemap plugins now</li>
+<li>Creates Image Sitemap from default WordPress Gallery</li>
 <li>Generates ALT text if there is none must for Image SEO</li>
 <li>Support WordPress Multisite installation</li>
 <li>Index sitemap functionality to help large sites. <a href="https://support.google.com/webmasters/answer/75712?hl=en">Google recommending Index Sitemap</a></li>
 <li>Control Sitemap generation frequency</li>
 <li>Pings Search Engines</li>
 </ul>
-<strong>Image Sitemap Pro Features</strong>
+<strong>Sitemap Pro Features</strong>
 <ul>
+<li>Supports XML Sitemap, Video Sitemap, Image Sitemap and HTML Sitemap. Get every Sitemap in one plugin.</li>
+<li>Supports YouTube, Vimeo, Dailymotion and WooCommerce Videos</li>
+<li>Extended support to bbpress (read bbpress images as well like normal posts or pages)</li>
 <li>Supports popular Gallery plugins (NextGen Gallery, Foo Gallery, Envira Gallery, Photo Gallery, Final Tiles Grid Gallery,Gallery plugin by Best Web Soft)</li>
-<li>Supports Slider plugin (Meta Slider).</li>
+<li>Supports Slider plugin (Meta Slider, Royal Slider).</li>
 <li>eCommerce plugin support (WooCommerce,WP eCommerce,Easy Digital Downloads etc)</li>
 <li>Supports Visual Composer plugins (WPBakery , Site Origin etc)</li>
 <li>Supports Download Monitor plugin</li>
 <li>All of Free plugin features</li></ul>
 <br />
-You can buy Pro Version at <a href="https://udinra.com/downloads/udinra-image-sitemap-pro">Udinra Image Sitemap Pro</a>
+You can buy Pro Version at <a href="https://udinra.com/downloads/udinra-sitemap-pro">Udinra Sitemap Pro</a>
 <br>
 <strong>Why use Image Sitemap?</strong>
 <a href="https://support.google.com/webmasters/answer/178636?hl=en">Image Sitemap details by Google</a>
 https://www.youtube.com/watch?v=PSy1K4S1asM
 <br />
-<strong>Other Sitemap Plugins</strong>
+<strong>Gallery Plugins</strong>
 <ul>
-<li><a href="https://wordpress.org/plugins/udinra-video-sitemap/">Video Sitemap plugin</a></li>
-<li><a href="https://wordpress.org/plugins/udinra-mobile-sitemap/">Mobile AMP Sitemap plugin</a></li>
+<li><a href="https://wordpress.org/plugins/udinra-auto-gallery/">Auto Image Gallery</a></li>
+<li><a href="https://wordpress.org/plugins/udinra-video-gallery/">Video Gallery</a></li>
 </ul>
 <strong>Shop Plugins</strong>
 <ul>
 <li><a href="https://wordpress.org/plugins/udinra-woocommerce-shop/">WooCommerce Shop</a></li>
 <li><a href="https://wordpress.org/plugins/udinra-easy-digital-downloads-shop/">Easy Digital Downloads Shop</a></li>
 </ul>
+
 == Installation ==
 
 The plugin can be installed like any other plugin.You can search from WordPress Dashboard (Udinra Image Sitemap) and click install to install it.You can also download it and upload it to your server wp-content/plugins directory and extract the zip file.
@@ -52,7 +58,7 @@ The plugin can be installed like any other plugin.You can search from WordPress 
 
 Step by step solution to common problems faced so please read the documentation before raising a support ticket.
 
-https://udinra.com/docs/category/image-sitemap-pro
+https://udinra.com/docs/category/sitemap-pro
 
 == Screenshots ==
 
@@ -61,6 +67,14 @@ https://udinra.com/docs/category/image-sitemap-pro
 3. Sitemap Page
 
 == Changelog ==
+
+= 3.6.1 = 
+
+Date issue in Category sitemap.
+
+= 3.6.0 = 
+
+Major release now supports XML sitemap as well. So no need to use two sitemap plugins now.
 
 = 3.5.2 = 
 

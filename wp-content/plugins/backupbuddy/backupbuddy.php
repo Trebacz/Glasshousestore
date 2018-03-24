@@ -3,20 +3,20 @@
  *
  *	Plugin Name: BackupBuddy
  *	Plugin URI: http://ithemes.com/purchase/backupbuddy/
- *	Description: The most complete WordPress solution for Backup, Restoration, Migration, and Deployment. Backs up a customizable selection of files, settings, and content for a complete snapshot of your site. Restore, migrate, or deploy your site to a new host or new domain with complete ease-of-mind. Stash Live feature allows for real-time live backups into the cloud.
- *	Version: 8.1.0.0
+ *	Description: The most complete WordPress solution for Backup, Restoration, Migration, and Deployment to the same host or a new domain. Backs up a customizable selection of files, settings, and content for a complete snapshot of your site. Stash Live feature allows for real-time live backups to the cloud.
+ *	Version: 8.2.2.0
  *	Author: iThemes
  *	Author URI: http://ithemes.com/
  *	iThemes Package: backupbuddy
- *	
- *	
+ *
+ *
  *	INSTALLATION:
  *		
  *		1. Download and unzip the latest release zip file.
  *		2. If you use the WordPress plugin uploader to install this plugin skip to step 4.
  *		3. Upload the entire plugin directory to your `/wp-content/plugins/` directory.
  *		4. Activate the plugin through the 'Plugins' menu in WordPress Administration.
- *	
+ *
  *
  *	USAGE:
  *		
@@ -25,11 +25,10 @@
  *
  *	CONTRIBUTORS (since BackupBuddy v1.0; launched March 4, 2010):
  *		
- *		Dustin Bolton (creation, everything), Chris Jean (early zip), Josh Benham (misc code, support, testing),
- *		Skyler Moore (ftp, misc code, support, testing), Jeremy Trask (xzip, misc code, support),
- *		Ronald Huereca (early multisite), Dustin Akers (support, testing), Daniel Harzheim (testing, settings form
- *		verification, PB framework contributions), Bradford Ulrich (UI, graphics), Glenn Ansley (misc code, support),
- *		Thomas Oliver (support), Ty Carlson (Stash UI, graphics).
+ *		Dustin Bolton (creation, lead BB dev, anything & everything 2010-present), Chris Jean (early zip), Josh Benham (misc code, support, testing),
+ *		Skyler Moore (ftp, misc code, support, testing), Jeremy Trask (xzip, misc code, support), Ronald Huereca (early multisite)
+ *		Dustin Akers (lead BB support, testing), Daniel Harzheim (testing, settings form verification, PB framework contributions),
+ *		Bradford Ulrich (UI, graphics), Glenn Ansley (misc code, support), Thomas Oliver (support), Ty Carlson (Stash UI, graphics).
  *
  */
 
@@ -39,7 +38,7 @@ $pluginbuddy_settings = array(
 				'slug'			=>		'backupbuddy',
 				'series'			=>		'',
 				'default_options'	=>		array(
-												'data_version'						=>		'17',				// Data structure version. Added BB 2.0 to ease updating.												
+												'data_version'						=>		'18',				// Data structure version. Added BB 2.0 to ease updating.												
 												'importbuddy_pass_hash'				=>		'',					// ImportBuddy password hash.
 												'importbuddy_pass_length'			=>		0,					// Length of the ImportBuddy password before it was hashed.
 												'backup_reminders'					=>		1,					// Remind to backup after post, pre-upgrade, etc.
@@ -82,7 +81,7 @@ $pluginbuddy_settings = array(
 												'email_return'                             => '',				// Return email address for emails sent. Defaults to admin email if none specified.
 												
 												'remote_destinations'				=>		array(),			// Array of remote destinations (S3, Rackspace, email, ftp, etc)
-												'remote_send_timeout_retries'			=>		'1',					// Number of times to attempt to resend timed out remote destination. IMPORTANT: Currently only permits values or 1 or 0. 1 max tries.
+												'remote_send_timeout_retries'			=>		'1',				// Number of times to attempt to resend timed out remote destination. IMPORTANT: Currently only permits values or 1 or 0. 1 max tries.
 												'role_access'						=>		'activate_plugins',	// Default role access to the plugin.
 												'dropboxtemptoken'					=>		'',					// Temporary Dropbox token for oauth.
 												'multisite_export'					=>		'0',				// Allow individual sites to be exported by admins of said subsite? (Network Admins can always export individual sites).
@@ -94,7 +93,7 @@ $pluginbuddy_settings = array(
 												'zip_method_strategy'				=>		'1',				// 0 = Not Set, 1 = Best Available, 2 = All Available, 3 = Force Compatibility.
 												'database_method_strategy'			=>		'php',				// php, mysqldump, all
 												'alternative_zip_2'					=>		'0',				// Alternative zip system (Jeremy).
-												'ignore_zip_warnings'				=>		'0',				// Ignore non-fatal zip warnings during the zip process (ie symlink, cant read file, etc).
+												'ignore_zip_warnings'				=>		'1',				// Ignore non-fatal zip warnings during the zip process (ie symlink, cant read file, etc).
 												'ignore_zip_symlinks'				=>		'1',				// When enabled (1) zip will not-follow (zip utility) or ignore (pclzip) any symbolic links
 												'zip_build_strategy'				=>		'3',				// 0 = Not Set, 1 = Reserved, 2 = Single-Burst/Single-Step, 3 = Multi-Burst/Single-Step (Default), 4 = Multi-Burst/Multi-Step.
 												'zip_step_period'					=>		'30',				// Zip build threshold period, at expiry will start new step. Empty for default of 30s. 0 for infinite.
@@ -111,6 +110,7 @@ $pluginbuddy_settings = array(
 												'deployment_allowed'				=>		'0',				// Whether or not this site accepts pushing/pulling of site data via Stash. 0 = disabled, 1 = enabled.
 												'hide_live'						=>		'0',				// Hide Stash Live from menu when set to 1.
 												'hide_dashboard_widget'				=>		'0',				// Hide dashboard widget from even being an option in admin when set to 1.
+												'deploy_sslverify'					=>		'1',				// Whether or not to verify ssl cert for outgoing remote connections.
 												'remote_api'						=>		array(
 																								'keys'	=>	array(),	// API key for allowing other BB installations to manage this BB, or use deployments.
 																								'ips'	=>	array(),	// Array of IP addresses allowed to access the remote API. If empty, any ip can connect when enabled.
@@ -151,8 +151,8 @@ $pluginbuddy_settings = array(
 												'last_tested_php_memory'			=>		0,					// Timestamp PHP memory was last tested.
 												'use_internal_cron'					=>		'0',				// When 1, we will try to use our own cron system to work around cron caching issues.
 												'php_runtime_test_minimum_interval'	=>		'604800',			// How often to perform the automated test via the housekeeping function. This must elapse before automated test will run. Zero (0) to disable.
-												'php_memory_test_minimum_interval'	=>		'604800',			// How often to perform the automated test via the housekeeping function. This must elapse before automated test will run. Zero (0) to disable.
-												'cron_request_timeout_override'		=>		'',					// Overrides cron loopback timeout time. 0 for no override. Useful if server too slow to respond in WP's default 0.01sec to get cron working.
+												'php_memory_test_minimum_interval'	=>		'604800',				// How often to perform the automated test via the housekeeping function. This must elapse before automated test will run. Zero (0) to disable.
+												'cron_request_timeout_override'		=>		'',				// Overrides cron loopback timeout time. 0 for no override. Useful if server too slow to respond in WP's default 0.01sec to get cron working.
 												'profiles'							=>		array(
 
 																								-3 => array(

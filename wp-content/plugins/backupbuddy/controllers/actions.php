@@ -48,6 +48,9 @@ class pb_backupbuddy_actions extends pb_backupbuddy_actionscore {
 	}
 	
 	function iterate_edits_since_last($post_id, $post, $updated = '' ) {
+		if ( wp_is_post_revision( $post_id) || wp_is_post_autosave( $post_id ) ) { // Ignore revisions and autosaves.
+			return;
+		}
 		if ($post->post_type != 'revision' && $post->post_type != 'attachment' && $post->post_type != 'nav_menu_item') {
 			pb_backupbuddy::$options['edits_since_last']++;
 			pb_backupbuddy::save();

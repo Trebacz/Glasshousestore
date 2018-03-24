@@ -17,7 +17,7 @@ class pb_backupbuddy_filters extends pb_backupbuddy_filterscore {
 		}
 		
 		//$schedules['five_minutes_interval'] = array( 'interval' => 300, 'display' => __( 'Once every five minutes', 'it-l10n-backupbuddy' ) ); // Used for BB Live.
-		$schedules['twicedaily'] = array( 'interval' => 21600, 'display' => __( 'Every Six Hours', 'it-l10n-backupbuddy' ) );
+		$schedules['quarterdaily'] = array( 'interval' => 21600, 'display' => __( 'Every Six Hours', 'it-l10n-backupbuddy' ) );
 		$schedules['twicedaily'] = array( 'interval' => 43200, 'display' => __( 'Twice Daily', 'it-l10n-backupbuddy' ) );
 		$schedules['everyotherday'] = array( 'interval' => 172800, 'display' => __( 'Every Other Day', 'it-l10n-backupbuddy' ) );
 		$schedules['twiceweekly'] = array( 'interval' => 302400, 'display' => __( 'Twice Weekly', 'it-l10n-backupbuddy' ) );

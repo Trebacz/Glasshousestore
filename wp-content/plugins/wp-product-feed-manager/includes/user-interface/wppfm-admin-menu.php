@@ -9,7 +9,7 @@
  * @author 		Michel Jongbloed
  * @category 	Menus
  * @package 	User-interface
- * @version     1.2
+ * @version     1.3
  */
 
 // Prevent direct access
@@ -24,32 +24,23 @@ function wppfm_add_feed_manager_menu( $channel_updated = false ) {
 	add_menu_page(
 		__( 'WP Feed Manager', 'wp-product-feed-manager' ), 
 		__( 'Feed Manager', 'wp-product-feed-manager' ), 
-		'manage_options', 'wp-product-feed-manager', 
+		'manage_woocommerce', 'wp-product-feed-manager', 
 		'wppfm_main_admin_page', 
-		esc_url( MYPLUGIN_PLUGIN_URL . '/images/app-rss-plus-xml-icon.png' ) 
+		esc_url( WPPFM_PLUGIN_URL . '/images/app-rss-plus-xml-icon.png' ) 
 	);
 
 	add_submenu_page(
 		'wp-product-feed-manager',
 		__( 'Add Feed', 'wp-product-feed-manager' ), 
 		__('Add Feed', 'wp-product-feed-manager' ), 
-		'manage_options', 
+		'manage_woocommerce', 
 		'wp-product-feed-manager-add-new-feed', 
 		'wppfm_add_feed_page' 
 	);
 
 	// add the settings 
 	add_submenu_page(
-	'wp-product-feed-manager', __( 'Settings', 'wp-product-feed-manager' ),  __( 'Settings', 'wp-product-feed-manager' ), 'manage_options', 'wppfm-options-page', 'wppfm_options_page' );
-
-	if( !wppfm_check_backup_status() ) {
-		echo wppfm_show_wp_warning( __( "Due to the latest update your Feed Manager backups are no longer valid! 
-			Please open the Feed Manager Settings page, remove all your backups in and make a new one.", 'wp-product-feed-manager' ), true );
-	}
-	
-// Obsolete 170217
-//	add_options_page(
-//	__( 'WP Feed Manage Options', 'wp-product-feed-manager' ), __( 'Feed Manager', 'wp-product-feed-manager' ), 'manage_options', 'wppfm_options_page', 'wppfm_options_page' );
+	'wp-product-feed-manager', __( 'Settings', 'wp-product-feed-manager' ),  __( 'Settings', 'wp-product-feed-manager' ), 'manage_woocommerce', 'wppfm-options-page', 'wppfm_options_page' );
 }
 
 add_action( 'admin_menu', 'wppfm_add_feed_manager_menu' );
@@ -76,10 +67,25 @@ function wppfm_options_page() {
 	$add_options_page->show();
 }
 
+/**
+ * Checks if the backups are valid for the current database version and warns the user if not
+ * 
+ * @since 1.9.6
+ */
+function wppfm_check_backups() {
+	if( !wppfm_check_backup_status() ) {
+		$msg = __( "Due to the latest update your Feed Manager backups are no longer valid! Please open the Feed Manager Settings page, remove all your backups in and make a new one.", 'wp-product-feed-manager' )
+			?><div class="notice notice-warning is-dismissible">
+			<p><?php echo $msg; ?></p>
+		</div><?php
+	}
+}
+
+add_action( 'admin_notices', 'wppfm_check_backups' );
+
 // ref HWOTBERH
 function wppfm_validate() {
 	if ( get_option( 'wppfm_lic_status' ) === 'valid' ) {
-		
 		if ( date( 'Ymd' ) === get_option( 'wppfm_lic_status_date' ) ) {
 			return 'valid';
 		} else {
@@ -89,6 +95,8 @@ function wppfm_validate() {
 		return wppfm_edd_status();
 	}
 }
+
+add_action('admin_init', 'wppfm_validate');
 
 function wppfm_edd_status() {
 	$edd_status = wppfm_check_license( get_option( 'wppfm_lic_key' ) );
@@ -102,12 +110,6 @@ function wppfm_edd_status() {
 		return $edd_status;
 	}
 }
-
-// obsolete 050317
-//function wppfm_license_menu() {
-//	add_plugins_page( 'Plugin License', 'Plugin License', 'manage_options', 'pluginname-license', 'edd_sample_license_page' );
-//}
-//add_action('admin_menu', 'wppfm_license_menu');
 
 function wppfm_register_option() {
 	// creates our settings in the options table
@@ -155,7 +157,7 @@ function wppfm_activate_license() {
 
 		// make sure the response came back okay
 		if ( is_wp_error( $response ) ) { 
-			wppfm_handle_wp_errors_response( $response, "Error 2121. Activating your license failed. Please contact support@wpmarketingrobot.com for support on this issue." );
+			echo wppfm_handle_wp_errors_response( $response, "Error 2121. Activating your license failed. Please contact support@wpmarketingrobot.com for support on this issue." );
 			return false; 
 		}
 
@@ -166,6 +168,7 @@ function wppfm_activate_license() {
 			// $license_data->license will be either "active" or "inactive"
 			update_option( 'wppfm_lic_status', $license_data->license );
 			update_option( 'wppfm_lic_key', $license );
+			update_option( 'wppfm_lic_expires', $license_data->expires );
 			update_option( 'wppfm_lic_status_date', date( 'Ymd' ) );
 		} elseif ( strpos( $response['body'], 'Fatal error' ) ) {
 			echo wppfm_show_wp_error( sprintf( __( "An error has occured. It is possible that the wpmarketingrobot website is down. 
@@ -176,6 +179,62 @@ function wppfm_activate_license() {
 }
 
 add_action('admin_init', 'wppfm_activate_license');
+
+/**
+ * Shows a message on all wp admin pages when the license needs to be renewed
+ * 
+ * @since 1.9.5
+ */
+function wppfm_check_license_expiration() {
+	$lic_key = get_option( 'wppfm_lic_key' );
+	$expires = get_option( 'wppfm_lic_expires' );
+	
+	if ( $expires === 'lifetime' ) { return; }
+	
+	if ( !$lic_key || !$expires ) { return; }
+	
+	$today = date( 'Y-m-d H:i:s', current_time( 'timestamp' ) );
+	$one_week_date = date_add( date_create( $today ), date_interval_create_from_date_string( '1 week') );
+	$almost_expires_date = date_format( $one_week_date, 'Y-m-d H:i:s' );
+	$plugin_name = get_plugin_data( WPPFM_PLUGIN_DIR.'wp-product-feed-manager.php' );
+	$msg = '';
+	$is_dismissible = 'is-dismissible';
+	
+	if ( $expires < $almost_expires_date ) { 
+		wppfm_check_license( $lic_key ); // make sure the status is correct
+		$expires = get_option( 'wppfm_lic_expires' );
+		$almost_expires_date = date_format( $one_week_date, 'Y-m-d H:i:s' );
+	}
+
+	if( $expires <= $today ) {
+		$msg = sprintf( __("You have an invalid or expired license key for your %s plugin. 
+			Please <a href='%scheckout/?edd_license_key=%s&utm_source=client-admin&utm_medium=renewal_link&utm_campaign=license_expired'>
+			click here to go to the Licenses renewal page</a> to keep the plugin working and your product feeds valid.", 
+			'wp-product-feed-manager'), $plugin_name['Name'], EDD_SL_STORE_URL, $lic_key );
+		$msg_id = 'wppfm-licence-expired';
+		$msg_type = 'error';
+		$is_dismissible = '';
+	} else if ( $expires < $almost_expires_date  ) {
+		$msg = !get_option( 'wppfm_license_notice_surpressed' ) ? sprintf( __("The license key for your %s plugin is expiring soon. 
+			If you wish you can <a href='%scheckout/?edd_license_key=%s&utm_source=client-admin&utm_medium=renewal_link&utm_campaign=license_renewal'>
+			click here</a> to renew your license key directly so you can be sure your product feeds keep working.", 'wp-product-feed-manager'), 
+			$plugin_name['Name'], EDD_SL_STORE_URL, $lic_key ) : '';
+		$msg_id = 'wppfm-licence-almost-expired';
+		$msg_type = 'info';
+	} else {
+		update_option( 'wppfm_license_notice_surpressed', false );
+	}
+
+	if( $msg ) { 
+		delete_option( 'wppfm_lic_status_date' ); // keep checking if there is an update on the license status
+		
+		?><div data-dismissible="notice-one-forever" class="notice notice-<?php echo $msg_type; ?> <?php echo $is_dismissible; ?>" id="<?php echo $msg_id; ?>">
+			<p><?php echo $msg; ?></p>
+		</div><?php
+	}
+}
+
+add_action('admin_notices', 'wppfm_check_license_expiration');
 
 function wppfm_check_license( $license ) {
 
@@ -190,17 +249,20 @@ function wppfm_check_license( $license ) {
 	);
 
 	$response = wp_remote_get( add_query_arg( $api_params, EDD_SL_STORE_URL ), array( 'timeout' => 15, 'sslverify' => false ) );
-
+	
 	if ( is_wp_error( $response ) ) {
-		wppfm_handle_wp_errors_response( $response, "Error 2122. Checking your license failed. Please contact support@wpmarketingrobot.com for support on this issue." );
+		echo wppfm_handle_wp_errors_response( $response, "Error 2122. Checking your license failed. Please contact support@wpmarketingrobot.com for support on this issue." );
 		return false; 
 	}
 	
 	$license_data = json_decode( wp_remote_retrieve_body( $response ) );
 	
+	update_option( 'wppfm_lic_expires', $license_data->expires );
+	
 	if( $license_data && $license_data->license == 'valid' ) {
 		return 'valid'; // this license is still valid
 	} else {
+		delete_option( 'wppfm_check_license_expiration' ); // reset the expiration messages
 		return $license_data->license; // this license is no longer valid
 	}
 }

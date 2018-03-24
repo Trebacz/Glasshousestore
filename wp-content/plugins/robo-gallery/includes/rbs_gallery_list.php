@@ -8,7 +8,7 @@
 *      Created: 2015
 *      Licensed under the GPLv2 license - http://opensource.org/licenses/gpl-2.0.php
 *
-*      Copyright (c) 2014-2016, Robosoft. All rights reserved.
+*      Copyright (c) 2014-2018, Robosoft. All rights reserved.
 *      Available only in  https://robosoft.co/robogallery/ 
 */
 
@@ -37,13 +37,15 @@ if(isset($_GET['showproinfo']) && $_GET['showproinfo']){
 	}
 }
 
+
 if(!function_exists('rbs_custom_columns')){
 	function rbs_custom_columns( $column, $post_id ) {
 	    switch ( $column ) {
 		case 'rbs_gallery' :
 			global $post;
 			//$slug = '' ; $slug = $post->post_name;
-	        $shortcode = '<span>[robo-gallery id='.$post->ID.']</span>';
+	        $shortcode = '
+			<input readonly="readonly" size="23" value="[robo-gallery id='.$post_id.']" class="robo-gallery-shortcode" type="text" />';
 		    echo $shortcode; 
 		    break;
 
@@ -76,7 +78,8 @@ if(!function_exists('add_rbs_table_columns')){
 
 if(!function_exists('rbs_gallery_robogalleryList')){
 	function rbs_gallery_robogalleryList (){
-		wp_enqueue_style ('robo-gallery-list', ROBO_GALLERY_URL.'css/admin/list.css', array( ), ROBO_GALLERY_VERSION );
+		wp_enqueue_script('robo-gallery-lising-js', ROBO_GALLERY_URL.'js/admin/listing.js', array( 'jquery' ), ROBO_GALLERY_VERSION, true ); 
+		wp_enqueue_style ('robo-gallery-lising-css', ROBO_GALLERY_URL.'css/admin/list.css', array( ), ROBO_GALLERY_VERSION );
 	}
 	add_action( 'in_admin_header', 'rbs_gallery_robogalleryList' );
 }

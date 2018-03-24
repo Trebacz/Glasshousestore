@@ -19,6 +19,29 @@ WooCommerce Personalized Product Option Plugin allow site admin to add unlimited
 
 
 == Changelog ==
+= 8.8 November 19, 2017
+* Bug fixed: Price calculation bug for fixed when used with variable product
+= 8.7 October 28, 2017
+* Bug Fixed: Some warnings removed when file is uplaoded
+= 8.6 September 20, 2017
+* Bug Fixed: Quantites input calculation optimized and fixed calculations errors.
+= 8.5 September 13, 2017
+* Featured: Percentage option added for Matrix input
+= 8.4 September 13, 2017
+* Feature: Input File JS now enque in standar way
+* Feature: Image type input is now better front end design
+= 8.3 September 10, 2017
+* Bug fixed: variable prices display issue fixed
+* Feature: Now file name will be saved in email link
+= 8.2 September 1, 2017
+* Optimization: filter added in plugin before adding data to order: ppom_add_item_meta
+= 8.1 August 19, 2017
+* Featre Added: Send file email as attachment (option added)
+* Bug fixed: Some notices and warnings removed
+* Bug fixed: Decimal point issue fixed with vartiation quantities input
+= 8.0 August 8, 2017
+* Featre Added: Ajax valition option is back agains
+* Feature Added: Product Meta are shown in Product List for Quick View and Edit Link
 = 7.9.5 June 24, 2017
 * Feature Added: Export Meta Issue Resolved
 = 7.9.4 June 21, 2017

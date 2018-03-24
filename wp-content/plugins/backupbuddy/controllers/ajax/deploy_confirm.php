@@ -30,12 +30,12 @@ if ( 'pull' == $direction ) { // Local so clean up here.
 	$apiKey = $destinationArray['api_key'];
 	$apiSettings = backupbuddy_remote_api::key_to_array( $apiKey );
 	
-	if ( false === ( $response = backupbuddy_remote_api::remoteCall( $apiSettings, 'confirmDeployment', array( 'serial' => $serial ), 30, null, null, null, null, null, null, null, $returnRaw = true ) ) ) {
+	if ( false === ( $response = backupbuddy_remote_api::remoteCall( $apiSettings, 'confirmDeployment', array( 'serial' => $serial ), 30, array(), $returnRaw = true ) ) ) {
 		$message = 'Error #2378378324. Unable to confirm remote deployment with serial `' . $serial . '` via remote API. This is a non-fatal warning. BackupBuddy will automatically clean up temporary data later.';
 		pb_backupbuddy::status( 'error', $message );
 		die( $message );
 	} else {
-		if ( false === ( $response_decoded = json_decode( $response, true ) ) ) {
+		if ( false === ( $response_decoded = @unserialize( $response ) ) ) {
 			$message = 'Error #239872373. Unable to decode remote deployment response with serial `' . $serial . '` via remote API. This is a non-fatal warning. BackupBuddy will automatically clean up temporary data later. Remote server response: `' . print_r( $response_decoded, true ) . '`.';
 			pb_backupbuddy::status( 'error', $message );
 			die( $message );

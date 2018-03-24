@@ -72,7 +72,7 @@ pb_backupbuddy::$ui->list_table(
 <br><br>
 <form id="pb_backupbuddy_rollback_form" method="post" action="?action=pb_backupbuddy_backupbuddy&function=rollback&step=1&archive=<?php echo basename( $restoreData['archive'] ); ?>">
 	<?php pb_backupbuddy::nonce(); ?>
-	<input type="hidden" name="restoreData" value="<?php echo base64_encode( serialize( $restoreData ) ); ?>">
+	<input type="hidden" name="restoreData" value="<?php echo base64_encode( json_encode( $restoreData ) ); ?>">
 	<input type="submit" name="submitForm" class="button button-primary" value="<?php echo __('Begin Rollback') . ' &raquo;'; ?>">
 	
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

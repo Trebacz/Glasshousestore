@@ -16,7 +16,7 @@ if( !defined( 'ABSPATH' ) ) exit;
  *
  * @since       1.0.0
  */
-class WPR_Giftcard_Activation {
+class KODIAK_Giftcard_Activation {
 
     public $plugin_name, $plugin_path, $plugin_file, $has_woo, $wpr_base;
 
@@ -32,20 +32,20 @@ class WPR_Giftcard_Activation {
         require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 
         $plugins = get_plugins();
-        
+
         // Set plugin directory
         $plugin_path = array_filter( explode( '/', $plugin_path ) );
         $this->plugin_path = end( $plugin_path );
-        
+
         // Set plugin file
         $this->plugin_file = $plugin_file;
-        
+
         // Set plugin name
         $this->plugin_name = 'WooCommerce - Gift Cards';
-        
+
         // Is EDD installed?
         foreach( $plugins as $plugin_path => $plugin ) {
-            
+
             if( $plugin['Name'] == 'WooCommerce' ) {
                 $this->has_woo = true;
                 $this->wpr_base = $plugin_path;
@@ -76,12 +76,12 @@ class WPR_Giftcard_Activation {
 
         if( $this->has_woo ) {
             $url  = esc_url( wp_nonce_url( admin_url( 'plugins.php?action=activate&plugin=' . $this->wpr_base ), 'activate-plugin_' . $this->wpr_base ) );
-            $link = '<a href="' . $url . '">' . __( 'activate it', 'rpgiftcards' ) . '</a>';
+            $link = '<a href="' . $url . '">' . __( 'activate it', 'kodiak-giftcards' ) . '</a>';
         } else {
             $url  = esc_url( wp_nonce_url( self_admin_url( 'update.php?action=install-plugin&plugin=woocommerce' ), 'install-plugin_woocommerce' ) );
-            $link = '<a href="' . $url . '">' . __( 'install it', 'rpgiftcards' ) . '</a>';
+            $link = '<a href="' . $url . '">' . __( 'install it', 'kodiak-giftcards' ) . '</a>';
         }
-        
-        echo '<div class="error"><p>' . $this->plugin_name . sprintf( __( ' requires WooCommerce! Please %s to continue!', 'rpgiftcards' ), $link ) . '</p></div>';
+
+        echo '<div class="error"><p>' . $this->plugin_name . sprintf( __( ' requires WooCommerce! Please %s to continue!', 'kodiak-giftcards' ), $link ) . '</p></div>';
     }
 }

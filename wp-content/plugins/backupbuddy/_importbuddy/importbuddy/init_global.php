@@ -47,14 +47,11 @@ if ( '' != $import_serial ) { // importbuddy has a serial. Look for a default st
 		$override_state_file = ABSPATH . 'importbuddy-' . $import_serial . '-state.php';
 		if ( file_exists( $override_state_file ) ) {
 			$statedata = file_get_contents( $override_state_file );
-			// Unserialize data; If it fails it then decodes the obscufated data then unserializes it..
-			if ( ! is_serialized( $statedata ) || ( false === ( $return = unserialize( $statedata ) ) ) ) {
-				// Skip first line.
-				$second_line_pos = strpos( $statedata, "\n" ) + 1;
-				$statedata = substr( $statedata, $second_line_pos );
-				// Decode back into an array.
-				$statedata = unserialize( base64_decode( $statedata ) );
-			}
+			// Skip first line.
+			$second_line_pos = strpos( $statedata, "\n" ) + 1;
+			$statedata = substr( $statedata, $second_line_pos );
+			// Decode back into an array.
+			$statedata = json_decode( base64_decode( $statedata ), true );
 			if ( is_array( $statedata ) ) { // Valid content.
 				// Normalize URLs:
 				if ( isset( $statedata['siteurl'] ) ) {

@@ -130,7 +130,7 @@ if ( false === $restore->_state['restoreDatabase'] ) {
 			pb_backupbuddy::status( 'error', 'Error #283464: Temp state file is not creatable/writable. Check your permissions. (' . $state_file . ')' );
 			return false;
 		}
-		if ( false === fwrite( $file_handle, "<?php die('Access Denied.'); // <!-- ?>\n" . base64_encode( serialize( $restore->_state ) ) ) ) {
+		if ( false === fwrite( $file_handle, "<?php die('Access Denied.'); // <!-- ?>\n" . base64_encode( json_encode( $restore->_state ) ) ) ) {
 			pb_backupbuddy::status( 'error', 'Error #2389373: Unable to write to state file.' );
 		} else {
 			pb_backupbuddy::status( 'details', 'Wrote to state file.' );

@@ -5,7 +5,17 @@ if ( false !== stristr( pb_backupbuddy::_GET( 'page' ), 'backupbuddy' ) ) {
 	add_action('in_admin_header', 'bb_admin_head');
 }
 function bb_admin_head() {
-	echo '<div class="bb-topbar-title"  style="margin-left: -20px; background: #2ea2cc; font-size: 2em; padding: 20px; color: #fff; font-weight: 100 !important;"><strong style="font-weight: 800 !important;">BACKUP</strong>BUDDY</div>';
+	echo '<div class="bb-topbar-title"  style="margin-left: -20px; background: #2ea2cc; font-size: 2em; padding: 20px; color: #fff; font-weight: 100 !important;"><strong style="font-weight: 800 !important;">BACKUP</strong>BUDDY
+	<span style="
+	    float: right;
+	    text-transform: initial;
+	    font-size: 0.7em;
+	    opacity: 0.4;
+	    /* letter-spacing: 0.5px; */
+	">
+	<span style="margin-right: 2px;font-size: 0.9em;">v</span>' . pb_backupbuddy::settings( 'version' ) . '
+	</span>
+	</div>';
 }
 
 /********** MISC **********/

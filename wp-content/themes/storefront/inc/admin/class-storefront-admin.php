@@ -72,7 +72,7 @@ if ( ! class_exists( 'Storefront_Admin' ) ) :
 					<ul>
 						<li><a href="https://wordpress.org/support/theme/storefront" target="_blank"><?php esc_attr_e( 'Support', 'storefront' ); ?></a></li>
 						<li><a href="https://docs.woocommerce.com/documentation/themes/storefront/" target="_blank"><?php esc_attr_e( 'Documentation', 'storefront' ); ?></a></li>
-						<li><a href="https://storefront.wordpress.com" target="_blank"><?php esc_attr_e( 'Development blog', 'storefront' ); ?></a></li>
+						<li><a href="https://woocommerce.wordpress.com/category/storefront/" target="_blank"><?php esc_attr_e( 'Development blog', 'storefront' ); ?></a></li>
 					</ul>
 				</section>
 
@@ -87,7 +87,7 @@ if ( ! class_exists( 'Storefront_Admin' ) ) :
 					 */
 					$referrer = wp_get_referer();
 
-					if ( strpos( $referrer, 'sf_guided_tour' ) !== false ) {
+					if ( strpos( $referrer, 'sf_starter_content' ) !== false ) {
 						echo '<h1>' . sprintf( esc_attr__( 'Setup complete %sYour Storefront adventure begins now 🚀%s ', 'storefront' ), '<span>', '</span>' ) . '</h1>';
 						echo '<p>' . esc_attr__( 'One more thing... You might be interested in the following Storefront extensions and designs.', 'storefront' ) . '</p>';
 					} else {

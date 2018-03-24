@@ -3,7 +3,7 @@
 Plugin Name: Robo Gallery
 Plugin URI: https://robosoft.co/wordpress-gallery-plugin
 Description: Gallery modes photo gallery, images gallery, video gallery, Polaroid gallery, gallery lighbox, portfolio gallery, responsive gallery
-Version: 2.6.22
+Version: 2.7.7
 Author: RoboSoft
 Author URI: https://robosoft.co/wordpress-gallery-plugin
 License: GPLv3 or later
@@ -15,13 +15,13 @@ if(!defined('WPINC'))die;
 if(!defined("ABSPATH"))exit;
 
 define("ROBO_GALLERY", 1); 
-define("ROBO_GALLERY_VERSION", '2.6.22'); 
+define("ROBO_GALLERY_VERSION", '2.7.7'); 
 
 if( !defined("ROBO_GALLERY_PATH") ) define("ROBO_GALLERY_PATH", plugin_dir_path( __FILE__ ));
 
-define("ROBO_GALLERY_SPECIAL", 1); 
-define("ROBO_GALLERY_EVENT_DATE", '2017-09-03'); 
-define("ROBO_GALLERY_EVENT_HOUR", 24); 
+define("ROBO_GALLERY_SPECIAL", 0); 
+define("ROBO_GALLERY_EVENT_DATE", '2016-12-08'); 
+define("ROBO_GALLERY_EVENT_HOUR", 20); 
 
 add_action( 'plugins_loaded', 'rbs_gallery_load_textdomain' );
 function rbs_gallery_load_textdomain() {
@@ -53,6 +53,9 @@ if( $keyResult=rbs_gallery_pro_check() ){
 
 define("ROBO_GALLERY_INCLUDES_PATH", 	ROBO_GALLERY_PATH.'includes/');
 define("ROBO_GALLERY_FRONTEND_PATH", 	ROBO_GALLERY_INCLUDES_PATH.'frontend/');
+define("ROBO_GALLERY_FRONTEND_EXT_PATH",ROBO_GALLERY_FRONTEND_PATH.'extensions/');
+
+
 define("ROBO_GALLERY_OPTIONS_PATH", 	ROBO_GALLERY_INCLUDES_PATH.'options/');
 define("ROBO_GALLERY_EXTENSIONS_PATH", 	ROBO_GALLERY_INCLUDES_PATH.'extensions/');
 define("ROBO_GALLERY_CMB_PATH", 		ROBO_GALLERY_PATH.'cmb2/');

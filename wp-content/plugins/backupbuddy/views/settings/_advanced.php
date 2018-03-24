@@ -387,6 +387,15 @@ $settings_form->add_setting( array(
 	'rules'		=>		'required',
 ) );
 $settings_form->add_setting( array(
+	'type'		=>		'checkbox',
+	'name'		=>		'deploy_sslverify',
+	'options'	=>		array( 'unchecked' => 0, 'checked' => 1 ),
+	'title'		=>		__( 'Deployment: Verify SSL Cert', 'it-l10n-backupbuddy' ),
+	'tip'		=>		__( '[Default: enabled] - When disabled BackupBuddy will not verify the SSL certificate authenticity of the remote end (outgoing connections). The connection will still be encrypted.', 'it-l10n-backupbuddy' ),
+	'css'		=>		'',
+	'rules'		=>		'required',
+) );
+$settings_form->add_setting( array(
 	'type'		=>		'text',
 	'name'		=>		'backup_cron_passed_force_time',
 	'title'		=>		__('Force cron if behind by X seconds', 'it-l10n-backupbuddy' ),
@@ -608,9 +617,9 @@ $settings_form->add_setting( array(
 	'name'		=>		'ignore_zip_warnings',
 	'options'	=>		array( 'unchecked' => '0', 'checked' => '1' ),
 	'title'		=>		__( 'Ignore zip archive warnings', 'it-l10n-backupbuddy' ),
-	'tip'		=>		__( '[Default: Disabled] When enabled BackupBuddy will ignore non-fatal warnings encountered during the backup process such as inability to read or access a file, symlink problems, etc. These non-fatal warnings will still be logged.', 'it-l10n-backupbuddy' ) . '</span>',
+	'tip'		=>		__( '[Default: Enabled] When enabled BackupBuddy will ignore non-fatal warnings encountered during the backup process such as inability to read or access a file, symlink problems, etc. These non-fatal warnings will still be logged.', 'it-l10n-backupbuddy' ) . '</span>',
 	'css'		=>		'',
-	'after'		=>		'<span class="description"> Check to ignore non-fatal errors when zipping files.</span>',
+	'after'		=>		'<span class="description"> Check to ignore non-fatal warnings when zipping files.</span>',
 	'rules'		=>		'required',
 ) );
 $settings_form->add_setting( array(

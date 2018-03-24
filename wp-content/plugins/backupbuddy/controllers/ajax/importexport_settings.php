@@ -17,7 +17,7 @@ if ( pb_backupbuddy::_POST( 'import_settings' ) != '' ) {
 			pb_backupbuddy::alert( 'Unable to unserialize settings data. Import aborted. Insure that you fully copied the settings and did not change any of the text.' );
 		} else { // unserialize success.
 			if ( !isset( $import['data_version'] ) ) { // missing expected content.
-				pb_backupbuddy::alert( 'Unserialized settings data but it did not contain expected data. Import aborted. Insure that you fully copied the settings and did not change any of the text.' );
+				pb_backupbuddy::alert( 'Unserialized settings data but it did not contain expected data. Import aborted. Insure that you fully copied the settings and did not change any of the text. Debugging data: `<pre>' . print_r( $import, true ) . '</pre>`.' );
 			} else { // contains expected content.
 				// Delete any existing scheduled hooks so that imported schedules overwrite existing 'next run' settings
 				$schedules = backupbuddy_api::getSchedules();

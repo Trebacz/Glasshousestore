@@ -126,6 +126,7 @@
 						if ( '' != response.overall_error ) {
 							jQuery( '#db_test_container' ).html( '<span class="pb_label pb_label-warning animated infinite tada">Error</span> &nbsp;&nbsp; ' + response.overall_error ).show();
 							jQuery('.pb_database_next_test').addClass( 'it-attention' );
+							backupbuddy_log( 'mysql test error. See results above.' );
 							return false;
 						}
 						
@@ -135,6 +136,7 @@
 							jQuery( '#mysql_server,#mysql_username,#mysql_password' ).addClass( 'input-attention' );
 							jQuery( '#db_test_container' ).html( '<span class="pb_label pb_label-warning animated infinite tada">Database Error</span> &nbsp;&nbsp; Unable to connect / authenticate to MySQL server. ' + response.connect_error ).show();
 							jQuery('.pb_database_next_test').addClass( 'it-attention' );
+							backupbuddy_log( 'mysql test error. See results above.' );
 							return false;
 						}
 						
@@ -142,18 +144,21 @@
 							jQuery( '#mysql_database' ).addClass( 'input-attention' );
 							jQuery( '#db_test_container' ).html( '<span class="pb_label pb_label-warning animated infinite tada">Database Error</span> &nbsp;&nbsp; Unable to select database. Verify the database exists & the user was granted ALL privileges. ' + response.selectdb_error ).show();
 							jQuery('.pb_database_next_test').addClass( 'it-attention' );
+							backupbuddy_log( 'mysql test error. See results above.' );
 							return false;
 						}
 						
 						if ( false === response.createdroptable ) {
 							jQuery( '#db_test_container' ).html( '<span class="pb_label pb_label-warning animated infinite tada">Database Error</span> &nbsp;&nbsp; Unable to create & drop test table. Verify the entered user has ALL privileges for the specified database. ' + response.createdroptable_error ).show();
 							jQuery('.pb_database_next_test').addClass( 'it-attention' );
+							backupbuddy_log( 'mysql test error. See results above.' );
 							return false;
 						}
 						if ( false === response.prefix ) {
 							jQuery( '#db_test_container' ).html( '<span class="pb_label pb_label-warning animated infinite tada">Database Error</span> &nbsp;&nbsp; The specified prefix does not the bare minimum criteria for WordPress. It should be in the format of letters (or numbers, but not at the beginning) followed by an underscore. <b>Either change the prefix or select to ignore this warning below to proceed.</b> Examples: wp_, wp2_, mywordpress_, dustins2ndblog_' ).show();
 							jQuery( '#db_wipe_options' ).show();
 							jQuery('.pb_database_next_test').addClass( 'it-attention' );
+							backupbuddy_log( 'mysql test error. See results above.' );
 							return false;
 						}
 						
@@ -168,6 +173,7 @@
 								jQuery( '#db_wipe_options' ).show();
 								jQuery( '#ignore_prefix_warnings' ).show();
 								jQuery('.pb_database_next_test').addClass( 'it-attention' );
+								backupbuddy_log( 'mysql prefix format warning.' );
 								return false;
 							}
 						} else { // No prefix format warning so hide option to bypass.
@@ -178,6 +184,7 @@
 						// Prefix exists.
 						if(  ( true === response.prefix_exists ) && ( true === window.restoreData.restoreDatabase ) ) {
 							if ( ( ! jQuery( '#wipe_prefix').is( ':checked' ) ) && ( ! jQuery( '#wipe_database').is( ':checked' ) ) ) {
+								backupbuddy_log( 'mysql prefix exists warning.' );
 								jQuery( '#db_test_container' ).html( '<span class="pb_label pb_label-warning animated infinite tada">Database Warning</span> &nbsp;&nbsp; The specified prefix appears to already exist in this database. Restoring may overwrite existing WordPress data. <b>Change the prefix, select to delete existing tables below, or use the advanced option to ignore SQL errors to proceed.</b>' ).show();
 								jQuery( '#db_wipe_options' ).show();
 								if (  jQuery('#ignore_sql_errors').is( ':checked' ) ) {
@@ -188,6 +195,8 @@
 								}
 							}
 						}
+						
+						backupbuddy_log( 'mysql test success.... proceeding to import soon.' );
 						
 						// Set up database settings in restoreData.
 						window.restoreData.databaseSettings.server = server;
@@ -231,7 +240,9 @@
 						console.dir( window.restoreData );
 						
 						jQuery('#backupbuddy-dbSettingsForm-restoreData').val( window.btoa( encodeURIComponent( JSON.stringify( window.restoreData ) ) ) ); // window.btoa() base64 encodes to get around transfer issues + Chrome XSS auditor. encodeURIComponent needed to keep UTF8 from getting mucked up going over to PHP's json_decode(). Blech!
-						jQuery('#database-box').hide();	
+						jQuery('#database-box').hide();
+						
+						backupbuddy_log( 'Moving on to importingDatabase step now...' );
 						jQuery('#database-box-working').html( new EJS({url: 'importbuddy/views/importingDatabase.htm'}).render() );
 						jQuery( '#backupbuddy-dbSettingsForm').submit();
 						

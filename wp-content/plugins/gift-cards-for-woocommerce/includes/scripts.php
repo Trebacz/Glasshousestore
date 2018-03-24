@@ -27,18 +27,18 @@ function wpr_giftcards_admin_scripts( $hook ) {
     wp_enqueue_script( 'jquery' );
     wp_enqueue_script( 'jquery-ui-core' );
     wp_enqueue_script( 'jquery-ui-datepicker' );
-    
+
     wp_enqueue_style( 'jquery-style', '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css' );
 
 
     if( $post_type == 'rp_shop_giftcard' ) {
-        wp_register_script( 'wpr_giftcards_admin_js', RPWCGC_URL . '/assets/js/admin.js', array( 'jquery' ), RPWCGC_VERSION, false );
+        wp_register_script( 'wpr_giftcards_admin_js', WPKODIAK_URL . '/assets/js/admin.js', array( 'jquery' ), WPKODIAK_VERSION, false );
         wp_enqueue_script( 'wpr_giftcards_admin_js');
-        
+
         if( $hook == 'post-new.php' ) {
-            wp_enqueue_style( 'wpr_giftcards_admin', RPWCGC_URL . '/assets/css/admin-new.css' );
+            wp_enqueue_style( 'wpr_giftcards_admin', WPKODIAK_URL . '/assets/css/admin-new.css' );
         } else {
-            wp_enqueue_style( 'wpr_giftcards_admin', RPWCGC_URL . '/assets/css/admin.css' );
+            wp_enqueue_style( 'wpr_giftcards_admin', WPKODIAK_URL . '/assets/css/admin.css' );
         }
     }
 
@@ -54,8 +54,6 @@ add_action( 'admin_enqueue_scripts', 'wpr_giftcards_admin_scripts', 100 );
  */
 function wpr_giftcards_scripts( $hook ) {
     global $post;
-    // Use minified libraries if SCRIPT_DEBUG is turned off
-	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
     wp_enqueue_script( 'jquery' );
     wp_enqueue_script( 'jquery-ui-core' );
@@ -63,11 +61,11 @@ function wpr_giftcards_scripts( $hook ) {
 
     wp_enqueue_style( 'jquery-style', '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css' );
 
-    wp_enqueue_script( 'wpr_giftcards_js', RPWCGC_URL . '/assets/js/scripts.js', array( 'jquery' ) );
-    wp_enqueue_style( 'wpr_giftcards_css', RPWCGC_URL . '/assets/css/styles.css' );
+    wp_enqueue_script( 'wpr_giftcards_js', WPKODIAK_URL . '/assets/js/scripts.js', array( 'jquery' ) );
+    wp_enqueue_style( 'wpr_giftcards_css', WPKODIAK_URL . '/assets/css/styles.css' );
 
     if( is_checkout() ) {
-        wp_register_script( 'wpr_giftcards_checkout_js', RPWCGC_URL . '/assets/js/checkout.js', array( 'jquery' ), RPWCGC_VERSION, false );
+        wp_register_script( 'wpr_giftcards_checkout_js', WPKODIAK_URL . '/assets/js/checkout.js', array( 'jquery' ), WPKODIAK_VERSION, false );
         wp_enqueue_script( 'wpr_giftcards_checkout_js' );
     }
 

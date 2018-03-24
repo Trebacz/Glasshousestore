@@ -93,6 +93,12 @@ $archive_limits_html .= '<tr>
 				<span class="description">Set blank to keep unlimited backups of a type or 0 (zero) to limit to none.</span>
 			</td>
 			</tr>
+			<tr style="display: none;">
+			<td colspan="5">
+				<h4 style="margin: 0;">Stash Usage Estimate:</h4>
+				With your above archive limits <i><b>after one year</b></i> of backing up you will have <i><b>at most X snapshots</b></i> (zip archives) for this site stored in your Stash storage, estimated to use up to <i><b>X GB</b></i> of storage (rough estimate based on current site size estimate only).
+			</td>
+			</tr>
 			
 		</table>
 
@@ -372,12 +378,12 @@ $available_versions = array(
 );
 $stash3_php_minimum = file_get_contents( dirname( __FILE__ ) . '/_phpmin.php' );
 if ( version_compare( PHP_VERSION, $stash3_php_minimum, '>=' ) ) { // Server's PHP is insufficient for this option.
-	$available_versions['3'] = 'Stash v3 (BETA)';
+	$available_versions['3'] = 'Stash v3 (upcoming)';
 }
 $settings_form->add_setting( array(
 	'type'		=>		'select',
 	'name'		=>		'destination_version',
-	'title'		=>		__( 'Stash Version', 'it-l10n-backupbuddy' ),
+	'title'		=>		__( 'Stash Transfer Engine', 'it-l10n-backupbuddy' ),
 	'options'		=>		$available_versions,
 	'tip'		=>		__('[Default: v2] - Stash Live makes use of the Stash Remote Destination for file transfers. This allows selecting which Stash Remote Destination version is used behind the scenes. Only versions compatible with your server are listed.', 'it-l10n-backupbuddy' ),
 	'rules'		=>		'required',

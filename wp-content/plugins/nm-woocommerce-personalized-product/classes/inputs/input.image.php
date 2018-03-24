@@ -102,6 +102,12 @@ class NM_Image_wooproduct extends NM_Inputs_wooproduct{
 				'desc' => __ ( 'Popup window height in px e.g: 550', 'nm-personalizedproduct' )
 		),
 		
+		'legacy_view' => array (
+				'type' => 'checkbox',
+				'title' => __ ( 'Enable legacy view', 'nm-personalizedproduct' ),
+				'desc' => __ ( 'Tick it to turn on old boxes view for images', 'nm-personalizedproduct' )
+		),
+		
 		'logic' => array (
 				'type' => 'checkbox',
 				'title' => __ ( 'Enable conditional logic', 'nm-personalizedproduct' ),
@@ -121,67 +127,118 @@ class NM_Image_wooproduct extends NM_Inputs_wooproduct{
 	*/
 	function render_input($args, $images = "", $default_selected = ""){
 		
-		// nm_personalizedproduct_pa($images);
+		// nm_personalizedproduct_pa();
+		$_html = '';
 		
-		$_html = '<div class="pre_upload_image_box">';
-			
-		$img_index = 0;
-		$popup_width	= $args['popup-width'] == '' ? 600 : $args['popup-width'];
-		$popup_height	= $args['popup-height'] == '' ? 450 : $args['popup-height'];
-		
-		if ($images) {
-			
-			foreach ($images as $image){
-					
+		// Checking if old view is enabled for images with boxes
+		if($args['legacy_view'] == 'on'){
+			$_html = '<div class="pre_upload_image_box">';
 				
-				$_html .= '<div class="pre_upload_image">';
-				if($image['id'] != ''){
-					if( isset($image['url']) && $image['url'] != '' )
-						$_html .= '<a href="'.$image['url'].'"><img src="'.wp_get_attachment_thumb_url( $image['id'] ).'" /></a>';
-					else
-						$_html .= '<img src="'.wp_get_attachment_thumb_url( $image['id'] ).'" />';
-				}else{
-					if( isset($image['url']) && $image['url'] != '' )
-						$_html .= '<a href="'.$image['url'].'"><img width="150" height="150" src="'.$image['link'].'" /></a>';
-					else {
-						$_html .= '<img width="150" height="150" src="'.$image['link'].'" />';
+			$img_index = 0;
+			$popup_width	= $args['popup-width'] == '' ? 600 : $args['popup-width'];
+			$popup_height	= $args['popup-height'] == '' ? 450 : $args['popup-height'];
+			
+			if ($images) {
+				
+				foreach ($images as $image){
+						
+					
+					$_html .= '<div class="pre_upload_image">';
+					if($image['id'] != ''){
+						if( isset($image['url']) && $image['url'] != '' )
+							$_html .= '<a href="'.$image['url'].'"><img src="'.wp_get_attachment_thumb_url( $image['id'] ).'" /></a>';
+						else
+							$_html .= '<img src="'.wp_get_attachment_thumb_url( $image['id'] ).'" />';
+					}else{
+						if( isset($image['url']) && $image['url'] != '' )
+							$_html .= '<a href="'.$image['url'].'"><img width="150" height="150" src="'.$image['link'].'" /></a>';
+						else {
+							$_html .= '<img width="150" height="150" src="'.$image['link'].'" />';
+						}
 					}
+					
+						
+					// for bigger view
+					$_html	.= '<div style="display:none" id="pre_uploaded_image_' . $args['id'].'-'.$img_index.'"><img style="margin: 0 auto;display: block;" src="' . $image['link'] . '" /></div>';
+						
+					$_html	.= '<div class="input_image">';
+					if ($args['multiple-allowed'] == 'on') {
+						$_html	.= '<input type="checkbox" data-price="'.$image['price'].'" data-title="'.stripslashes( $image['title'] ).'" name="'.$args['name'].'[]" value="'.esc_attr(json_encode($image)).'" />';
+					}else{
+						
+						//default selected
+						$checked = ($image['title'] == $default_selected ? 'checked = "checked"' : '' );
+						$_html	.= '<input type="radio" data-price="'.$image['price'].'" data-title="'.stripslashes( $image['title'] ).'" data-type="'.stripslashes( $args['data-type'] ).'" name="'.$args['name'].'" value="'.esc_attr(json_encode($image)).'" '.$checked.' />';
+					}
+						
+					
+					$price = '';
+					if(function_exists('wc_price') && $image['price'] > 0)
+						$price = wc_price( $image['price'] );
+					
+					// image big view	 
+					$_html	.= '<a href="#TB_inline?width='.$popup_width.'&height='.$popup_height.'&inlineId=pre_uploaded_image_' . $args['id'].'-'.$img_index.'" class="thickbox" title="' . $image['title'] . '"><img width="15" src="' . $this -> plugin_meta['url'] . '/images/zoom.png" /></a>';
+					$_html	.= '<div class="p_u_i_name">'.stripslashes( $image['title'] ) . ' ' . $price . '</div>';
+					$_html	.= '</div>';	//input_image
+						
+						
+					$_html .= '</div>';
+						
+					$img_index++;
 				}
-				
-					
-				// for bigger view
-				$_html	.= '<div style="display:none" id="pre_uploaded_image_' . $args['id'].'-'.$img_index.'"><img style="margin: 0 auto;display: block;" src="' . $image['link'] . '" /></div>';
-					
-				$_html	.= '<div class="input_image">';
-				if ($args['multiple-allowed'] == 'on') {
-					$_html	.= '<input type="checkbox" data-price="'.$image['price'].'" data-title="'.stripslashes( $image['title'] ).'" name="'.$args['name'].'[]" value="'.esc_attr(json_encode($image)).'" />';
-				}else{
-					
-					//default selected
-					$checked = ($image['title'] == $default_selected ? 'checked = "checked"' : '' );
-					$_html	.= '<input type="radio" data-price="'.$image['price'].'" data-title="'.stripslashes( $image['title'] ).'" data-type="'.stripslashes( $args['data-type'] ).'" name="'.$args['name'].'" value="'.esc_attr(json_encode($image)).'" '.$checked.' />';
-				}
-					
-				
-				$price = '';
-				if(function_exists('wc_price') && $image['price'] > 0)
-					$price = wc_price( $image['price'] );
-				
-				// image big view	 
-				$_html	.= '<a href="#TB_inline?width='.$popup_width.'&height='.$popup_height.'&inlineId=pre_uploaded_image_' . $args['id'].'-'.$img_index.'" class="thickbox" title="' . $image['title'] . '"><img width="15" src="' . $this -> plugin_meta['url'] . '/images/zoom.png" /></a>';
-				$_html	.= '<div class="p_u_i_name">'.stripslashes( $image['title'] ) . ' ' . $price . '</div>';
-				$_html	.= '</div>';	//input_image
-					
-					
-				$_html .= '</div>';
-					
-				$img_index++;
 			}
-		}
-		
-		$_html .= '<div style="clear:both"></div>';		//container_buttons
 			
-		$_html .= '</div>';		//container_buttons
+			$_html .= '<div style="clear:both"></div>';		//container_buttons
+				
+			$_html .= '</div>';		//container_buttons
+			
+
+		} else {
+			
+			$_html = '<div class="nm-boxes-outer">';
+				
+			$img_index = 0;
+			$popup_width	= $args['popup-width'] == '' ? 600 : $args['popup-width'];
+			$popup_height	= $args['popup-height'] == '' ? 450 : $args['popup-height'];
+			
+			if ($images) {
+				
+				foreach ($images as $image){
+						
+					$_html .= '<label><div class="pre_upload_image">';
+					if ($args['multiple-allowed'] == 'on') {
+						$_html	.= '<input type="checkbox" data-price="'.$image['price'].'" data-title="'.stripslashes( $image['title'] ).'" name="'.$args['name'].'[]" value="'.esc_attr(json_encode($image)).'" />';
+					}else{
+						
+						//default selected
+						$checked = ($image['title'] == $default_selected ? 'checked = "checked"' : '' );
+						$_html	.= '<input type="radio" data-price="'.$image['price'].'" data-title="'.stripslashes( $image['title'] ).'" data-type="'.stripslashes( $args['data-type'] ).'" name="'.$args['name'].'" value="'.esc_attr(json_encode($image)).'" '.$checked.' />';
+					}					
+					if($image['id'] != ''){
+						if( isset($image['url']) && $image['url'] != '' )
+							$_html .= '<a href="'.$image['url'].'"><img src="'.wp_get_attachment_thumb_url( $image['id'] ).'" /></a>';
+						else
+							$_html .= '<img data-image-tooltip="'.wp_get_attachment_url($image['id']).'" class="nm-enlarge-image" src="'.wp_get_attachment_thumb_url( $image['id'] ).'" />';
+					}else{
+						if( isset($image['url']) && $image['url'] != '' )
+							$_html .= '<a href="'.$image['url'].'"><img width="150" height="150" src="'.$image['link'].'" /></a>';
+						else {
+							$_html .= '<img class="nm-enlarge-image" data-image-tooltip="'.$image['link'].'" src="'.$image['link'].'" />';
+						}
+					}
+					
+						
+						
+					$_html .= '</div></label>';
+						
+					$img_index++;
+				}
+			}
+			
+			$_html .= '<div style="clear:both"></div>';		//container_buttons
+				
+			$_html .= '</div>';		//container_buttons
+		}
 		
 		echo $_html;
 		
@@ -198,7 +255,12 @@ class NM_Image_wooproduct extends NM_Inputs_wooproduct{
 					<script type="text/javascript">	
 					<!--
 					jQuery(function($){
-	
+						  if($('.nm-enlarge-image').length){
+						    $('.nm-enlarge-image').imageTooltip({
+							  xOffset: 5,
+							  yOffset: 5
+						    });
+						  }	
 						// pre upload image click selection
 						/*$(".pre_upload_image").click(function(){
 

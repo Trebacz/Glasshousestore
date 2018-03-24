@@ -3,7 +3,7 @@ Contributors:      shawfactor
 Donate link: 	   https://lhero.org/plugins/lh-archived-post-status/
 Tags:              admin, posts, pages, status, workflow
 Requires at least: 3.0
-Tested up to:      4.8
+Tested up to:      4.9
 Stable tag:        trunk
 License:           GPLv2 or later
 License URI:       http://www.gnu.org/licenses/gpl-2.0.html
@@ -130,3 +130,9 @@ If you want to customise the display that shortcode has plenty of arguments. The
 
 **2.18 October 08, 2017**
 * Bug Fix
+
+**2.19 October 10, 2017**
+* Changed uninstall method to static
+
+**2.20 November 27, 2017**
+* Added message filter and disquss fix

@@ -1,9 +1,9 @@
 <?php
 
 /* * ******************************************************************
- * Version 5.0
- * Modified: 23-07-2017
- * Copyright 2017 Accentio. All rights reserved.
+ * Version 5.1
+ * Modified: 02-02-2018
+ * Copyright 2018 Accentio. All rights reserved.
  * License: None
  * By: Michel Jongbloed
  * ****************************************************************** */
@@ -44,7 +44,6 @@ if ( !class_exists( 'WPPFM_Taxonomies_Class' ) ) :
 
 			$cat_string( $cats[ 0 ]->term_id );
 
-			//return implode( ' &gt; ', $result );
 			return implode( $separator, $result );
 		}
 
@@ -81,42 +80,21 @@ if ( !class_exists( 'WPPFM_Taxonomies_Class' ) ) :
 			} else { return false; }		
 		}
 
-// obsolete 080117
-//		public static function make_shop_category_string_from_selected_category( $product_categories, $category_id,
-//																		   $category_string, $separator = '/' ) {
-//			
-//			$category = self::select_category_by_id( $product_categories, $category_id );
-//
-//			if ( $category ) {
-//
-//				$return_string = $category->name . $separator . $category_string;
-//			} else {
-//
-//				$return_string = '';
-//				wppfm_write_log_file( "Could not find a parent category for $category_string" );
-//			}
-//
-//			$return_string = $category ? $category->name . $separator . $category_string : '';
-//
-//			if ( $category && $category->parent !== 0 && self::select_category_by_id( $product_categories, $category->parent ) ) {
-//
-//				$return_string = self::make_shop_category_string_from_selected_category( $product_categories, $category->parent, $return_string, $separator );
-//			}
-//
-//			return rtrim( $return_string, $separator );
-//		}
-
-		// TODO: Check if this function can replace, or be replaced by the get_shop_categories or make_shop_category_string_from_selected_category functions
 		public static function get_shop_categories_list() {
-
 			$args = array(
 				'hide_empty'	 => 0,
 				'taxonomy'		 => 'product_cat',
 				'hierarchical'	 => 1,
 				'orderby'		 => 'name',
 				'order'			 => 'ASC',
+				'exclude'		 => apply_filters( 'wppfm_category_mapping_exclude', array() ),
+				'exclude_tree'	 => apply_filters( 'wppfm_category_mapping_exclude_tree', array() ),
+				'number'		 => absint( apply_filters( 'wppfm_category_mapping_max_categories', 0 ) ),
 				'child_of'		 => 0
 			);
+			
+			// see https://developer.wordpress.org/reference/classes/wp_term_query/__construct/ for valid args
+			$args = apply_filters( 'wppfm_category_mapping_args', $args );
 
 			return self::get_cat_hierchy( 0, $args );
 		}
@@ -137,17 +115,6 @@ if ( !class_exists( 'WPPFM_Taxonomies_Class' ) ) :
 
 			return $ret;
 		}
-
-// obsolete 280117
-//		private static function select_category_by_id( $product_categories, $category_id ) {
-//
-//			foreach ( $product_categories as $category ) {
-//
-//				if ( $category->term_id === $category_id ) {
-//					return $category;
-//				}
-//			}
-//		}
 	}
 
 	

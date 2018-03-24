@@ -118,7 +118,7 @@ class pb_backupbuddy_destination_s32 { // Change class name end to match destina
 			}
 			
 			$s3Config['signature'] = 'v4';
-			$s3Config['region'] = str_replace( array( '.amazonaws.com', 's3-' ), '', $settings['region'] );
+			$s3Config['region'] = str_replace( array( 'amazon.com.cn', '.amazonaws.com', 's3-' ), '', $settings['region'] );
 			if ( 's3' == $s3Config['region'] ) {
 				$s3Config['region'] = 'us-east-1';
 			}

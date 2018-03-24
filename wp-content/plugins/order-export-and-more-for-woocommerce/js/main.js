@@ -3,6 +3,37 @@ var $j = jQuery.noConflict();
 
 jQuery(document).ready(function() {
 
+	//Handles the sorting
+
+	jQuery(".sortable_table").sortable({
+		update: function (ev, tbody) {
+			var current_table_name = jQuery('.checkbox-class:checked').val();
+			var obj = {};
+			var counter = 0;
+			jQuery('.'+current_table_name+' > tbody  > tr').each(function() {
+				if(jQuery(this).attr('data-key') != ""){
+					var get_place_holder = jQuery(this).attr('data-key');}
+//                   console.log(get_place_holder);
+				if(get_place_holder != "undefined"){
+					counter++;
+					obj[get_place_holder] = counter;
+				}
+
+			});
+			var form_data = {
+				action : 'savefieldorder',
+				pass_obj : obj,
+				pass_current_table_name : current_table_name,
+			};
+			jQuery.ajax({
+				url: ajaxurl,
+				type: 'POST',
+				data: form_data,
+				success: function(data) {
+				}
+			});
+		}
+	});
 	
 	//initialises the date pickers
 	jQuery('.jemexp-datepicker').datepicker({
@@ -176,7 +207,10 @@ jQuery(document).ready(function() {
 	//LETS SET THE DEFAULTS
 	$j('.export-fields input[type=checkbox]').prop('checked', true);
 	$j('.jem-order-status input[type=checkbox]').prop('checked', true);
-	
+        
+	// JS for sortable label for order and product export
+	//jQuery('.sortable_table').sortable();
+	$j('.sortable_table').sortable();
 });
 
 
@@ -216,5 +250,3 @@ function selectTab(tab, subTab){
 	
 	
 }
-
-

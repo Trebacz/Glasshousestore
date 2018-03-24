@@ -2,8 +2,8 @@
 Contributors: Wpmarketingrobot, Michel Jongbloed, AukeJomm
 Tags: Google Merchant Export, Product feed, woocommerce, Google product feed export, google, shopping, Google Adwords, Google Merchant, wooCommerce export, woocommerce variations, e-commerce, google merchant product feed, product variations, variations export, wp-e-commerce export, wp marketing robot
 Requires at least: 4.6
-Tested up to: 4.8
-Stable tag: 1.9.4
+Tested up to: 4.9
+Stable tag: 2.0.6
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -89,6 +89,36 @@ In case it does please do submit your feed in your Google Merchant center and ch
 3. Save and generate your feed
 
 == Changelog ==
+= 2.0.6 - 09/03/2018 =
+* Fixed an error that prevented attributes of variable products to show up in the feed
+* Fixed an error that prevented the image library to work on variable products
+* Fixed an error where some items of variable products of type WC_Product_Variable where not correctly implemented
+
+= 2.0.5 - 16/02/2018 =
+* Fixed an issue where when the user had not selected the "include variations" option, the non product specific variation data like min_variation_price or max_variation_price would not be included on the main version of the variation product.* Changed the feed processing proces so it can handle feeds with large number of products
+* Fixed an error that would cause the feed process to fail with product variations that included sale dates
+* Changed the way the variation data was accessed that caused some messages in logging files
+* Fixed an issue where third party attributes that start with an underscore would show up as an empty row in the Google Source pulldown list
+* Changed the way third party attributes are shown in the source list. They now keep their origional name
+* Fixed a few security issues
+* Added the WooCommerce version check
+* Improved the auto feed update timing
+* Added the wppfm_category_mapping_exclude, wppfm_category_mapping_exclude_tree and wppfm_category_mapping_max_categories filters that allow the user to influence the category mapping list
+* Fixed an issue where the Stock count would show a wrong number when the actual Stock account was 0
+
+= 1.9.8 - 21/10/2017 =
+* Made some improvements in the script loading process
+* Fixed a bug that caused the the "update license" message to show up when you just registered the plugin
+* Fixed a bug in the automatic feed update time calculation
+* Made the plugin accessable for the Shop Manager role
+* Made a few fixes to prevent certain error messages
+* Made some improvements to the memory usage during feed generation
+
+= 1.9.5 - 23/09/2017 =
+* Fixed a bug that prevented some custom values to show up in the attributes list
+* Improved error messaging during license activation
+* Fixed a bug where an attribute value of "0" would not be placed in an xml feed
+
 = 1.9.4 - 03/09/2017 =
 * Fixed an issue where filtering failed when the user would not enter an "or" input
 * Improved the backup process

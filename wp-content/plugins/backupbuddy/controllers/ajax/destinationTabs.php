@@ -339,9 +339,6 @@ $destination_type = pb_backupbuddy::_GET( 'add' );
 					
 					$thisDest = '';
 					$thisDest .= '<li class="bb_destination-item bb_destination-' . $destination_name . ' bb_destination-new-item ' . $disableClass . '">';
-					if ( 's33' == $destination_name ) {
-						$thisDest .= '<div class="bb-ribbon"><span>New</span></div>';
-					}
 					if ( 'stash3' == $destination_name ) {
 						$thisDest .= '<div class="bb-ribbon"><span>New</span></div>';
 					}

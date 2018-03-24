@@ -103,30 +103,6 @@ function prep_money_values( $money_value, $feed_language = '' ) {
 }
 
 /**
- * Registers preps
- * 
- * $since 1.8.0
- * 
- * @param int $products
- */
-// ref HWOTBERH
-function prep_registration_generation( $products ) {
-	if ( date( 'Ymd' ) !== get_option( 'wppfm_prep_check' ) ) {
-		$params = array(
-			'site'				=> home_url(),
-			'products'			=> $products
-		);
-
-		wp_remote_post( 
-			trailingslashit( EDD_SL_STORE_URL ) . 'wpmr/plugins/product-feed-manager/register.php', array(
-				'body' => $params
-		) );
-		
-		update_option( 'wppfm_prep_check', date( 'Ymd' ) );
-	}
-}
-
-/**
  * Checks if there are invalid backups
  * 
  * @since 1.8.0
@@ -159,6 +135,23 @@ function wppfm_reinitiate_plugin() {
 	delete_option( 'wppfm_lic_status' );
 	delete_option( 'wppfm_lic_status_date' );
 	delete_option( 'wppfm_lic_key' );
+	delete_option( 'wppfm_lic_expires' );
+	delete_option( 'wppfm_license_notice_surpressed' );
+	
+	// reset the keyed options
+	WPPFM_Db_Management::clean_options_table();
+
+	do_action( 'wppfm_plugin_reinitialized' );
+	
+	return true;
+}
+
+function wppfm_clear_feed_process_data() {
+	WPPFM_Feed_Controller_Class::clear_feed_queue();
+	WPPFM_Feed_Controller_Class::set_feed_processing_flag( false );
+	WPPFM_Db_Management::clean_options_table();
+	
+	do_action( 'wppfm_feed_process_data_cleared' );
 	
 	return true;
 }
@@ -176,8 +169,8 @@ function numberformat_parse( $number_string ) {
 	
 	// convert a number string that is a actual standard number format whilst the woocommerce options are not standard
 	// to the woocommerce standard. This sometimes happens with meta values
-	if( strpos( $number_string, $decimal_separator ) === false ) {
-		$number_string = strpos( $number_string, $thousand_separator ) === false ? $number_string : str_replace( $thousand_separator, $decimal_separator, $number_string );
+	if( !empty( $decimal_separator ) && strpos( $number_string, $decimal_separator ) === false ) {
+		$number_string = !empty( $thousand_separator ) && strpos( $number_string, $thousand_separator ) === false ? $number_string : str_replace( $thousand_separator, $decimal_separator, $number_string );
 	}
 	
 	$no_thousands_sep = str_replace( $thousand_separator, '', $number_string );
@@ -185,24 +178,24 @@ function numberformat_parse( $number_string ) {
 }
 
 /**
- * Returns the memory limit that is set for Wordpress
+ * returns the path to the feed file including feed name and extension
  * 
- * @since 1.10.0
- * 
+ * @param string $feed_name
  * @return string
  */
-function get_wp_memory_limit() {
-	return (int) ini_get('memory_limit') . "M";
+function get_file_path( $feed_name ) {
+
+	// previous to plugin version 1.3.0 feeds where stored in the plugins but after that version they are stored in the upload folder
+	if( file_exists( WP_PLUGIN_DIR . '/wp-product-feed-manager-support/feeds/' . $feed_name ) ) {
+		return WP_PLUGIN_DIR . '/wp-product-feed-manager-support/feeds/' . $feed_name;
+	} elseif( file_exists( WPPFM_FEEDS_DIR . '/' . $feed_name ) ) {
+		return WPPFM_FEEDS_DIR . '/' . $feed_name;
+	} else { // as of version 1.5.0 all spaces in new filenames are replaced by a dash
+		$forbidden_name_chars = forbidden_file_name_characters();
+		return WPPFM_FEEDS_DIR . '/' . str_replace( $forbidden_name_chars, '-', $feed_name);
+	}
 }
 
-/**
- * Returns the current memory usage
- * 
- * @since 1.10.0
- * 
- * @return string
- */
-function get_current_memory_usage() {
-	$mem_usage = memory_get_usage( true );
-	return round( $mem_usage / 1024 / 1024, 2) . "M";
+function forbidden_file_name_characters() {
+	return array( ' ', '<', '>', ':', '?', ',' ); // characters that are not allowed in a feed file name
 }

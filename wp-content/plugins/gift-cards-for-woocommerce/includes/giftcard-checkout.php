@@ -13,14 +13,14 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 // Adds the Gift Card form to the checkout page so that customers can enter the gift card information
 function rpgc_cart_form() {
-	
+
 	if( get_option( 'woocommerce_enable_giftcard_cartpage' ) == "yes" ) {
 		do_action( 'wpr_before_cart_form' );
-		
+
 		?>
-		
+
 		<div class="giftcard" style="float: left;">
-			<label type="text" for="giftcard_code" style="display: none;"><?php _e( 'Giftcard', 'rpgiftcards' ); ?>:</label><input type="text" name="giftcard_code" class="input-text" id="giftcard_code" value="" placeholder="<?php _e( 'Gift Card', 'rpgiftcards' ); ?>" /><input type="submit" class="button" name="apply_giftcard" value="<?php _e( 'Apply Gift card', 'rpgiftcards' ); ?>" />
+			<label type="text" for="giftcard_code" style="display: none;"><?php _e( 'Giftcard', 'kodiak-giftcards' ); ?>:</label><input type="text" name="giftcard_code" class="input-text" id="giftcard_code" value="" placeholder="<?php _e( 'Gift Card', 'kodiak-giftcards' ); ?>" /><input type="submit" class="button" name="apply_giftcard" value="<?php _e( 'Apply Gift card', 'kodiak-giftcards' ); ?>" />
 		</div>
 
 		<?php
@@ -45,13 +45,13 @@ if ( ! function_exists( 'rpgc_checkout_form' ) ) {
 
 			do_action( 'wpr_before_checkout_form' );
 
-			$info_message = apply_filters( 'woocommerce_checkout_giftcard_message', __( 'Have a giftcard?', 'rpgiftcards' ) . ' <a href="#" class="showgiftcard">' . __( 'Click here to enter your code', 'rpgiftcards' ) . '</a>' );
+			$info_message = apply_filters( 'woocommerce_checkout_giftcard_message', __( 'Have a giftcard?', 'kodiak-giftcards' ) . ' <a href="#" class="showgiftcard">' . __( 'Click here to enter your code', 'kodiak-giftcards' ) . '</a>' );
 			wc_print_notice( $info_message, 'notice' );
 			?>
 
 			<form class="checkout_giftcard" method="post" style="display:none">
-				<p class="form-row form-row-first"><input type="text" name="giftcard_code" class="input-text" placeholder="<?php _e( 'Gift card', 'rpgiftcards' ); ?>" id="giftcard_code" value="" /></p>
-				<p class="form-row form-row-last"><input type="submit" class="button" name="apply_giftcard" value="<?php _e( 'Apply Gift card', 'rpgiftcards' ); ?>" /></p>
+				<p class="form-row form-row-first"><input type="text" name="giftcard_code" class="input-text" placeholder="<?php _e( 'Gift card', 'kodiak-giftcards' ); ?>" id="giftcard_code" value="" /></p>
+				<p class="form-row form-row-last"><input type="submit" class="button" name="apply_giftcard" value="<?php _e( 'Apply Gift card', 'kodiak-giftcards' ); ?>" /></p>
 				<div class="clear"></div>
 			</form>
 
@@ -73,51 +73,46 @@ function wpr_display_giftcard_in_cart() {
 
 	foreach( $cart as $key => $product ) {
 
-		if( WPR_Giftcard::wpr_is_giftcard($product['product_id'] ) )
+		if( KODIAK_Giftcard::wpr_is_giftcard($product['product_id'] ) )
 				$card[] = $product;
 	}
 
 	if( ! empty( $card ) ) {
-		echo '<h6>' . __( 'Gift Cards In Cart', 'rpgiftcards' ) . '</h6>';
+		echo '<h6>' . __( 'Gift Cards In Cart', 'kodiak-giftcards' ) . '</h6>';
 		echo '<table width="100%" class="shop_table cart">';
 		echo '<thead>';
-		echo '<tr><td>' . __( 'Name', 'rpgiftcards' ) . '</td><td>' . __( 'Email', 'rpgiftcards' ) . '</td><td>' . __( 'Price', 'rpgiftcards' ) . '</td><td>' . __( 'Note', 'rpgiftcards' ) . '</td></tr>';
+		echo '<tr><td>' . __( 'Name', 'kodiak-giftcards' ) . '</td><td>' . __( 'Email', 'kodiak-giftcards' ) . '/' . __( 'Address', 'kodiak-giftcards' ) . '</td><td>' . __( 'Price', 'kodiak-giftcards' ) . '</td><td>' . __( 'Note', 'kodiak-giftcards' ) . '</td></tr>';
 		echo '</thead>';
 		foreach( $card as $key => $information ) {
-
-			if( WPR_Giftcard::wpr_is_giftcard($information['product_id'] ) ){
+			if( KODIAK_Giftcard::wpr_is_giftcard($information['product_id'] ) ){
 				$gift += 1;
 
-				$rpw_to_check 		= ( get_option( 'woocommerce_giftcard_to' ) <> NULL ? get_option( 'woocommerce_giftcard_to' ) : __('To', 'rpgiftcards' ) );
-				$rpw_toEmail_check 	= ( get_option( 'woocommerce_giftcard_toEmail' ) <> NULL ? get_option( 'woocommerce_giftcard_toEmail' ) : __('To Email', 'rpgiftcards' )  );
-				$rpw_note_check		= ( get_option( 'woocommerce_giftcard_note' ) <> NULL ? get_option( 'woocommerce_giftcard_note' ) : __('Note', 'rpgiftcards' )  );
-				$rpw_reload_card		= ( get_option( 'woocommerce_giftcard_reload_card' ) <> NULL ? get_option( 'woocommerce_giftcard_reload' ) : __('Card Number', 'rpgiftcards' )  );
-				
-				for ( $i = 0; $i < $information["quantity"]; $i++ ) { 
+				$rpw_to_check 		= ( get_option( 'woocommerce_giftcard_to' ) <> NULL ? get_option( 'woocommerce_giftcard_to' ) : __('To', 'kodiak-giftcards' ) );
+				$rpw_toEmail_check 	= ( get_option( 'woocommerce_giftcard_toEmail' ) <> NULL ? get_option( 'woocommerce_giftcard_toEmail' ) : __('To Email', 'kodiak-giftcards' )  );
+				$rpw_address_check 	= ( get_option( 'woocommerce_giftcard_address' ) <> NULL ? get_option( 'woocommerce_giftcard_address' ) : __('Address', 'kodiak-giftcards' )  );
+				$rpw_note_check		= ( get_option( 'woocommerce_giftcard_note' ) <> NULL ? get_option( 'woocommerce_giftcard_note' ) : __('Note', 'kodiak-giftcards' )  );
+				$rpw_reload_card	= ( get_option( 'woocommerce_giftcard_reload_card' ) <> NULL ? get_option( 'woocommerce_giftcard_reload' ) : __('Card Number', 'kodiak-giftcards' )  );
+
+				for ( $i = 0; $i < $information["quantity"]; $i++ ) {
 					echo '<tr style="font-size: 0.8em">';
+
+						echo '<td>';
+						echo $information["variation"][$rpw_to_check];
 						if ( isset( $information["variation"][$rpw_reload_card] ) ) {
-							echo '<td colspan="2">' . __( 'Reload card:', 'rpgiftcards') . ' ' . $information["variation"][$rpw_reload_card] . '</td>';
-						} else {
-							echo '<td>';
-							if ( isset( $information["variation"][$rpw_to_check] ) ) {
-								echo $information["variation"][$rpw_to_check];
-							}
-							echo '</td>';
-							
-							echo '<td>';
-							if ( isset( $information["variation"][$rpw_toEmail_check] ) ) {
-								echo $information["variation"][$rpw_toEmail_check];
-							}
-							echo '</td>';
+							echo __( 'Reload card:', 'kodiak-giftcards') . ' ' . $information["variation"][$rpw_reload_card];
 						}
-						
-						// Add a check to see if the product is on sale and if it is output the full price
-						#echo '<td>' . wc_price( $information["variation"]["price"] / $information["quantity"] ) . '</td>';
+						echo '</td>';
+
+						echo '<td>';
+						echo $information["variation"][$rpw_toEmail_check];
+						echo $information["variation"][$rpw_address_check];
+						echo '</td>';
+
 						echo '<td>' . wc_price( $information["line_total"] / $information["quantity"] ) . '</td>';
-						
+
 						echo '<td>';
 						if ( isset( $information["variation"][$rpw_toEmail_check] ) ) {
-							echo $information["variation"][$rpw_note_check]; 
+							echo $information["variation"][$rpw_note_check];
 						}
 						echo '</td>';
 					echo '</tr>';
@@ -135,10 +130,10 @@ function woocommerce_apply_giftcard($giftcard_code) {
 
 	if ( !  empty( $_POST['giftcard_code'] ) ) {
 		$giftcard_number = sanitize_text_field( $_POST['giftcard_code'] );
-		$giftcard_id = WPR_Giftcard::wpr_get_giftcard_by_code( $giftcard_number );
+		$giftcard_id = KODIAK_Giftcard::wpr_get_giftcard_by_code( $giftcard_number );
 
 		if ( $giftcard_id ) {
-			
+
 			if ( ! WC()->session->giftcard_post ) {
 				WC()->session->giftcard_post = array();
 			}
@@ -149,10 +144,10 @@ function woocommerce_apply_giftcard($giftcard_code) {
 
 				if ( ( strtotime($current_date) <= strtotime($cardExperation) ) || ( strtotime($cardExperation) == '' ) ) {
 					if( wpr_get_giftcard_balance( $giftcard_id ) > 0 ) {
-						
+
 						if ( WC()->session->giftcard_post == NULL ) {
 							WC()->session->giftcard_post = array( $giftcard_id );
-							
+
 						} else {
 							$newCard = array( $giftcard_id );
 							$currentCards = WC()->session->giftcard_post;
@@ -166,23 +161,23 @@ function woocommerce_apply_giftcard($giftcard_code) {
 
 						WC()->cart->calculate_totals();
 
-						wc_add_notice(  __( 'Gift card applied successfully.', 'rpgiftcards' ), 'success' );
+						wc_add_notice(  __( 'Gift card applied successfully.', 'kodiak-giftcards' ), 'success' );
 
 					} else {
-						wc_add_notice( __( 'Gift Card does not have a balance!', 'rpgiftcards' ), 'error' );
+						wc_add_notice( __( 'Gift Card does not have a balance!', 'kodiak-giftcards' ), 'error' );
 					}
 				} else {
-					wc_add_notice( __( 'Gift Card has expired!', 'rpgiftcards' ), 'error' ); // Giftcard Entered has expired
+					wc_add_notice( __( 'Gift Card has expired!', 'kodiak-giftcards' ), 'error' ); // Giftcard Entered has expired
 				}
 			} else {
-				wc_add_notice( __( 'Gift Card already in the cart!', 'rpgiftcards' ), 'error' );  //  You already have a gift card in the cart		
+				wc_add_notice( __( 'Gift Card already in the cart!', 'kodiak-giftcards' ), 'error' );  //  You already have a gift card in the cart
 			}
-		} else {		
-			wc_add_notice( __( 'Gift Card does not exist!', 'rpgiftcards' ), 'error' ); // Giftcard Entered does not exist
+		} else {
+			wc_add_notice( __( 'Gift Card does not exist!', 'kodiak-giftcards' ), 'error' ); // Giftcard Entered does not exist
 		}
 
 		wc_print_notices();
-		
+
 		if ( defined('DOING_AJAX') && DOING_AJAX ) {
 			die();
 		}
@@ -203,9 +198,9 @@ add_action( 'wp_ajax_nopriv_woocommerce_apply_giftcard', 'woocommerce_apply_gift
 
 
 function apply_cart_giftcard( ) {
-	if ( isset( $_POST['giftcard_code'] ) ) 
+	if ( isset( $_POST['giftcard_code'] ) )
 		woocommerce_apply_giftcard( $_POST['giftcard_code'] );
-	
+
 	WC()->cart->calculate_totals();
 
 }
@@ -242,27 +237,27 @@ function rpgc_order_giftcard( ) {
 
 
 
-			$giftcard = new WPR_Giftcard();
+			$giftcard = new KODIAK_Giftcard();
 			$price = $giftcard->wpr_get_payment_amount();
 
 			if ( is_cart() ) {
 				$gotoPage = WC()->cart->get_cart_url();
 			} else {
-				$gotoPage = WC()->cart->get_checkout_url();	
+				$gotoPage = WC()->cart->get_checkout_url();
 			}
 
 			?>
 			<tr class="giftcard">
-				<th><?php _e( 'Gift Card Payment', 'rpgiftcards' ); ?> </th>
+				<th><?php _e( 'Gift Card Payment', 'kodiak-giftcards' ); ?> </th>
 				<td style="font-size:0.85em;">
 					<?php echo wc_price( $price ); ?>
-					<?php foreach ( $giftCards as $key => $giftCard) { 
+					<?php foreach ( $giftCards as $key => $giftCard) {
 						$cardNumber = wpr_get_giftcard_number( $giftCard );
 						$cardValue  = wpr_get_giftcard_balance( $giftCard );
 
 						?>
 
-						<br /> <a href="<?php echo add_query_arg( 'remove_giftcards', $cardNumber, $gotoPage ) ?>"><small>[<?php _e( 'Remove', 'rpgiftcards' ); ?> <?php echo wc_price( $cardValue); ?> <?php _e( 'Gift Card', 'rpgiftcards' ); ?>]</small></a>
+						<br /> <a href="<?php echo add_query_arg( 'remove_giftcards', $cardNumber, $gotoPage ) ?>"><small>[<?php _e( 'Remove', 'kodiak-giftcards' ); ?> <?php echo wc_price( $cardValue); ?> <?php _e( 'Gift Card', 'kodiak-giftcards' ); ?>]</small></a>
 					<?php } ?>
 				</td>
 			</tr>
@@ -285,59 +280,75 @@ function rpgc_update_card( $order_id ) {
 	global $woocommerce;
 
 	$giftCards = WC()->session->giftcard_post;
-	$giftcard = new WPR_Giftcard();
+	$giftcard = new KODIAK_Giftcard();
 	$payment = $giftcard->wpr_get_payment_amount();
 
 	if ( isset( $giftCards ) ) {
 		foreach ($giftCards as $key => $giftCard_id ) {
 
 			if ( $giftCard_id != '' ) {
-				//Decrease Ballance of card
-				
+				//Decrease Balance of card
 				$balance = wpr_get_giftcard_balance( $giftCard_id );
 
-				$giftcard->wpr_decrease_balance( $giftCard_id );
+				$giftcardPayment = $giftcard->wpr_decrease_balance( $giftCard_id );
 
 				$giftCard_IDs = get_post_meta ( $giftCard_id, 'wpr_existingOrders_id', true );
-				$giftCard_IDs[] = $order_id;
+				if ( is_array ( $giftCard_IDs ) ) {
+					$giftCard_IDs[] = $order_id;
+				} else {
+					$giftCard_IDs = array( $order_id );
+				}
+
 
 				$giftCardIDs = get_post_meta( $order_id, 'rpgc_id', true );
-				$giftCardIDs[] = $giftCard_id;
-				
+				if ( is_array ( $giftCardIDs ) ) {
+					$giftCardIDs[] = $order_id;
+				} else {
+					$giftCardIDs = array( $order_id );
+				}
+
 				$giftCardPayments = get_post_meta( $order_id, 'rpgc_payment', true );
 				$giftCardBalances = get_post_meta( $order_id, 'rpgc_balance', true );
 
 
 				if ( $payment > $balance ){
-					$giftCardPayments[] = $balance;
+					if ( is_array ( $giftCardPayments ) ) {
+						$giftCardPayments[] = $giftcardPayment;
+					} else {
+						$giftCardPayments = array( $giftcardPayment );
+					}
 					$payment -= $balance;
 					$newBalance = 0;
 				} else {
-					$giftCardPayments[] = $payment;
-					$newBalance = $balance - $payment;
+					if ( is_array ( $giftCardPayments ) ) {
+						$giftCardPayments[] = $giftcardPayment;
+					} else {
+						$giftCardPayments = array( $giftcardPayment );
+					}
+					$newBalance = $balance - $giftcardPayment;
 				}
 
-				$giftCardBalances[] = $newBalance;
-
-				//$newBalance = wpr_get_giftcard_balance( $giftCard_id );
+				if ( is_array ( $giftCardBalances ) ) {
+					$giftCardBalances[] = $newBalance;
+				} else {
+					$giftCardBalances = array( $newBalance );
+				}
 
 				$giftCardInfo = get_post_meta( $giftCard_id, '_wpr_giftcard', true );
-
 				$giftCardInfo['balance'] = $newBalance;
 
 				update_post_meta( $giftCard_id, '_wpr_giftcard', $giftCardInfo ); // Update balance of Giftcard
 				update_post_meta( $giftCard_id, 'rpgc_balance', $giftCardBalances );
 				update_post_meta( $giftCard_id, 'wpr_existingOrders_id', $giftCard_IDs ); // Saves order id to gifctard post
-				
+
 				update_post_meta( $order_id, 'rpgc_id', $giftCardIDs );
 				update_post_meta( $order_id, 'rpgc_payment', $giftCardPayments );
 				update_post_meta( $order_id, 'rpgc_balance', $giftCardBalances );
 
 				WC()->session->idForEmail = $order_id;
-				
 			}
 		}
-	
+
 		unset( WC()->session->giftcard_payment, WC()->session->giftcard_post );
 	}
 
@@ -351,7 +362,6 @@ function rpgc_update_card( $order_id ) {
 add_action( 'woocommerce_checkout_order_processed', 'rpgc_update_card' );
 
 
-
 /**
  * Displays the giftcard data on the order thank you page
  *
@@ -360,22 +370,22 @@ function rpgc_display_giftcard( $order ) {
 
 	$theIDNums =  get_post_meta( $order->get_id(), 'rpgc_id', true );
 	$theBalance = get_post_meta( $order->get_id(), 'rpgc_balance', true );
-	
+
 	if ( $theIDNums ) {
 		?>
 
 
-		<h4 style="margin-bottom: 10px;"><?php _e( 'Gift Card Balance After Order:', 'rpgiftcards' ); ?></h4>
+		<h4 style="margin-bottom: 10px;"><?php _e( 'Gift Card Balance After Order:', 'kodiak-giftcards' ); ?></h4>
 		<ul style="list-style:none; margin-left: 10px;">
 		<?php
 		foreach ($theIDNums as $key => $theIDNum) {
 			if( isset( $theIDNum ) ) {
 				if ( $theIDNum <> '' ) {
 				?>
-					<li><?php _e( 'Gift Card', 'rpgiftcards' ); ?> <?php echo wpr_get_giftcard_number( $theIDNum );  ?>: <?php echo wc_price( $theBalance[$key] ); ?> <?php _e( 'remaining', 'rpgiftcards' ); ?> <?php do_action('wpr_after_remaining_balance', $theIDNum, $theBalance[$key] ); ?></li>
+					<li><?php _e( 'Gift Card', 'kodiak-giftcards' ); ?> <?php echo wpr_get_giftcard_number( $theIDNum );  ?>: <?php echo wc_price( $theBalance[$key] ); ?> <?php _e( 'remaining', 'kodiak-giftcards' ); ?> <?php do_action('wpr_after_remaining_balance', $theIDNum, $theBalance[$key] ); ?></li>
 
 					<?php
-				}	
+				}
 			}
 		}
 		?>
@@ -385,7 +395,7 @@ function rpgc_display_giftcard( $order ) {
 		if( isset( $theGiftCardData ) ) {
 			if ( $theGiftCardData <> '' ) {
 		?>
-				<h4><?php _e( 'Gift Card Information:', 'rpgiftcards' ); ?></h4>
+				<h4><?php _e( 'Gift Card Information:', 'kodiak-giftcards' ); ?></h4>
 				<?php
 				$i = 1;
 
@@ -393,14 +403,14 @@ function rpgc_display_giftcard( $order ) {
 
 					if ( $i % 2 ) echo '<div style="margin-bottom: 10px;">';
 					echo '<div style="float: left; width: 45%; margin-right: 2%;>';
-					echo '<h6><strong> ' . __('Giftcard',  'rpgiftcards' ) . ' ' . $i . '</strong></h6>';
+					echo '<h6><strong> ' . __('Giftcard',  'kodiak-giftcards' ) . ' ' . $i . '</strong></h6>';
 					echo '<ul style="font-size: 0.85em; list-style: none outside none;">';
-					if ( $giftcard[rpgc_product_num] ) 	echo '<li>' . __('Card', 'rpgiftcards') . ': ' . get_the_title( $giftcard[rpgc_product_num] ) . '</li>';
-					if ( $giftcard[rpgc_to] ) 			echo '<li>' . __('To',  'rpgiftcards' ) . ': ' . $giftcard[rpgc_to] . '</li>';
-					if ( $giftcard[rpgc_to_email] ) 	echo '<li>' . __('Send To',  'rpgiftcards' ) . ': ' . $giftcard[rpgc_to_email] . '</li>';
-					if ( $giftcard[rpgc_balance] ) 		echo '<li>' . __('Balance',  'rpgiftcards' ) . ': ' . wc_price( $giftcard[rpgc_balance] ) . '</li>';
-					if ( $giftcard[rpgc_note] ) 		echo '<li>' . __('Note',  'rpgiftcards' ) . ': ' . $giftcard[rpgc_note] . '</li>';
-					if ( $giftcard[rpgc_quantity] ) 	echo '<li>' . __('Quantity',  'rpgiftcards' ) . ': ' . $giftcard[rpgc_quantity] . '</li>';
+					if ( $giftcard[rpgc_product_num] ) 	echo '<li>' . __('Card', 'kodiak-giftcards') . ': ' . get_the_title( $giftcard[rpgc_product_num] ) . '</li>';
+					if ( $giftcard[rpgc_to] ) 			echo '<li>' . __('To',  'kodiak-giftcards' ) . ': ' . $giftcard[rpgc_to] . '</li>';
+					if ( $giftcard[rpgc_to_email] ) 	echo '<li>' . __('Send To',  'kodiak-giftcards' ) . ': ' . $giftcard[rpgc_to_email] . '</li>';
+					if ( $giftcard[rpgc_balance] ) 		echo '<li>' . __('Balance',  'kodiak-giftcards' ) . ': ' . wc_price( $giftcard[rpgc_balance] ) . '</li>';
+					if ( $giftcard[rpgc_note] ) 		echo '<li>' . __('Note',  'kodiak-giftcards' ) . ': ' . $giftcard[rpgc_note] . '</li>';
+					if ( $giftcard[rpgc_quantity] ) 	echo '<li>' . __('Quantity',  'kodiak-giftcards' ) . ': ' . $giftcard[rpgc_quantity] . '</li>';
 					echo '</ul>';
 					echo '</div>';
 					if ( !( $i % 2 ) ) echo '</div>';
@@ -436,13 +446,13 @@ function rpgc_add_order_giftcard( $total_rows, $order ) {
 
 		foreach ($giftCardPayment as $key => $payment ) {
 			$newRow['rpgc_data' . $key ] = array(
-				'label' => __( 'Gift Card Payment:', 'rpgiftcards' ),
+				'label' => __( 'Gift Card Payment:', 'kodiak-giftcards' ),
 				'value'	=> wc_price( -1 * $payment )
 			);
 		}
 
 		if( get_option( 'woocommerce_enable_giftcard_process' ) == 'no' ){
-			array_splice($total_rows, 1, 0, $newRow);	
+			array_splice($total_rows, 1, 0, $newRow);
 		} else {
 			array_splice($total_rows, 2, 0, $newRow);
 		}
@@ -457,16 +467,17 @@ function wpr_giftcard_in_order( $order_id ) {
 
 	$giftCardPayment = get_post_meta( $order_id, 'rpgc_payment', true);
 
-	if ( $giftCardPayment ) { 
+	if ( $giftCardPayment ) {
 		foreach ($giftCardPayment as $key => $payment ) {?>
-	
+
 		<tr>
-			<td class="label"><?php _e( 'Gift Card Payment', 'rpgiftcards' ); ?> <span class="tips" data-tip="<?php _e( 'This is the amount used by gift cards.', 'rpgiftcards' ); ?>">[?]</span>:</td>
-			<td class="total"><?php echo wc_price($payment); ?></td>
+			<td class="label"><?php _e( 'Gift Card Payment', 'kodiak-giftcards' ); ?> <span class="tips" data-tip="<?php _e( 'This is the amount used by gift cards.', 'kodiak-giftcards' ); ?>">[?]</span>:</td>
 			<td width="1%"></td>
+			<td class="total"><?php echo wc_price($payment); ?></td>
+
 		</tr>
-	
-	<?php  
+
+	<?php
 		}
 	}
 

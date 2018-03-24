@@ -241,6 +241,7 @@ class WC_Predictive_Search
 	 */
 	public function get_product_results( $search_keyword, $row, $start = 0, $woocommerce_search_focus_enable, $woocommerce_search_focus_plugin, $product_term_id = 0, $text_lenght = 100, $current_lang = '', $include_header = true , $show_price = true, $show_sku = false, $show_addtocart = false, $show_categories = false, $show_tags = false ) {
 		global $wpdb;
+		global $predictive_search_description_source;
 
 		$have_product = $this->check_product_exsited( $search_keyword, $woocommerce_search_focus_enable, $woocommerce_search_focus_plugin, 'product', $product_term_id, $current_lang );
 		if ( ! $have_product ) {
@@ -283,8 +284,20 @@ class WC_Predictive_Search
 
 				$post = get_post( $product_id );
 
-				$product_description = WC_Predictive_Search_Functions::woops_limit_words( strip_tags( WC_Predictive_Search_Functions::strip_shortcodes( strip_shortcodes ( $post->post_content ) ) ), $text_lenght, '...' );
-				if ( trim( $product_description ) == '' ) $product_description = WC_Predictive_Search_Functions::woops_limit_words( strip_tags( WC_Predictive_Search_Functions::strip_shortcodes( strip_shortcodes( $post->post_excerpt ) ) ), $text_lenght, '...' );
+				$product_content = WC_Predictive_Search_Functions::woops_limit_words( strip_tags( WC_Predictive_Search_Functions::strip_shortcodes( strip_shortcodes ( $post->post_content ) ) ), $text_lenght, '...' );
+				
+				$product_excerpt = WC_Predictive_Search_Functions::woops_limit_words( strip_tags( WC_Predictive_Search_Functions::strip_shortcodes( strip_shortcodes( $post->post_excerpt ) ) ), $text_lenght, '...' );
+
+				$product_description = $product_content;
+				if ( 'excerpt' == $predictive_search_description_source ) {
+					$product_description = $product_excerpt;
+				}
+
+				if ( empty( $product_description ) && 'excerpt' == $predictive_search_description_source ) {
+					$product_description = $product_content;
+				} elseif ( empty( $product_description ) ) {
+					$product_description = $product_excerpt;
+				}
 
 				$availability      = $product->get_availability();
 				$availability_html = empty( $availability['availability'] ) ? '' : '<span class="stock ' . esc_attr( $availability['class'] ) . '">' . esc_html( $availability['availability'] ) . '</span>';
@@ -341,7 +354,7 @@ class WC_Predictive_Search
 
 		if ( $product_term_id > 0 ) {
 			global $wc_ps_term_relationships_data;
-			$term_relationships_sql = $wc_ps_term_relationships_data->get_sql( $product_term_id, 'post_parent' );
+			$term_relationships_sql = $wc_ps_term_relationships_data->get_sql( $product_term_id, 'post_id', 'post_parent' );
 		}
 
 		if ( class_exists('SitePress') && '' != $current_lang ) {
@@ -381,6 +394,7 @@ class WC_Predictive_Search
 	 */
 	public function get_product_sku_results( $search_keyword, $row, $start = 0, $product_term_id = 0, $text_lenght = 100, $current_lang = '', $include_header = true , $show_price = true, $show_sku = true, $show_addtocart = false, $show_categories = false, $show_tags = false ) {
 		global $wpdb;
+		global $predictive_search_description_source;
 
 		$have_p_sku = $this->check_product_sku_exsited( $search_keyword, $product_term_id, $current_lang );
 		if ( ! $have_p_sku ) {
@@ -423,8 +437,20 @@ class WC_Predictive_Search
 
 				$post = get_post( $product_id );
 
-				$product_description = WC_Predictive_Search_Functions::woops_limit_words( strip_tags( WC_Predictive_Search_Functions::strip_shortcodes( strip_shortcodes ( $post->post_content ) ) ), $text_lenght, '...' );
-				if ( trim( $product_description ) == '' ) $product_description = WC_Predictive_Search_Functions::woops_limit_words( strip_tags( WC_Predictive_Search_Functions::strip_shortcodes( strip_shortcodes( $post->post_excerpt ) ) ), $text_lenght, '...' );
+				$product_content = WC_Predictive_Search_Functions::woops_limit_words( strip_tags( WC_Predictive_Search_Functions::strip_shortcodes( strip_shortcodes ( $post->post_content ) ) ), $text_lenght, '...' );
+
+				$product_excerpt = WC_Predictive_Search_Functions::woops_limit_words( strip_tags( WC_Predictive_Search_Functions::strip_shortcodes( strip_shortcodes( $post->post_excerpt ) ) ), $text_lenght, '...' );
+
+				$product_description = $product_content;
+				if ( 'excerpt' == $predictive_search_description_source ) {
+					$product_description = $product_excerpt;
+				}
+
+				if ( empty( $product_description ) && 'excerpt' == $predictive_search_description_source ) {
+					$product_description = $product_content;
+				} elseif ( empty( $product_description ) ) {
+					$product_description = $product_excerpt;
+				}
 
 				$product_sku  = stripslashes( $current_product->sku );
 				$post_parent  = $current_product->post_parent;
@@ -467,6 +493,7 @@ class WC_Predictive_Search
 	 */
 	public function get_post_results( $search_keyword, $row, $start = 0, $woocommerce_search_focus_enable, $woocommerce_search_focus_plugin, $post_term_id = 0, $text_lenght = 100, $current_lang = '', $post_type = 'post', $include_header = true , $show_categories = false, $show_tags = false ) {
 		global $wpdb;
+		global $predictive_search_description_source;
 
 		$total_post = 0;
 		$have_post = $this->check_product_exsited( $search_keyword, $woocommerce_search_focus_enable, $woocommerce_search_focus_plugin, $post_type, $post_term_id, $current_lang );
@@ -495,8 +522,20 @@ class WC_Predictive_Search
 			foreach ( $search_posts as $item ) {
 
 				$post_data = get_post( $item->post_id );
-				$item_description = WC_Predictive_Search_Functions::woops_limit_words( strip_tags( WC_Predictive_Search_Functions::strip_shortcodes( strip_shortcodes ( $post_data->post_content ) ) ), $text_lenght, '...' );
-				if ( trim( $item_description ) == '' ) $item_description = WC_Predictive_Search_Functions::woops_limit_words( strip_tags( WC_Predictive_Search_Functions::strip_shortcodes( strip_shortcodes( $post_data->post_excerpt ) ) ), $text_lenght, '...' );
+				$item_content = WC_Predictive_Search_Functions::woops_limit_words( strip_tags( WC_Predictive_Search_Functions::strip_shortcodes( strip_shortcodes ( $post_data->post_content ) ) ), $text_lenght, '...' );
+				
+				$item_excerpt = WC_Predictive_Search_Functions::woops_limit_words( strip_tags( WC_Predictive_Search_Functions::strip_shortcodes( strip_shortcodes( $post_data->post_excerpt ) ) ), $text_lenght, '...' );
+
+				$item_description = $item_content;
+				if ( 'excerpt' == $predictive_search_description_source ) {
+					$item_description = $item_excerpt;
+				}
+
+				if ( empty( $item_description ) && 'excerpt' == $predictive_search_description_source ) {
+					$item_description = $item_content;
+				} elseif ( empty( $item_description ) ) {
+					$item_description = $item_excerpt;
+				}
 
 				$item_data = array(
 					'title'       => $item->post_title,

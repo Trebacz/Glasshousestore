@@ -1700,7 +1700,12 @@ class backupbuddy_live_periodic {
 			
 			// If too many remote sends have failed today then give up for now since something is likely wrong.
 			if ( self::$_state['stats']['recent_send_fails'] > $destination_settings['max_daily_failures'] ) {
-				$error = 'Error #5002: Too many file transfer failures have occurred so stopping transfers. We will automatically try again in 12 hours. Verify there are no remote file transfer problems. Check recently send file logs on Remote Destinations page. Don\'t want to wait? Pause Files process then select \'Reset Send Attempts\' under \'Advanced Troubleshooting Options\'.  Time since last send file: `' . pb_backupbuddy::$format->time_ago( self::$_state['stats']['last_send_fail'] ) . '`. File: `' . self::$_state['stats']['last_send_fail_file'] . '`.';
+				if ( self::$_state['stats']['last_send_fail'] > 0 ) {
+					$last_fail = pb_backupbuddy::$format->time_ago( self::$_state['stats']['last_send_fail'] );
+				} else {
+					$last_fail = 'unknown';
+				}
+				$error = 'Error #5002: Too many file transfer failures have occurred so stopping transfers. We will automatically try again in 12 hours. Verify there are no remote file transfer problems. Check recently send file logs on Remote Destinations page. Don\'t want to wait? Pause Files process then select \'Reset Send Attempts\' under \'Advanced Troubleshooting Options\'.  Time since last send file: `' . $last_fail . '`. File: `' . self::$_state['stats']['last_send_fail_file'] . '`.';
 				backupbuddy_core::addNotification( 'live_error', 'BackupBuddy Stash Live Error', $error );
 				self::$_state['step']['last_status'] =  $error;
 				pb_backupbuddy::status( 'error', $error );

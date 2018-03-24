@@ -45,11 +45,17 @@ class NM_PriceMatrix_wooproduct extends NM_Inputs_wooproduct{
 								'title' => __ ( 'Description', 'nm-personalizedproduct' ),
 								'desc' => __ ( 'Type description, it will be diplay under section heading.', 'nm-personalizedproduct' )
 						),
+						'option_added' => array (
+								'type' => 'checkbox',
+								'title' => __ ( 'Option Added', 'nm-personalizedproduct' ),
+								'desc' => __ ( 'It will apply discount on Base+Options Price, otherwis apply only Base Price', 'nm-personalizedproduct' ) 
+						),
 						'options' => array (
 								'type' => 'paired',
 								'title' => __ ( 'Price matrix', 'nm-personalizedproduct' ),
 								'desc' => __ ( 'Type quantity range with price', 'nm-personalizedproduct' )
 						),
+						
 						
 						
 				);
@@ -61,18 +67,31 @@ class NM_PriceMatrix_wooproduct extends NM_Inputs_wooproduct{
 	*/
 	function render_input($args, $ranges){
 
+		$ranges = ppom_handle_price_matrix( $ranges, $args['product_price'] );
+		
 		$_html = '<input name="_pricematrix" id="_pricematrix" type="hidden" value="'.esc_attr( json_encode($ranges)).'" />';
+		$_html .= '<input name="_pricematrix_option_added" id="_pricematrix_option_added" type="hidden" value="'.esc_attr( $args['option_added'] ).'" />';
 
 		$_html .= '<p>'. stripslashes( $args['description']).'</p>';
 		
 		foreach($ranges as $opt)
 		{
+			$price = isset( $opt['price'] ) ? trim($opt['price']) : 0;
+			if(isset($opt['percent'])){
+				
+				$percent = $opt['percent'];
+				$price = "-{$percent} (".wc_price( $price ).")";
+			}else {
+				$price = wc_price( $price );	
+			}
+			
 			$_html .= '<div style="clear:both;border-bottom:1px #ccc dashed;">';
 			$_html .= '<span>'.stripslashes(trim($opt['option'])).'</span>';
-			$_html .= '<span style="float:right">'.wc_price(trim($opt['price'])).'</span>';
+			$_html .= '<span style="float:right">'.$price.'</span>';
 			$_html .= '</div>';
 		}
 
 		echo $_html;
 	}
+	
 }

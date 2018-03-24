@@ -1,9 +1,9 @@
 <?php
 
 /* * ******************************************************************
- * Version 3.7
- * Modified: 03-09-2017
- * Copyright 2017 Accentio. All rights reserved.
+ * Version 4.1
+ * Modified: 04-02-2018
+ * Copyright 2018 Accentio. All rights reserved.
  * License: None
  * By: Michel Jongbloed
  * ****************************************************************** */
@@ -108,7 +108,7 @@ if ( !class_exists( 'WPPFM_Queries' ) ) :
 		}
 		
 		public function read_failed_feeds() {
-			return $this->_wpdb->get_results( "SELECT product_feed_id, updated, schedule FROM {$this->_table_prefix}feedmanager_product_feed WHERE status_id=4 OR status_id=3", ARRAY_A );
+			return $this->_wpdb->get_results( "SELECT product_feed_id, updated, schedule FROM {$this->_table_prefix}feedmanager_product_feed WHERE status_id=5 OR status_id=6", ARRAY_A );
 		}
 
 		public function read_sources() {
@@ -125,8 +125,8 @@ if ( !class_exists( 'WPPFM_Queries' ) ) :
 
 		public function read_feed( $feed_id ) {
 			$result = $this->_wpdb->get_results( "SELECT p.product_feed_id, p.source_id AS source, p.title, p.feed_title, p.feed_description, p.main_category, "
-			. "p.url, p.include_variations, p.is_aggregator, p.status_id, p.updated, p.schedule, c.name_short "
-			. "AS country, m.channel_id AS channel, p.status_id, p.language "
+			. "p.url, p.include_variations, p.is_aggregator, p.status_id, p.base_status_id, p.updated, p.products, p.schedule, c.name_short "
+			. "AS country, m.channel_id AS channel, p.language "
 			. "FROM {$this->_table_prefix}feedmanager_product_feed AS p "
 			. "INNER JOIN {$this->_table_prefix}feedmanager_country AS c ON p.country_id = c.country_id "
 			. "INNER JOIN {$this->_table_prefix}feedmanager_channel AS m ON p.channel_id = m.channel_id "
@@ -148,30 +148,81 @@ if ( !class_exists( 'WPPFM_Queries' ) ) :
 		}
 
 		/**
-		 * Returns the post data from published products with id between offset and offset+limit
+		 * Returns the post ids that belong to the selected categories
 		 * 
-		 * @param string $column_string
 		 * @param string $category_string
-		 * @param int $offset
-		 * @param int $limit
 		 * @return array
 		 */
-		public function read_post_data( $column_string, $category_string, $offset, $limit ) {
-			$main_table					 = $this->_table_prefix . 'posts';
-			$term_relationships_table	 = $this->_table_prefix . 'term_relationships';
-			$term_taxonomy_table		 = $this->_table_prefix . 'term_taxonomy';
-			$selecting_columns			 = $column_string ? ', ' . $column_string : '';
+		public function get_post_ids( $category_string, $with_variation = false ) {
+			$products_query = "SELECT DISTINCT {$this->_table_prefix}posts.ID
+				FROM {$this->_table_prefix}posts
+				LEFT JOIN {$this->_table_prefix}term_relationships ON ({$this->_table_prefix}posts.ID = {$this->_table_prefix}term_relationships.object_id) 
+				LEFT JOIN {$this->_table_prefix}term_taxonomy ON ({$this->_table_prefix}term_relationships.term_taxonomy_id = {$this->_table_prefix}term_taxonomy.term_taxonomy_id)
+				WHERE {$this->_table_prefix}posts.post_type = 'product' AND {$this->_table_prefix}posts.post_status = 'publish'
+				AND {$this->_table_prefix}term_taxonomy.term_id IN ($category_string)
+				ORDER BY ID";
 
-			return $this->_wpdb->get_results( "SELECT DISTINCT ID $selecting_columns 
-				FROM $main_table 
-				LEFT JOIN $term_relationships_table ON ($main_table.ID = $term_relationships_table.object_id) 
-				LEFT JOIN $term_taxonomy_table ON ($term_relationships_table.term_taxonomy_id = $term_taxonomy_table.term_taxonomy_id)
-				WHERE $main_table.post_type = 'product' AND $main_table.post_status = 'publish'
-				AND ID >= $offset AND ID < $limit
-				AND $term_taxonomy_table.term_id IN ($category_string)
-				ORDER BY ID" );
+			// get all main product ids (simple and variable, but not the variations)
+			$main_products_ids = $this->_wpdb->get_col( $products_query );
+			
+			// if variations should not be included return the main product ids
+			if ( ! $with_variation ) {
+				return $main_products_ids;
+			}
+
+			$main_products_ids_string = implode( ', ', $main_products_ids );
+
+			$variation_products_query = "SELECT DISTINCT post_parent FROM {$this->_table_prefix}posts
+				WHERE {$this->_table_prefix}posts.post_parent IN ( {$main_products_ids_string} )
+				AND {$this->_table_prefix}posts.post_type = 'product_variation'
+				ORDER BY ID";
+				
+			// get the ids of the variable products
+			$variation_products = $this->_wpdb->get_col( $variation_products_query );
+			
+			// if there are no variations, return the main product ids
+			if( count( $variation_products ) < 1 ) {
+				return $main_products_ids;
+			}
+			
+			$variation_products_ids_string = implode( ', ', $variation_products );
+
+			// remove the variable product ids from the list so that only the main simple product ids remain
+			$simple_products_ids = array_diff( $main_products_ids, $variation_products );
+			
+			$product_variations_query = "SELECT DISTINCT ID FROM {$this->_table_prefix}posts
+				WHERE {$this->_table_prefix}posts.post_parent IN ( {$variation_products_ids_string} )
+				AND {$this->_table_prefix}posts.post_type = 'product_variation'
+				ORDER BY ID";
+				
+			// now get the variations
+			$product_variations_ids = $this->_wpdb->get_col( $product_variations_query );
+			
+			// add the variations ids to the simple product ids
+			$all_product_ids = array_merge( $simple_products_ids, $product_variations_ids );
+			asort( $all_product_ids );
+			
+			return $all_product_ids;
 		}
 
+		/**
+		 * Gets the required data from the main 
+		 * 
+		 * @param type $post_id
+		 * @param type $column_string
+		 * @param type $category_string
+		 * @return type
+		 */
+		public function read_post_data( $post_id, $column_string ) {
+			$selecting_columns			 = $column_string ? ', ' . $column_string : '';
+			
+			$result = $this->_wpdb->get_results( "SELECT DISTINCT ID $selecting_columns
+				FROM {$this->_table_prefix}posts 
+				WHERE ID = $post_id");
+				
+			return $result ? $result[0] : null;
+		}
+		
 		/**
 		 * returns the lowest product id belonging to one or more categories
 		 * 
@@ -216,7 +267,6 @@ if ( !class_exists( 'WPPFM_Queries' ) ) :
 		}
 
 		public function read_meta_data( $post_id, $record_ids, $meta_columns ) {
-			$options_table	 = $this->_table_prefix . 'options';
 			$data = array();
 
 			foreach ( $meta_columns as $column ) {
@@ -231,7 +281,7 @@ if ( !class_exists( 'WPPFM_Queries' ) ) :
 				foreach( $record_ids as $rec_id ) {
 					$value = get_post_meta( $rec_id, $column, true );
 					
-					if ( $value ) {
+					if ( $value || $value === '0' ) {
 						array_push( $data, $this->make_meta_object( $column, $value, $rec_id ) );
 					} else {
 						$alt_val = maybe_unserialize( get_post_meta( $rec_id, '_product_attributes', true ) );
@@ -247,8 +297,7 @@ if ( !class_exists( 'WPPFM_Queries' ) ) :
 				}
 			}
 			
-			$main_url = $this->_wpdb->get_var( "SELECT option_value FROM $options_table WHERE option_name = 'siteurl'" );
-			$this->polish_data( $data, $post_id, $main_url );
+			$this->polish_data( $data, $post_id );
 
 			return $data;
 		}
@@ -262,7 +311,9 @@ if ( !class_exists( 'WPPFM_Queries' ) ) :
 			return $obj;
 		}
 
-		private function polish_data( &$data, $main_post_id, $site_url ) {
+		private function polish_data( &$data, $main_post_id ) {
+			
+			$site_url = get_option( 'siteurl' );
 
 			foreach ( $data as $row ) {
 
@@ -322,13 +373,13 @@ if ( !class_exists( 'WPPFM_Queries' ) ) :
 		}
 
 		public function get_custom_product_fields() {
-			$keywords_array = explode( ', ', get_option( 'wppfm_third_party_attribute_keywords' ) );
+			$keywords_array = explode( ',', get_option( 'wppfm_third_party_attribute_keywords', '%wpmr%,%cpf%,%unit%,%bto%,%yoast%' ) );
 			$main_table	 = $this->_wpdb->postmeta;
 			
 			$query_string = "SELECT DISTINCT meta_key FROM $main_table WHERE meta_key NOT BETWEEN '_' AND '_z'";
 			
 			foreach( $keywords_array as $keyword ) {
-				$query_string .= " OR meta_key LIKE '$keyword'";
+				$query_string .= " OR meta_key LIKE '" . trim( $keyword ) . "'";
 			}
 			
 			$query_string .= " ORDER BY meta_key";
@@ -336,17 +387,21 @@ if ( !class_exists( 'WPPFM_Queries' ) ) :
 			return $this->_wpdb->get_col( $query_string );
 		}
 		
+		public function clear_feed_batch_options() {
+			$this->_wpdb->query( "DELETE FROM {$this->_wpdb->options} WHERE option_name LIKE '%_batch_%'" );
+		}
+		
 		public function get_own_variable_product_attributes( $variable_id ) {
-			$keywords = get_option( 'wppfm_third_party_attribute_keywords', '%_wpmr_%, %_cpf_%, %_unit%, %_bto_%' );
+			$keywords = get_option( 'wppfm_third_party_attribute_keywords', '%wpmr%,%cpf%,%unit%,%bto%,%yoast%' );
 			$wpmr_attributes = array();
 			
 			if ( $keywords ) {
-				$keywords_array = explode( ', ', $keywords );
+				$keywords_array = explode( ',', $keywords );
 				$main_table	 = $this->_wpdb->postmeta;
-				$query_where_string = count( $keywords_array ) > 0 ? "WHERE (meta_key LIKE '$keywords_array[0]'" : '';
+				$query_where_string = count( $keywords_array ) > 0 ? "WHERE (meta_key LIKE '" . trim( $keywords_array[0] ) . "'" : '';
 
 				for( $i = 1; $i < count( $keywords_array ); $i++ ) {
-					$query_where_string .= " OR meta_key LIKE '$keywords_array[$i]'";
+					$query_where_string .= " OR meta_key LIKE '" . trim( $keywords_array[$i] ) . "'";
 				}
 
 				$query_where_string .= count( $keywords_array ) > 0 ? ") AND " : '';
@@ -359,11 +414,10 @@ if ( !class_exists( 'WPPFM_Queries' ) ) :
 			return $wpmr_attributes;
 		}
 
-// @since 1.9.0 230717		
-//		public function get_all_product_attributes() {
-//			$main_table	 = $this->_wpdb->postmeta;
-//			return $this->_wpdb->get_results( "SELECT DISTINCT meta_value FROM $main_table WHERE meta_key = '_product_attributes'" );
-//		}
+		public function get_all_product_attributes() {
+			$main_table	 = $this->_wpdb->postmeta;
+			return $this->_wpdb->get_results( "SELECT DISTINCT meta_value FROM $main_table WHERE meta_key = '_product_attributes'" );
+		}
 
 		public function get_current_feed_status( $feed_id ) {
 			$main_table = $this->_table_prefix . 'feedmanager_product_feed';
@@ -379,10 +433,19 @@ if ( !class_exists( 'WPPFM_Queries' ) ) :
 			$main_table = $this->_table_prefix . 'feedmanager_feed_status';
 			return $this->_wpdb->get_row( "SELECT status_id FROM $main_table WHERE status = '$status'" );
 		}
+		
+		public function get_feed_ids_with_specific_status( $status_id ) {
+			return $this->_wpdb->get_results( "SELECT product_feed_id FROM {$this->_table_prefix}feedmanager_product_feed WHERE status_id = '$status_id'" );
+		}
 
 		public function update_current_feed_status( $feed_id, $new_status ) {
 			$main_table = $this->_table_prefix . 'feedmanager_product_feed';
-			return $this->_wpdb->update( $main_table, array( 'status_id' => $new_status ), array( 'product_feed_id' => $feed_id ) );
+			
+			if( $new_status === 1 || $new_status === 2 ) {
+				return $this->_wpdb->update( $main_table, array( 'status_id' => $new_status, 'base_status_id' => $new_status ), array( 'product_feed_id' => $feed_id ) );
+			} else {
+				return $this->_wpdb->update( $main_table, array( 'status_id' => $new_status ), array( 'product_feed_id' => $feed_id ) );
+			}
 		}
 
 		public function set_nr_feed_products( $feed_id, $nr_products ) {
@@ -452,13 +515,14 @@ if ( !class_exists( 'WPPFM_Queries' ) ) :
 			return $result;
 		}
 
-		public function update_feed_update_data( $feed_id, $feed_url ) {
+		public function update_feed_update_data( $feed_id, $feed_url, $nr_products ) {
 			$main_table = $this->_table_prefix . 'feedmanager_product_feed';
 			return $this->_wpdb->update( $main_table, array( 
 				'updated' => date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ), 
-				'url' => $feed_url ), 
+				'url' => $feed_url,
+				'products' => $nr_products ),
 			array( 'product_feed_id' => $feed_id ), 
-			array( '%s', '%s' ), 
+			array( '%s', '%s', '%s' ), 
 			array( '%d' ) );
 		}
 
@@ -468,6 +532,21 @@ if ( !class_exists( 'WPPFM_Queries' ) ) :
 			return $result[ 'url' ];
 		}
 
+		/**
+		 * Sets the status id of a feed
+		 * 
+		 * 0 = unknown
+		 * 1 = OK (will be updated automatically)
+		 * 2 = On hold (will not be updated automatically)
+		 * 3 = Processing
+		 * 4 = In processing queue
+		 * 5 = Has errors
+		 * 6 = Failed processing
+		 * 
+		 * @param string $feed_id
+		 * @param int $status
+		 * @return bool
+		 */
 		public function update_feed_file_status( $feed_id, $status ) {
 			$main_table = $this->_table_prefix . 'feedmanager_product_feed';
 			return $this->_wpdb->update( $main_table, array( 'status_id' => $status ), array( 'product_feed_id' => $feed_id ), array( '%d' ), array( '%d' ) );
@@ -739,7 +818,7 @@ if ( !class_exists( 'WPPFM_Queries' ) ) :
 		/**
 		 * Returns a string with all the column names from a specified table
 		 * 
-		 * @since 1.10.0
+		 * @since 1.9.5
 		 * 
 		 * @param string $table_name
 		 * @return string with column names

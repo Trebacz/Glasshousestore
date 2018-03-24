@@ -17,14 +17,14 @@ jQuery(function($){
 	/*
 	 * handling date input
 	 */
-	$("input[data-type='date']").each(function(i, item){
+	/*$("input[data-type='date']").each(function(i, item){
 		
 		//console.log(item);
 		$(item).datepicker({ 	changeMonth: true,
 			changeYear: true,
 			dateFormat: $(item).attr('data-format')
 			});
-	});
+	});*/
 	
 	
 	
@@ -42,73 +42,10 @@ jQuery(function($){
 	 */
 	 if($('#input-quantities').length){
 		$('#input-quantities input').change(function(){
-			var total_price = 0;
-			var item_qty = 0;
-			var html_price = 0;
-			var product_price = false;
-			$('#input-quantities').find('.quantity').each(function(){
-				var qt = $(this).val();
-				var pr = $(this).data('price');
-				
-				if( pr === '' ) {
-					
-					product_price = true;
-					pr = $("#_product_price").val();
-					var this_total = qt * pr;
-					total_price = parseFloat(total_price) + parseFloat(this_total);
-					//total_price = total_price + Math.round(this_total * 100 / 100);
-					//console.log($(this).val());
-					item_qty = item_qty + Number( $(this).val() );
-					//console.log();
-					var decimalSeparator = nm_personalizedproduct_vars.wc_decimal_sep;
-					var noOfDecimal = nm_personalizedproduct_vars.wc_noof_decimal;
-					html_price = ppom_addThousandSeperator(total_price.toFixed(noOfDecimal));
-					html_price = html_price.toString().replace('.', decimalSeparator);
-					html_price = get_woocommerce_price_format(html_price);
-				}
-			});
 			
-			if( product_price ) {
-				$('.display-total-price').html('Total: '+html_price);
-				$('form.cart .qty').val( item_qty );
-			}
+			
+			ppom_update_quantity();
 		});
-	}
-	
-	function ppom_addThousandSeperator(n){
-
-	    var rx=  /(\d+)(\d{3})/;
-	    return String(n).replace(/^\d+/, function(w){
-	        while(rx.test(w)){
-	            w= w.replace(rx, '$1'+nm_personalizedproduct_vars.wc_thousand_sep+'$2');
-	        }
-	        return w;
-	    });
-	
-	}
-	
-	
-	function get_woocommerce_price_format(p) {
-	  var currency_pos = nm_personalizedproduct_vars.wc_currency_pos;
-	  var format = '';
-	  var sym = nm_personalizedproduct_vars.woo_currency;
-	  
-	  switch ( currency_pos ) {
-	    case 'left' :
-	      format = sym + p;
-	    break;
-	    case 'right' :
-	      format = p + sym;
-	    break;
-	    case 'left_space' :
-	      format = sym + ' ' + p;
-	    break;
-	    case 'right_space' :
-	      format = p + ' ' + sym;
-	    break;
-	  }
-	
-	  return format;
 	}
 	
 		
@@ -290,6 +227,101 @@ function remove_existing_rules(box_rules, element){
         });
     }
 }
+
+function ppom_addThousandSeperator(n){
+
+    var rx=  /(\d+)(\d{3})/;
+    return String(n).replace(/^\d+/, function(w){
+        while(rx.test(w)){
+            w= w.replace(rx, '$1'+nm_personalizedproduct_vars.wc_thousand_sep+'$2');
+        }
+        return w;
+    });
+
+}
+
+
+function get_woocommerce_price_format(p) {
+  var currency_pos = nm_personalizedproduct_vars.wc_currency_pos;
+  var format = '';
+  var sym = nm_personalizedproduct_vars.woo_currency;
+  
+  switch ( currency_pos ) {
+    case 'left' :
+      format = sym + p;
+    break;
+    case 'right' :
+      format = p + sym;
+    break;
+    case 'left_space' :
+      format = sym + ' ' + p;
+    break;
+    case 'right_space' :
+      format = p + ' ' + sym;
+    break;
+  }
+
+  return format;
+}
+	
+	
+	
+function ppom_update_quantity() {
+		
+	var total_price = 0;
+	var item_qty = 0;
+	var html_total_price = 0;
+	var total_option_price = 0;
+	var product_price = false;
+	var decimalSeparator = nm_personalizedproduct_vars.wc_decimal_sep;
+	var noOfDecimal = nm_personalizedproduct_vars.wc_no_decimal;
+	
+
+	//resetting
+	jQuery('#display-total-price > span.ppom-total-option-price').hide();
+	jQuery('#display-total-price > span.ppom-grand-total-price').hide();
+	
+	jQuery('#input-quantities').find('.ppom-quantity').each(function(){
+		var qty = jQuery(this).val();
+		var option_price = jQuery(this).attr('data-price');
+		var base_price = jQuery("#_product_price").val();
+	
+		
+		item_qty = item_qty + parseInt( jQuery(this).val() );
+		jQuery('form.cart .qty').val( item_qty );
+		
+		if( option_price !== '' ){
+			
+			total_option_price += parseFloat(option_price * qty);
+		}
+		
+		var this_total = qty * base_price;
+		total_price = parseFloat(total_price) + parseFloat(this_total);
+		html_total_price = ppom_addThousandSeperator(total_price.toFixed(noOfDecimal));
+		html_total_price = html_total_price.toString().replace('.', decimalSeparator);
+	});
+	
+	// Product Total
+	jQuery('#display-total-price > span.ppom-total-price').show().find('.ppom-price').html( html_total_price );
+	
+	var grand_total = parseFloat(total_option_price) + parseFloat(total_price);
+	// Option Total
+	if( total_option_price > 0 ){
+		
+		var html_total_option_price = ppom_addThousandSeperator(total_option_price.toFixed(noOfDecimal));
+		html_total_option_price = html_total_option_price.toString().replace('.', decimalSeparator);
+		jQuery('#display-total-price > span.ppom-total-option-price').show().find('.ppom-price').html( html_total_option_price );
+		
+		var html_grand_total = ppom_addThousandSeperator(grand_total.toFixed(noOfDecimal));
+		html_grand_total = html_grand_total.toString().replace('.', decimalSeparator);
+		jQuery('#display-total-price > span.ppom-grand-total-price').show().find('.ppom-price').html( html_grand_total );
+	}
+	
+	// updating hidden var to have total option price
+	jQuery("#_quantities_option_price").val(total_option_price);
+	
+}
+
 
 function stripslashes (str) {
 	  // +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)

@@ -311,9 +311,8 @@ class JEM_export_lite {
 
 	<div class="jemex-panel-wrap">			
 		<ul class="jemex-vert-tabs">
-		  <li><a href="#field-tab" id="vert-field-tab" class="dashicons-before dashicons-media-spreadsheet">Fields</a></li>
-		  <li><a href="#filters-tab" id="vert-filter-tab"  class="dashicons-before dashicons-filter">Filters</a></li>
-		  <li><a href="#labels-tab" id="vert-label-tab" class="dashicons-before dashicons-tag">Labels</a></li>
+		  <li><a href="#field-tab" id="vert-field-tab" class="dashicons-before dashicons-media-spreadsheet">Fields & <span id="vert-label-tab" class="dashicons-before dashicons-tag">Labels</a></a></li>
+		  <li><a href="#filters-tab" id="vert-filter-tab"  class="dashicons-before dashicons-filter">Filters</a></li>		  
 		  <li><a href="#scheduled-tab" id="vert-scheduled-tab" class="dashicons-before dashicons-clock">Scheduled</a></li>
 								</ul>
 		<div id="field-tab" class="jemex-panel">
@@ -328,7 +327,7 @@ class JEM_export_lite {
 		</div>
 				<div id="labels-tab" class="jemex-panel">
 		<div class="jemex-inner-panel">
-				' . $this->generate_labels_tab() . '
+                ' . $this->generate_labels_tab() . '
 		</div>
 		</div>
 		<div id="scheduled-tab" class="jemex-panel">
@@ -543,52 +542,89 @@ class JEM_export_lite {
 	function generate_fields_tab(){
 		//Globals
 		global $jem_export_globals;
-		//we create a set of divs for each entity
-		
-		$html = "<p class='instructions'>" . __('Select the fields you would like to export.', JEM_EXP_DOMAIN) ."</p>";
+                
+		$html = "<p class='instructions'>" . __('Select the fields you would like to export and drag rows to reorder exported fields.', JEM_EXP_DOMAIN) ."</p>";
 		$html .= '<a href="javascript:void(0);" id="export-select-all">select all</a>  |';
 		$html .= '<a href="javascript:void(0);" id="export-select-none">select none</a>';
 		$html .= '<form method="post" id="postform"  action="' . admin_url( "admin-post.php" ) . '?tab=export&sub-tab=fields">';
-		
+	                   
 		foreach($this->objects as $object){
+                    
 			$html .= '<div class="export-fields" id="' . $object->id . '-div" style="display: none;">';
-			$html .= '<table><tbody>';
+                    
+			$html .= '<table class="fields-table '.$object->id.' " id="fieldsTable"><tbody id="fieldsTableBody" class="sortable_table">';
 			
 			//now loop thru the entities fields
 			
 			$checkbox_name = 'name="' . $object->id . '_fields[';
-			
-			foreach ($object->fields as $field){
-				if(isset($field['disabled'])){
-					$disabled = " disabled='disabled' ";
-					$msg = "<td><a href='http://jem-products.com/woocommerce-export-orders-pro-plugin/?utm_source=wordpress&utm_medium=plugin&utm_campaign=wordpress' target='_blank'>Available in the PRO version</a></td>";
-				} else {
-					$disabled='';
-					$msg = "";
-				}
-				$html .= '<tr><td><input type="checkbox" ' . $checkbox_name . $field['name'] . ']"' . $disabled . '>' . $field['placeholder'] . '</input></td>';
-				$html .= $msg;
-				$html .= '</tr>';
-			}
+                        
+                        //define variable for labelbox name
+                        $labelbox_name = 'name="' . $object->id . '_labels[';
+                        
+                        //get label array
+                        $labels = get_option( JEM_EXP_DOMAIN . '_' . $object->id . '_labels');
+                        if($object->id == 'Product'){
+                            $get_sort_labels = get_option('product_option');
+                            $sort_order_decode = json_decode($get_sort_labels);
+                        }
+                        if($object->id == 'Order'){
+                            $get_sort_labels = get_option('order_option');
+                            $sort_order_decode = json_decode($get_sort_labels);
+                        }
+                        if($object->id == 'Customer'){
+                            $get_sort_labels = get_option('customer_option');
+                            $sort_order_decode = json_decode($get_sort_labels);
+                        }
+                        if($object->id == 'Shipping'){
+                            $get_sort_labels = get_option('shipping_option');
+                            $sort_order_decode = json_decode($get_sort_labels);
+                        }
+                        if($object->id == 'Coupons'){
+                            $get_sort_labels = get_option('coupons_option');
+                            $sort_order_decode = json_decode($get_sort_labels);
+                        }
+                        if($object->id == 'Categories'){
+                            $get_sort_labels = get_option('categories_option');
+                            $sort_order_decode = json_decode($get_sort_labels);
+                        }
+                        if($object->id == 'Tags'){
+                            $get_sort_labels = get_option('tags_option');
+                            $sort_order_decode = json_decode($get_sort_labels);
+                        }
+                        foreach ($sort_order_decode as $key => $value) {
+                            foreach ($object->fields as $field){ 
+
+                                    if(isset($field['disabled'])){
+                                            $disabled = " disabled='disabled' ";
+                                            $msg = "<td><a href='http://jem-products.com/woocommerce-export-orders-pro-plugin/?utm_source=wordpress&utm_medium=plugin&utm_campaign=wordpress' target='_blank'>Available in the PRO version</a></td>";
+                                    } else {
+                                            $disabled='';
+                                            $msg = "";
+                                    }
+                                    // check if label is set or not
+                                    $val = ( isset($labels[ $field['name'] ] ) ) ? $labels[ $field['name'] ] : '';
+                                    //condition for set sorting order
+                                    if($key == $field['placeholder']){
+                                        $html .= '<tr class="test" data-key="'.$field['placeholder'].'" data-order="'.$sort_order_decode->$field['placeholder'].'" ><td class="drag-handler"></td><td class="recipe-table__cell"><div class="custom-field-class mapping-col-1"><input type="checkbox" ' . $checkbox_name . $field['name'] . ']"' . $disabled . '> </div><div class="mapping-class-2">'. $field['placeholder'] .'</div><div class="custom-labels-class mapping-col-3"><input type="text" size="50"' . $labelbox_name . $field['name'] . ']" placeholder="' . $field['placeholder'] . '" value="' . $val .'"></div></td>';
+                                        $html .= $msg;
+                                        $html .= '</tr>';
+                                    }
+                            }
+                        }
 			
 			$html .= '</tbody></table></div>';
 			
 		}
-		
-		//now add the submit button
-		$html .= '
-			<p class="submit">
+                
+                $html .= '<p class="submit">
+                                <input type="hidden" name="entity-being-edited" id="entity-being-edited" value="">
+                                <input type="hidden" name="action" value="update_labels"> <input type="hidden" name="data" value="update_labels">
 				<input type="hidden" name="action" value="export_data">
-		        <input type="hidden" name="_wp_http_referer" value="' . urlencode( $_SERVER['REQUEST_URI'] ) . '">
+                                <input type="hidden" name="_wp_http_referer" value="' . urlencode( $_SERVER['REQUEST_URI'] ) . '">
 				<input type="hidden" id="entity-to-export" name="entity-to-export" value="export_data">
 				<input type="submit" class="button-primary"  id="submit-export" value="Export ' . $object->id .'">
-			</p>
-				
-		';
-		
-		
-		return $html;
-		
+			</p>';
+		return $html;	
 		
 	}
 	
@@ -618,6 +654,7 @@ class JEM_export_lite {
 				//do we have a custum label for this one?
 				$val = ( isset($labels[ $field['name'] ] ) ) ? $labels[ $field['name'] ] : '';
 				
+                                
 				$html .= '<tr><th><label>' . $field['name'] . '</label><td><input type="text" size="50"' . $labelbox_name . $field['name'] . ']" placeholder="' . $field['placeholder'] . '" value="' . $val .'"></td></tr>';
 			}
 				
@@ -630,8 +667,8 @@ class JEM_export_lite {
 		$html .= '  <input type="hidden" name="action" value="update_labels"> <input type="hidden" name="data" value="update_labels">';
 		
 		$html .= '<p class="submit"><input type="submit" value="Save Changes " class="button-primary"></p>';
-		
-		return $html;
+//		
+                return $html;
 	
 	
 	}
@@ -649,14 +686,14 @@ class JEM_export_lite {
 			$html .= '<div class="export-filters" id="' . $object->id . '-filters-div" style="display: block;">';
 			
 			
-// 			$html .= '
-// 				<div class="filter-dates">
-// 					<label>
-// 				 	' . __('From Date', JEM_EXP_DOMAIN) . '
-// 				 	</label>
-// 				 	<input id="order-filter-start-date"  class="jemexp-datepicker">
-// 				</div>
-// 			';
+ 			$html .= '
+ 				<div class="filter-dates">
+ 					<label>
+ 				 	' . __('From Date', JEM_EXP_DOMAIN) . '
+ 				 	</label>
+ 				 	<input id="order-filter-start-date"  class="jemexp-datepicker">
+ 				</div>
+ 			';
 			
 
 			$html .= $object->generate_filters();
@@ -726,7 +763,7 @@ class JEM_export_lite {
 				$msg = "<a href='http://jem-products.com/woocommerce-export-orders-pro-plugin/?utm_source=wordpress&utm_medium=plugin&utm_campaign=wordpress' target='_blank'>This data is available in the PRO version</a>";
 			}
 			
-			$html .= '<tr><td width="150px"><input type="radio" id="' . $id . '" value="' . $id . '" name="datatype">';
+			$html .= '<tr><td width="150px"><input type="radio" class="checkbox-class" id="' . $id . '" value="' . $id . '" name="datatype">';
 			$html .= '<label for="' . $id .'">' . $id . '</label></td>';
 			$html .= '<td>' . $msg . '</td>';
 			$html .= '</tr>';
@@ -764,12 +801,12 @@ class JEM_export_lite {
 		if( $ent === '' ){
 			//no entity being edited
 			wp_redirect( urldecode($_POST['_wp_http_referer']));
-		}
-		
+		}		
 	
 		//the name of the labels
 		$nm = $ent . "_labels";
-		$labels = ( isset( $_POST[$nm] ) ) ? array_filter( $_POST[$nm] ) : array();
+                
+                $labels = ( isset( $_POST[$nm] ) ) ? array_filter( $_POST[$nm] ) : array();
 		
 		//And update we go
 		update_option( JEM_EXP_DOMAIN . '_' . $ent . '_labels', $labels);
@@ -786,31 +823,7 @@ class JEM_export_lite {
 	 * This handles the form post from the settings tab
 	 * Called automagically from the admin_post action
 	 */
-	function save_settings(){
-		//ok lets take each field, sanitize it and off we go!
-		
-		$settings = array();
-		$settings['filename'] = sanitize_text_field( $_POST['jemex_export_filename'] );
-		
-		$settings['encoding'] = sanitize_text_field( $_POST['jemex_encoding'] );
-		
-		$settings['date_format'] = sanitize_text_field( $_POST['jemex_date_format'] );
-		
-		$settings['delimiter'] = sanitize_text_field( $_POST['jemex_field_delimiter'] );
-		
-		//save them
-		update_option(JEM_EXP_DOMAIN, $settings);
-		
-		//set the transient
-		$this->save_admin_messages(__('Settings Saved.', JEM_EXP_DOMAIN), 'updated');
-		
-		//now just goback to settings!
-		wp_redirect( urldecode($_POST['_wp_http_referer']));
-		return;
-		
-		
-	}
-
+	
 	/**
 	 * This handles the form post from from the META VIEWER tab
 	 * Called automagically from the admin_post action
@@ -834,18 +847,60 @@ class JEM_export_lite {
 
 	}
 
+	/**
+	 * This handles the form post from the settings tab
+	 * Called automagically from the admin_post action
+	 */
+	function save_settings(){
+		//ok lets take each field, sanitize it and off we go!
 
+		$settings = array();
+		$settings['filename'] = sanitize_text_field( $_POST['jemex_export_filename'] );
+
+		$settings['encoding'] = sanitize_text_field( $_POST['jemex_encoding'] );
+
+		$settings['date_format'] = sanitize_text_field( $_POST['jemex_date_format'] );
+
+		$settings['delimiter'] = sanitize_text_field( $_POST['jemex_field_delimiter'] );
+
+		//save them
+		update_option(JEM_EXP_DOMAIN, $settings);
+
+		//set the transient
+		$this->save_admin_messages(__('Settings Saved.', JEM_EXP_DOMAIN), 'updated');
+
+		//now just goback to settings!
+		wp_redirect( urldecode($_POST['_wp_http_referer']));
+		return;
+
+
+	}
 	/**
 	 * This handles the export of the data
 	 * * gets called automagically by the submit of the form
 	 */
-	function export_data(){
-		
+	function export_data(){		
 
+                //code for save labels
+                //lets update any of the labels!
+		//first get the entity we are edting
+		$ent = ( isset($_POST['entity-being-edited']) ) ? $_POST['entity-being-edited'] : '';
+
+		if( $ent === '' ){
+			//no entity being edited
+			wp_redirect( urldecode($_POST['_wp_http_referer']));
+		}
+			
+		//the name of the labels
+		$nm = $ent . "_labels";
+                $labels = ( isset( $_POST[$nm] ) ) ? array_filter( $_POST[$nm] ) : array();
+                
+		//And update we go
+		update_option( JEM_EXP_DOMAIN . '_' . $ent . '_labels', $labels);
+            
 		//load settings
 		$this->get_settings();
-		
-		
+				
 		$output_fileName = $this->settings['filename'];
 
 		//first get the entity we are exporting
@@ -856,8 +911,6 @@ class JEM_export_lite {
 			wp_redirect( urldecode($_POST['_wp_http_referer']));
 			return;
 		}
-		
-
 		
 		//if no object redirects
 		if(!isset($this->objects[$ent])){
@@ -944,9 +997,8 @@ class JEM_export_lite {
 			$file = @fopen( 'php://output', 'w' );
 			fwrite( $file, $contents );
 			fclose($file);
-		}
-		
-		
+		}               
+				
 	}
 	
 

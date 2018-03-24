@@ -29,7 +29,7 @@ if ( !class_exists( 'WPPFM_Admin_Page' ) ) :
 		protected function __construct() {
 
 			// link to the spinner gif file
-			$this->spinner_gif = MYPLUGIN_PLUGIN_URL . '/images/ajax-loader.gif';
+			$this->spinner_gif = WPPFM_PLUGIN_URL . '/images/ajax-loader.gif';
 		}
 
 		/**

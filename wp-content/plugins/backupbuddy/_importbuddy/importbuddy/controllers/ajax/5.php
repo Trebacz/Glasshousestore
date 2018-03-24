@@ -85,7 +85,7 @@ if ( 'true' != pb_backupbuddy::_GET( 'deploy' ) ) { // deployment mode pre-loads
 	}
 	
 	
-} else {
+} else { // Deployment
 	if ( isset( pb_backupbuddy::$options['default_state_overrides'] ) && ( count( pb_backupbuddy::$options['default_state_overrides'] ) > 0 ) ) { // Default state overrides exist. Apply them.
 		$restoreData = pb_backupbuddy::$options['default_state_overrides'];
 	} else {
@@ -220,7 +220,7 @@ if ( TRUE !== $restore->_state['databaseSettings']['migrateDatabase'] ) {
 }
 
 
-if ( 'true' == pb_backupbuddy::_GET( 'deploy' ) ) {
+if ( 'true' == pb_backupbuddy::_GET( 'deploy' ) ) { // Deployment
 	
 	// Write default state overrides.
 	global $importbuddy_file;
@@ -231,7 +231,7 @@ if ( 'true' == pb_backupbuddy::_GET( 'deploy' ) ) {
 		pb_backupbuddy::status( 'error', 'Error #328937: Temp state file is not creatable/writable. Check your permissions. (' . $state_file . ')' );
 		return false;
 	}
-	if ( false === fwrite( $file_handle, "<?php die('Access Denied.'); // <!-- ?>\n" . base64_encode( serialize( $restore->_state ) ) ) ) {
+	if ( false === fwrite( $file_handle, "<?php die('Access Denied.'); // <!-- ?>\n" . base64_encode( json_encode( $restore->_state ) ) ) ) {
 		pb_backupbuddy::status( 'error', 'Error #2389373: Unable to write to state file.' );
 	} else {
 		pb_backupbuddy::status( 'details', 'Wrote to state file.' );
@@ -239,8 +239,7 @@ if ( 'true' == pb_backupbuddy::_GET( 'deploy' ) ) {
 	fclose( $file_handle );
 	
 	if ( 6 == $nextStepNum ) {
-		pb_backupbuddy::status( 'message', 'Deployment finished (importbuddy).' );
-		pb_backupbuddy::status( 'deployFinished', 'Finished.' );
+		pb_backupbuddy::status( 'message', 'Moving to cleanup step next...' );
 	} else {
 		pb_backupbuddy::status( 'details', 'Chunking database migration so about to run step `' . $nextStepNum . '`.' );
 	}

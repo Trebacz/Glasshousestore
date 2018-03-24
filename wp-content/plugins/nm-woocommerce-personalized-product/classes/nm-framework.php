@@ -81,7 +81,10 @@ class NM_Framwork_V1{
 		// shipped scripts
 		if( ! is_product() )
 			return;
-			
+
+
+		global $post;
+		
 		// shipped scripts
 		if($this -> wp_shipped_scripts){
 			foreach($this -> wp_shipped_scripts as $handler){
@@ -110,6 +113,12 @@ class NM_Framwork_V1{
 				}
 			}
 		}
+		
+		/**
+		 * loading plupload script
+		 * @since 8.4
+		 **/
+		ppom_load_file_upload_js( $post );
 	}
 
 

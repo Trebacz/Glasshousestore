@@ -8,12 +8,12 @@
 *      Created: 2015
 *      Licensed under the GPLv2 license - http://opensource.org/licenses/gpl-2.0.php
 *
-*      Copyright (c) 2014-2016, Robosoft. All rights reserved.
+*      Copyright (c) 2014-2018, Robosoft. All rights reserved.
 *      Available only in  https://robosoft.co/robogallery/ 
 */
 
-if(!defined('WPINC'))die;
-if(!defined("ABSPATH"))exit;
+if(!defined('WPINC')) die;
+if(!defined("ABSPATH")) exit;
 
 class RoboGalleryUpdate {
 	public $posts = array();
@@ -59,24 +59,20 @@ class RoboGalleryUpdate {
 		$curVersion = get_option( 'RoboGalleryInstallVersion' );
 
 		if( $curVersion != ROBO_GALLERY_VERSION ){
-			delete_option('RoboGalleryInstallDate');
-			add_option( 'RoboGalleryInstallDate', time() );
-			add_option( "RoboGalleryInstallVersion", ROBO_GALLERY_VERSION );
+			update_option('RoboGalleryInstallDate', time());
+			update_option('RoboGalleryInstallVersion', ROBO_GALLERY_VERSION );
 		}
 		
 		$this->dbVersionOld = get_option( 'rbs_gallery_db_version' );
-		if(!$this->dbVersionOld) $this->dbVersionOld = 0;
+		if( !$this->dbVersionOld ) $this->dbVersionOld = 0;
 
 		$this->dbVersion = ROBO_GALLERY_VERSION;
 
 		if( $this->dbVersionOld && $this->dbVersionOld == $this->dbVersion )  $this->needUpdate = false;
 
 		if( $this->needUpdate ){
-			delete_option("robo_gallery_after_install");
-			add_option( 'robo_gallery_after_install', '1' );
-
-			delete_option("rbs_gallery_db_version");
-			add_option( "rbs_gallery_db_version", ROBO_GALLERY_VERSION );
+			update_option( 'robo_gallery_after_install', '1' );
+			update_option( 'rbs_gallery_db_version', ROBO_GALLERY_VERSION );
 			$this->posts = $this->getGalleryPost();
 			$this->update();
 		}

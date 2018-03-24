@@ -393,9 +393,9 @@ and (max-width : 568px) {
 .quantities-lable{font-weight:200;}
 
 /* variable product price display issue fixed in 7.9.3 */
-.single_variation_wrap .price {
+/*.single_variation_wrap .price {
     display:block !important;
-}
+}*/
 .single_variation_wrap { clear:both; }
 
 /*ToolTip  Styles*/
@@ -439,4 +439,20 @@ and (max-width : 568px) {
 .arrow.top:after {
   bottom: -20px;
   top: auto;
+}
+.nm-boxes-outer .pre_upload_image {
+  width: 75px;
+  float: left;
+  margin-right: 5px;
+}
+.nm-boxes-outer input[type=radio], .nm-boxes-outer input[type=checkbox] {
+  display: none;
+}
+
+.nm-boxes-outer input + img{
+  cursor:pointer;
+  border:2px solid transparent;
+}
+.nm-boxes-outer input:checked + img{
+  border:2px solid #f00;
 }

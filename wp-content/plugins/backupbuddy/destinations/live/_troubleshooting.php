@@ -353,11 +353,11 @@ class backupbuddy_live_troubleshooting {
 	
 	private static function _test_status_log() {
 		$status_log_file = backupbuddy_core::getLogDirectory() . 'status-live_periodic_' . pb_backupbuddy::$options['log_serial'] . '.txt';
-		$status_log_file_contents = file_get_contents( $status_log_file );
-		self::_find_notices( $status_log_file_contents, $status_log_file );
 		
 		// Get tail of status log.
 		if ( file_exists( $status_log_file ) ) {
+			$status_log_file_contents = @file_get_contents( $status_log_file );
+			self::_find_notices( $status_log_file_contents, $status_log_file );
 			self::$_results['live_status_log_tail'] = backupbuddy_core::read_backward_line( $status_log_file, self::$_settings['status_log_recent_lines'] );
 		} else {
 			self::$_results['extraneous_log_tail'] = '**Log file `' . $status_log_file . '` not found.**';

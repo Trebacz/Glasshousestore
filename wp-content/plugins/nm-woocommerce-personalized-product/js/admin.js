@@ -484,6 +484,7 @@ function save_form_meta() {
 		productmeta_name 	: jQuery.trim(jQuery('input[name="productmeta_name"]').val()),
 		productmeta_validation 	: jQuery.trim(jQuery('input:checkbox[name="enable_ajax_validation"]:checked').val()),
 		dynamic_price_hide 	: jQuery.trim(jQuery('input:checkbox[name="dynamic_price_hide"]:checked').val()),
+		send_file_attachment 	: jQuery.trim(jQuery('input:checkbox[name="send_file_attachment"]:checked').val()),
 		show_cart_thumb 	: jQuery.trim(jQuery('input:checkbox[name="show_cart_thumb"]:checked').val()),
 		aviary_api_key 		: jQuery.trim(jQuery('input[name="aviary_api_key"]').val()),
 		productmeta_style	: jQuery.trim(jQuery('textarea[name="productmeta_style"]').val()),

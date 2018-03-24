@@ -701,41 +701,47 @@ class Client
      *
      * @throws Exception
      */
-    function chunkedUploadFinish($uploadId, $path, $writeMode,$byteOffset)
-    {
-    		\pb_backupbuddy::status( 'details', 'chunkedUploadFinish start.' );
-        Checker::argStringNonEmpty("uploadId", $uploadId);
-        Path::checkArgNonRoot("path", $path);
-        WriteMode::checkArg("writeMode", $writeMode);
-
-\pb_backupbuddy::status( 'details', 'Prepping params for chunk finish. Session: `' . $uploadId . '`. Offset: `' . $byteOffset . '`.' );
-
-        $params = $writeMode->getExtraParams();
-
-$header = "Dropbox-API-Arg: " . json_encode( array( 'cursor' => array(
-				"session_id" => $uploadId,
-				"offset" => $byteOffset,
-			),
-			'commit' => array(
-				"path" => $path,
-			    "mode" => 'add',
-			    "autorename" => true,
-			    "mute" => false
-			)
-		) );
-
-
-        $response = $this->doPost(
-            $this->contentHost,
-            "2/files/upload_session/finish",
-         null,$header, 'application/octet-stream' );
+	function chunkedUploadFinish($uploadId, $path, $writeMode,$byteOffset) {
+		\pb_backupbuddy::status( 'details', 'chunkedUploadFinish start.' );
 		
-
-        if ($response->statusCode === 404) return null;
-        if ($response->statusCode !== 200) throw RequestUtil::unexpectedStatus($response);
-
-        return RequestUtil::parseResponseJson($response->body);
-    }
+		Checker::argStringNonEmpty("uploadId", $uploadId);
+		Path::checkArgNonRoot("path", $path);
+		WriteMode::checkArg("writeMode", $writeMode);
+		
+		\pb_backupbuddy::status( 'details', 'Prepping params for chunk finish. Session: `' . $uploadId . '`. Offset: `' . $byteOffset . '`.' );
+		
+		$params = $writeMode->getExtraParams();
+		
+		$header = "Dropbox-API-Arg: " .
+			json_encode(
+				array(
+					'cursor' => array(
+						"session_id" => $uploadId,
+						"offset" => $byteOffset,
+					),
+					'commit' => array(
+						"path" => $path,
+						"mode" => 'add',
+						"autorename" => true,
+						"mute" => false
+					)
+				)
+			);
+		
+		if ( \pb_backupbuddy::$options['log_level'] == '3' ) { // Full logging enabled.
+			\pb_backupbuddy::status( 'details', 'Dropbox header: `' . $header . '`.' );
+		}
+		
+		$response = $this->doPost( $this->contentHost, "2/files/upload_session/finish", null, $header, 'application/octet-stream' );
+		
+		if ($response->statusCode === 404) return null;
+		if ($response->statusCode !== 200) {
+			\pb_backupbuddy::status( 'error', 'Error #38494834434: `' . print_r( $response, true ) . '`.' );
+			throw RequestUtil::unexpectedStatus($response);
+		}
+		
+		return RequestUtil::parseResponseJson($response->body);
+	}
 
     /**
      * @param array $params
@@ -1373,7 +1379,7 @@ $header = "Dropbox-API-Arg: " . json_encode( array( 'cursor' => array(
 
         $response = $this->doPost(
             $this->apiHost,
-            "2/files/delete",
+            "2/files/delete_v2",
             array(
                 "path" => $path,
             ),

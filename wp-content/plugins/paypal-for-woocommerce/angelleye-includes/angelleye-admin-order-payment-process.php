@@ -31,6 +31,9 @@ class AngellEYE_Admin_Order_Payment_Process {
             #angelleye_admin_order_reference_order {
                 display: none;
             }
+            label[for="angelleye_admin_order_reference_order-hide"] {
+                display: none;
+             }
         </style>
         <?php
     }
@@ -41,6 +44,9 @@ class AngellEYE_Admin_Order_Payment_Process {
             #angelleye_admin_order_reference_order {
                 display: block;
             }
+            label[for="angelleye_admin_order_reference_order-hide"] {
+                display: inline;
+             }
         </style>
         <?php
     }
@@ -51,6 +57,9 @@ class AngellEYE_Admin_Order_Payment_Process {
             #angelleye_admin_order_payment_process {
                 display: none;
             }
+            label[for="angelleye_admin_order_payment_process-hide"] {
+                display: none;
+             }
         </style>
         <?php
     }
@@ -61,6 +70,9 @@ class AngellEYE_Admin_Order_Payment_Process {
             #angelleye_admin_order_payment_process {
                 display: block;
             }
+            label[for="angelleye_admin_order_payment_process-hide"] {
+                display: inline;
+             }
         </style>
         <?php
     }
@@ -539,7 +551,7 @@ class AngellEYE_Admin_Order_Payment_Process {
                 AngellEYE_Utility::angelleye_paypal_for_woocommerce_add_paypal_transaction($result, $order, $this->gateway_settings['payment_action']);
                 $order->payment_complete($result['TRANSACTIONID']);
                 update_post_meta($order_id, '_first_transaction_id', $result['TRANSACTIONID']);
-                $order->add_order_note(sprintf(__('%s payment approved! Transaction ID: %s', 'paypal-for-woocommerce'), $this->payment_method, $result['TRANSACTIONID']));
+                $order->add_order_note(sprintf(__('%s payment Transaction ID: %s', 'paypal-for-woocommerce'), $this->payment_method, $result['TRANSACTIONID']));
             } else {
                 if (!empty($result['L_ERRORCODE0'])) {
                     $ErrorCode = urldecode($result['L_ERRORCODE0']);

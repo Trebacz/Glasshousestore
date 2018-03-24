@@ -130,15 +130,22 @@ class backupbuddy_restore {
 	public function start( $backupFile, $skipUnzip = false ) {
 		$this->_before( __FUNCTION__ );
 		
-		if ( ! file_exists( $backupFile ) ) {
-			return $this->_error( 'Unable to access backup file `' . $backupFile . '`. Verify it still exists and has proper read permissions.' );
-		}
-		
 		$this->_state['archive'] = $backupFile;
 		$serial = backupbuddy_core::get_serial_from_file( basename( $backupFile ) );
 		$this->_state['serial'] = $serial;
-		unset( $backupFile );
 		unset( $serial );
+		
+		if ( ! file_exists( $backupFile ) ) {
+			return $this->_error( 'Error #8498394349: Unable to access backup file `' . $backupFile . '`. Verify it still exists and has proper read permissions.' );
+		} else {
+			pb_backupbuddy::status( 'details', 'Specified backup file exists: `' . $backupFile . '`.' );
+		}
+		
+		unset( $backupFile );
+		
+		if ( @file_exists( ABSPATH . 'importbuddy/' ) ) {
+			@unlink( ABSPATH . 'importbuddy/' );
+		}
 		
 		if ( defined( 'PB_STANDALONE' ) && ( true === PB_STANDALONE ) ) {
 			$mysql_9010_log = ABSPATH . 'importbuddy/mysql_9010_log-' . pb_backupbuddy::$options['log_serial'] . '.txt';
@@ -209,7 +216,7 @@ class backupbuddy_restore {
 			} // end foreach.
 		}
 		if ( '' == $detectedDatLocation ) {
-			return $this->_error( 'Unable to determine DAT file location. It may be missing OR the backup zip file may be incomplete or corrupted. Verify the backup zip has fully uploaded or re-upload it. You can try manually unzipping then selecting the advanced option to skip unzip.' );
+			return $this->_error( 'Error #894379843: Unable to determine DAT file location in backup file. It may be missing OR the backup zip file may be incomplete or corrupted. Verify the backup zip has fully uploaded or re-upload it. You can try manually unzipping then selecting the advanced option to skip unzip.' );
 		}
 		pb_backupbuddy::status( 'details', 'Confirmed DAT file location: `' . $detectedDatLocation . '`.' );
 		$this->_state['datLocation'] = $detectedDatLocation;
@@ -425,7 +432,11 @@ class backupbuddy_restore {
 		
 		if ( false !== $this->_state['restoreDatabase'] ) {
 			if ( count( $this->_state['databaseSettings']['sqlFiles'] ) == 0 ) {
-				pb_backupbuddy::status( 'error', 'Unable to find db_1.sql or other expected database file in the extracted files in the expected location. Make sure you did not rename your backup ZIP file. You may manually restore your SQL file if you can find it via phpmyadmin or similar tool then on Step 1 of ImportBuddy select the advanced option to skip database import. This will allow you to proceed.' );
+				if ( 'deploy' == $this->_state['type'] ) { // Can be normal for deployment so no warning.
+					pb_backupbuddy::status( 'details', 'Unable to find db_1.sql or other expected database file in the extracted files in the expected location. This is normal if no tables were selected to back up. Make sure you did not rename your backup ZIP file. You may manually restore your SQL file if you can find it via phpmyadmin or similar tool then on Step 1 of ImportBuddy select the advanced option to skip database import. This will allow you to proceed.' );
+				} else {
+					pb_backupbuddy::status( 'warning', 'Warning #34748734: Unable to find db_1.sql or other expected database file in the extracted files in the expected location. This is normal if no tables were selected to back up. Make sure you did not rename your backup ZIP file. You may manually restore your SQL file if you can find it via phpmyadmin or similar tool then on Step 1 of ImportBuddy select the advanced option to skip database import. This will allow you to proceed.' );
+				}
 				return false;
 			} else {
 				pb_backupbuddy::status( 'details', 'SQL files found. Finished determining database files.' );

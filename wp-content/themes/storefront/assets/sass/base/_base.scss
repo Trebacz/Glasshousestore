@@ -33,9 +33,7 @@ textarea {
 	color: $color_body;
 	font-family: $base-font;
 	line-height: 1.618;
-	-moz-osx-font-smoothing: grayscale;
 	text-rendering: optimizeLegibility;
-	-webkit-font-smoothing: antialiased;
 	font-weight: 400;
 }
 
@@ -294,18 +292,11 @@ body {
 	.site-logo-link,
 	.custom-logo-link {
 		display: block;
+		margin-bottom: 0;
 
 		img {
 			max-width: 210px;
 		}
-	}
-
-	.site-branding,
-	.site-logo-anchor,
-	.site-logo-link,
-	.custom-logo-link {
-		margin-bottom: 0;
-		float: left;
 	}
 
 	.widget {
@@ -339,6 +330,9 @@ body {
 }
 
 .site-branding {
+	float: left;
+	margin-bottom: 0;
+
 	.site-title {
 		font-size: 2em;
 		letter-spacing: -1px;
@@ -352,6 +346,10 @@ body {
 	.site-description {
 		font-size: ms(-1);
 		display: none;
+	}
+
+	.logo {
+		margin: 0;
 	}
 }
 
@@ -586,24 +584,26 @@ table {
 		border-width: 1px 0;
 		margin-bottom: ms(5);
 
-		ul.products,
 		ul.products li.product,
 		.widget {
 			margin-bottom: 0;
 		}
 
 		.col-1 {
-			@include span( 6 of 12 );
-
 			ul.products {
+				margin-bottom: ms(4);
+
 				li.product {
 					@include span( 3 of 6 );
+
+					&:last-child {
+						margin-right: 0;
+					}
 				}
 			}
 		}
 
 		.col-2 {
-			@include span( last 6 of 12 );
 			padding: ms(3);
 			background-color: rgba(#000,.025);
 		}
@@ -755,7 +755,7 @@ table {
 	}
 
 	.entry-meta {
-		font-weight: 300;
+		font-weight: 400;
 	}
 
 	&.type-page {
@@ -831,7 +831,6 @@ input[type="submit"],
 	display: inline-block;
 	outline: none;
 	-webkit-appearance: none;
-	-webkit-font-smoothing: antialiased;
 	border-radius: 0;
 
 	&.cta,
@@ -883,6 +882,10 @@ input[type="search"]::-webkit-search-decoration { /* Corrects inner padding disp
 
 input[type="search"] {
 	box-sizing: border-box; // Overrules normalize.css.
+
+	&::placeholder {
+		color: #616161;
+	}
 }
 
 button::-moz-focus-inner,
@@ -1370,7 +1373,7 @@ button.menu-toggle {
 
 .widget-area {
 	.widget {
-		font-weight: 300;
+		font-weight: 400;
 
 		a.button {
 			font-weight: 600 !important;
@@ -1398,7 +1401,8 @@ button.menu-toggle {
 			width: 100%;
 		}
 
-		input[type=submit] {
+		input[type=submit],
+		button[type=submit] {
 			@include screen-reader-text();
 			top: 0;
 			left: 0;

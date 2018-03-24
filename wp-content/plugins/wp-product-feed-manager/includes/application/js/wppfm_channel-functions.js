@@ -1,7 +1,7 @@
 /*!
- * channel-functions.js v1.5
+ * channel-functions.js v1.6
  * Part of the WP Product Feed Manager
- * Copyright 2017, Michel Jongbloed
+ * Copyright 2018, Michel Jongbloed
  */
 
 "use strict";
@@ -39,6 +39,7 @@ function wppfm_showChannelInputs( channel, isNew ) {
 		'19':'switchToRicardoFeedFormMainInputs',
 		'20':'switchToEbayFeedFormMainInputs',
 		'21':'switchToShopzillaFeedFormMainInputs',
+		'22':'switchToConvertoFeedFormMainInputs',
 		'998':'switchToMarketingrobotCsvFeedFormMainInputs',
 		'999':'switchToMarketingrobotFeedFormMainInputs'
 	};
@@ -60,7 +61,8 @@ function wppfm_showChannelInputs( channel, isNew ) {
 }
 
 /**
- * depending on channel show or hide the category map
+ * depending on channel show or hide the category map directly after channel selection
+ * Add the channel to the "show" part when it does not have an own category list
  * 
  * @param {string} channel
  * @returns nothing
@@ -72,6 +74,7 @@ function wppfm_show_or_hide_category_map( channel ) {
 		case '15': // Commerce Connector
 		case '17': // Bol.com
 		case '18': // Adtraction
+		case '22': // Converto
 			$jq( '#category-map' ).show();
 			break;
 			
@@ -112,6 +115,7 @@ function wppfm_reactOnChannelInputChanged( channel, feedId, categoryChanged ) {
 		'19':'ricardoInputChanged',
 		'20':'ebayInputChanged',
 		'21':'shopzillaInputChanged',
+		'22':'convertoInputChanged',
 		'998':'marketingrobotCsvInputChanged',
 		'999':'marketingrobotInputChanged'
 	};	
@@ -146,6 +150,7 @@ function wppfm_getChannelFeedType( channel ) {
 		case '15': // Commerce Connector
 		case '17': // Bol.com
 		case '19': // Ricardo.ch
+		case '22': // Converto
 		case '998': // Custom CSV Feed.com
 			return 'csv'; 
             
@@ -205,6 +210,7 @@ function wppfm_channelUsesOwnCategories( channel ) {
 		case '15': // Commerce Connector
 		case '17': // Bol.com
 		case '18': // Adtraction
+		case '22': // Converto
             return true;
             
         default:
@@ -246,7 +252,7 @@ function wppfm_fillCategoryVariables( channel, selectedCategory, currentLevelId 
  * 
  * @param {string} id
  * @param {string} level
- * $param (string) combinationLevel
+ * @param (string) combinationLevel
  * @param {string} channel
  * @param {string} fieldName
  * @param {string} selected
@@ -277,7 +283,6 @@ function wppfm_displayCorrectStaticField( id, level, combinationLevel, channel, 
  * Gets the advised input fields
  * 
  * @param {string} channel
- * @param {string} source Currently not in use
  * @returns {array} array containing the advised inputs
  */
 function wppfm_getAdvisedInputs( channel ) {
@@ -302,7 +307,8 @@ function wppfm_getAdvisedInputs( channel ) {
 		'18':'woocommerceToAdtractionFields',
 		'19':'woocommerceToRicardoFields',
 		'20':'woocommerceToeBayFields',
-		'21':'woocommerceToShopzillaFields'
+		'21':'woocommerceToShopzillaFields',
+		'22':'woocommerceToConvertoFields'
 	};
 
 	if ( fName.hasOwnProperty( channel ) ) {
@@ -558,6 +564,13 @@ function wppfm_setChannelRelatedPresets( outputsField, channel ) {
 			break;
 
 		case '21': // Shopzilla
+			if ( outputsField['field_label'] === 'Availability' || outputsField['field_label'] === 'Condition' ) {
+				// only switch to the 'preset' value if no user value is set
+				if ( !outputsField['value'] ) { outputsField['value'] = setShopzillaPresets( outputsField['field_label'] ); }
+			}
+			break;
+
+		case '22': // Converto
 			if ( outputsField['field_label'] === 'Availability' || outputsField['field_label'] === 'Condition' ) {
 				// only switch to the 'preset' value if no user value is set
 				if ( !outputsField['value'] ) { outputsField['value'] = setShopzillaPresets( outputsField['field_label'] ); }

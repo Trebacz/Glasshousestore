@@ -141,8 +141,12 @@ class NM_Date_wooproduct extends NM_Inputs_wooproduct{
 				<!--
 				jQuery(function($){
 
-					$("#<?php echo $args['id'];?>").datepicker({ 	changeMonth: true,
+					$("#<?php echo $args['id'];?>").datepicker("destroy");
+					
+					$("#<?php echo $args['id'];?>").datepicker({ 	
+						changeMonth: true,
 						changeYear: true,
+						dateFormat: $("#<?php echo $args['id'];?>").attr('data-format'),
 						defaultDate: "01-01-1964"
 						});
 				});

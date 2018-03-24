@@ -51,7 +51,8 @@ function udinra_image_deact($networkwide) {
 				remove_action('admin_menu','udinra_image_sitemap_admin');	
 				remove_action('admin_notices', 'udinra_image_admin_notice');
 				remove_action('admin_init', 'udinra_image_admin_ignore');
-				remove_action( 'admin_enqueue_scripts', 'udinra_image_admin_style');
+				remove_action( 'init', 'udinra_image_update' );
+				remove_action( 'admin_enqueue_scripts', 'udinra_image_free_admin_style');
 				remove_action( 'wpmu_new_blog', 'udinra_image_new_blog', 10, 6);        
 
 				global $wp_rewrite;
@@ -68,7 +69,8 @@ function udinra_image_deact($networkwide) {
 			remove_action('admin_menu','udinra_image_sitemap_admin');	
 			remove_action('admin_notices', 'udinra_image_admin_notice');
 			remove_action('admin_init', 'udinra_image_admin_ignore');
-			remove_action( 'admin_enqueue_scripts', 'udinra_image_admin_style');
+			remove_action( 'init', 'udinra_image_update' );
+			remove_action( 'admin_enqueue_scripts', 'udinra_image_free_admin_style');
 			remove_action( 'wpmu_new_blog', 'udinra_image_new_blog', 10, 6);        
 
 			wp_clear_scheduled_hook('udinra_image_event');
@@ -79,10 +81,11 @@ function udinra_image_deact($networkwide) {
 	else {	
 		wp_clear_scheduled_hook('udinra_image_event');
 		remove_action( 'transition_post_status', 'udinra_image_post_unpublished', 10, 3 );
-		remove_action( 'admin_enqueue_scripts', 'udinra_image_admin_style');
+		remove_action( 'admin_enqueue_scripts', 'udinra_image_free_admin_style');
 		remove_action('admin_menu','udinra_image_sitemap_admin');	
 		remove_action('admin_notices', 'udinra_image_admin_notice');
 		remove_action('admin_init', 'udinra_image_admin_ignore');
+		remove_action( 'init', 'udinra_image_update' );
 	}
 }
  

@@ -7,7 +7,7 @@
  * @author 		Michel Jongbloed
  * @category 	Messages
  * @package 	User-interface
- * @version     2.2
+ * @version     2.3
  */
 
 // Prevent direct access
@@ -18,11 +18,11 @@ if (!defined('ABSPATH')) exit;
  * 
  * @param string $message
  * @param bool $dismissible
- * @param bool $permanent_dismissible
+ * @param string $permanent_dismissible_id
  * @return html string
  */
-function wppfm_show_wp_error( $message, $dismissible = false, $permanent_dismissible = false ) {
-	return wppfm_show_wp_message( $message, 'error', $dismissible, $permanent_dismissible );
+function wppfm_show_wp_error( $message, $dismissible = false, $permanent_dismissible_id = '' ) {
+	return wppfm_show_wp_message( $message, 'error', $dismissible, $permanent_dismissible_id );
 }
 
 /**
@@ -30,11 +30,11 @@ function wppfm_show_wp_error( $message, $dismissible = false, $permanent_dismiss
  * 
  * @param string $message
  * @param bool $dismissible
- * @param bool $permanent_dismissible
+ * @param string $permanent_dismissible_id
  * @return html string
  */
-function wppfm_show_wp_warning( $message, $dismissible = false, $permanent_dismissible = false ) {
-	return wppfm_show_wp_message( $message, 'warning', $dismissible, $permanent_dismissible );
+function wppfm_show_wp_warning( $message, $dismissible = false, $permanent_dismissible_id = '' ) {
+	return wppfm_show_wp_message( $message, 'warning', $dismissible, $permanent_dismissible_id );
 }
 
 /**
@@ -42,11 +42,11 @@ function wppfm_show_wp_warning( $message, $dismissible = false, $permanent_dismi
  * 
  * @param string $message
  * @param bool $dismissible
- * @param bool $permanent_dismissible
+ * @param string $permanent_dismissible_id
  * @return html string
  */
-function wppfm_show_wp_success( $message, $dismissible = false, $permanent_dismissible = false ) {
-	return wppfm_show_wp_message( $message, 'success', $dismissible, $permanent_dismissible );
+function wppfm_show_wp_success( $message, $dismissible = false, $permanent_dismissible_id = '' ) {
+	return wppfm_show_wp_message( $message, 'success', $dismissible, $permanent_dismissible_id );
 }
 
 /**
@@ -54,11 +54,11 @@ function wppfm_show_wp_success( $message, $dismissible = false, $permanent_dismi
  * 
  * @param string $message
  * @param bool $dismissible
- * @param bool $permanent_dismissible
+ * @param string $permanent_dismissible_id
  * @return html string
  */
-function wppfm_show_wp_info( $message, $dismissible = false, $permanent_dismissible = false ) {
-	return wppfm_show_wp_message( $message, 'info', $dismissible, $permanent_dismissible );
+function wppfm_show_wp_info( $message, $dismissible = false, $permanent_dismissible_id = '' ) {
+	return wppfm_show_wp_message( $message, 'info', $dismissible, $permanent_dismissible_id );
 }
 
 /**
@@ -67,15 +67,15 @@ function wppfm_show_wp_info( $message, $dismissible = false, $permanent_dismissi
  * @param string $message
  * @param string $type
  * @param bool $dismissible
- * @param bool $permanent_dismissible
+ * @param string $permanent_dismissible_id
  * @return html string
  */
-function wppfm_show_wp_message( $message, $type, $dismissible, $permanent_dismissible ) {
+function wppfm_show_wp_message( $message, $type, $dismissible, $permanent_dismissible_id ) {
 	$dism = $dismissible ? ' is-dismissible' : '';
-	$perm_dism = $permanent_dismissible ? ' id="disposible-warning-message"' : '';
-	$dismiss_button = $permanent_dismissible ? '<button type="button" id="disposible-notice-button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>' : '';
+	$perm_dism = $permanent_dismissible_id ? ' id="disposible-warning-message"' : '';
+	$dismiss_permanently = '' !== $permanent_dismissible_id ? '<p id=dismiss-permanently>dismiss permanently<p>' : '';
 	
-	return '<div' . $perm_dism . ' class="notice notice-' . $type . $dism . '"><p>'  . $message . '</p>' . $dismiss_button . '</div>';
+	return '<div' . $perm_dism . ' class="notice notice-' . $type . $dism . '"><p>'  . $message . '</p>' . $dismiss_permanently . '</div>';
 }
 
 /**
@@ -88,11 +88,12 @@ function wppfm_show_wp_message( $message, $type, $dismissible, $permanent_dismis
  * @return html string
  */
 function wppfm_handle_wp_errors_response( $response, $message ) {
-	$err_msgs = $response->get_error_messages();
+	$err_msgs = method_exists( $response, 'get_error_messages' ) ? $response->get_error_messages() : array( 'Error unknown' );
+	$err_msg = method_exists( $response, 'get_error_message' ) ? $response->get_error_message() : 'Error unknown';
 	$err_txt = !empty( $err_msgs ) ? implode( ' :: ', $err_msgs ) : 'error unknown!';
 
 	wppfm_write_log_file( $message . $err_txt );
-	return wppfm_show_wp_error( $message . " Error message: " . $response->get_error_message() );
+	return wppfm_show_wp_error( $message . " Error message: " . $err_msg );
 }
 
 /**
@@ -104,7 +105,7 @@ function wppfm_handle_wp_errors_response( $response, $message ) {
  * @param string $filename
  */
 function wppfm_write_log_file( $error_message, $filename = 'error' ) {
-	$file = fopen( MYPLUGIN_PLUGIN_DIR . $filename . '.log', "a");
+	$file = fopen( WPPFM_PLUGIN_DIR . $filename . '.log', "a");
 
 	if ( $file ) {
 		if ( is_null( $error_message ) || is_string( $error_message ) || is_int( $error_message ) || is_bool( $error_message ) || is_float( $error_message ) ) {
@@ -134,8 +135,8 @@ function wppfm_write_log_file( $error_message, $filename = 'error' ) {
  * @return string
  */
 function wppfm_log_http_requests( $response, $args, $url ) {
-	if ( is_wp_error( $response ) && stripos( $this->_uri, '/wp-admin/admin.php?page=' . MYPLUGIN_PLUGIN_NAME ) !== false ) {
-		$logfile = MYPLUGIN_PLUGIN_DIR . 'http_request_error.log';
+	if ( is_wp_error( $response ) && stripos( $this->_uri, '/wp-admin/admin.php?page=' . WPPFM_PLUGIN_NAME ) !== false ) {
+		$logfile = WPPFM_PLUGIN_DIR . 'http_request_error.log';
 		file_put_contents( $logfile, sprintf( "### %s, URL: %s\nREQUEST: %sRESPONSE: %s\n", date( 'c' ), $url, print_r( $args, true ), print_r( $response, true ) ), FILE_APPEND );
 	}
 	
@@ -188,3 +189,5 @@ class MJ {
 		self::log( $queries_class->get_feedmanager_product_feedmeta_table() );
 	}
 }
+
+

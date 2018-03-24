@@ -21,7 +21,7 @@ if ( 'true' != pb_backupbuddy::_GET( 'deploy' ) ) { // NOT deployment. deploymen
 		$existing_state = pb_backupbuddy::$options['default_state_overrides'];
 		$existing_state['tempPath'] = ABSPATH . 'importbuddy/temp_' . pb_backupbuddy::random_string( 12 ) . '/';
 	} else {
-		die( 'Error #84379794322337894: Missing expected default state override.' );
+		die( 'Error #84379794322337894: Missing expected default state override. Options: `' . print_r( pb_backupbuddy::$options, true ) . '`.' );
 	}
 }
 
@@ -163,7 +163,7 @@ if ( 'true' == pb_backupbuddy::_GET( 'deploy' ) ) {
 		pb_backupbuddy::status( 'error', 'Error #328937: Temp state file is not creatable/writable. Check your permissions. (' . $state_file . ')' );
 		return false;
 	}
-	if ( false === fwrite( $file_handle, "<?php die('Access Denied.'); // <!-- ?>\n" . base64_encode( serialize( $restore->_state ) ) ) ) {
+	if ( false === fwrite( $file_handle, "<?php die('Access Denied.'); // <!-- ?>\n" . base64_encode( json_encode( $restore->_state ) ) ) ) {
 		pb_backupbuddy::status( 'error', 'Error #2389373: Unable to write to state file.' );
 	} else {
 		pb_backupbuddy::status( 'details', 'Wrote to state file.' );

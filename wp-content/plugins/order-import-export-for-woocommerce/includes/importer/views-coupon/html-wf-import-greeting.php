@@ -1,5 +1,14 @@
-<div>
-	<p><?php _e( 'You can import coupons (in CSV format) in to the shop using any of below methods.', 'wf_order_import_export' ); ?></p>
+<div class="wrap woocommerce">
+    <div class="icon32" id="icon-woocommerce-importer"><br></div>
+    <h2 class="nav-tab-wrapper woo-nav-tab-wrapper">
+        <a href="<?php echo admin_url('admin.php?page=wf_woocommerce_order_im_ex') ?>" class="nav-tab"><?php _e('Order Import / Export', 'wf_order_import_export'); ?></a>
+        <a href="<?php echo admin_url('admin.php?page=wf_coupon_csv_im_ex&tab=coupon') ?>" class="nav-tab nav-tab-active"><?php _e('Coupon Import / Export', 'wf_order_import_export'); ?></a>
+        <a href="<?php echo admin_url('admin.php?page=wf_woocommerce_order_im_ex&tab=subscription') ?>" class="nav-tab"><?php _e('Subscription Import / Export', 'wf_order_import_export'); ?></a>
+        <a href="https://www.xadapter.com/product/order-import-export-plugin-for-woocommerce/" target="_blank" class="nav-tab nav-tab-premium"><?php _e('Upgrade to Premium for More Features', 'wf_order_import_export'); ?></a>
+    </h2>
+    <div class="orderimpexp-main-box">
+        <div class="tool-box bg-white p-20p orderimpexp-view">
+	<p><?php _e( 'You can import coupons (in CSV format) in to the shop using below methods.', 'wf_order_import_export' ); ?></p>
 
 	<?php if ( ! empty( $upload_dir['error'] ) ) : ?>
 		<div class="error"><p><?php _e('Before you can upload your import file, you will need to fix the following error:'); ?></p>
@@ -10,7 +19,7 @@
 				<tbody>
 					<tr>
 						<th>
-							<label for="upload"><?php _e( 'Method 1: Select a file from your computer' ); ?></label>
+							<label for="upload"><?php _e( 'Select a file from your computer' ); ?></label>
 						</th>
 						<td>
 							<input type="file" id="upload" name="import" size="25" />
@@ -27,4 +36,8 @@
 			</p>
 		</form>
 	<?php endif; ?>
+        </div>
+        <?php include(WT_OrdImpExpCsv_BASE . 'includes/views/market.php'); ?>
+        <div class="clearfix"></div>
+    </div>
 </div>

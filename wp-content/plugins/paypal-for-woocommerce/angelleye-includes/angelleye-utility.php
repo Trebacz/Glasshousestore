@@ -757,17 +757,16 @@ class AngellEYE_Utility {
             $order = wc_get_order($order_id);
         }
         $payment_action = '';
-        if ($current->id == 'paypal_express' || $current->id == 'paypal_pro') {
+        if ($current->id == 'paypal_express' || $current->id == 'paypal_pro' || $current->id == 'paypal_pro_payflow') {
             $old_wc = version_compare(WC_VERSION, '3.0', '<');
             $payment_action = $old_wc ? get_post_meta($order_id, '_payment_action', true) : get_post_meta($order->get_id(), '_payment_action', true);
             if ($payment_action == 'Sale' || $payment_action == 'DoCapture' || empty($payment_action)) {
                 return $boolean;
-            } else {
-                return false;
-            }
+            } 
         } else {
             return $boolean;
         }
+        return $boolean;
     }
 
     public function angelleye_write_request_response_api_log($PayPalResult) {
@@ -831,6 +830,19 @@ class AngellEYE_Utility {
                 'type' => 'password',
                 'description' => __('Enter your PayPal Rest API Secret ID.', 'paypal-for-woocommerce'),
                 'default' => ''
+            ),
+            'payment_action' => array(
+                'title' => __('Payment Action', 'paypal-for-woocommerce'),
+                'label' => __('Whether to process as a Sale or Authorization.', 'paypal-for-woocommerce'),
+                'description' => __('Sale will capture the funds immediately when the order is placed.  Authorization will authorize the payment but will not capture the funds.  You would need to capture funds from within the PayPal account when you are ready to deliver.'),
+                'type' => 'select',
+                'class'    => 'wc-enhanced-select',
+                'options' => array(
+                    'sale' => 'Sale',
+                    'authorize' => 'Authorization'
+                ),
+                'default' => 'Sale',
+                'desc_tip' => true,
             ),
             'enable_tokenized_payments' => array(
                 'title' => __('Enable Tokenized Payments', 'paypal-for-woocommerce'),
@@ -945,23 +957,8 @@ class AngellEYE_Utility {
             ),
             'description' => __('This is where you can add new PayPal Transaction to your store.', 'paypal-for-woocommerce'),
             'public' => false,
-            'show_ui' => false,
-            'capability_type' => 'post',
-            'capabilities' => array(
-                'create_posts' => false, // Removes support for the "Add New" function
-            ),
-            'map_meta_cap' => true,
-            'publicly_queryable' => true,
-            'exclude_from_search' => false,
-            'hierarchical' => false, // Hierarchical causes memory issues - WP loads all records!
-            'rewrite' => array('slug' => 'paypal_ipn'),
-            'query_var' => true,
-            'supports' => array('', ''),
-            'has_archive' => true,
-            'show_in_nav_menus' => FALSE
-                        )
-                )
-        );
+            'query_var' => false,
+        ) ) );
     }
 
     public function angelleye_paypal_for_woocommerce_order_action_meta_box($post_type, $post) {
@@ -1495,6 +1492,7 @@ class AngellEYE_Utility {
      * @return type
      */
     public static function number_format($price) {
+        $price = str_replace(',', '.', $price);
         $decimals = 2;
         if (!self::currency_has_decimals(get_woocommerce_currency())) {
             $decimals = 0;
@@ -1852,7 +1850,7 @@ class AngellEYE_Utility {
     
     public static function angelleye_express_checkout_validate_shipping_address($paypal_request) {
         if( !empty($paypal_request['SECFields']['addroverride']) && $paypal_request['SECFields']['addroverride'] == 1 ) {
-            $address_required_field = array('shiptoname', 'shiptostreet', 'shiptostreet2', 'shiptocity', 'shiptostate', 'shiptozip', 'shiptocountrycode');
+            $address_required_field = array('shiptoname', 'shiptostreet', 'shiptocity', 'shiptostate', 'shiptozip', 'shiptocountrycode');
             foreach ($address_required_field as $key => $value) {
                 if( empty($paypal_request['Payments'][0][$value]) ) {
                     unset($paypal_request['SECFields']['addroverride']);
@@ -1924,4 +1922,85 @@ class AngellEYE_Utility {
             }
         }
     }
+    
+    public static function get_user_ip() {
+        $ip_address = '';
+        if(class_exists('WC_Geolocation')) {
+            $ip_address =  WC_Geolocation::get_ip_address();
+        } else {
+            $ip_address = !empty($_SERVER['HTTP_X_FORWARD_FOR']) ? $_SERVER['HTTP_X_FORWARD_FOR'] : $_SERVER['REMOTE_ADDR'];
+        }
+        $ipv4_pattern = '/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/';
+        if ( ! preg_match( $ipv4_pattern, $ip_address ) && filter_var($ip_address, FILTER_VALIDATE_IP,FILTER_FLAG_IPV6) ) {
+            $ip_address = '';
+        } 
+        if(strlen($ip_address) > 16) {
+            $ip_address = '';
+        }
+        return $ip_address;
+    }
+    
+    public static function woo_compatibility_notice() {
+        echo '<div class="error angelleye-notice" style="display:none;"><div class="angelleye-notice-logo"><span></span></div><div class="angelleye-notice-message">' . __('PayPal for WooCommerce requires WooCommerce version 2.6 or higher.  Please backup your site files and database, update WooCommerce, and try again.','paypal-for-woocommerce') . '</div></div>';
+    }
+    
+    public static function is_display_angelleye_paypal_pro_payflow_reference_transaction_notice($paypal_pro_payflow) {
+        $is_display = false;
+        if(get_user_meta(get_current_user_id(), 'ignore_paypal_pro_payflow_reference_transaction_notice')) {
+            return $is_display;
+        }
+        if( $paypal_pro_payflow->enabled == 'no' ) {
+             return $is_display;
+        }
+        if (class_exists('WC_Subscriptions_Order')) {
+            return $is_display = true;
+        }
+        if( $paypal_pro_payflow->enabled == 'yes' && (!empty($_GET['page']) && $_GET['page'] == 'wc-settings' ) && (!empty($_GET['tab']) && $_GET['tab'] == 'checkout' ) && $paypal_pro_payflow->enable_tokenized_payments == 'yes' ) {
+             return $is_display = true;
+        }
+        return $is_display;
+    }
+    
+    public static function angelleye_get_pre_option($bool, $option) {
+            global $wpdb;
+            if ( ! wp_installing() ) {
+		$notoptions = wp_cache_get( 'notoptions', 'options' );
+		if ( isset( $notoptions[ $option ] ) ) {
+			
+			return $bool;
+		}
+		$alloptions = wp_load_alloptions();
+		if ( isset( $alloptions[$option] ) ) {
+			$value = $alloptions[$option];
+		} else {
+			$value = wp_cache_get( $option, 'options' );
+			if ( false === $value ) {
+				$row = $wpdb->get_row( $wpdb->prepare( "SELECT option_value FROM $wpdb->options WHERE option_name = %s LIMIT 1", $option ) );
+				if ( is_object( $row ) ) {
+					$value = $row->option_value;
+					wp_cache_add( $option, $value, 'options' );
+				} else { 
+					if ( ! is_array( $notoptions ) ) {
+						 $notoptions = array();
+					}
+					$notoptions[$option] = true;
+					wp_cache_set( 'notoptions', $notoptions, 'options' );
+					return $bool;
+				}
+			}
+		}
+	} else {
+		$suppress = $wpdb->suppress_errors();
+		$row = $wpdb->get_row( $wpdb->prepare( "SELECT option_value FROM $wpdb->options WHERE option_name = %s LIMIT 1", $option ) );
+		$wpdb->suppress_errors( $suppress );
+		if ( is_object( $row ) ) {
+			$value = $row->option_value;
+		} else {
+			return $bool;
+		}
+	}
+        
+        return maybe_unserialize( $value );
+
+        }
 }

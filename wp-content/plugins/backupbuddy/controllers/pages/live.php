@@ -101,7 +101,7 @@ if ( ( 'disconnect' == pb_backupbuddy::_GET( 'live_action' ) ) && ( false !== $l
 		}
 		?>
 		<h3><?php _e( 'Disconnect from Stash Live', 'it-l10n-backupbuddy' ); ?></h3>
-		<?php _e( 'Please authenticate with your iThemes Member Login to validate your access and disconnect this site from Stash Live.', 'it-l10n-backupbuddy' ); ?><br><br>
+		<?php _e( 'To disconnect you must verify you have access to this account. Please authenticate with your iThemes Member Login to validate your access and disconnect this site from Stash Live.', 'it-l10n-backupbuddy' ); ?><br><br>
 		<form method="post" action="<?php echo pb_backupbuddy::nonce_url( $admin_url . '?page=pb_backupbuddy_live&live_action=disconnect' ); ?>">
 			<input type="hidden" name="disconnect" value="yes">
 			<table>

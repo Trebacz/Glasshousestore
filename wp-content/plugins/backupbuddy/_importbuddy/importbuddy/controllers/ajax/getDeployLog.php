@@ -14,7 +14,7 @@ if ( '' == $importFileSerial ) {
 	die( 'Access denied.' );
 }
 
-pb_backupbuddy::status( 'details', '*** End ImportBuddy Log section' );
+pb_backupbuddy::status( 'details', '*** End ImportBuddy Log Section (Deployment)' );
 
 // Log to make a copy of retrieved deploy info into.
 $log_directory = backupbuddy_core::getLogDirectory();

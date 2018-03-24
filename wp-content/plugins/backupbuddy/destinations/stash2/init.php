@@ -271,7 +271,6 @@ class pb_backupbuddy_destination_stash2 { // Change class name end to match dest
 		
 		
 		if ( ! is_array( $quota_data ) ) {
-			echo 'Error #8943978344: `' . $quota_data . '`.';
 			return false;
 		} else {
 			set_transient( 'pb_backupbuddy_stash2quota_' . $settings['itxapi_username'], $quota_data, $cache_time );
@@ -571,7 +570,7 @@ class pb_backupbuddy_destination_stash2 { // Change class name end to match dest
 			// Get file listing.
 			$files = self::listFiles( $settings, $prefix = '' );
 			if ( ! is_array( $files ) ) {
-				pb_backupbuddy::status( 'Error #3892383: Unable to list files. Skipping archive limiting.' );
+				pb_backupbuddy::status( 'Error #389234483: Unable to list files. Skipping archive limiting.' );
 				return false;
 			}
 			$remotePath = 'backup-' . backupbuddy_core::backup_prefix();

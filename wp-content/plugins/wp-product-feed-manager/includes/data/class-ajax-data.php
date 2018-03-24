@@ -1,9 +1,9 @@
 <?php
 
 /* * ******************************************************************
- * Version 1.5
- * Modified: 20-08-2017
- * Copyright 2017 Accentio. All rights reserved.
+ * Version 1.7
+ * Modified: 04-01-2018
+ * Copyright 2018 Accentio. All rights reserved.
  * License: None
  * By: Michel Jongbloed
  * ****************************************************************** */
@@ -38,6 +38,7 @@ if ( !class_exists( 'WPPFM_Ajax_Data_Class' ) ) :
 			add_action( 'wp_ajax_myajax-get-output-fields', array( $this, 'myajax_get_output_fields' ) );
 			add_action( 'wp_ajax_myajax-get-input-fields', array( $this, 'myajax_get_input_fields' ) );
 			add_action( 'wp_ajax_myajax-get-feed-data', array( $this, 'myajax_get_feed_data' ) );
+//			add_action( 'wp_ajax_myajax-get-feed-status', array( $this, 'myajax_get_feed_status' ) );
 			add_action( 'wp_ajax_myajax-get-main-feed-filters', array( $this, 'myajax_get_feed_filters' ) );
 			add_action( 'wp_ajax_myajax-switch-feed-status', array( $this, 'myajax_switch_feed_status_between_hold_and_ok' ) );
 			add_action( 'wp_ajax_myajax-duplicate-existing-feed', array( $this, 'myajax_duplicate_feed_data' ) );
@@ -47,6 +48,8 @@ if ( !class_exists( 'WPPFM_Ajax_Data_Class' ) ) :
 			add_action( 'wp_ajax_myajax-delete-backup-file', array( $this, 'myajax_delete_backup_file' ) );
 			add_action( 'wp_ajax_myajax-restore-backup-file', array( $this, 'myajax_restore_backup_file' ) );
 			add_action( 'wp_ajax_myajax-duplicate-backup-file', array( $this, 'myajax_duplicate_backup_file' ) );
+			add_action( 'wp_ajax_myajax-get-next-feed-in-queue', array( $this, 'myajax_get_next_feed_in_queue' ) );
+			add_action( 'wp_ajax_myajax-register-notice-dismission', array( $this, 'myajax_register_notice_dismission' ) );
 		}
 
 		/**
@@ -143,12 +146,12 @@ if ( !class_exists( 'WPPFM_Ajax_Data_Class' ) ) :
 						
 						$custom_product_attributes = $this->_queries->get_custom_product_attributes();
 						$custom_product_fields = $this->_queries->get_custom_product_fields();
-//	230717				$product_attributes = $this->_queries->get_all_product_attributes();
+						$product_attributes = $this->_queries->get_all_product_attributes();
 						$product_taxonomies = get_taxonomies();
 						$third_party_custom_fields = $data_class->get_third_party_custom_fields();
 						
 						echo json_encode( $this->combine_custom_attributes_and_feeds( $custom_product_attributes, 
-							$custom_product_fields, $product_taxonomies, $third_party_custom_fields ) );
+							$custom_product_fields, $product_attributes, $product_taxonomies, $third_party_custom_fields ) );
 						break;
 
 					default:
@@ -234,8 +237,6 @@ if ( !class_exists( 'WPPFM_Ajax_Data_Class' ) ) :
 
 				$country_id = $data_class->get_country_id_from_short_code( $country_code )->country_id;
 
-				//$status_id	 = $data_class->get_status_id_from_status( $status )->status_id;
-				// get the posted meta data
 				$meta_data = json_decode( $m_data );
 
 				// insert or update the feed
@@ -303,8 +304,8 @@ if ( !class_exists( 'WPPFM_Ajax_Data_Class' ) ) :
 				// only return results when the user is an admin with manage options
 				if ( is_admin() ) {
 
+					WPPFM_Feed_Controller_Class::remove_id_from_feed_queue( $feed_id );
 					$this->_queries->delete_meta( $feed_id );
-
 					echo $this->_queries->delete_feed( $feed_id );
 				}
 			}
@@ -378,21 +379,42 @@ if ( !class_exists( 'WPPFM_Ajax_Data_Class' ) ) :
 			// IMPORTANT: don't forget to exit
 			exit;
 		}
+		
+		public function myajax_get_next_feed_in_queue() {
+			if ( $this->safe_ajax_call( filter_input( INPUT_POST, 'nextFeedInQueueNonce' ), 'myajax-next-feed-in-queue-nonce' ) ) {
+				$next_feed_id = WPPFM_Feed_Controller_Class::get_next_id_from_feed_queue();
+				echo false !== $next_feed_id ? $next_feed_id : 'false';
+			}
+			
+			// IMPORTANT: don't forget to exit
+			exit;
+		}
+		
+		public function myajax_register_notice_dismission() {
+			if ( $this->safe_ajax_call( filter_input( INPUT_POST, 'noticeDismissionNonce' ), 'myajax-duplicate-backup-nonce' ) ) {
 
-		private function combine_custom_attributes_and_feeds( $attributes, $feeds, $product_taxonomies, $third_party_fields ) {
-			$keywords = explode( ', ', get_option( 'wppfm_third_party_attribute_keywords', '%_wpmr_%, %_cpf_%, %_unit%, %_bto_%' ) );
+				// only take action when the user is an admin with manage options
+				if ( is_admin() ) {
+					update_option( 'wppfm_license_notice_surpressed', true );
+					echo 'true';
+				} else {
+					echo 'false';
+				}
+			}
+			
+			// IMPORTANT: don't forget to exit
+			exit;
+		}
+		
+		private function combine_custom_attributes_and_feeds( $attributes, $feeds, $product_attributes, $product_taxonomies, $third_party_fields ) {
+			$keywords = explode( ',', get_option( 'wppfm_third_party_attribute_keywords', '%wpmr%,%cpf%,%unit%,%bto%,%yoast%' ) );
 			$prev_dup_array = array(); // used to prevent doubles
 			
 			foreach ( $feeds as $feed ) {
-				$clean_feed = $feed;
 				$obj = new stdClass();
-				
-				foreach( $keywords as $keyword ) {
-					$clean_feed = str_replace( trim( $keyword, '%' ), '', $clean_feed );
-				}
-				
+
 				$obj->attribute_name = $feed;
-				$obj->attribute_label = $clean_feed;
+				$obj->attribute_label = $feed;
 				
 				array_push( $attributes, $obj );
 				array_push( $prev_dup_array, $obj->attribute_label );
@@ -407,23 +429,26 @@ if ( !class_exists( 'WPPFM_Ajax_Data_Class' ) ) :
 					array_push( $attributes, $obj );
 					array_push( $prev_dup_array, $taxonomy );
 				}
-//				$attribute_object = maybe_unserialize( $attribute_string->meta_value );
-//
-//				if( $attribute_object && ( is_object( $attribute_object ) || is_array( $attribute_object ) ) ) {
-//
-//					foreach ( $attribute_object as $attribute ) {
-//						if ( !in_array( $attribute['name'], $prev_dup_array ) ) {
-//							$obj = new stdClass();
-//							$obj->attribute_name = $attribute['name'];
-//							$obj->attribute_label = $attribute['name'];
-//
-//							array_push( $attributes, $obj );
-//							array_push( $prev_dup_array, $attribute['name'] );
-//						}
-//					}
-//				} else {
-//					if ( $attribute_object ) { wppfm_write_log_file( $attribute_object , 'debug' ); }
-//				}
+			}
+
+			foreach ($product_attributes as $attribute_string){
+				$attribute_object = maybe_unserialize( $attribute_string->meta_value );
+
+				if( $attribute_object && ( is_object( $attribute_object ) || is_array( $attribute_object ) ) ) {
+
+					foreach ( $attribute_object as $attribute ) {
+						if ( !in_array( $attribute['name'], $prev_dup_array ) ) {
+							$obj = new stdClass();
+							$obj->attribute_name = $attribute['name'];
+							$obj->attribute_label = $attribute['name'];
+
+							array_push( $attributes, $obj );
+							array_push( $prev_dup_array, $attribute['name'] );
+						}
+					}
+				} else {
+					if ( $attribute_object ) { wppfm_write_log_file( $attribute_object , 'debug' ); }
+				}
 			}
 			
 			foreach ( $third_party_fields as $field_label ) {

@@ -1,5 +1,36 @@
 *** WooCommerce Predictive Search Changelog ***
 
+= 4.5.0 - 2017/12/12 =
+* Feature Upgrade. In this upgrade we have added the option when description is used with results to draw it from the Description or the Extract short description.
+* Feature - Add new Results Description Source option from long DESCRIPTION or EXTRACT short description
+* Tweak - On Settings tab added new Results Description Source option box with help text and switch
+* Tweak - Tested for compatibility with WooCommerce 3.2.5
+* Tweak - Tested for compatibility with WordPress 4.9.1
+* Fix - Check if post_parent field is missed on SKU table database when upgrade from an older version of the Free plugin to latest version of Premium. Upgrade will check and automatically add that field for sync database. Prevent the sync from stalling at SKU because the table does not exist.
+
+= 4.4.5 - 2017/11/27 =
+* Fix - Add AND for clause of mysql query, to resolve mysql bug preventing search queries completing within a product category
+* Credit - Thanks to Jos Vermeulen for reporting the search in category bug
+
+= 4.4.4 - 2017/11/16 =
+* Maintenance Update - 2 bug fixes plus compatibility with WC 3.2.3 and WordPress 4.9 
+* Tweak - Tested for compatibility with WooCommerce 3.2.3
+* Tweak - Tested for compatibility with WordPress 4.9
+* Fix - Get correct stock status of variable products for sync to PS database
+* Fix - Don't show outofstock products on SKU results if Exclude Out of Stock Products option is ON
+
+= 4.4.3 - 2017/11/01 =
+* Tweak - Tested for compatibility with WooCommerce 3.2.2
+* Tweak - Tested for compatibility with WordPress 4.8.3
+* Tweak - Add new arguments to sql generate function of PS Term Relationship so that can search on more fields
+* Fix - Show results for search SKU with a selected Category.
+* Credit - Thanks to Jos Vermeulen for the search for SKU in selected category bug report
+
+= 4.4.2 - 2017/10/13 =
+* Tweak - Tested for compatibility with WooCommerce 3.2.0
+* Tweak - Tested for compatibility with WordPress 4.8.2
+* Tweak - Added support for the new WC 'tested up to' feature to show this plugin has been tested compatible with WC updates
+
 = 4.4.1 - 2017/08/03 =
 * Tweak - Update sync code to also check for outofstock products on post meta as well as post term
 * Tweak - Test for compatibility with WordPress version 4.8.1 

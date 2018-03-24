@@ -13,18 +13,31 @@ final class Curl
 
     /** @var string[] */
     private $headers = array();
+    
+    private $debugout;
 
     /**
      * @param string $url
      */
     function __construct($url)
-    {
+    {	
+    	
+    		if ( \pb_backupbuddy::$options['log_level'] == '3' ) { // Full logging enabled.
+			ob_start();  
+			$this->debugout = fopen('php://output', 'w');
+    		}
+    		
         // Make sure there aren't any spaces in the URL (i.e. the caller forgot to URL-encode).
         if (strpos($url, ' ') !== false) {
             throw new \InvalidArgumentException("Found space in \$url; it should be encoded");
         }
-
+        \pb_backupbuddy::status( 'details', 'Curl URL: `' . $url . '`.' );
         $this->handle = curl_init($url);
+        
+        if ( \pb_backupbuddy::$options['log_level'] == '3' ) { // Full logging enabled.
+	        curl_setopt($this->handle, CURLOPT_VERBOSE, true);  
+	        curl_setopt($this->handle, CURLOPT_STDERR, $this->debugout);  
+	   }
 
         // NOTE: Though we turn on all the correct SSL settings, many PHP installations
         // don't respect these settings.  Run "examples/test-ssl.php" to run some basic
@@ -72,14 +85,20 @@ final class Curl
 		$this->headers = array_merge( $this->headers, array( 'Content-Type: '. $contentType) );
 		
         $this->set(CURLOPT_HTTPHEADER, $this->headers);
-        \pb_backupbuddy::status('details', 'About to Curl.php curl_exec() in exec.' );
+        \pb_backupbuddy::status('details', 'About to exec in Curl.php curl_exec(). contentType: `' . $contentType . '`.' );
         $body = curl_exec($this->handle);
         if ($body === false) {
             throw new Exception_NetworkIO("Error executing HTTP request: " . curl_error($this->handle));
         }
 
         $statusCode = curl_getinfo($this->handle, CURLINFO_HTTP_CODE);
-
+        
+        if ( \pb_backupbuddy::$options['log_level'] == '3' ) { // Full logging enabled.
+       	fclose($this->debugout);
+		$debug = ob_get_clean();
+		\pb_backupbuddy::status( 'details', 'Dropbox HTTP debug: `' . $debug . '`.' );
+	   }
+        
         return new HttpResponse($statusCode, $body);
     }
     

@@ -148,7 +148,7 @@ $schedule_form->add_setting( array(
 	'rules'		=>		'required',
 ) );
 
-
+$schedule_intervals = wp_get_schedules();
 
 if ( pb_backupbuddy::_GET( 'edit' ) != '' ) {
 	$defaultInterval = null;
@@ -157,9 +157,8 @@ if ( pb_backupbuddy::_GET( 'edit' ) != '' ) {
 }
 
 $intervalArray = array();
-$schedule_intervals = wp_get_schedules();
 foreach( $schedule_intervals as $interval_tag => $schedule_interval ) {
-	$intervalArray[ $schedule_interval['interval'] ] = array( $interval_tag, $schedule_interval['display'] );
+	$intervalArray[ $schedule_interval['interval'] ] = array( $interval_tag, str_replace( '%', '&nbsp;', str_pad( $schedule_interval['display'], 30, '%' ) ) .  '&nbsp;&nbsp;(' . $interval_tag . ')' );
 }
 ksort( $intervalArray );
 $intervalArray = array_reverse( $intervalArray );
@@ -344,6 +343,15 @@ foreach ( pb_backupbuddy::$options['schedules'] as $schedule_id => $schedule ) {
 	}
 	$type = $profile['title'] . ' (' . $type . ')';
 	$interval = $schedule['interval'];
+	
+	$schedule_intervals = wp_get_schedules();
+	if ( ! isset( $schedule_intervals[ $interval ] ) ) { // Detect invalid schedule interval.
+		$warning = __( 'Invalid schedule interval! Delete and recreate the schedule with a valid interval for this schedule to work.', 'it-l10n-backupbuddy' ) . ' ' . __( 'Invalid interval tag', 'it-l10n-backupbuddy' ) . ': `' . $interval . '`';
+		pb_backupbuddy::alert( $warning, true );
+		$interval = '<span class="pb_label pb_label-important">' . __( 'ERROR', 'it-l10n-backupbuddy' ) . '</span> <font color="red">' . $warning . '</font>';
+	} else {
+		$interval = $schedule_intervals[ $interval ]['display'] . ' (' . $interval . ')';
+	}
 	
 	if ( isset( $schedule['on_off'] ) && ( $schedule['on_off'] == '0' ) ) {
 		$on_off = '<font color=red>Disabled</font>';

@@ -1,4 +1,7 @@
-<?php // Incoming vars: $sha1 (bool)
+<?php // Incoming vars: $sha1 (bool), $file_includes (array), $file_excludes (array), $destinationSettings (from the site initiating the transfer, whether this site or remote)
+require_once( pb_backupbuddy::plugin_path() . '/destinations/site/init.php' );
+
+
 if ( ! isset( $sha1 ) ) {
 	$sha1 = false; // Whether to calculate sha1 hash for determining file differences.
 }
@@ -106,57 +109,67 @@ foreach( $activePlugins as $activePluginDir => $activePlugin ) {
 $allPluginDirs = glob( WP_PLUGIN_DIR . '/*', GLOB_ONLYDIR );
 $inactivePluginDirs = array_diff( $allPluginDirs, $activePluginDirs ); // Remove active plugins from directories of all plugins to get directories of inactive plugins to exclude later.
 $inactivePluginDirs[] = pb_backupbuddy::plugin_path(); // Also exclude BackupBuddy directory.
+$pluginsExcludes = array_merge( $inactivePluginDirs, pb_backupbuddy_destination_site::get_exclusions( $destinationSettings, 'plugins' ) );
+$pluginsExcludes = array_filter( $pluginsExcludes );
 
-
-// Calculate media files signatures.
 $upload_dir = wp_upload_dir();
-$mediaExcludes = array(
-	'/backupbuddy_backups',
-	'/pb_backupbuddy',
-	'/backupbuddy_temp',
-);
-$mediaSignatures = backupbuddy_core::hashGlob( $upload_dir['basedir'], $sha1, $mediaExcludes, $handle_utf8 = true );
+$mediaSignatures = backupbuddy_core::hashGlob( $upload_dir['basedir'], $sha1, pb_backupbuddy_destination_site::get_exclusions( $destinationSettings, 'media' ), $handle_utf8 = true );
 
 
 // Calculate child theme file signatures, excluding main theme directory..
 if ( get_stylesheet_directory() == get_template_directory() ) { // Theme & childtheme are same so do not send any childtheme files!
 	$childThemeSignatures = array();
 } else {
-	$childThemeSignatures = backupbuddy_core::hashGlob( get_stylesheet_directory(), $sha1 );
+	$childThemeSignatures = backupbuddy_core::hashGlob( get_stylesheet_directory(), $sha1, pb_backupbuddy_destination_site::get_exclusions( $destinationSettings, 'childtheme' ) );
 }
 
 
-global $wp_version;
+// CALCULATE EXTRAS
+$extrasRaws = $destinationSettings['extras'];
+$extrasRaws = explode( "\n", $extrasRaws );
+foreach( $extrasRaws as &$extrasRaw ) {
+	$extras[] = trim( $extrasRaw );
+}
+$extras = array_filter( $extras );
+
+$extrasSignatures = array();
+foreach( $extras as $extra ) {
+	$extrasSignatures = array_merge( $extrasSignatures, backupbuddy_core::hashGlob( ABSPATH . $extra, $sha1, pb_backupbuddy_destination_site::get_exclusions( $destinationSettings, 'customroot', ABSPATH . $extra ), null, rtrim( $extra, '/\\' ) ) );
+}
+$extrasSignatures = array_unique( $extrasSignatures, SORT_REGULAR ); // SORT_REGULAR keeps arrays inside intact.
 
 /*
 error_log( 'pluginFiles:' );
 error_log( print_r( backupbuddy_core::hashGlob( WP_PLUGIN_DIR, $sha1, $inactivePluginDirs ), true ) );
 */
 
+global $wp_version;
 return array(
 	'backupbuddyVersion'		=> pb_backupbuddy::settings( 'version' ),
 	'wordpressVersion'			=> $wp_version,
-	'localTime'					=> time(),
-	'php'						=> array(
-									'upload_max_filesize' => $upload_max_filesize,
-									'max_execution_time' => $max_execution_time,
-									'memory_limit' => $memory_limit,
-									'max_post_size' => $max_post_size,
-									),
+	'localTime'				=> time(),
+	'php'					=> array(
+								'upload_max_filesize' => $upload_max_filesize,
+								'max_execution_time' => $max_execution_time,
+								'memory_limit' => $memory_limit,
+								'max_post_size' => $max_post_size,
+								),
 	'abspath'					=> ABSPATH,
 	'siteurl'					=> site_url(),
 	'homeurl'					=> home_url(),
 	'tables'					=> $dbTables,
-	'dbPrefix'					=> $wpdb->prefix,
-	'activePlugins'				=> $activePlugins,
+	'dbPrefix'				=> $wpdb->prefix,
+	'activePlugins'			=> $activePlugins,
 	'activeTheme'				=> get_template(),
 	'activeChildTheme'			=> get_stylesheet(),
-	'themeSignatures'			=> backupbuddy_core::hashGlob( get_template_directory(), $sha1 ),
+	'themeSignatures'			=> backupbuddy_core::hashGlob( get_template_directory(), $sha1, pb_backupbuddy_destination_site::get_exclusions( $destinationSettings, 'theme' ) ),
 	'childThemeSignatures'		=> $childThemeSignatures,
-	'pluginSignatures'			=> backupbuddy_core::hashGlob( WP_PLUGIN_DIR, $sha1, $inactivePluginDirs ),
+	'pluginSignatures'			=> backupbuddy_core::hashGlob( WP_PLUGIN_DIR, $sha1, $pluginsExcludes ),
 	'mediaSignatures'			=> $mediaSignatures,
 	'mediaCount'				=> count( $mediaSignatures ),
-	'notifications'				=> array(), // Array of string notification messages.
+	'extraSignatures'			=> $extrasSignatures,
+	'extraCount'				=> count( $extrasSignatures ),
+	'notifications'			=> array(), // Array of string notification messages.
 );
 
 

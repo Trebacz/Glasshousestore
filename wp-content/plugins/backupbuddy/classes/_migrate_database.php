@@ -252,9 +252,12 @@ class backupbuddy_migrateDB {
 	
 	
 	function nearTimeLimit() {
+		if ( '-1' == $this->restoreData['maxExecutionTime'] ) { // If -1 then skip chunking mode.
+			return false;
+		}
 		// If we are within 1 second of reaching maximum PHP runtime then stop here so that it can be picked up in another PHP process...
 		if ( ( ( microtime( true ) - $this->startTime ) + self::TIME_WIGGLE_ROOM ) >= $this->restoreData['maxExecutionTime'] ) {
-			pb_backupbuddy::status( 'message', 'Approaching limit of available PHP chunking time of `' . $this->restoreData['maxExecutionTime'] . '` sec. Ran for ' . round( microtime( true ) - $this->startTime, 3 ) . ' sec.' );
+			pb_backupbuddy::status( 'message', 'Nearing limit of available PHP chunking time of `' . $this->restoreData['maxExecutionTime'] . '` sec. Ran for ' . round( microtime( true ) - $this->startTime, 3 ) . ' sec.' );
 			return true;
 		} else {
 			return false;

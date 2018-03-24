@@ -1,8 +1,8 @@
 <?php
 
 /* * ******************************************************************
- * Version 2.4
- * Modified: 20-08-2017
+ * Version 2.5
+ * Modified: 15-12-2017
  * Copyright 2017 Accentio. All rights reserved.
  * License: None
  * By: Michel Jongbloed
@@ -17,7 +17,7 @@ if ( !class_exists( 'WPPFM_Ajax_File_Class' ) ) :
 	 * The WPPFM_Ajax_File_Class contains all functions for file manipulation ajax calls
 	 * 
 	 * @class		WPPFM_Ajax_File_Class
-	 * @version		2.4
+	 * @version		2.5
 	 * @category	Class
 	 * @author		Michel Jongbloed
 	 */
@@ -39,6 +39,7 @@ if ( !class_exists( 'WPPFM_Ajax_File_Class' ) ) :
 			add_action( 'wp_ajax_myajax-auto-feed-fix-mode-selection', array( $this, 'myajax_auto_feed_fix_mode_selection' ) );
 			add_action( 'wp_ajax_myajax-debug-mode-selection', array( $this, 'myajax_debut_mode_selection' ) );
 			add_action( 'wp_ajax_myajax-third-party-attribute-keywords', array( $this, 'myajax_set_third_party_attribute_keywords' ) );
+			add_action( 'wp_ajax_myajax-clear-feed-process-data', array( $this, 'myajax_clear_feed_process_data' ) );
 			add_action( 'wp_ajax_myajax-reinitiate-plugin', array( $this, 'myajax_reinitiate_plugin' ) );
 		}
 
@@ -136,15 +137,22 @@ if ( !class_exists( 'WPPFM_Ajax_File_Class' ) ) :
 
 			// make sure this call is legal
 			if ( $this->safe_ajax_call( filter_input( INPUT_POST, 'updateFeedFileNonce' ), 'myajax-update-feed-file-nonce' ) ) {
-				$feed_master_class = new WPPFM_Feed_Master_Class();
-
 				// fetch the data from $_POST
-				$feed_received	 = filter_input( INPUT_POST, 'feedData' );
-				$feed_data		 = json_decode( $feed_received );
-
+				$feed_id	 = filter_input( INPUT_POST, 'feedId' );
+				
 				// only return results when the user is an admin with manage options
 				if ( is_admin() ) {
-					$feed_master_class->update_feed_file( $feed_data, false );
+					WPPFM_Feed_Controller_Class::add_id_to_feed_queue($feed_id);
+					
+					// if there is no feed processing in progress, start updating the current feed
+					if( ! WPPFM_Feed_Controller_Class::feed_is_processing() ) {
+						$feed_master_class = new WPPFM_Feed_Master_Class();
+						$feed_master_class->update_feed_file( false );
+					} else {
+						$data_class = new WPPFM_Data_Class();
+						$data_class->update_feed_status( $feed_id, 4 ); // feed status to waiting in queue
+						echo __( 'Pushed the feed to the background queue. Processing starts after all other feeds are processed.', 'wp-product-feed-manager' );
+					}
 				} else {
 					echo wppfm_show_wp_error( __( 'Error writing the feed. You do not have the correct authorities to write the file.', 'wp-product-feed-manager' ) );
 				}
@@ -222,7 +230,6 @@ if ( !class_exists( 'WPPFM_Ajax_File_Class' ) ) :
 		 * @since 1.8.0
 		 */
 		public function myajax_set_third_party_attribute_keywords() {
-			
 			// make sure this call is legal
 			if ( $this->safe_ajax_call( filter_input( INPUT_POST, 'thirdPartyKeywordsNonce' ), 'myajax-set-third-party-keywords-nonce' ) ) {
 				$keywords = filter_input( INPUT_POST, 'keywords' );
@@ -254,7 +261,26 @@ if ( !class_exists( 'WPPFM_Ajax_File_Class' ) ) :
 			// IMPORTANT: don't forget to exit
 			exit;
 		}
+		
+		/**
+		 * Clears all option data that is related to the feed processing
+		 * 
+		 * @since 1.10.0
+		 */
+		public function myajax_clear_feed_process_data() {
+			
+			if ( $this->safe_ajax_call( filter_input( INPUT_POST, 'clearFeedNonce' ), 'myajax-clear-feed-nonce' ) ) {
+				
+				if ( wppfm_clear_feed_process_data() ) {
+					echo "Feed processing data cleared";
+				} else {
+					echo "Clearing failed!";
+				}
+			}
 
+			// IMPORTANT: don't forget to exit
+			exit;
+		}
 	}
 
 	// End of WPPFM_Ajax_File_Class

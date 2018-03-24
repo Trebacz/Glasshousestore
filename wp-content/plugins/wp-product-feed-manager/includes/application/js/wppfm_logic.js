@@ -1,7 +1,7 @@
 /*!
  * logic.js v1.2
  * Part of the WP Product Feed Manager
- * Copyright 2016, Michel Jongbloed
+ * Copyright 2018, Michel Jongbloed
  *
  */
 
@@ -34,16 +34,12 @@ function wppfm_editCategories() {
 function wppfm_generateFeed() {
 
 	if ( $jq( '#file-name' ).val() !== '' ) {
-
 		if ( _feedHolder['categoryMapping'] && _feedHolder['categoryMapping'].length > 0 ) {
-
 			wppfm_generateAndSaveFeed();
 		} else {
-
 			var userInput = confirm( 'You\'ve not selected a Shop Category in the Category Mapping Table. With no Shop Category selected, your feed will be empty.\n\n Are you sure you still want to save this feed?' );
 
 			if ( userInput === true ) {
-
 				wppfm_generateAndSaveFeed();
 			}
 		}
@@ -214,21 +210,11 @@ function wppfm_getCorrectValueSelector( rowId, sourceLevel, valueEditorLevel, ty
 }
 
 function wppfm_deactivateFeed( id ) {
-
-	wppfm_switchFeedStatus( id, function ( result ) {
-
-		if ( result === "1" ) {
-			wppfm_updateFeedRowStatus( id, 1 );
-		} else {
-			wppfm_updateFeedRowStatus( id, 2 );
-		}
-	} );
+	wppfm_switchFeedStatus( id, function ( result ) { wppfm_updateFeedRowStatus( id, parseInt( result ) ); } );
 }
 
 function wppfm_duplicateFeed( id, feedName ) {
-	
 	wppfm_duplicateExistingFeed( id, function ( result ) {
-		
 		if ( result ) { wppfm_show_success_message( 'Added a copy of feed "' + feedName + '" to the list.' ); }
 	} );
 }
@@ -236,7 +222,6 @@ function wppfm_duplicateFeed( id, feedName ) {
 function wppfm_viewFeed( url ) { window.open( url ); }
 
 function wppfm_addRowValueEditor( rowId, sourceLevel, valueEditorLevel, values ) {
-
 	// add the change values controls
 	$jq( '#end-row-id-' + rowId ).remove();
 	$jq( '#row-' + rowId ).append( wppfm_valueEditor( rowId, sourceLevel, valueEditorLevel, values ) + wppfm_endrow( rowId ) );

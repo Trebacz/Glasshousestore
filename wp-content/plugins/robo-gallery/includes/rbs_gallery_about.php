@@ -8,7 +8,7 @@
 *      Created: 2015
 *      Licensed under the GPLv2 license - http://opensource.org/licenses/gpl-2.0.php
 *
-*      Copyright (c) 2014-2016, Robosoft. All rights reserved.
+*      Copyright (c) 2014-2018, Robosoft. All rights reserved.
 *      Available only in  https://robosoft.co/robogallery/ 
 */
 
@@ -69,5 +69,5 @@ if(!ROBO_GALLERY_PRO){
 	</div>
 	';
 }
-echo '<div class="rbs_about_string2">Copyright &copy; 2014 - 2017 RoboSoft '.__('All Rights Reserved', 'robo-gallery').'.</div>
+echo '<div class="rbs_about_string2">Copyright &copy; 2014 - 2018 RoboSoft '.__('All Rights Reserved', 'robo-gallery').'.</div>
 ';

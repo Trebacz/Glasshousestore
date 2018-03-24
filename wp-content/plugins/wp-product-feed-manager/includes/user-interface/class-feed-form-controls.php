@@ -23,9 +23,9 @@ if ( !class_exists( 'WPPFM_Feed_Form_Control' ) ) :
 			$ident = $id !== '-1' ? $identifier . '-' . $id : $identifier;
 			
 			$html_code = '<div id="category-selector-' . $ident . '" style="display:' . $display . '">';
-			$html_code .= '<div id="selected-categories"></div><select class="cat_select" id="' . $ident . '_0" disabled></select>';
+			$html_code .= '<div id="selected-categories"></div><select class="cat_select" id="' . $ident . '_0" style="height:33px;" disabled></select>';
 			
-			for ( $i = 1; $i < 8; $i++ ) { $html_code .= '<select class="cat_select" id="' . $ident . '_' . $i . '" style="display:none;"></select>'; }
+			for ( $i = 1; $i < 8; $i++ ) { $html_code .= '<select class="cat_select" id="' . $ident . '_' . $i . '" style="height:33px; display:none;"></select>'; }
 			
 			$html_code .= '<div>';
 			
@@ -65,7 +65,7 @@ if ( !class_exists( 'WPPFM_Feed_Form_Control' ) ) :
 
 			if ( !empty( $channels ) ) {
 				$html_code = '<div id="selected-merchant"></div>';
-				$html_code .= '<select id="merchants" style="display:initial">';
+				$html_code .= '<select id="merchants" style="display:initial; height:33px;">';
 
 				$html_code .= '<option value="0">' . __( '-- Select your merchant --', 'wp-product-feed-manager' ) . '</option>';
 
@@ -84,7 +84,7 @@ if ( !class_exists( 'WPPFM_Feed_Form_Control' ) ) :
 			$countries = $data_class->get_countries();
 
 			if ( !empty( $countries ) ) {
-				$html_code = '<select id="countries" disabled>';
+				$html_code = '<select id="countries" style="height:33px" disabled>';
 				$html_code .= '<option value="0">' . __( '-- Select your target country --', 'wp-product-feed-manager' ) . '</option>';
 
 				foreach ( $countries as $country ) { $html_code .= '<option value="' . $country[ 'name_short' ] . '">' . $country[ 'name' ] . '</option>'; }
@@ -99,11 +99,11 @@ if ( !class_exists( 'WPPFM_Feed_Form_Control' ) ) :
 			$html_code = '<span id="wppfm-update-day-wrapper" style="display:initial">' . __( 'Every ', 'wp-product-feed-manager' );
 			$html_code .= '<input type="text" class="small-text" name="days-interval" id="days-interval" value="1" style="width:30px;" /> ' . __( 'day(s) at', 'wp-product-feed-manager' ) . '</span>';
 			$html_code .= '<span id="wppfm-update-every-day-wrapper" style="display:none">' . __( 'Every day at', 'wp-product-feed-manager' ) . '</span>';
-			$html_code .= ' <select id="update-schedule-hours" style="width:50px;">' . self::hour_list() . '</select>';
-			$html_code .= '<select id="update-schedule-minutes" style="width:50px;">' . self::minutes_list() . '</select>';
+			$html_code .= ' <select id="update-schedule-hours" style="width:52px;height:35px;">' . self::hour_list() . '</select>';
+			$html_code .= '<select id="update-schedule-minutes" style="width:52px;height:35px;">' . self::minutes_list() . '</select>';
 			$html_code .= '<span id="wppfm-update-frequency-wrapper" style="display:initial">';
 			$html_code .= __( ' for ', 'wp-product-feed-manager' );
-			$html_code .= '<select id="update-schedule-frequency" style="width:50px;">' . self::frequency_list() . '</select>';
+			$html_code .= '<select id="update-schedule-frequency" style="width:50px;height:35px;">' . self::frequency_list() . '</select>';
 			$html_code .= __( ' time(s) a day', 'wp-product-feed-manager' );
 			$html_code .= '</span>';
 			

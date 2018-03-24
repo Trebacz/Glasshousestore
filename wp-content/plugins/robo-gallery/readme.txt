@@ -1,10 +1,10 @@
 === Gallery - Photo Gallery and Images Gallery ===
 Contributors: gallerysupport, robosoft
 Donate link: https://robosoft.co/robogallery
-Tags: gallery, photo gallery, images gallery, gallery images, responsive gallery, categories gallery, Polaroid gallery, gallery lightbox, portfolio gallery, video gallery, Gallery Plugin, Robo Gallery
+Tags: gallery, photo gallery, images gallery, gallery images, wordpress gallery plugin, responsive gallery, categories gallery, Polaroid gallery, gallery lightbox, portfolio gallery, video gallery, Gallery Plugin, Robo Gallery
 Requires at least: 3.3
-Tested up to: 4.8
-Stable tag: 2.6.22
+Tested up to: 4.9
+Stable tag: 2.7.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -94,6 +94,8 @@ This interface gallery button have wide range of the front end interface customi
 *   **Advanced Load more function** - in gallery implemented very attractive navigation mode. Auto pre loading images like endless list of the gallery images. This gallery load more function have alot of customization options to make it work the way you need.
 *   **SEO code optimization** - in gallery implemented few front end code output modes. One simplified mode with all core front end gallery code elements another mode with additional not visible elements. This option have additional modes. This SEO output modes give you default output mode, thumbnail, thumnails+links mode.
 *   **Gallery Template** - in our gallery we have advanced templating engine for gallery images description. Every hover text of gallery image could be edit and customized with built-in templating options.
+*   **Gallery Cache** - incredible new super cache option make your gallery load ten time faster. This function use absolutely new model of the images load. When you enable cache for big size gallery it's gonna be much faster and effective to use our plugin. Your visitors will be really surprised by the speed of the page load.
+
 
 = Gallery Pro Key Features =
 
@@ -257,6 +259,31 @@ If any problem occurs, please contact us.
 
 == Changelog ==
 
+= 2.7.7 =
+*  Updated cache functionality of the gallery
+*  Added gallery cache expire option
+
+= 2.7.6 =
+*  Added copy shortcode by click in gallery listing
+*  Added gallery sorting configrmation message
+
+= 2.7.5 =
+*   fix of the notices
+
+= 2.7.3 =
+*   New ajax preload gallery module
+*   Notification init fix
+*   Fix for automatic js error detection and fixing system
+
+= 2.7.2 =
+*   New advanced, automatic js error detection and fixing system
+
+= 2.7.1 =
+*   New advanced gallery categories sorting section
+
+= 2.7.0 =
+*   New super gallery cache function
+
 = 2.6.22 =
 *   Update Robo Gallery ordering page
 
@@ -416,6 +443,31 @@ If any problem occurs, please contact us.
 
 
 == Upgrade Notice ==
+
+= 2.7.7 =
+Updated cache functionality of the gallery
+Added gallery cache expire option
+
+= 2.7.6 =
+Added copy shortcode by click in gallery listing
+Added gallery sorting configrmation message
+
+= 2.7.5 =
+fix of the notices
+
+= 2.7.3 =
+New ajax preload gallery module
+Notification init fix
+Fix for automatic js error detection and fixing system
+
+= 2.7.2 =
+New advanced, automatic js error detection and fixing system
+
+= 2.7.1 =
+New advanced gallery categories sorting section
+
+= 2.7.0 =
+New super gallery cache function
 
 = 2.6.22 =
 Update Robo Gallery ordering page

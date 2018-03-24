@@ -18,7 +18,7 @@ function wppfm_getFeedList( callback ) {
 			postFeedsListNonce: MyAjax.postFeedsListNonce
 
 		}, function ( response ) {
-
+			
 		callback( wppfm_validateResponse( response ) );
 	} );
 }
@@ -182,28 +182,35 @@ function wppfm_updateFeedToDb( feed, metaData, callback ) {
 	} );
 }
 
-function wppfm_updateFeedFile( feed, callback ) {
-
-	var strt = new Date();
-	console.log( "Feed update started at " + strt.getHours() + ":" + strt.getMinutes() + ":" + strt.getSeconds() );
-
+function wppfm_updateFeedFile( feed_id, callback ) {
 	jQuery.post(
 		MyAjax.ajaxurl,
 		{
 			action: 'myajax-update-feed-file',
 			dataType: 'text',
-			feedData: JSON.stringify( feed ),
+			feedId: feed_id,
 			updateFeedFileNonce: MyAjax.updateFeedFileNonce
 
 		}, function ( response ) {
 
-		var ended = new Date();
-		var runtime = ( ended - strt ) / 1000;
-		console.log( "Feed update ended at " + ended.getHours() + ":" + ended.getMinutes() + ":" + ended.getSeconds() + " (runtime " + runtime + " seconds)." );
-
 		callback( wppfm_validateResponse( response ) );
 	} );
 }
+
+// function wppfm_getCurrentFeedStatus( feedId, callback ) {
+
+// 	jQuery.post(
+// 		MyAjax.ajaxurl,
+// 		{
+// 			action: 'myajax-get-feed-data',
+// 			sourceId: feedId,
+// 			feedDataNonce: MyAjax.feedDataNonce
+
+// 		}, function ( response ) {
+
+// 			callback( wppfm_validateResponse( response ) );
+// 		} );
+// }
 
 function wppfm_getFeedData( feedId, callback ) {
 
@@ -283,21 +290,6 @@ function wppfm_auto_feed_fix_mode( selection, callback ) {
 	} );
 }
 
-function wppfm_debug_mode( selection, callback ) {
-
-	jQuery.post(
-		MyAjax.ajaxurl,
-		{
-			action: 'myajax-debug-mode-selection',
-			debug_selection: selection,
-			debugNonce: MyAjax.setDebugNonce
-			
-		}, function ( response ) {
-
-		callback( response.trim() );
-	} );
-}
-
 function wppfm_change_third_party_attribute_keywords( keywords, callback ) {
 	
 	jQuery.post(
@@ -310,6 +302,19 @@ function wppfm_change_third_party_attribute_keywords( keywords, callback ) {
 	}, function( response ) {
 	
 		callback( response.trim() );
+	} );
+}
+
+function wppfm_clear_feed_process_data( callback ) {
+	jQuery.post(
+		MyAjax.ajaxurl,
+	{
+		action: 'myajax-clear-feed-process-data',
+		clearFeedNonce: MyAjax.setClearFeedProcessNonce
+		
+	}, function( response ) {
+		
+		callback( response );
 	} );
 }
 
@@ -439,6 +444,19 @@ function wppfm_deleteFeedFromDb( feedId, callback ) {
 			feedId: feedId,
 			deleteFeedNonce: MyAjax.deleteFeedNonce
 
+		}, function ( response ) {
+
+		callback( wppfm_validateResponse( response ) );
+	} );
+}
+
+function wppfm_checkNextFeedInQueue( callback ) {
+	jQuery.post(
+		MyAjax.ajaxurl,
+		{
+			action: 'myajax-get-next-feed-in-queue',
+			nextFeedInQueueNonce: MyAjax.nextFeedInQueueNonce
+			
 		}, function ( response ) {
 
 		callback( wppfm_validateResponse( response ) );

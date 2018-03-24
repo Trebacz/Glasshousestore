@@ -6,7 +6,7 @@ if ( ! current_user_can( pb_backupbuddy::$options['role_access'] ) ) {
 pb_backupbuddy::verify_nonce();
 
 
-$restoreData = unserialize( base64_decode( pb_backupbuddy::_POST( 'restoreData' ) ) );
+$restoreData = json_decode( base64_decode( pb_backupbuddy::_POST( 'restoreData' ) ), true );
 require_once( pb_backupbuddy::plugin_path() . '/classes/restore.php' );
 $rollback = new backupbuddy_restore( 'rollback', $restoreData );
 
@@ -35,7 +35,7 @@ the rollback to revert your site to its prior condition.
 
 <form method="post" action="?action=pb_backupbuddy_backupbuddy&function=rollback&step=4&archive=<?php echo basename( $restoreData['archive'] ); ?>">
 	<?php pb_backupbuddy::nonce(); ?>
-	<input type="hidden" name="restoreData" value="<?php echo base64_encode( serialize( $restoreData ) ); ?>">
+	<input type="hidden" name="restoreData" value="<?php echo base64_encode( json_encode( $restoreData ) ); ?>">
 	<input type="submit" name="submit" id="submitForm" class="button button-primary" value="<?php echo __( "Accept Rollback - Everything looks good", 'it-l10n-backupbuddy' ); ?>">
 	<span style="vertical-align: -5px; margin-left: 20px; margin-right: 20px; font-weight: 800;">OR</span>
 	<a href="<?php echo $restoreData['undoURL']; ?>?confirm=1" class="button button-secondary"><?php _e('<b>CANCEL</b> the Rollback - Something is wrong', 'it-l10n-backupbuddy' ); ?></a>

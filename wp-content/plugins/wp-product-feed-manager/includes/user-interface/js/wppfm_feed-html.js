@@ -221,12 +221,10 @@ function wppfm_valueEditor( rowId, sourceLevel, valueEditorLevel, valueObject ) 
 }
 
 function wppfm_endrow( rowId ) {
-	
 	return '<div class="end-row" id="end-row-id-' + rowId + '">&nbsp;</div>';
 }
 
 function wppfm_forAllProductsAtChangeValuesSelector( rowId, sourceLevel, valueEditorLevel, displayStatus ) {
-    
     var other = sourceLevel > 0 ? 'other ' : '';
 
     return '<div class="colw col30w allproducts" id="value-editor-input-query-span-' + rowId + '-' + sourceLevel + '-0" style="display:' + displayStatus + ';float:right;">'
@@ -237,25 +235,33 @@ function wppfm_forAllProductsAtChangeValuesSelector( rowId, sourceLevel, valueEd
 }
 
 function wppfm_valueOptionsSingleInput( rowId, sourceLevel, valueEditorLevel, value ) {
-
     return ' to' + wppfm_valueOptionsSingleInputValue( rowId, sourceLevel, valueEditorLevel, value );
 }
 
 function wppfm_valueOptionsElementInput( rowId, sourceLevel, valueEditorLevel, value ) {
-
     return ' with element name' + wppfm_valueOptionsSingleInputValue( rowId, sourceLevel, valueEditorLevel, value );
 }
 
 function wppfm_valueOptionsSingleInputValue( rowId, sourceLevel, valueEditorLevel, value ) {
-
     return ' <input type="text" onchange="wppfm_valueInputOptionsChanged(' + rowId + ', ' + sourceLevel 
         + ', ' + valueEditorLevel + ')" id="value-options-input-' + rowId + '-' + sourceLevel + '-' + valueEditorLevel + '" value="' + value + '">';
 }
 
+function wppfm_addFeedStatusChecker( feedId ) {
+    return '<script type="text/javascript">var wppfmStatusCheck_' + feedId + ' = null; '
+        + '(function(){ wppfmStatusCheck_' + feedId + ' = window.setInterval( wppfm_checkAndSetStatus_' + feedId + ', 5000, ' + feedId + ' ); })(); '
+        + 'function wppfm_checkAndSetStatus_' + feedId + '( feedId ) {'
+            + 'wppfm_getFeedData( feedId, function( result ) {'
+                + 'var data = JSON.parse( result )[0];'
+                + 'if( data["status_id"] !== "3" && data["status_id"] !== "4" ) {'
+                    + 'wppfm_resetFeedStatus( data );'
+                    + 'window.clearInterval( wppfmStatusCheck_' + feedId + ' );'
+                + '}'
+            + '} );'
+        + '}</script>';
+}
+
 function wppfm_valueOptionsReplaceInput( rowId, sourceLevel, valueEditorLevel, value, endValue ) {
-
-    console.log(value);
-
     return '<input type="text" onchange="wppfm_valueInputOptionsChanged(' + rowId + ', ' + sourceLevel + ', ' 
         + valueEditorLevel + ' )" id="value-options-input-' + rowId + '-' + sourceLevel + '-' + valueEditorLevel
         + '" value="' + value + '"> with <input type="text" onchange="wppfm_valueInputOptionsChanged('
@@ -264,7 +270,6 @@ function wppfm_valueOptionsReplaceInput( rowId, sourceLevel, valueEditorLevel, v
 }
 
 function wppfm_valueOptionsRecalculate( rowId, sourceLevel, valueEditorLevel, selectedValue, value ) {
-
     var valueOptions = wppfm_changeValuesRecalculateOptions();
 
     var htmlCode = '<select class="select-value-options" id="value-options-recalculate-options-' + rowId + '-' + sourceLevel + '-0">';
@@ -283,7 +288,6 @@ function wppfm_valueOptionsRecalculate( rowId, sourceLevel, valueEditorLevel, se
 }
 
 function wppfm_changeValueCntrl( rowId, conditionLevel, valueEditorLevel, selectedValue ) {
-
     var valueOptions = wppfm_changeValuesOptions();
 
     var htmlCode = '<select class="select-value-options" id="value-options-'

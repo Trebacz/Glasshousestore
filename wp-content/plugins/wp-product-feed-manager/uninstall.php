@@ -1,8 +1,8 @@
 <?php
 
 /* * ******************************************************************
- * Version 3.1
- * Modified: 20-08-2017
+ * Version 3.2
+ * Modified: 25-12-2017
  * Copyright 2017 Accentio. All rights reserved.
  * License: None
  * By: Michel Jongbloed
@@ -74,12 +74,17 @@ function unregister_plugin() {
 	delete_option( 'wppfm_lic_status' );
 	delete_option( 'wppfm_lic_status_date' );
 	delete_option( 'wppfm_lic_key' );
+	delete_option( 'wppfm_lic_expires' );
 	delete_option( 'wppfm_channel_update_check_date' );
 	delete_option( 'wppfm_channels_to_update' );
-	delete_option( 'wppfm_ftp_passive' ); // depricated as of 1.9.3
+	delete_option( 'wppfm_ftp_passive' ); // deprecated as of 1.9.3
 	delete_option( 'wppfm_auto_feed_fix' );
 	delete_option( 'wppfm_debug_mode' );
+	delete_option( 'wppfm_prep_check' );
 	delete_option( 'wppfm_third_party_attribute_keywords' );
+	delete_option( 'wppfm_license_notice_surpressed' ); // @since 1.9.0
+	delete_option( 'wppfm_feed_queue' ); // @since 1.10.0
+	delete_option( 'wppfm_background_process_is_running' ); // @since 1.10.0
 
 	if ( $license ) { // if the plugin is a licensed version then deactivate it on the license server
 		// data to send in our API request

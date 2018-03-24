@@ -2,7 +2,6 @@
 
 
 /***** BEGIN BackupBuddy Stash Live Init *****/
-//pb_backupbuddy::load();
 foreach( pb_backupbuddy::$options['remote_destinations'] as $destination ) { // See if we have Live activated.
 	if ( 'live' == $destination['type'] ) {
 		include( 'destinations/live/live_continuous.php' );
@@ -17,12 +16,29 @@ foreach( pb_backupbuddy::$options['remote_destinations'] as $destination ) { // 
 include( 'classes/constants.php' );
 include( 'classes/api.php' );
 
+
 // Handle API calls if backupbuddy_api_key is posted. If anything fails security checks pretend nothing at all happened.
-if ( '' != pb_backupbuddy::_POST( 'backupbuddy_api_key' ) ) { // Remote API access.
-	if ( isset( pb_backupbuddy::$options['remote_api'] ) && ( count( pb_backupbuddy::$options['remote_api']['keys'] ) > 0 ) && defined( 'BACKUPBUDDY_API_ENABLE' ) && ( TRUE == BACKUPBUDDY_API_ENABLE ) ) { // Verify API is enabled. && defined( 'BACKUPBUDDY_API_SALT' ) && ( 'CHANGEME' != BACKUPBUDDY_API_SALT ) && ( strlen( BACKUPBUDDY_API_SALT ) >= 5 )
-		include( 'classes/remote_api.php' );
-		backupbuddy_remote_api::localCall( $secure = true );
-		die();
+if ( isset( $_SERVER['HTTP_BACKUPBUDDY_API_KEY' ] ) && ( '' != $_SERVER['HTTP_BACKUPBUDDY_API_KEY' ] ) ) { // Although the header is passed with dashes PHP changes these to underscores after they are received. However, if you send the header with underscores it will silently be dropped.
+	if ( pb_backupbuddy::$options['log_level'] == '3' ) { // Full logging enabled.
+		pb_backupbuddy::status( 'details', 'Deployment incoming call: HTTP_BACKUPBUDDY-API-KEY header set' );
+	}
+	
+	if ( defined( 'BACKUPBUDDY_API_ENABLE' ) && ( TRUE == BACKUPBUDDY_API_ENABLE ) ) {
+		if ( pb_backupbuddy::$options['log_level'] == '3' ) { // Full logging enabled.
+			pb_backupbuddy::status( 'details', 'Deployment incoming call: API enabled via wp-config.' );
+		}
+		
+		if ( ( isset( pb_backupbuddy::$options['remote_api'] ) ) && ( count( pb_backupbuddy::$options['remote_api']['keys'] ) > 0 ) ) { // Verify API is enabled. && defined( 'BACKUPBUDDY_API_SALT' ) && ( 'CHANGEME' != BACKUPBUDDY_API_SALT ) && ( strlen( BACKUPBUDDY_API_SALT ) >= 5 )
+			if ( pb_backupbuddy::$options['log_level'] == '3' ) { // Full logging enabled.
+				pb_backupbuddy::status( 'details', 'Deployment incoming call: API keys are defined / turned on.' );
+			}
+			
+			include( 'classes/remote_api.php' );
+			pb_backupbuddy::set_status_serial( 'remote_api' ); // Log all incoming remote API calls.
+			backupbuddy_remote_api::localCall( $keySet = true );
+			die();
+		}
+		
 	}
 }
 
@@ -169,31 +185,25 @@ if ( isset( pb_backupbuddy::$options['cron_request_timeout_override'] ) && ( '' 
 }
 
 
+// Inform PHP Compatibility Checking plugin that we are always compatible with the latest PHP version(s).
+function itbub_phpcompat_declaration( $ignored ) {
+	array_push( $ignored, '*/backupbuddy/*');
+	return $ignored;
+}
+add_filter( 'phpcompat_whitelist', 'itbub_phpcompat_declaration' );
 
-// TODO: In the future when WordPress handles this for us, remove on WP versions where it is no longer needed.
-/* Disabled -- may be causing issues with Stash transients?
-function backupbuddy_clean_transients() {
-	backupbuddy_transient_delete( true );
-}
-function backupbuddy_clear_transients() {
-	backupbuddy_transient_delete( false );
-}
-function backupbuddy_transient_delete( $expired = true ) {
-	global $_wp_using_ext_object_cache;
-	if ( !$_wp_using_ext_object_cache ) {
-		global $wpdb;
-		$sql = "DELETE FROM `$wpdb->options` WHERE option_name LIKE '_transient_timeout%'";
-		if ( $expired ) {
-			$time = time();
-			$sql .=  " AND option_value < $time";
-		}
-		$wpdb->query( $sql );
-		$wpdb->query( "OPTIMIZE TABLE $wpdb->options" );
+
+// WP 4.9+ Now requires an action to be specified on an ajax call so we must register a nopriv action
+// for the http loopback test to invoke to get the expected '0 200 OK' response. It has to be nopriv
+// because the this is a loopback access and so the site itsefl is not a logged in user.
+function itbub_ajax_nopriv_itbub_http_loop_back_test() {
+    // Default WordPress response will be die('0') or wp_die('0') which will return '0 200 OK'
+	if ( ( '' == pb_backupbuddy::_GET( 'serial' ) ) || ( pb_backupbuddy::_GET( 'serial' ) != pb_backupbuddy::$options['log_serial'] ) ) {
+		status_header(400);
+		die();
 	}
 }
-add_action( 'wp_scheduled_delete', 'backupbuddy_clean_transients' );
-add_action( 'after_db_upgrade', 'backupbuddy_clear_transients' );
-*/
+add_action( 'wp_ajax_nopriv_itbub_http_loop_back_test', 'itbub_ajax_nopriv_itbub_http_loop_back_test' );
 
 
 // iThemes Sync Verb Support

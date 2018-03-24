@@ -46,21 +46,26 @@ $deploy = new backupbuddy_deploy( $destination, '', $destination_id );
 
 
 <style>
-	.deploy-push-text {
-		//font-size: 1.4em;
+	.deploy-push-text, .deploy-pull-text {
 		padding: 7px;
+		
+		text-align: center;
+		display: inline-block;
+		line-height: 1.3em;
+		padding-right: 30px;
+		padding-left: 30px;
 		
 		-webkit-border-radius: 3px;
 		-moz-border-radius: 3px;
 		border-radius: 3px;
 	}
 	.deploy-pull-text {
-		//font-size: 1.4em;
-		padding: 7px;
-		
-		-webkit-border-radius: 3px;
-		-moz-border-radius: 3px;
-		border-radius: 3px;
+		border-left: 2px solid #d4d1d1;
+		border-radius: 0;
+	}
+	.deploy-push-text-sub, .deploy-pull-text-sub {
+		font-size: 0.55em;
+		font-style: italic;
 	}
 	.deploy-status {
 		display: inline-block;
@@ -133,7 +138,7 @@ if ( isset( $destination['sha1'] ) ) {
 } else {
 	$sha1 = false;
 }
-$localInfo = backupbuddy_api::getPreDeployInfo( $sha1 );
+$localInfo = backupbuddy_api::getPreDeployInfo( $sha1, $destination );
 $status = $deploy->start( $localInfo );
 $errorMessage = '';
 if ( false === $status ) {
@@ -165,15 +170,14 @@ if ( false === $status ) {
 		<?php if ( true === $siteUp ) { ?>
 			<td class="deploy-pushpull-wrap">
 				<?php if ( isset( $destination['disable_push'] ) && ( '1' == $destination['disable_push'] ) ) { ?>
-					<s><a href="javascript:void(0);" class="deploy-push-text" onClick="alert( 'This option is disabled in this destination\'s settings.' );">Push to</a></s>
+					<s><a href="javascript:void(0);" class="deploy-push-text" onClick="alert( 'This option is disabled in this destination\'s settings.' );">Push to<br><span class="deploy-push-text-sub">faster</span></a></s>
 				<?php } else { ?>
-					<a href="javascript:void(0);" class="deploy-push-text" onClick="jQuery( '.deploy-type-selected' ).removeClass( 'deploy-type-selected' ); jQuery(this).addClass( 'deploy-type-selected' ); jQuery('#deploy-pull-wrap').hide(); jQuery('#deploy-push-wrap').slideDown(); jQuery('#backupbuddy_deploy_direction').attr('data-direction','push' ); jQuery( '.database_contents_shortcuts-prefix' ).click(); jQuery( '.plugins_shortcuts-none' ).click();">Push to</a>
+					<a href="javascript:void(0);" class="deploy-push-text" onClick="jQuery( '.deploy-type-selected' ).removeClass( 'deploy-type-selected' ); jQuery(this).addClass( 'deploy-type-selected' ); jQuery('#deploy-pull-wrap').hide(); jQuery('#deploy-push-wrap').slideDown(); jQuery('#backupbuddy_deploy_direction').attr('data-direction','push' ); jQuery( '.database_contents_shortcuts-prefix' ).click(); jQuery( '.plugins_shortcuts-none' ).click();">Push to<br><span class="deploy-push-text-sub">faster</span></a>
 				<?php } ?>
-				&nbsp;|&nbsp;
 				<?php if ( isset( $destination['disable_pull'] ) && ( '1' == $destination['disable_pull'] ) ) { ?>
-					<s><a href="javascript:void(0);" class="deploy-pull-text" onClick="alert( 'This option is disabled in this destination\'s settings.' );">Pull from</a></s>
+					<s><a href="javascript:void(0);" class="deploy-pull-text" onClick="alert( 'This option is disabled in this destination\'s settings.' );">Pull from<br><span class="deploy-pull-text-sub">slower</span></a></s>
 				<?php } else { ?>
-					<a href="javascript:void(0);" class="deploy-pull-text" onClick="jQuery( '.deploy-type-selected' ).removeClass( 'deploy-type-selected' ); jQuery(this).addClass( 'deploy-type-selected' ); jQuery('#deploy-push-wrap').hide(); jQuery('#deploy-pull-wrap').slideDown(); jQuery('#backupbuddy_deploy_direction').attr('data-direction','pull' ); jQuery( '.database_contents_shortcuts-prefix' ).click(); jQuery( '.plugins_shortcuts-none' ).click();">Pull from</a>
+					<a href="javascript:void(0);" class="deploy-pull-text" onClick="jQuery( '.deploy-type-selected' ).removeClass( 'deploy-type-selected' ); jQuery(this).addClass( 'deploy-type-selected' ); jQuery('#deploy-push-wrap').hide(); jQuery('#deploy-pull-wrap').slideDown(); jQuery('#backupbuddy_deploy_direction').attr('data-direction','pull' ); jQuery( '.database_contents_shortcuts-prefix' ).click(); jQuery( '.plugins_shortcuts-none' ).click();">Pull from<br><span class="deploy-push-text-sub">slower</span></a>
 				<?php } ?>
 			</td>
 		<?php } ?>
@@ -191,6 +195,9 @@ $deployData = $deploy->getState();
 $deployDataJson = json_encode( $deployData );
 echo '<script>window.deployData = ' . $deployDataJson . '; console.log("deployData (len: ' . strlen( $deployDataJson ) . '):"); console.dir( window.deployData );</script>';
 
+$localInfoJson = json_encode( $localInfo );
+echo '<script>console.log("localInfo (len: ' . strlen( $localInfoJson ) . '; hint: find remoteInfo in deployData[\'remoteInfo\']):"); console.dir( ' . $localInfoJson . ' );</script>';
+unset( $localInfoJson );
 
 
 if ( '' != $errorMessage ) {
@@ -200,12 +207,16 @@ if ( '' != $errorMessage ) {
 
 
 $unmatchedPlugins = array();
+$wrapBefore = '';
+$wrapAfter = '';
 
-
+$wrapBefore = '';
+$wrapAfter = '';
 if ( $localInfo['backupbuddyVersion'] != $deployData['remoteInfo']['backupbuddyVersion'] ) {
 	$wrapBefore = '<span class="deploy-unmatched-plugin-version">';
 	$wrapAfter = '</span>';
 }
+
 $activePluginsA = $wrapBefore . 'BackupBuddy v' . $localInfo['backupbuddyVersion'] . $wrapAfter . '<span style="position: relative; top: -0.5em; font-size: 0.7em;">&Dagger;</span>'; // Start with BB. Is only in the visual list. Will not be deployed.
 $i = 0; $x = count( $localInfo['activePlugins'] );
 foreach( (array)$localInfo['activePlugins'] as $index => $localPlugin ) {

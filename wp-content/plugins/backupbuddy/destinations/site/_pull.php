@@ -59,6 +59,7 @@ $pushRows = array(
 	'Active Theme' => array( $deployData['remoteInfo']['activeTheme'], $localInfo['activeTheme'] . ' ' . $activeThemeBInfo ),
 	'Active Child Theme' => array( $remoteActiveChildTheme, $localInfo['activeChildTheme'] . ' ' . $activeChildThemeBInfo ),
 	'Media / Attachments' => array( $deployData['remoteInfo']['mediaCount'], $localInfo['mediaCount'] . ' <a href="javascript:void(0);" class="deploy-show-files" rel="pullMediaFiles" title="Click to list files.">(' . count( $deployData['pullMediaFiles'] ) . ' files to pull)</a>' ),
+	'Additional Inclusions' => array( $deployData['remoteInfo']['extraCount'], $localInfo['extraCount'] . ' <a href="javascript:void(0);" class="deploy-show-files" rel="pullExtraFiles" title="Click to list files.">(' . count( $deployData['pullExtraFiles'] ) . ' files to pull)</a>' ),
 );
 
 

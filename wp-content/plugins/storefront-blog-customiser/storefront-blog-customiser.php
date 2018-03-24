@@ -3,7 +3,7 @@
  * Plugin Name: Storefront Blog Customiser
  * Plugin URI: http://woocommerce.com/products/storefront-blog-customiser/
  * Description: Adds blog customisation settings to the Storefront theme
- * Version: 1.2.2
+ * Version: 1.2.3
  * Author: WooCommerce
  * Author URI: http://woocommerce.com/
  * Requires at least: 4.1.0
@@ -101,7 +101,7 @@ final class Storefront_Blog_Customiser {
 		$this->token 			= 'storefront-blog-customiser';
 		$this->plugin_url 		= plugin_dir_url( __FILE__ );
 		$this->plugin_path 		= plugin_dir_path( __FILE__ );
-		$this->version 			= '1.2.2';
+		$this->version 			= '1.2.3';
 
 		register_activation_hook( __FILE__, array( $this, 'install' ) );
 
@@ -529,6 +529,7 @@ final class Storefront_Blog_Customiser {
 		$blog_archive_full_width = get_theme_mod( 'sbc_blog_archive_layout', false );
 		$blog_single_full_width  = get_theme_mod( 'sbc_blog_single_layout', false );
 		$magazine                = get_theme_mod( 'sbc_magazine_layout', false );
+		$is_blog_archive         = is_archive() || is_search() || is_category() || is_tag() || ( is_home() && ! is_page_template( 'template-homepage.php' ) );
 
 		if ( version_compare( $storefront_version, '2.0.0', '>=' ) ) {
 			$version = '-2';
@@ -536,28 +537,31 @@ final class Storefront_Blog_Customiser {
 			$version = '';
 		}
 
-		if ( is_archive() || is_search() || is_category() || is_tag() || ( is_home() && ! is_page_template( 'template-homepage.php' ) ) ) {
+		// Archives.
+		if ( $is_blog_archive ) {
 			$classes[] = 'sbc-' . $post_layout_archive . $version;
 		}
 
+		if ( $is_blog_archive && true === (bool) $blog_archive_full_width ) {
+			$classes[] = 'storefront-full-width-content';
+		}
+
+		if ( $is_blog_archive && true === (bool) $magazine ) {
+			$classes[] = 'sbc-magazine';
+		}
+
+		// Single.
 		if ( is_single() ) {
 			$classes[] = 'sbc-' . $post_layout_single . $version;
 		}
 
+		if ( is_singular( 'post' ) && true === (bool) $blog_single_full_width ) {
+			$classes[] = 'storefront-full-width-content';
+		}
+
+		// Homepage.
 		if ( is_page_template( 'template-homepage.php' ) ) {
 			$classes[] = 'sbc-' . $post_layout_homepage . $version;
-		}
-
-		if ( ( is_category() || is_tag() || is_home() ) && true == $blog_archive_full_width ) {
-			$classes[] = 'storefront-full-width-content';
-		}
-
-		if ( is_singular( 'post' ) && true == $blog_single_full_width ) {
-			$classes[] = 'storefront-full-width-content';
-		}
-
-		if ( ( is_category() || is_tag() || is_home() ) && true == $magazine ) {
-			$classes[] = 'sbc-magazine';
 		}
 
 		return $classes;
@@ -573,42 +577,43 @@ final class Storefront_Blog_Customiser {
 		$post_layout_homepage    = get_theme_mod( 'sbc_post_layout_homepage', 'default' );
 		$blog_archive_full_width = get_theme_mod( 'sbc_blog_archive_layout', false );
 		$blog_single_full_width  = get_theme_mod( 'sbc_blog_single_layout', false );
+		$is_blog_archive         = is_archive() || is_search() || is_category() || is_tag() || ( is_home() && ! is_page_template( 'template-homepage.php' ) );
+
 
 		// Archives.
-		if ( 'meta-inline-bottom' == $post_layout_archive && ( is_archive() || is_search() || is_category() || is_tag() || ( is_home() && ! is_page_template( 'template-homepage.php' ) ) ) ) {
+		if ( 'meta-inline-bottom' === $post_layout_archive && $is_blog_archive ) {
 			remove_action( 'storefront_loop_post', 'storefront_post_meta', 20 );
 			add_action( 'storefront_loop_post',    'storefront_post_meta', 35 );
 		}
 
-		if ( 'meta-hidden' == $post_layout_archive && ( is_archive() || is_search() || is_category() || is_tag() || ( is_home() && ! is_page_template( 'template-homepage.php' ) ) ) ) {
+		if ( 'meta-hidden' === $post_layout_archive && $is_blog_archive ) {
 			remove_action( 'storefront_loop_post', 'storefront_post_meta', 20 );
 		}
 
-		// Single posts
-		if ( 'meta-inline-bottom' == $post_layout_single && is_single() ) {
+		// Single posts.
+		if ( 'meta-inline-bottom' === $post_layout_single && is_single() ) {
 			remove_action( 'storefront_single_post', 'storefront_post_meta', 20 );
 			add_action( 'storefront_single_post',    'storefront_post_meta', 35 );
 		}
 
-		if ( 'meta-hidden' == $post_layout_single && is_single() ) {
+		if ( 'meta-hidden' === $post_layout_single && is_single() ) {
 			remove_action( 'storefront_single_post', 'storefront_post_meta', 20 );
 		}
 
-		// Homepage
-		if ( 'meta-inline-bottom' == $post_layout_homepage && is_page_template( 'template-homepage.php' ) ) {
+		if ( 'meta-inline-bottom' === $post_layout_homepage && is_page_template( 'template-homepage.php' ) ) {
 			remove_action( 'storefront_loop_post', 'storefront_post_meta', 20 );
 			add_action( 'storefront_loop_post',	   'storefront_post_meta', 35 );
 		}
 
-		if ( 'meta-hidden' == $post_layout_homepage && is_page_template( 'template-homepage.php' ) ) {
+		if ( 'meta-hidden' === $post_layout_homepage && is_page_template( 'template-homepage.php' ) ) {
 			remove_action( 'storefront_loop_post', 'storefront_post_meta', 20 );
 		}
 
-		if ( ( is_category() || is_tag() || is_home() ) && true == $blog_archive_full_width ) {
+		if ( ( is_category() || is_tag() || is_home() ) && true === $blog_archive_full_width ) {
 			remove_action( 'storefront_sidebar', 'storefront_get_sidebar', 10 );
 		}
 
-		if ( is_singular( 'post' ) && true == $blog_single_full_width ) {
+		if ( is_singular( 'post' ) && true === $blog_single_full_width ) {
 			remove_action( 'storefront_sidebar', 'storefront_get_sidebar', 10 );
 		}
 	}
@@ -619,7 +624,7 @@ final class Storefront_Blog_Customiser {
 	 * @param  array $classes The classes.
 	 * @return array $classes The classes.
 	 */
-	function sbc_post_class( $classes ) {
+	public function sbc_post_class( $classes ) {
 		$magazine = get_theme_mod( 'sbc_magazine_layout', false );
 
 		if ( true == $magazine && ! is_single() ) {
@@ -643,7 +648,7 @@ final class Storefront_Blog_Customiser {
 		$homepage_blog_columns 	= get_theme_mod( 'sbc_homepage_blog_columns', '2' );
 		$homepage_blog_limit 	= get_theme_mod( 'sbc_homepage_blog_limit', 2 );
 
-		if ( true == $display_homepage_blog ) {
+		if ( true === $display_homepage_blog ) {
 			$args 	= array(
 					'post_type'           => 'post',
 					'posts_per_page'      => absint( $homepage_blog_limit ),

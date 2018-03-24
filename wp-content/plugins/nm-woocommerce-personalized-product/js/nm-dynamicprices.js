@@ -2,11 +2,22 @@
 var oAJAXRequest = false;
 var options_price_added = [];	//this contains all option which is added for price
 jQuery(function($){
+	
+	// Woocommmerce vartiation update events
+    $( ".single_variation_wrap" ).on( "show_variation", function ( event, variation ) {
+        // Fired when the user selects all the required dropdowns / attributes
+        // and a final variation is selected / shown
+        
+        // console.log(variation);
+        
+        var ppom_product_base_price = variation.display_price;
+        $("#_product_price").val(ppom_product_base_price);
+    } );
    
    $.blockUI.defaults.overlayCSS.cursor = "default";
    
    /* ============= setting prices dynamically on product page ============= */
-	$(".nm-productmeta-box").find('select,input:checkbox,input:radio,input[type="number"]').on('change', function(){
+	$(".nm-productmeta-box").find('select,input:checkbox,input:radio').on('change', function(){
 		
 		//console.log($("option:selected", this)
 		var selected_option_price = $("option:selected", this).attr('data-price');
@@ -169,6 +180,7 @@ jQuery(function($){
 				}
 				
 				
+				
 				//enabling add to cart button
 				$('form.cart').unblock();
 				oAJAXRequest = false;
@@ -178,6 +190,7 @@ jQuery(function($){
 		}, 200);
 		
 		//console.log(oAJAXRequest);
+		
 		
 	});
 	

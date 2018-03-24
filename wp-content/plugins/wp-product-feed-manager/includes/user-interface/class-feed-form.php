@@ -21,15 +21,12 @@ if ( !class_exists( 'WPPFM_Feed_Form' ) ) :
 		/**
 		 * Constructor
 		 */
-		public function __construct() {
-
-		}
+		public function __construct() { }
 
 		public function display() {
-
-			$html_code = '<div class="meta-box-sortables ui-sortable>';
+			$html_code = '<div class="meta-box-sortable ui-sortable>';
 			$html_code .= '<h3>' . __( 'Basic Feed Options', 'wp-product-feed-manager' ) . '</h3>';
-
+			
 			echo $this->tabs();
 
 			echo $this->add_or_edit_feed_page_code();

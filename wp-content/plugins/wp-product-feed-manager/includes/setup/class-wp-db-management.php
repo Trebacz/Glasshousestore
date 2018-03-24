@@ -1,8 +1,8 @@
 <?php
 
 /* * ******************************************************************
- * Version 2.0
- * Modified: 26-08-2017
+ * Version 2.1
+ * Modified: 29-09-2017
  * Copyright 2017 Accentio. All rights reserved.
  * License: None
  * By: Michel Jongbloed
@@ -24,7 +24,7 @@ if ( !class_exists( 'WPPFM_Database' ) ) :
 		 * Attributes
 		 * -------------------------------------------------------------------------------------------------- */
 
-		private $_version = '1.2.1'; // as of plugin version 1.9.3
+		private $_version = '1.2.4'; // as of plugin version 1.10.0
 		private $_wpdb;
 		private $_charset_collate = '';
 		private $_image_folder;
@@ -49,7 +49,7 @@ if ( !class_exists( 'WPPFM_Database' ) ) :
 			}
 
 			// url to the image folder
-			$this->_image_folder = esc_url( MYPLUGIN_PLUGIN_URL . '/images/' );
+			$this->_image_folder = esc_url( WPPFM_PLUGIN_URL . '/images/' );
 		}
 
 		/**
@@ -72,7 +72,14 @@ if ( !class_exists( 'WPPFM_Database' ) ) :
 		 */
 		public function verify_db_version() {
 			$actual_db_version = get_option( 'wppfm_db_version' ) ? get_option( 'wppfm_db_version' ) : $this->get_current_db_version();
-			if ( $actual_db_version < $this->_version ) { $this->make_or_update_the_tables(); }
+			if ( $actual_db_version < $this->_version ) { 
+				$this->make_or_update_the_tables(); 
+
+				// update table as of version 1.2.4
+				if( $this->_version >= '1.2.4' ) {
+					$this->update_status_table();
+				}
+			}
 
 			do_action( 'wppfm_db_verified' );
 		}
@@ -147,10 +154,11 @@ if ( !class_exists( 'WPPFM_Database' ) ) :
 				source_id smallint NOT NULL,
 				title varchar(100) NOT NULL UNIQUE DEFAULT '',
 				feed_title varchar(100),
-				feed_description varchar(500),
-				main_category varchar(250) NOT NULL DEFAULT '',
-				url varchar(250) NOT NULL DEFAULT '',
+				feed_description varchar(200),
+				main_category varchar(200) NOT NULL DEFAULT '',
+				url varchar(200) NOT NULL DEFAULT '',
 				status_id smallint NOT NULL DEFAULT 1,
+				base_status_id smallint NOT NULL DEFAULT 2,
 				updated datetime NOT NULL,
 				schedule varchar(50) NOT NULL DEFAULT '1:00:00',
 				products int NOT NULL DEFAULT 1,
@@ -170,7 +178,7 @@ if ( !class_exists( 'WPPFM_Database' ) ) :
 			$sql = "CREATE TABLE $table_name (
 				meta_id int NOT NULL AUTO_INCREMENT,
 				product_feed_id int NOT NULL,
-				meta_key varchar(255),
+				meta_key varchar(191),
 				meta_value longtext,
 				PRIMARY KEY  (meta_id),
 				KEY product_feed_id (product_feed_id),
@@ -256,8 +264,8 @@ if ( !class_exists( 'WPPFM_Database' ) ) :
 			$sql = "CREATE TABLE $table_name (
 				product_id int NOT NULL,
 				error_id int NOT NULL,
-				error_message varchar(500) NOT NULL,
-				action_message varchar(1000),
+				error_message varchar(200) NOT NULL,
+				action_message varchar(255),
 				timestamp timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 				PRIMARY KEY  (product_id)
 			) " . $this->_charset_collate . ";";
@@ -355,11 +363,13 @@ if ( !class_exists( 'WPPFM_Database' ) ) :
 			if ( $count == 0 ) {
 				$sql = "INSERT INTO $table_name
                (status_id, status, color) VALUES
-                  ('0', 'Unknown', '#DE2443'),
-                  ('1', 'OK', '#7AD03A'),
-                  ('2', 'On hold', '#0073AA'),
-                  ('3', 'Has errors', '#AA4444'),
-                  ('4', 'Processing', '#AA4443')";
+                  ('0', 'Unknown', '#6549F7'),
+                  ('1', 'OK', '#0073AA'),
+                  ('2', 'On hold', '#0173AA'),
+                  ('3', 'Processing', '#0000FF'),
+				  ('4', 'In processing queue', '#00CCFF'),
+                  ('5', 'Has errors', '#FF0000'),
+				  ('6', 'Failed processing', '#FF3300')";
 
 				$this->_wpdb->query( $sql );
 			}
@@ -411,6 +421,64 @@ if ( !class_exists( 'WPPFM_Database' ) ) :
 				if ( $channel_data !== null ) {
 					$data_class->register_channel( $channel_short_name, $channel_data );
 				}
+			}
+		}
+		
+		/**
+		 * Updates the status table to version 1.2.4
+		 * 
+		 * @since 1.10.0
+		 */
+		private function update_status_table() {
+			$table_name = $this->_wpdb->prefix . 'feedmanager_feed_status';
+
+			$count = $this->_wpdb->get_var( "SELECT COUNT(*) FROM $table_name" );
+
+			// only fill the table if its still empty
+			if ( $count < 7 ) {
+				$format = array( '%d', '%s', '%s' );
+				
+				$this->_wpdb->replace(
+					$table_name,
+					array( 'status_id' => '0', 'status' => 'Unknown', 'color' => '#6549F7' ),
+					$format
+				);
+				
+				$this->_wpdb->replace(
+					$table_name,
+					array( 'status_id' => '1', 'status' => 'OK', 'color' => '#0073AA' ),
+					$format
+				);
+				
+				$this->_wpdb->replace(
+					$table_name,
+					array( 'status_id' => '2', 'status' => 'On hold', 'color' => '#0173AA' ),
+					$format
+				);
+				
+				$this->_wpdb->replace(
+					$table_name,
+					array( 'status_id' => '3', 'status' => 'Processing', 'color' => '#0000FF' ),
+					$format
+				);
+				
+				$this->_wpdb->replace(
+					$table_name,
+					array( 'status_id' => '4', 'status' => 'In processing queue', 'color' => '#00CCFF' ),
+					$format
+				);
+				
+				$this->_wpdb->replace(
+					$table_name,
+					array( 'status_id' => '5', 'status' => 'Has errors', 'color' => '#FF0000' ),
+					$format
+				);
+				
+				$this->_wpdb->replace(
+					$table_name,
+					array( 'status_id' => '6', 'status' => 'Failed processing', 'color'	=> '#FF3300' ),
+					$format
+				);
 			}
 		}
 	}

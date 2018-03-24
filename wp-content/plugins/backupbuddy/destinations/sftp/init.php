@@ -43,13 +43,18 @@ class pb_backupbuddy_destination_sftp {
 		$upload_dir = wp_upload_dir();
 		$key_file = $upload_dir['basedir'] . '/backupbuddy-sftp-key-' . pb_backupbuddy::$options['log_serial'] . '.txt';
 		if ( file_exists( $key_file ) ) {
+			pb_backupbuddy::status( 'details', 'Key file found at `' . $key_file . '`.' );
 			if ( false === ( $key = file_get_contents( $key_file ) ) ) {
 				pb_backupbuddy::status( 'error', 'Error #4839493843: Unable to read key file contents from `' . $key_file . '`.' );
 				$key = '';
+			} else {
+				pb_backupbuddy::status( 'details', 'Loaded key file.' );
 			}
+		} else {
+			pb_backupbuddy::status( 'details', 'No key file found at `' . $key_file . '`. Using password only.' );
 		}
 		if ( '' !== $key ) { // Use key file.
-			pb_backupbuddy::status( 'details', 'Using key file `' . $key_file . '`.' );
+			pb_backupbuddy::status( 'details', 'Using contents of key file `' . $key_file . '`.' );
 			$pass_or_key = $key;
 			require_once( pb_backupbuddy::plugin_path() . '/destinations/sftp/lib/phpseclib/Crypt/RSA.php' );
 			$crypt = new Crypt_RSA();
@@ -84,7 +89,7 @@ class pb_backupbuddy_destination_sftp {
 			$files = array( $files );
 		}
 		
-		pb_backupbuddy::status( 'details', 'FTP class send() function started.' );
+		pb_backupbuddy::status( 'details', 'sFTP class send() function started.' );
 		self::_init();
 		
 		// Connect to server.
@@ -159,7 +164,7 @@ class pb_backupbuddy_destination_sftp {
 				// Start remote backup limit
 				if ( $settings['archive_limit'] > 0 ) {
 					pb_backupbuddy::status( 'details', 'Archive limit enabled. Getting contents of backup directory.' );
-					$contents = $sftp->rawlist( $settings['path'] ); // already in destination directory/path.
+					$contents = $sftp->rawlist( '.' ); //$settings['path'] ); // already in destination directory/path.
 					
 					// Create array of backups
 					$bkupprefix = backupbuddy_core::backup_prefix();
@@ -190,11 +195,12 @@ class pb_backupbuddy_destination_sftp {
 						foreach( $backups as $backup ) {
 							$i++;
 							if ( $i > $settings['archive_limit'] ) {
-								if ( false === $sftp->delete( $settings['path'] . '/' . $backup['file'] ) ) {
-									pb_backupbuddy::status( 'details', 'Unable to delete excess sFTP file `' . $backup['file'] . '` in path `' . $settings['path'] . '`.' );
+								//if ( false === $sftp->delete( $settings['path'] . '/' . $backup['file'] ) ) {
+								if ( false === $sftp->delete( $backup['file'] ) ) {
+									pb_backupbuddy::status( 'details', 'Unable to delete excess sFTP file `' . $backup['file'] . '` in current path `' . $settings['path'] . '`.' );
 									$delete_fail_count++;
 								} else {
-									pb_backupbuddy::status( 'details', 'Deleted excess sFTP file `' . $backup['file'] . '` in path `' . $settings['path'] . '`.' );
+									pb_backupbuddy::status( 'details', 'Deleted excess sFTP file `' . $backup['file'] . '` in current path `' . $settings['path'] . '`.' );
 								}
 							}
 						}
@@ -205,7 +211,7 @@ class pb_backupbuddy_destination_sftp {
 							pb_backupbuddy::status( 'details', 'No problems encountered deleting excess backups.' );
 						}
 					} else {
-						pb_backupbuddy::status( 'details', 'Not enough backups found to exceed limit. Skipping limit enforcement.' );
+						pb_backupbuddy::status( 'details', 'Not enough backups found (' . count( $backups ) . ' backups for this site out of ' . count( $contents ) . ' on server) to exceed limit (' . $settings['archive_limit'] . '). Skipping limit enforcement.' );
 					}
 				} else {
 					pb_backupbuddy::status( 'details',  'No sFTP archive file limit to enforce.' );

@@ -31,5 +31,3 @@ pb_backupbuddy::$classes['import'] = new pb_backupbuddy_import();
 // ********** OTHER (admin) **********
 
 
-
-?>

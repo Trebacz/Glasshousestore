@@ -1,10 +1,10 @@
 === Social Media Follow Buttons Bar ===
 Contributors: Arthur Gareginyan
-Tags: icon, icon set, button, social, media, social button, social media, social network, follow, follow button, follow link, follow icon, follow me, toolbar, link to profile, facebook, flickr, twitter, instagram, google plus, youtube, google-play, itunes, apple-music, periscope, vimeo, blogger, buzzsprout, livejournal, linkedIn, diaspora, deviantart, xing, pinterest, tumblr, snapchat, twitch, patreon, imdb, soundcloud, plugdj, plug dj, spotify, bandcamp, dloky, amazon, bookbub, goodreads, meetvibe, meetup, steam, beam, mixer, discord, yelp, bloglovin, mediumg, 500px, behance, polyvore, yellowpages, line, itch, itch.io, mastodon, remind, trademe, vsco, hireology, kompoz, soundblend, stumbleupon, whatsapp, vkontakte, vk, vk.com, odnoklassniki, ok, ok.ru, telegram, github, wordpress, codepen, askfm, ebay, hangouts, houzz, quora, steemit, theartstack, theknot, viber, etsy, tripadvisor, stackoverflow, stackexchange, bitbucket, dailypaintworks, flipboard, gab, minds, wattpad, itunes podcasts, skype, personal website, email, telephone, phone, rss feed, rss, feed, tooltips, bootstrap tooltip,
+Tags: icon, icon set, button, social, media, social button, social media, social network, follow, follow button, follow link, follow icon, follow me, toolbar, link to profile, facebook, flickr, twitter, instagram, google plus, youtube, google-play, itunes, apple-music, periscope, vimeo, blogger, buzzsprout, livejournal, linkedIn, diaspora, deviantart, xing, pinterest, tumblr, snapchat, twitch, patreon, imdb, soundcloud, plugdj, plug dj, spotify, bandcamp, dloky, amazon, bookbub, goodreads, meetvibe, meetup, steam, beam, mixer, discord, yelp, bloglovin, mediumg, 500px, behance, polyvore, yellowpages, line, itch, itch.io, mastodon, remind, trademe, vsco, hireology, kompoz, soundblend, stumbleupon, whatsapp, vkontakte, vk, vk.com, odnoklassniki, ok, ok.ru, telegram, github, wordpress, codepen, askfm, ebay, hangouts, houzz, quora, steemit, theartstack, theknot, viber, etsy, tripadvisor, stackoverflow, stackexchange, bitbucket, dailypaintworks, flipboard, feedsfloor, gab, minds, wattpad, itunes podcasts, aboutme, group, stitcher, strava, wechat, weibo, blackberry-world, iheart, livestream, tunein, untappd, skype, personal website, email, telephone, phone, rss feed, rss, feed, tooltips, bootstrap tooltip,
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8A88KC7TFF6CS
 Requires at least: 3.9
-Tested up to: 4.8
-Stable tag: 4.24
+Tested up to: 4.9
+Stable tag: 4.30
 License: GPL3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -19,7 +19,7 @@ The Social Media Follow Buttons Bar - is a bar with set of icons of the popular 
 
 Unlike the other plugins, this plugin creates a live bar. The bar automatically adapt to the width of the block where it placed. If the buttons do not fit to the one line, then they will be placed on multiple lines. So they can be arranged horizontally or vertically, in one line or in a few, and all of this is done automatically. Also it can be aligned to left, center or right.
 
-It give you finer control over buttons. You can configure they on plugins settings page. You can choose the size of icons, choose open link in current tab or in new, and etc. Also you can have the social media follow buttons automatically added to the bottom of all post or/and pages, and can position the link buttons using either a widget, a shortcode or a template action hook. If you want more options then tell me and I will be happy to add it.
+It give you finer control over buttons. You can configure they on plugins settings page. You can choose the size of icons, choose open link in current tab or in new, and etc. Also you can have the social media follow buttons automatically added to the bottom of all post or/and pages, and can position the link buttons using either a widget, a shortcode or a template action hook. If you want more options then tell us and we will be happy to add it.
 
 **Features**
 
@@ -43,6 +43,7 @@ It give you finer control over buttons. You can configure they on plugins settin
 **Supported social media and links:**
 
 * Facebook
+* Facebook Group
 * Flickr
 * Twitter
 * Instagram
@@ -125,7 +126,18 @@ It give you finer control over buttons. You can configure they on plugins settin
 * Gab
 * Minds
 * Flipboard
+* FeedsFloor
 * Wattpad
+* Strava
+* Stitcher
+* WeChat
+* Weibo
+* about.me
+* Untappd
+* TuneIn
+* iHeart
+* BlackBerry World
+* Livestream
 * Personal website
 * Email
 * Telephone
@@ -139,9 +151,20 @@ This plugin is ready for translation and has already been translated into severa
 
 * English (default)
 * Russian (translation by [Milena Kiseleva](https://www.instagram.com/milava_kiseleva/))
+* German (translation by Michael)
 * Spanish (translation by Ramiro Garcés and Patricio Toledo)
 
 If you want to help translate this plugin then please visit the [translation page](https://translate.wordpress.org/projects/wp-plugins/social-media-buttons-toolbar).
+
+**System requirements**
+
+* [PHP](https://php.net) version **5.2** or higher.
+* [MySQL](https://www.mysql.com) version **5.0** or higher.
+
+**Recommendations:**
+
+* [PHP](https://php.net) version **7.0** or higher.
+* [MySQL](https://www.mysql.com) version **5.6** or higher.
 
 **Contribution**
 
@@ -156,7 +179,7 @@ Developing plugins is long and tedious work. If you benefit or enjoy this plugin
 
 Install "Social Media Follow Buttons Bar" just as you would any other WordPress Plugin.
 
-Automatically via WordPress Admin Panel:
+Automatically via WordPress Admin Area:
 
 1. Log into Admin Panel of your WordPress website.
 2. Go to "`Plugins`" -> "`Add New`".
@@ -182,11 +205,11 @@ After installation and activation, the "`Social Media Follow Buttons`" menu ite
 A. Sorry, this plugin is available for use only on self-hosted (WordPress.ORG) websites.
 
 = Q. Can I use this plugin on my language? =
-A. Yes. This plugin is ready for translation and has already been translated into several languages. But If your language is not available then you can make one. The POT file is included and placed in the "`languages`" folder. Just send the PO file to me at the arthurgareginyan@gmail.com and I will include this translation within the next plugin update. Many of plugin users would be delighted if you share your translation with the community. Thanks for your contribution!
+A. Yes. This plugin is ready for translation and has already been translated into several languages. But If your language is not available then you can make one. The POT file is included and placed in the "`languages`" folder. Just send the PO file to us at the arthurgareginyan@gmail.com and we will include this translation within the next plugin update. Many of plugin users would be delighted if you share your translation with the community. Thanks for your contribution!
 
 = Q. How does it work? =
 A. Simply go to the plugin settings page, select the desired settings and click the "Save changes" button. Enjoy your fancy social media follow buttons. It's that simple!
-You can find the plugin settings page at "`WP Admin Panel`" -> "`Settings`" -> "`Social Media Follow Buttons`".
+You can find the plugin settings page at "`WordPress Admin Area`" -> "`Settings`" -> "`Social Media Follow Buttons`".
 
 = Q. Does this plugin requires any modification of the theme? =
 A. Absolutely not. This plugin is configurable entirely from the plugin settings page that you can find in the Admin Panel of your WordPress website.
@@ -200,19 +223,19 @@ A. The images that uses in this plugin are already compressed, but I will do my 
 = Q. It's not working. What could be wrong? =
 A. As with every plugin, it's possible that things don't work. The most common reason for this is a web browser's cache. Every web browser stores a cache of the websites you visit (pages, images, and etc.) to reduce bandwidth usage and server load. This is called the browser's cache.​ Clearing your browser's cache may solve the problem.
 
-It's impossible to tell what could be wrong exactly, but if you post a support request in the plugin's support forum on WordPress.org, I'd be happy to give it a look and try to help out. Please include as much information as possible, including a link to your website where the problem can be seen.
+It's impossible to tell what could be wrong exactly, but if you post a support request in the plugin's support forum on WordPress.org, we'd be happy to give it a look and try to help out. Please include as much information as possible, including a link to your website where the problem can be seen.
 
-= Q. The last WordPress update is preventing me from editing my website that is using this plugin. Why is this? =
+= Q. The last WordPress update is preventing me from editing the website of the creator that is using this plugin. Why is this? =
 A. This plugin can not cause such problem. More likely, the problem are related to the settings of the website. It could just be a cache, so please try to clear your website's cache (may be you using a caching plugin, or some web service such as the CloudFlare) and then the cache of your web browser. Also please try to re-login to the website, this too can help.
 
 = Q. Where to report bug if found? =
 A. Please visit the [Dedicated Plugin Page on GitHub](https://github.com/ArthurGareginyan/social-media-buttons-toolbar) and report.
 
 = Q. Where to share any ideas or suggestions to make the plugin better? =
-A. Any suggestions are very welcome! Please send me an email to [arthurgareginyan@gmail.com](mailto:arthurgareginyan@gmail.com). Thank you!
+A. Any suggestions are very welcome! Please send us an email to [arthurgareginyan@gmail.com](mailto:arthurgareginyan@gmail.com). Thank you!
 
 = Q. I love this plugin! Can I help somehow? =
-A. Yes, any financial contributions are welcome! Just visit [my website](https://www.arthurgareginyan.com/donate.html), click on the donate button, and thank you!
+A. Yes, any financial contributions are welcome! Just visit [the website of the creator](https://www.arthurgareginyan.com/donate.html), click on the donate button, and thank you!
 
 
 == Screenshots ==
@@ -243,7 +266,7 @@ Commercial licensing (e.g. for projects that can’t use an open-source license)
 * The icon of plugin is a copyrighted image created by [Arthur Gareginyan](https://www.arthurgareginyan.com). (C) All rights reserved.
 * The banner of plugin is a copyrighted image created by [Arthur Gareginyan](https://www.arthurgareginyan.com). (C) All rights reserved.
 * The Entrepreneur image that used on banner is from [Pixabay](https://pixabay.com/en/entrepreneur-start-start-up-career-696976/) and licensed under the [Creative Commons CC0](https://creativecommons.org/publicdomain/zero/1.0/deed.en).
-* Icons [bitbucket.png, dailypaintworks.png, flipboard.png, gab.png, minds.png, theknot.png, viber.png, etsy.png, tripadvisor.png, stackoverflow.png, stackexchange.png, wattpad.png, itunes-podcasts.png, email.png, facebook.png, linkedin.png, google-play.png, itch.png, mastodon.png, remind.png, trademe.png, vsco.png, hireology.png, kompoz.png, soundblend.png, itunes.png, apple-music.png, medium.png, 500px.png, behance.png, polyvore.png, yellowpages.png, mixer.png, telephone.png, bloglovin.png, line.png, stumbleupon.png, whatsapp.png, plugdj.png, deviantart.png, buzzsprout.png, periscope.png, youtube.png, meetvibe.png, wordpress.png, twitter.png, imdb.png, dloky.png, snapchat.png, steam.png, discord.png, twitch.png, amazon.png, bookbub.png, goodreads.png, reddit.png, meetup.png, codepen.png, askfm.png, ebay.png, hangouts.png, houzz.png, quora.png, steemit.png, theartstack.png, instagram.png, patreon.png, bandcamp.png, youtube-gaming.png, xing.png](https://www.iconfinder.com/iconsets/square-logo-buttons?ref=ArthurGareginyan) by [Arthur Gareginyan](https://www.arthurgareginyan.com) and licensed under the [Creative Commons (Attribution 3.0 Unported)](http://creativecommons.org/licenses/by/3.0/).
+* Icons [blackberry-world.png, iheart.png, livestream.png, tunein.png, untappd.png, about-me.png, facebook-group.png, stitcher.png, strava.png, wechat.png, weibo.png, feedsfloor.png, bitbucket.png, dailypaintworks.png, flipboard.png, gab.png, minds.png, theknot.png, viber.png, etsy.png, tripadvisor.png, stackoverflow.png, stackexchange.png, wattpad.png, itunes-podcasts.png, email.png, facebook.png, linkedin.png, google-play.png, itch.png, mastodon.png, remind.png, trademe.png, vsco.png, hireology.png, kompoz.png, soundblend.png, itunes.png, apple-music.png, medium.png, 500px.png, behance.png, polyvore.png, yellowpages.png, mixer.png, telephone.png, bloglovin.png, line.png, stumbleupon.png, whatsapp.png, plugdj.png, deviantart.png, buzzsprout.png, periscope.png, youtube.png, meetvibe.png, wordpress.png, twitter.png, imdb.png, dloky.png, snapchat.png, steam.png, discord.png, twitch.png, amazon.png, bookbub.png, goodreads.png, reddit.png, meetup.png, codepen.png, askfm.png, ebay.png, hangouts.png, houzz.png, quora.png, steemit.png, theartstack.png, instagram.png, patreon.png, bandcamp.png, youtube-gaming.png, xing.png](https://www.iconfinder.com/iconsets/square-logo-buttons?ref=ArthurGareginyan) by [Arthur Gareginyan](https://www.arthurgareginyan.com) and licensed under the [Creative Commons (Attribution 3.0 Unported)](http://creativecommons.org/licenses/by/3.0/).
 * Icons [flickr.png, google-plus.png, vimeo.png, blogger.png, livejournal.png, pinterest.png, tumblr.png, soundcloud.png, spotify.png, yelp.png, vkontakte.png, odnoklassniki.png, telegram.png, github.png, skype.png, website.png, rss-feed.png](https://www.iconfinder.com/iconsets/social-buttons-2?ref=ArthurGareginyan) by Ivlichev Victor Petrovich and licensed under the [Creative Commons (Attribution 3.0 Unported)](http://creativecommons.org/licenses/by/3.0/).
 * [Bootstrap](http://getbootstrap.com) by Twitter, Inc. released under the [MIT license](https://github.com/twbs/bootstrap/blob/master/LICENSE).
 * [Bootstrap-checkbox](https://github.com/vsn4ik/bootstrap-checkbox) is a project of [Vasily A.](https://github.com/vsn4ik), shared under the [MIT license](https://github.com/vsn4ik/bootstrap-checkbox/blob/master/LICENSE).
@@ -255,6 +278,38 @@ Commercial licensing (e.g. for projects that can’t use an open-source license)
 
 
 == Changelog ==
+
+= 4.30 =
+* Added option for the Untappd.
+* Added option for the TuneIn.
+* Added option for the iHeart.
+* Added option for the BlackBerry World.
+* Added option for the Livestream.
+
+= 4.29 =
+* Added option for the Strava.
+* Added option for the Stitcher.
+* Added option for the WeChat.
+* Added option for the Weibo.
+* Added option for the about.me.
+* Added option for the Facebook Group.
+
+= 4.28 =
+* Added option for the FeedsFloor.
+
+= 4.27 =
+* Texts updated.
+* The year in the copyright text is updated.
+* The sidebar items are rearranged.
+* Translation files updated.
+
+= 4.26 =
+* The plugin is fully tested for compatibility with WordPress version 4.9.
+* CSS code improved.
+
+= 4.25 =
+* German translation added. (Thanks to Michael)
+* Fixed an issue where the "Hello" message could not be hidden.
 
 = 4.24 =
 * Added option for the Daily Paintworks.
@@ -281,7 +336,7 @@ Commercial licensing (e.g. for projects that can’t use an open-source license)
 * The menu item of the plugin is renamed.
 * The "Author" tab on the settings page is removed.
 * Content of the "Support" tab on the settings page is updated.
-* Copyright of plugin files is changed to the "Space X-Chimp Studio".
+* Copyright of plugin files is changed to the "Space X-Chimp".
 * The "Support" tab renamed to the "Support Me".
 * The "Usage" tab renamed to the "Usage Instructions".
 

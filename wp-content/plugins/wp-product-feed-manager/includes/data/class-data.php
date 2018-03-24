@@ -30,7 +30,6 @@ if ( !class_exists( 'WPPFM_Data_Class' ) ) :
 		 * Constructor
 		 */
 		public function __construct() {
-
 			$this->_queries	 = new WPPFM_Queries ();
 			$this->_files	 = new WPPFM_File_Class();
 		}
@@ -80,7 +79,8 @@ if ( !class_exists( 'WPPFM_Data_Class' ) ) :
 		
 		public function get_failed_feeds() { return $this->_queries->read_failed_feeds(); }
 
-		public function get_status_id_from_status( $status ) { return $this->_queries->get_status_id( $status ); }
+		// 291217
+		//public function get_status_id_from_status( $status ) { return $this->_queries->get_status_id( $status ); }
 
 		public function get_feed_status( $feed_id ) { 
 			$feed_status = $this->_queries->get_current_feed_status( $feed_id );
@@ -91,7 +91,7 @@ if ( !class_exists( 'WPPFM_Data_Class' ) ) :
 		
 		public function get_nr_of_feed_products( $feed_id ) { return $this->_queries->get_nr_feed_products( $feed_id );	}
 
-		public function update_feed_data( $feed_id, $feed_url ) { return $this->_queries->update_feed_update_data( $feed_id, $feed_url ); }
+		public function update_feed_data( $feed_id, $feed_url, $nr_products ) { return $this->_queries->update_feed_update_data( $feed_id, $feed_url, $nr_products ); }
 
 		public function update_feed_status( $feed_id, $status ) { return $this->_queries->update_feed_file_status( $feed_id, $status );	}
 
@@ -140,6 +140,18 @@ if ( !class_exists( 'WPPFM_Data_Class' ) ) :
 		public function get_filter_query( $feed_id ) { return $this->_queries->get_product_filter_query( $feed_id ); }
 		
 		public function get_own_variation_data( $variation_id ) { return $this->_queries->get_own_variable_product_attributes( $variation_id );	}
+		
+		public function add_parent_data( &$product_data, $parent_id, $post_columns_query_string ) { 
+			$parent_product_data = (array)$this->_queries->read_post_data( $parent_id, $post_columns_query_string );
+			
+			$colums = explode( ', ', $post_columns_query_string );
+
+			foreach( $colums as $column ) {
+				if( $product_data[$column] === '' && array_key_exists( $column, $parent_product_data ) && $parent_product_data[$column] !== '' ) {
+					$product_data[$column] = $parent_product_data[$column];
+				}
+			}
+		}
 
 		public function get_custom_fields_with_metadata( $feed_id ) {
 
@@ -177,49 +189,52 @@ if ( !class_exists( 'WPPFM_Data_Class' ) ) :
 			
 			return $custom_fields;
 		}
+		
+		/**
+		 * Checks if other feeds than the active feed are still on processing status. If so, set these feeds to error
+		 * 
+		 * @since 1.10.0
+		 * 
+		 * @param string $active_feed_id
+		 */
+		public function check_for_failed_feeds( $active_feed_id ) {
+			$processing_feeds = $this->_queries->get_feed_ids_with_specific_status( '3' );
+			
+			foreach( $processing_feeds as $feed ) {
+				if( $active_feed_id !== $feed->product_feed_id ) {
+					$this->_queries->update_current_feed_status( $feed->product_feed_id, 6);
+				}
+			}
+		}
 
 		public function get_feed_data( $feed_id ) {
-
 			// get the main data
 			$main_feed_data = $this->_queries->read_feed( $feed_id );
 
 			$main_data = $this->convert_data_to_feed_data( $main_feed_data[ 0 ] );
-
 			$main_data->attributes = array();
 
 			$channel = $this->_queries->get_channel_short_name_from_db( $main_feed_data[ 0 ][ 'channel' ] );
 
 			// read the output fields
 			if ( $channel !== 'marketingrobot' && $channel !== 'marketingrobot_csv' ) {
-
 				$outputs = $this->_files->get_output_fields_for_specific_channel( $channel );
 			} else {
-
 				$outputs = $this->get_custom_fields_with_metadata( $feed_id );
 			}
 
 			// add meta data to the feeds output fields
 			$output_fields = $this->fill_output_fields_with_metadata( $feed_id, $outputs );
-
 			$inputs = $this->get_advised_inputs( $main_data->channel, $main_data->dataSource );
 
 			for ( $i = 0; $i < count( $output_fields ); $i++ ) {
-
 				$output_title	 = $output_fields[ $i ]->field_label;
 				$is_active		 = false;
 
-				if ( $output_fields[ $i ]->category_id > 0 && $output_fields[ $i ]->category_id < 3 ) {
-
-					$is_active = true;
-				}
-
-				if ( !empty( $output_fields[ $i ]->value ) && $output_fields[ $i ]->value !== 'undefined' ) {
-
-					$is_active = true;
-				}
+				if ( $output_fields[ $i ]->category_id > 0 && $output_fields[ $i ]->category_id < 3 ) { $is_active = true; }
+				if ( !empty( $output_fields[ $i ]->value ) && $output_fields[ $i ]->value !== 'undefined' ) { $is_active = true; }
 
 				$advised_source	 = property_exists( $inputs, $output_title ) ? $advised_source	 = $inputs->{$output_title} : '';
-
 				$this->add_attribute( $main_data->attributes, $i, $output_title, $advised_source, $output_fields[ $i ]->value, $output_fields[ $i ]->category_id, $is_active, 0, 0, 0 );
 			}
 
@@ -234,10 +249,13 @@ if ( !class_exists( 'WPPFM_Data_Class' ) ) :
 			$channel_base_class	 = new WPPFM_Channel();
 			$channel_short_name	 = $channel_base_class->get_channel_short_name( $main_data->channel );
 
-			$class_name	 = 'WPPFM_' . ucfirst( $channel_short_name ) . '_Feed_Class';
-			$feed_class	 = new $class_name();
-
-			$feed_class->set_feed_output_attribute_levels( $main_data );
+			if ( class_exists( 'WPPFM_' . ucfirst( $channel_short_name ) . '_Feed_Class' ) ) {
+				$class_name	 = 'WPPFM_' . ucfirst( $channel_short_name ) . '_Feed_Class';
+				$feed_class	 = new $class_name();
+				
+				if( function_exists( 'set_feed_output_attribute_levels' ) )
+					$feed_class->set_feed_output_attribute_levels( $main_data );
+			}
 		}
 
 		private function add_attribute( &$attribute, $id, $title, $advised_source, $value, $field_level, $is_active,
@@ -259,15 +277,7 @@ if ( !class_exists( 'WPPFM_Data_Class' ) ) :
 		}
 
 		private function convert_data_to_feed_data( $data ) {
-
 			$feed = new stdClass();
-			
-			if ( $data[ 'title' ] === null || $data[ 'feed_description' ] === null || $data[ 'language' ] === null ) {
-				$queries = new WPPFM_Queries();
-				$msg = sprintf( "The feedmanager_product_feed table is not up to date and is missing one or more columns. The database currently contains these columne: %s", 
-					$queries->get_table_columns( "feedmanager_product_feed" ) );
-				wppfm_write_log_file($msg);
-			}
 
 			$feed->feedId			 = $data[ 'product_feed_id' ];
 			$feed->title			 = $data[ 'title' ];
@@ -275,15 +285,16 @@ if ( !class_exists( 'WPPFM_Data_Class' ) ) :
 			$feed->categoryMapping	 = $data[ 'category_mapping' ];
 			$feed->isAggregator		 = $data[ 'is_aggregator' ];
 			$feed->includeVariations = $data[ 'include_variations' ];
-			$feed->feed_title		 = $feed->feed_title !== null ? $data[ 'feed_title' ] : '';
-			$feed->feed_description	 = $feed->feed_description !== null ? $data[ 'feed_description' ] : '';
+			$feed->feedTitle		 = $data[ 'feed_title' ] !== null ? $data[ 'feed_title' ] : '';
+			$feed->feedDescription	 = $data[ 'feed_description' ] !== null ? $data[ 'feed_description' ] : '';
 			$feed->url				 = $data[ 'url' ];
 			$feed->dataSource		 = $data[ 'source' ];
 			$feed->channel			 = $data[ 'channel' ];
 			$feed->country			 = $data[ 'country' ];
 			$feed->status			 = $data[ 'status_id' ];
+			$feed->baseStatusId		 = $data[ 'base_status_id'];
 			$feed->updateSchedule	 = $data[ 'schedule' ];
-			$feed->language			 = $feed->language !== null ? $data[ 'language' ] : '';
+			$feed->language			 = $data[ 'language' ] !== null ? $data[ 'language' ] : '';
 
 			return $feed;
 		}

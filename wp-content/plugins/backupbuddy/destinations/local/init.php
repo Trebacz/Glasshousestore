@@ -25,6 +25,16 @@ class pb_backupbuddy_destination_local { // Change class name end to match desti
 	
 	
 	
+	public static function _formatSettings( $settings ) {
+		// Apply defaults.
+		$settings = array_merge( self::$default_settings, $settings );
+		
+		$settings['path'] = rtrim( $settings['path'], '/' ) . '/'; // Force trailing slash.
+		
+		return $settings;
+	} // End _formatSettings().
+	
+	
 	/*	send()
 	 *	
 	 *	Send one or more files.
@@ -33,6 +43,8 @@ class pb_backupbuddy_destination_local { // Change class name end to match desti
 	 *	@return		boolean						True on success, else false.
 	 */
 	public static function send( $settings = array(), $files = array(), $send_id = '' ) {
+		$settings = self::_formatSettings( $settings ); // Format all settings.
+		
 		global $pb_backupbuddy_destination_errors;
 		if ( '1' == $settings['disabled'] ) {
 			$pb_backupbuddy_destination_errors[] = __( 'Error #48933: This destination is currently disabled. Enable it under this destination\'s Advanced Settings.', 'it-l10n-backupbuddy' );
@@ -149,6 +161,7 @@ class pb_backupbuddy_destination_local { // Change class name end to match desti
 	 *	@return		bool|string					True on success, string error message on failure.
 	 */
 	public static function test( $settings, $files = array() ) {
+		$settings = self::_formatSettings( $settings ); // Format all settings.
 		
 		$path = rtrim( $settings['path'], '/\\' );
 		$url = rtrim( $settings['url'], '/\\' );

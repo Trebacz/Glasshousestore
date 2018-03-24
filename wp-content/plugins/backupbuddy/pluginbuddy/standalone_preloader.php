@@ -644,3 +644,7 @@ function did_action( $action ) {
 function _doing_it_wrong( $function, $message, $version ) {
 	return;
 }
+
+function has_filter( $name, $callback ) {
+	return true;
+}

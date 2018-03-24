@@ -283,7 +283,7 @@ if ( ( $serial == '' ) || ( ! is_array( $backup ) ) ) {
 		//error_log( print_r( $backup, true ) );
 		if ( 'push' == $backup['deployment_direction'] ) {
 			pb_backupbuddy::status( 'details', 'About to retrieve push deployment status log from `' . $backup['deployment_log'] . '`...', $serial );
-			pb_backupbuddy::status( 'details', '** Begin External Log section (ImportBuddy)', $serial );
+			pb_backupbuddy::status( 'details', '*** Begin External Log Section (ImportBuddy)', $serial );
 		} elseif ( 'pull' == $backup['deployment_direction'] ) {
 			pb_backupbuddy::status( 'details', 'About to retrieve pull deployment status log from `' . $backup['deployment_log'] . '`...', $serial );
 			pb_backupbuddy::status( 'details', '*** Begin External Log Section (Remote backup or ImportBuddy)', $serial );
@@ -341,7 +341,7 @@ if ( ( $serial == '' ) || ( ! is_array( $backup ) ) ) {
 				
 				require_once( pb_backupbuddy::plugin_path() . '/classes/remote_api.php' );
 				
-				if ( false === ( $response = backupbuddy_remote_api::remoteCall( $backup['deployment_destination'], 'getBackupStatus', array( 'serial' => $backup['deployment_log'] ), 30, null, null, null, null, null, null, null, $returnRaw = true ) ) ) {
+				if ( false === ( $response = backupbuddy_remote_api::remoteCall( $backup['deployment_destination'], 'getBackupStatus', array( 'serial' => $backup['deployment_log'] ), 30, array(), $returnRaw = true ) ) ) {
 					$message = 'Error #783283378. Unable to get remove backup status log with serial `' . $backup['deployment_log'] . '` via remote API.';
 					pb_backupbuddy::status( 'error', $message, $serial );
 					echo $message;

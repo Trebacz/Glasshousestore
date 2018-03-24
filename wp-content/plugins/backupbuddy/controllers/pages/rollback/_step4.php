@@ -9,7 +9,7 @@ pb_backupbuddy::verify_nonce();
 echo '<h3 style="margin-top: 0;">' . __( 'Rollback Complete', 'it-l10n-backupbuddy' ) . '</h3>';
 
 
-$restoreData = unserialize( base64_decode( pb_backupbuddy::_POST( 'restoreData' ) ) );
+$restoreData = json_decode( base64_decode( pb_backupbuddy::_POST( 'restoreData' ) ), true );
 require_once( pb_backupbuddy::plugin_path() . '/classes/restore.php' );
 $rollback = new backupbuddy_restore( 'rollback', $restoreData );
 

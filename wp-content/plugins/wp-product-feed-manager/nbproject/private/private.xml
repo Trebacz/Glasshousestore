@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="857">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="910">
         <file>
-            <url>includes/application/class-feed-master_OLD.php</url>
-            <bookmark id="787">
+            <url>includes/user-interface/js/feed-form.js</url>
+            <bookmark id="638">
                 <name/>
-                <line>74</line>
+                <line>1683</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>includes/application/wppfm-feed-processing-support.php</url>
+            <bookmark id="910">
+                <name/>
+                <line>1190</line>
                 <key/>
             </bookmark>
         </file>
@@ -23,55 +31,17 @@
             </bookmark>
         </file>
         <file>
-            <url>includes/data/class-queries.php</url>
-            <bookmark id="857">
+            <url>includes/application/class-background-processing.php</url>
+            <bookmark id="885">
                 <name/>
-                <line>645</line>
-                <key/>
-            </bookmark>
-            <bookmark id="855">
-                <name/>
-                <line>675</line>
-                <key/>
-            </bookmark>
-            <bookmark id="856">
-                <name/>
-                <line>791</line>
-                <key/>
-            </bookmark>
-        </file>
-        <file>
-            <url>includes/application/class-feed-master.php</url>
-            <bookmark id="845">
-                <name/>
-                <line>200</line>
-                <key/>
-            </bookmark>
-            <bookmark id="854">
-                <name/>
-                <line>344</line>
-                <key/>
-            </bookmark>
-            <bookmark id="844">
-                <name/>
-                <line>352</line>
-                <key/>
-            </bookmark>
-        </file>
-        <file>
-            <url>includes/user-interface/js/feed-form.js</url>
-            <bookmark id="638">
-                <name/>
-                <line>1683</line>
+                <line>265</line>
                 <key/>
             </bookmark>
         </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Dropbox/Websites/www.wp-winkel-work.dev/wp-content/plugins/wp-product-feed-manager/includes/data/class-db-management.php</file>
-            <file>file:/D:/Dropbox/Websites/www.wp-winkel-work.dev/wp-content/plugins/wp-product-feed-manager/wp-product-feed-manager.php</file>
-            <file>file:/D:/Dropbox/Websites/www.wp-winkel-work.dev/wp-content/plugins/wp-product-feed-manager/includes/data/class-queries.php</file>
+            <file>file:/D:/Dropbox/Websites/www.deployement-test-shop.dev.cc/wp-content/plugins/wp-product-feed-manager/wp-product-feed-manager.php</file>
         </group>
     </open-files>
 </project-private>

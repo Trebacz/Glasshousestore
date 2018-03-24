@@ -24,6 +24,7 @@ if (isset ( $_REQUEST ['productmeta_id'] ) && $_REQUEST ['do_meta'] == 'edit') {
 	$productmeta_name 		= (isset($single_productmeta -> productmeta_name) ? $single_productmeta -> productmeta_name : '');
 	$enable_ajax_validation = (isset($single_productmeta -> productmeta_validation) ? $single_productmeta -> productmeta_validation : '');
     $dynamic_price_hide  	= (isset($single_productmeta -> dynamic_price_display) ? $single_productmeta -> dynamic_price_display : '');
+    $send_file_attachment  	= (isset($single_productmeta -> send_file_attachment) ? $single_productmeta -> send_file_attachment : '');
 	$show_cart_thumb		= (isset($single_productmeta -> show_cart_thumb) ? $single_productmeta -> show_cart_thumb : '');
 	$aviary_api_key 		= (isset($single_productmeta -> aviary_api_key) ? $single_productmeta -> aviary_api_key : '');
 	$productmeta_style 		= (isset($single_productmeta -> productmeta_style) ? $single_productmeta -> productmeta_style : '');
@@ -61,11 +62,22 @@ echo '<p><a class="button" href="'.$url_cancel.'">'.__('&laquo; Existing Product
 					<p class="s-font"><?php _e('For your reference', 'nm-personalizedproduct')?></p></td>
 			</tr>
 			
+			<tr>
+				<td class="headings"><?php _e('Enable ajax based validation?', 'nm-personalizedproduct')?></td>
+				<td><input type="checkbox" <?php checked($enable_ajax_validation, 'yes')?> name="enable_ajax_validation" value="yes" /> <br />
+					<p class="s-font"><?php _e('Do not refresh the page until required data is provided', 'nm-personalizedproduct')?></p></td>
+			</tr>
 			
             <tr>
 				<td class="headings"><?php _e('Hide dynamic price display on product page?', 'nm-personalizedproduct')?></td>
 				<td><input type="checkbox" <?php checked($dynamic_price_hide, 'yes')?> name="dynamic_price_hide" value="yes" /> <br />
 					<p class="s-font"><?php _e('sometime prices are not display correctly on product page when variation changes, but these are added to cart correctly. So better to hide dynamic prices display on product page.', 'nm-personalizedproduct')?></p></td>
+			</tr>
+			
+			<tr>
+				<td class="headings"><?php _e('Receive file in E-mail as attachment?', 'nm-personalizedproduct')?></td>
+				<td><input type="checkbox" <?php checked($send_file_attachment, 'yes')?> name="send_file_attachment" value="yes" /> <br />
+					<p class="s-font"><?php _e('This will send an extra email with all files as Attachment. File URLs already sent with default WooCommerce Invoice.', 'nm-personalizedproduct')?></p></td>
 			</tr>
 			
 			 

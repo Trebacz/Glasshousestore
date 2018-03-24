@@ -36,14 +36,12 @@ if ( !class_exists( 'WPPFM_Add_Feed_Page' ) ) :
 			echo $this->admin_page_header();
 
 			if ( 'valid' === wppfm_validate() ) { // ref HWOTBERH
-
 				echo $this->message_field();
 
 				echo $this->main_page_body_top();
 
 				echo $this->main_admin_buttons();
 			} else {
-				
 				wp_redirect( admin_url( '/admin.php?page=wp-product-feed-manager' ) );
 			}
 
@@ -51,22 +49,17 @@ if ( !class_exists( 'WPPFM_Add_Feed_Page' ) ) :
 		}
 
 		private function prepare_feed_form() {
-
 			$this->_feed_form = new WPPFM_Feed_Form ();
 		}
 
 		private function main_page_body_top() {
-
 			$this->_feed_form->display();
 		}
 
 		private function main_admin_buttons() {
-
-			$html_code = '<div class="button-wrapper" id="page-bottom-buttons"><input class="button-primary" type="button" ' .
+			return '<div class="button-wrapper" id="page-bottom-buttons"><input class="button-primary" type="button" ' .
 			'onclick="parent.location=\'admin.php?page=wp-product-feed-manager\'" name="new" value="' .
 			__( 'Feeds List', 'wp-product-feed-manager' ) . '" id="add-new-feed-button" /></div>';
-
-			return $html_code;
 		}
 
 	}

@@ -74,7 +74,7 @@ if ( 'deploy' == pb_backupbuddy::_GET( 'backupbuddy_backup' ) ) {
 		pb_backupbuddy::alert( 'Error #984854784: Unable to decode input. Data: `' . htmlentities( pb_backupbuddy::_POST( 'deployData' ) ) . '`.', true );
 		return false;
 	}
-	if ( false === ( $deployData = unserialize( $deployDataRaw ) ) ) {
+	if ( false === ( $deployData = json_decode( $deployDataRaw, true ) ) ) {
 		pb_backupbuddy::alert( 'Error #382954735: Unable to unserialize input. Data: `' . htmlentities( $deployDataRaw ) . '`.', true );
 		return false;
 	}
@@ -611,7 +611,7 @@ if ( 'deploy' == pb_backupbuddy::_GET( 'backupbuddy_backup' ) ) {
 						} else if ( 'START_DEPLOY' == data[i] ) {
 							isInDeployLog = true;
 						} else if ( 'END_DEPLOY' == data[i] ) {
-							backupbuddy_log( '*** Ending remote log (if applicable)' );
+							backupbuddy_log( '*** End External Log (ImportBuddy)' );
 							isInDeployLog = false;
 						} else {
 							//backupbuddy_log( '~~~ (direct): ' + data[i] );
@@ -1023,9 +1023,6 @@ if ( 'deploy' == pb_backupbuddy::_GET( 'backupbuddy_backup' ) ) {
 						
 						$thisDest = '';
 						$thisDest .= '<li class="bb_destination-item bb_destination-' . $destination_name . ' bb_destination-new-item ' . $disableClass . '">';
-						if ( 's33' == $destination_name ) {
-							$thisDest .= '<div class="bb-ribbon"><span>New</span></div>';
-						}
 						if ( 'stash3' == $destination_name ) {
 							$thisDest .= '<div class="bb-ribbon"><span>New</span></div>';
 						}
@@ -1079,7 +1076,7 @@ if ( 'deploy' == pb_backupbuddy::_GET( 'backupbuddy_backup' ) ) {
 
 <div>
 	<span style="float: right; margin-top: 18px;">
-		<b><?php _e('Archive size', 'it-l10n-backupbuddy' );?></b>:&nbsp; <span class="backupbuddy_archive_size">0 MB</span>
+		<b><?php _e('Archive size', 'it-l10n-backupbuddy' );?></b>:&nbsp; <span class="backupbuddy_archive_size">-- MB</span>
 	</span>
 	<?php
 	
@@ -1209,9 +1206,9 @@ if ( 'deploy' == pb_backupbuddy::_GET( 'backupbuddy_backup' ) ) {
 			?></span>
 			<span class="backup-step-status"></span>
 			<div class="backup-step-error-message" style="display: none;" id="backupbuddy_errors_notice">
-				<h3>Some errors may have been encountered</h3>
+				<h3>Possible errors or warnings may have been encountered</h3>
 				See the Status Log in the tab above for details on detected errors.
-				<b>Not all errors are fatal.</b> Look up error codes & troubleshooting details in the <a href="http://ithemes.com/codex/page/BackupBuddy#Troubleshooting" target="_blank"><b>Knowledge Base</b></a>.
+				<b>Not all errors are fatal and are sometimes normal.</b> Look up error codes & troubleshooting details in the <a href="http://ithemes.com/codex/page/BackupBuddy#Troubleshooting" target="_blank"><b>Knowledge Base</b></a>.
 				<b><i>Provide a copy of the Status Log if seeking support.</i></b>
 			</div>
 		</div>
@@ -1259,7 +1256,7 @@ if ( $profile_array['backup_mode'] == '1' ) { // Classic mode (all in one page l
 	<div style="width: 100%">
 		<div class="description" style="text-align: center;">
 			<?php
-			_e('Running in CLASSIC mode. Leaving this page before the backup completes will likely result in a failed backup.', 'it-l10n-backupbuddy' );
+			pb_backupbuddy::alert( __('Running in CLASSIC mode. Leaving this page before the backup completes will likely result in a failed backup.', 'it-l10n-backupbuddy' ) );
 			?>
 		</div>
 	</div>
@@ -1392,6 +1389,21 @@ if ( 'deploy' == pb_backupbuddy::_GET( 'backupbuddy_backup' ) ) {
 	} else {
 		$deployData['sendMedia'] = false;
 	}
+	
+	if ( 'true' == pb_backupbuddy::_POST( 'sendExtras' ) ) {
+		$deployData['sendExtras'] = true;
+	} else {
+		$deployData['sendExtras'] = false;
+	}
+	
+	if ( '1' == pb_backupbuddy::_POST( 'setBlogPublic' ) ) {
+		$deployData['setBlogPublic'] = true;
+	} elseif ( '0' == pb_backupbuddy::_POST( 'setBlogPublic' ) ) {
+		$deployData['setBlogPublic'] = false;
+	} else {
+		$deployData['setBlogPublic'] = '';
+	}
+	
 	
 	if ( 'true' == pb_backupbuddy::_POST( 'doImportCleanup' ) ) {
 		$deployData['doImportCleanup'] = true;

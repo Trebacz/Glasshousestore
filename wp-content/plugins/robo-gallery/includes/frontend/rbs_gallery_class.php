@@ -8,11 +8,17 @@
 *      Created: 2017
 *      Licensed under the GPLv2 license - http://opensource.org/licenses/gpl-2.0.php
 *
-*      Copyright (c) 2014-2017, Robosoft. All rights reserved.
+*      Copyright (c) 2014-2018, Robosoft. All rights reserved.
 *      Available only in  https://robosoft.co/robogallery/ 
 */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
+
+
+
+
+require_once ROBO_GALLERY_FRONTEND_EXT_PATH.'core/roboGalleryCore.php';
+require_once ROBO_GALLERY_FRONTEND_EXT_PATH.'loader/RoboGalleryLoader.php';
 
 class roboGallery extends roboGalleryUtils{
 
@@ -86,7 +92,15 @@ class roboGallery extends roboGalleryUtils{
  	public $debug = 0;
 
  	public $seoContent = '';
- 	
+
+ 	public $startTime =  0 ;
+ 	public $endTime =  0 ;
+
+ 	public $roboGalleryCore;
+
+ 	public $html = '';
+
+
  	function updateCountView(){
  		if(!$this->id) return ;
  		$count_key = 'gallery_views_count';
@@ -100,6 +114,9 @@ class roboGallery extends roboGalleryUtils{
  	}
 
  	function __construct($attr){
+
+ 		$this->startTime = microtime(true);
+
  		$this->helper 		= new roboGalleryHelper();
  		$this->galleryId 	= 'rbs_gallery_'.uniqid();
  		
@@ -107,8 +124,6 @@ class roboGallery extends roboGalleryUtils{
 
 			$this->id = $attr['id'];
 			
-
-
 			$options_id = (int) get_post_meta( $this->id, ROBO_GALLERY_PREFIX.'options', true );
 			if($options_id){
 				$this->real_id = $this->id;
@@ -116,6 +131,10 @@ class roboGallery extends roboGalleryUtils{
 				$this->id = $options_id;
 			}
 			$this->helper->setId( $this->id );
+
+			$this->roboGalleryCore = new roboGalleryCore( $this );
+			
+
  		}
 
  		$this->debug = get_option( ROBO_GALLERY_PREFIX.'debugEnable', 0 );
@@ -187,12 +206,47 @@ class roboGallery extends roboGalleryUtils{
  	public function getGallery( ){
  		if( !$this->id ) return ''; 
 
- 		$this->updateCountView();
+ 		$cache = get_post_meta( $this->id, ROBO_GALLERY_PREFIX.'cache', true );
+
+ 		if($cache){
+ 			$cacheId = $this->real_id ? $this->real_id : $this->id ;
+ 			$cached_result =  get_transient( 'robo_gallery_cached_id'. $cacheId ); 
+ 		}
+
+ 		//$cached_result = '';
+
+ 		if( get_option( ROBO_GALLERY_PREFIX.'jqueryVersion', 'build' )=='forced' ){
+			$this->robo_gallery_styles();
+			$this->robo_gallery_scripts();
+		} else {
+			add_action( 'get_footer', array($this, 'robo_gallery_styles') );
+			add_action( 'get_footer', array($this, 'robo_gallery_scripts') );
+		}
+
+		$this->updateCountView();
+
+
+ 		if( $cache && $cached_result ){
+
+ 			$debugText = '';
+
+ 			if($this->debug){
+ 				$this->endTime = microtime(true);
+				$execution_time = ($this->endTime - $this->startTime);
+				$debugText =  '<b>Total Execution Time (cache) </b> '.$execution_time;	
+ 			}
+
+ 			return $debugText.$cached_result;
+ 		}
+
+ 		
 
  		//$galleryImages = get_post_meta( $this->options_id && $this->real_id ? $this->real_id : $this->id, ROBO_GALLERY_PREFIX.'galleryImages', true );;
  		//if( !$galleryImages || !is_array( $galleryImages ) || !count($galleryImages) || !(int)$galleryImages[0] ) return '';
 
- 		$this->helper->setValue( 'filterContainer',  '#'.$this->galleryId.'filter', 'string' );
+ 		$this->helper->setValue( 'filterContainer',  	'#'.$this->galleryId.'filter', 'string' );
+ 		$this->helper->setValue( 'loadingContainer',  	'#robo_gallery_loading_'.$this->galleryId, 'string' );
+ 		$this->helper->setValue( 'mainContainer',  		'#robo_gallery_main_block_'.$this->galleryId, 'string' );
 
 		
 		$sizeType 	= get_post_meta( $this->id, ROBO_GALLERY_PREFIX.'sizeType', true );
@@ -439,13 +493,7 @@ class roboGallery extends roboGalleryUtils{
 
 		if(count($this->selectImages->imgArray)){
 
-			if( get_option( ROBO_GALLERY_PREFIX.'jqueryVersion', 'build' )=='forced' ){
-				$this->robo_gallery_styles();
-				$this->robo_gallery_scripts();
-			} else {
-				add_action( 'get_footer', array($this, 'robo_gallery_styles') );
-				add_action( 'get_footer', array($this, 'robo_gallery_scripts') );
-			}
+			
 
 			for ($i=0; $i<count($this->selectImages->imgArray); $i++) {
 				
@@ -548,7 +596,10 @@ class roboGallery extends roboGalleryUtils{
 		}
 		if( $this->returnHtml ){
 			$this->returnHtml = 
-				'<div style="'.$this->rbsMainDivStyle.'">'
+				'<style type="text/css" scoped>'.$this->roboGalleryCore->getCSS().'</style>'
+				.$this->runEvent('html', 'before')		
+				.$this->roboGalleryCore->getHTML()
+				.'<div id="robo_gallery_main_block_'.$this->galleryId.'" style="'.$this->rbsMainDivStyle.'  display: none;">'
 					.($pretext?'<div>'.$pretext.'</div>':'')
 					.($menu?$this->getMenu():'').
 					'<div id="'.$this->galleryId.'" data-options="'.$this->galleryId.'" style="width:100%;" class="robo_gallery">'
@@ -557,7 +608,12 @@ class roboGallery extends roboGalleryUtils{
 					.($aftertext?'<div>'.$aftertext.'</div>':'')
 				.'</div>'
 				.$this->seoContent
-				.'<script>'.$this->compileJavaScript().'</script>';
+				//.$this->getErrorDialog()
+				.$this->runEvent('html', 'after')	
+				.'<script>'
+					.$this->compileJavaScript()
+					//.$this->getCheckJsFunction()
+				.'</script>';
 
 				if( count($this->scriptList) ){ //&& !defined('ROBO_GALLERY_JS_FILES')
 					//define( 'ROBO_GALLERY_JS_FILES', 1);
@@ -572,9 +628,55 @@ class roboGallery extends roboGalleryUtils{
 					}
 				}
 		} 
-		return $this->returnHtml;
+		
+		$debugText = '';
+
+		if( $cache ){
+			
+			$option_cache = (int) get_option(ROBO_GALLERY_PREFIX.'cache', '12');
+			if(!$option_cache) $option_cache = 12;
+
+			set_transient( 'robo_gallery_cached_id'.$cacheId , $this->returnHtml, $option_cache * HOUR_IN_SECONDS );
+
+			if($this->debug){
+				$this->endTime = microtime(true);
+				$execution_time = ($this->endTime - $this->startTime);
+				$debugText =  '<b>Total Execution Time:</b> '.$execution_time;	
+			}
+		}
+		
+
+		
+
+		return $debugText.$this->returnHtml;
  	}
 
+ 	function runEvent( $element, $event ){
+
+ 		//return $this->roboGalleryCore->runEvent( $element, $event, $this );
+
+ 		/*add_filter( 'robo_gallery_frontend_', 'wpcandy_time_ago' );
+
+ 		do_action( 'robo_gallery_frontend_'.$element.'_'.$event );
+*/
+ 		/*$eventResult = apply_filters(
+		    'robo_gallery_frontend_'.$element.'_'.$event,
+		    '',
+		    array(
+		    	'id' => $this->id
+		    )
+		);
+		
+		print_r($eventResult);
+
+		return $eventResult;*/
+ 		/*add_action('wporg_after_settings_page_html',  array($this, 'doEvent'));
+ 		add_action('wporg_after_settings_page_html', 'myprefix_add_settings');*/
+ 	}
+
+ /*	function doEvent( 'element', 'event', 'order' ){
+ 		add_action('wporg_after_settings_page_html',  array($this, 'doEvent'));
+ 	}*/
 
  	function getHover( $img ){
 			$hoverHTML = '';
@@ -696,5 +798,37 @@ class roboGallery extends roboGalleryUtils{
  		}
  		
  		return $class;
+ 	}
+
+ 	public function getCheckJsFunction(){
+ 		$jsFunction = '';
+ 		$jsFunction .= ' 
+ 			var prefix = window.addEventListener ? "" : "on";
+			var eventName = window.addEventListener ? "addEventListener" : "attachEvent";
+			window[eventName](prefix + "load", function(event){
+				var jObject = window.rbjQuer || window.jQuery ;
+				if( (typeof jObject == "undefined") || (jObject == null) || (typeof jObject.fn.collagePlus == "undefined") || (jObject.fn.collagePlus == null) ){
+					console.log(" Robo Gallery :: error loading js file ");
+					var roboGalleryObj = document.getElementById("robo_gallery_main_block_'.$this->galleryId.'");
+					var roboErrorObj = document.getElementById("robo_gallery_error_message_'.$this->galleryId.'");
+					roboGalleryObj.parentNode.insertBefore( roboErrorObj, roboGalleryObj);
+					roboErrorObj.style.display =  "block";
+				}
+			}, false);';
+ 		return $jsFunction;
+ 	}
+
+ 	function getErrorDialog(){
+ 		$htmlReturn = '';
+ 		$htmlReturn .= '<div id="robo_gallery_error_message_'.$this->galleryId.'" style="display: none; ">';
+ 			$htmlReturn .= '<strong>'.__('Robo Gallery :: Loading problems [error 768]', 'robo-gallery').'</strong><br/>'
+				.__('Looks like you have some loading problems or conflict of Robo Gallery with some other plugins or theme.', 'robo-gallery')
+			  	.__('Please open Settings section on the right side admin menu and use Compatibility Settings / jQuery option. ', 'robo-gallery')
+			  	.__('Try to switch jQuery option value to Forced include, save settings try to reload page. ', 'robo-gallery')
+			  	.__('If it\'s not gonna help please try Alternative option. User Guide: [ <a href="https://robosoft.co/knowledgebase/2017/11/07/loading-problems-or-conflicts/" target="_blank">Fix conflict solution</a> ] ','robo-gallery')
+			 	.'<br/>'
+			 	.__('If it\'s not gonna help please <a href="https://robosoft.co/new-ticket" target="_blank">contact our support team</a> and we help you to find solution.', 'robo-gallery');
+		$htmlReturn .= '</div>';
+		return $htmlReturn;
  	}
  } 

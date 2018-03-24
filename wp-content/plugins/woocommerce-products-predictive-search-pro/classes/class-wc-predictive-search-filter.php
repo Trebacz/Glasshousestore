@@ -18,10 +18,12 @@ class WC_Predictive_Search_Hook_Filter
 	public static function plugins_loaded() {
 		global $woocommerce_search_page_id;
 		global $predictive_search_mode;
+		global $predictive_search_description_source;
 
 		$woocommerce_search_page_id = WC_Predictive_Search_Functions::get_page_id_from_shortcode( 'woocommerce_search', 'woocommerce_search_page_id');
 
-		$predictive_search_mode = get_option( 'predictive_search_mode', 'strict' );
+		$predictive_search_mode               = get_option( 'predictive_search_mode', 'strict' );
+		$predictive_search_description_source = get_option( 'predictive_search_description_source', 'content' );
 	}
 
 	public static function a3_wp_admin() {

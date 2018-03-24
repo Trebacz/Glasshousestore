@@ -86,9 +86,9 @@ function wppfm_listen() {
 	
 	$jq( '#wppfm_auto_feed_fix_mode' ).change( function () { wppfm_auto_feed_fix_changed(); } );
 	
-	$jq( '#wppfm_debug_mode' ).change( function () { wppfm_debug_mode_changed(); } );
-	
 	$jq( '#wppfm_third_party_attr_keys' ).focusout( function() { wppfm_third_party_attributes_changed(); } );
+	
+	$jq( '#wppfm-clear-feed-process-button' ).click( function() { wppfm_clear_feed_process(); } );
 	
 	$jq( '#wppfm-reinitiate-plugin-button' ).click( function() { wppfm_reinitiate(); } );
     
@@ -106,7 +106,7 @@ function wppfm_listen() {
         if ( $jq(this).is(":checked") ) { $jq( 'input#wppfm_license_activate' ).prop( 'disabled', false ); } 
 		else { $jq( 'input#wppfm_license_activate' ).prop( 'disabled', true ); }
     } );
-
+	
     //$jq( '.edit-output' ).click( function () { wppfm_editOutput( this.id ); } ); TODO: Hier nog verder naar zoeken. De this.id zou de id van de link op moeten pakken.
 	
 	$jq( '#wppfm_prepare_backup' ).click( function() { 
@@ -121,6 +121,4 @@ function wppfm_listen() {
 	$jq( '#wppfm_backup-file-name' ).keyup( function() {
 		if ( $jq( '#wppfm_backup-file-name' ).val !== '' ) { $jq( '#wppfm_make_backup' ).attr( 'disabled', false ); }
 	} );
-	
-    $jq( '.notice-dismiss' ).click( function () { console.log( "Disposed-Clicked" ); } );
 }

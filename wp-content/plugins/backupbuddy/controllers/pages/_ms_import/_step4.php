@@ -137,7 +137,7 @@ if ( isset( $this->_backupdata[ 'is_multisite' ] ) && ( ( $this->_backupdata[ 'i
 	<input type='hidden' name='blog_id' value='<?php echo esc_attr( absint( $_POST[ 'blog_id' ] ) ); ?>' />
 	<input type='hidden' name='blog_path' value='<?php echo esc_attr( $_POST[ 'blog_path' ] ); ?>' />
 	<input type='hidden' name='upload_path' value='<?php echo esc_attr( $wp_upload_dir ); ?>' />
-	<input type='hidden' name='global_options' value='<?php echo base64_encode( serialize( $this->advanced_options ) ); ?>' />
+	<input type='hidden' name='global_options' value='<?php echo base64_encode( json_encode( $this->advanced_options ) ); ?>' />
 	<input type='hidden' name='fileupload_url' value='<?php echo esc_attr( $wp_upload_url ); ?>' />
 	<?php submit_button( __('Next Step') . ' &raquo;', 'primary', 'add-site' ); ?>
 	</form>

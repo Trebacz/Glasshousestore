@@ -83,9 +83,30 @@ while( $t < $stop_time_limit ) {
 	$t++;
 }
 
+if ( '' !== $restore->_state['cleanup']['set_blog_public'] ) {
+	pb_backupbuddy::status( 'details', 'Changing blog_public search engine visibility based on selected setting with value `' . $restore->_state['cleanup']['set_blog_public'] . '`.' );
+	$restore->setBlogPublic( $restore->_state['cleanup']['set_blog_public'] );
+} else {
+	pb_backupbuddy::status( 'details', 'No change to blog_public search engine visibility based on selected setting.' );
+}
 
-cleanup( $restore->_state, $restore );
+if ( 'true' == pb_backupbuddy::_GET( 'deploy' ) ) { // Deployment
+	pb_backupbuddy::status( 'details', 'Deployment so skipping cleanup procedures.' );
+} else {
+	cleanup( $restore->_state, $restore );
+}
 echo $footer; // We must preload the footer file contents since we are about to delete it.
+
+
+if ( 'true' == pb_backupbuddy::_GET( 'deploy' ) ) { // Deployment
+	pb_backupbuddy::status( 'message', 'Deployment finished (importbuddy).' );
+	pb_backupbuddy::status( 'deployFinished', 'Finished.' );
+	// Sleep 10 seconds so that Pushing site has time to confirm completion. Then cleanup.
+	sleep(10);
+	cleanup( $restore->_state, $restore );
+} else { // Standard restore.
+	pb_backupbuddy::status( 'backupbuddy_milestone', 'finish_importbuddy' );
+}
 
 
 // Parse submitted options/settings.
@@ -124,10 +145,8 @@ function parse_options( $restoreData ) {
 	// Search engine visibility (set_blog_public wp_options).
 	if ( '1' == pb_backupbuddy::_POST( 'set_blog_public' ) ) {
 		$restoreData['cleanup']['set_blog_public'] = true;
-		error_log('999yes' );
 	} elseif ( '0' == pb_backupbuddy::_POST( 'set_blog_public' ) ) {
 		$restoreData['cleanup']['set_blog_public'] = false;
-		error_log('999nope' );
 	}
 	
 	return $restoreData;
@@ -142,13 +161,6 @@ function parse_options( $restoreData ) {
  */
 function cleanup( $restoreData, $restore ) {
 	pb_backupbuddy::status( 'details', 'Starting importbuddy cleanup procedures.' );
-	
-	if ( '' !== $restoreData['cleanup']['set_blog_public'] ) {
-		pb_backupbuddy::status( 'details', 'Changing blog_public search engine visibility based on selected setting.' );
-		$restore->setBlogPublic( $restoreData['cleanup']['set_blog_public'] );
-	} else {
-		pb_backupbuddy::status( 'details', 'No change to blog_public search engine visibility based on selected setting.' );
-	}
 	
 	if ( true !== $restoreData['cleanup']['deleteArchive'] ) {
 		pb_backupbuddy::status( 'details', 'Skipped deleting backup archive.' );
@@ -203,12 +215,12 @@ function cleanup( $restoreData, $restore ) {
 	if ( true !== $restoreData['cleanup']['deleteImportLog'] ) {
 		pb_backupbuddy::status( 'details', 'Skipped deleting import log (deleteImportBuddyDirectory may override).' );
 	} else {
-		remove_file( 'importbuddy-' . pb_backupbuddy::$options['log_serial'] . '.txt', 'importbuddy-' . pb_backupbuddy::$options['log_serial'] . '.txt log file', true );
+		remove_file( ABSPATH . 'importbuddy-' . pb_backupbuddy::$options['log_serial'] . '.txt', 'importbuddy-' . pb_backupbuddy::$options['log_serial'] . '.txt log file', true );
 	}
 }
 
 
-pb_backupbuddy::status( 'backupbuddy_milestone', 'finish_importbuddy' );
+
 
 
 // Used by cleanup() above.

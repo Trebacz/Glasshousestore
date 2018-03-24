@@ -3,11 +3,11 @@
  * Plugin Name:			Storefront Blog Excerpt
  * Plugin URI:			http://wordpress.org/plugins/storefront-blog-excerpt/
  * Description:			A boilerplate plugin for creating Storefront extensions.
- * Version:				1.1.2
+ * Version:				1.1.3
  * Author:				Wooassist
  * Author URI:			http://wooassist.com
  * Requires at least:	4.0.0
- * Tested up to:		4.7.3
+ * Tested up to:		4.9.1
  *
  * Text Domain: storefront-blog-excerpt
  * Domain Path: /languages/
@@ -323,15 +323,20 @@ final class Storefront_Blog_Excerpt {
 	/**
 	 * Display the post content with a link to the single post
 	 * @since 1.0.0
+	 * Version 1.1.3 added permalink to thumbnail image
 	 */
 	public function post_excerpt() {
 		?>
 		<div class="entry-content" itemprop="articleBody">
 		<?php
+		
 		if ( has_post_thumbnail() ) {
 			$thumb_size = get_theme_mod( 'woa_sf_blog_excerpt_image_size', 'full' );
 			$img_class = ( $thumb_size == 'thumbnail' ) ? apply_filters( 'woa_sf_blog_excerpt_image_float', 'alignleft' ) : '';
-			the_post_thumbnail( $thumb_size, array( 'itemprop' => 'image', 'class' => "attachment-$thumb_size $img_class" ) );
+		?>	
+			<a href="<?php the_permalink(); ?>" ><?php the_post_thumbnail( $thumb_size, array( 'itemprop' => 'image', 'class' => "attachment-$thumb_size $img_class" ) ); ?></a>
+		<?php
+			
 		}
 
 		$content = do_shortcode( ( has_excerpt( get_the_ID() ) ) ? get_the_excerpt() : get_the_content() );

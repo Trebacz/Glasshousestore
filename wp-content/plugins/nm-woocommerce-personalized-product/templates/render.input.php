@@ -5,7 +5,7 @@
 global $nmpersonalizedproduct, $product;
 
 $single_form = $nmpersonalizedproduct -> get_product_meta ( $nmpersonalizedproduct -> productmeta_id );
-//nm_personalizedproduct_pa( $single_form );
+// nm_personalizedproduct_pa( $single_form );
 
 $existing_meta = json_decode ( $single_form -> the_meta, true );
 
@@ -23,10 +23,12 @@ echo '<style>';
 	
 	/**
 	 * hiding prices for variable product
+	 * only when priced options are used
 	 * 
-	 * @since 6.8
+	 * @since 8.2
 	 **/
-	 echo '.single_variation_wrap .price {display: none; !important}';
+	 if( ppom_meta_priced_options($existing_meta) ) 
+		echo '.single_variation_wrap .price {display: none !important}';
 echo '</style>';
 
 
@@ -278,7 +280,8 @@ echo '</style>';
 					
 					
 				case 'select':
-				
+					
+					
 					$default_selected = (isset( $meta['selected'] ) ? $meta['selected'] : '' );
 					$data_onetime = (isset( $meta['onetime'] ) ? $meta['onetime'] : '' );
 					$data_onetime_taxable = (isset( $meta['onetime_taxable'] ) ? $meta['onetime_taxable'] : '' );
@@ -466,7 +469,8 @@ echo '</style>';
 					
 					
 				case 'image':
-					
+					$plugin_meta = get_plugin_meta_wooproduct();
+					wp_enqueue_script('nm-image-zoom', $plugin_meta['url'].'/js/image-tooltip.js', array('jquery') );
 						$default_selected = $meta['selected'];
 						$args = array(	'name'			=> $name,
 								'id'			=> $name,
@@ -474,6 +478,7 @@ echo '</style>';
 								'data-req'		=> $required,
 								'data-message'	=> $error_message,
 								'popup-width'	=> $meta['popup_width'],
+								'legacy_view'	=> (isset($meta['legacy_view'])) ? $meta['legacy_view'] : '',
 								'popup-height'	=> $meta['popup_height'],
 								'multiple-allowed' => $meta['multiple_allowed']);
 					
@@ -588,13 +593,17 @@ echo '</style>';
 					case 'pricematrix':
 						
 						$pm_name = sanitize_key($title);
+						$option_added = isset($meta['option_added']) ? $meta['option_added'] : '';
+						
 						echo '<div id="price-matrix-'.$pm_name.'" style="width: '. $the_width.'; margin-right: '. $the_margin.';'.$visibility.'" '.$conditions_data.'>';
 						printf( __('<label for="%1$s">%2$s</label><br />', 'nm-personalizedproduct'), $pm_name, $title );
 						
 						$args = array(	'id'			=> $name,
-								'data-type'		=> $type,
-								'title'			=> $title,
-								'description'			=> $description,
+										'data-type'		=> $type,
+										'title'			=> $title,
+										'description'	=> $description,
+										'product_price'	=> $product->get_price(),
+										'option_added'  => $option_added,
 						);
 						$args = apply_filters('ppom_input_args', $args, $type);
 						$nmpersonalizedproduct -> inputs[$type]	-> render_input($args, $options);
@@ -669,116 +678,3 @@ echo '</style>';
 	
 	echo '</div>'; // ends nm-productmeta-box
 }
-
-if( $single_form -> productmeta_validation == 'yes'){	//enable ajax based validation
-?>
-<script type="text/javascript">
-	<!--
-	jQuery(function($){
-		
-		//updating nm_personalizedproduct_vars.settings
-		$(".nm-productmeta-box").closest('form').find('button').click(function(event)
-		  {
-		    event.preventDefault(); // cancel default behavior
-		
-		    if( validate_cart_data() ){
-		    	$(this).closest('form').submit();
-		    }
-		  });
-	});
-	
-	function validate_cart_data(){
-	
-	var form_data = jQuery.parseJSON( '<?php echo stripslashes($single_form -> the_meta);?>' );
-	var has_error = true;
-	var error_in = '';
-	
-	jQuery.each( form_data, function( key, meta ) {
-		
-		var type = meta['type'];
-		var error_message	= stripslashes( meta['error_message'] );
-		//console.log('err message '+error_message+' id '+meta['data_name']);
-		
-		error_message = (error_message === '') ? nm_personalizedproduct_vars.default_error_message : error_message;
-		
-		if(type === 'text' || type === 'textarea' || type === 'select' || type === 'email' || type === 'date'){
-			
-			var input_control = jQuery('#'+meta['data_name']);
-			
-			if(meta['required'] === "on" && jQuery(input_control).val() === '' && jQuery(input_control).closest('div').css('display') != 'none'){
-				jQuery(input_control).closest('div').find('span.errors').html(error_message).css('color', 'red');
-				has_error = false;
-				error_in = meta['data_name']
-			}else{
-				jQuery(input_control).closest('div').find('span.errors').html('').css({'border' : '','padding' : '0'});
-			}
-		}else if(type === 'checkbox'){
-			
-			if(meta['required'] === "on" && jQuery('input:checkbox[name="'+meta['data_name']+'[]"]:checked').length === 0 && jQuery('input:checkbox[name="'+meta['data_name']+'[]"]').closest('div').css('display') != 'none'){
-				
-				jQuery('input:checkbox[name="'+meta['data_name']+'[]"]').closest('div').find('span.errors').html(error_message).css('color', 'red');
-				has_error = false;
-			}else if(meta['min_checked'] != '' && jQuery('input:checkbox[name="'+meta['data_name']+'[]"]:checked').length < meta['min_checked']){
-				jQuery('input:checkbox[name="'+meta['data_name']+'[]"]').closest('div').find('span.errors').html(error_message).css('color', 'red');
-				has_error = false;
-			}else if(meta['max_checked'] != '' && jQuery('input:checkbox[name="'+meta['data_name']+'[]"]:checked').length > meta['max_checked']){
-				jQuery('input:checkbox[name="'+meta['data_name']+'[]"]').closest('div').find('span.errors').html(error_message).css('color', 'red');
-				has_error = false;
-			}else{
-				
-				jQuery('input:checkbox[name="'+meta['data_name']+'[]"]').closest('div').find('span.errors').html('').css({'border' : '','padding' : '0'});
-				
-				}
-		}else if(type === 'radio'){
-				
-				if(meta['required'] === "on" && jQuery('input:radio[name="'+meta['data_name']+'"]:checked').length === 0 && jQuery('input:radio[name="'+meta['data_name']+'"]').closest('div').css('display') != 'none'){
-					jQuery('input:radio[name="'+meta['data_name']+'"]').closest('div').find('span.errors').html(error_message).css('color', 'red');
-					has_error = false;
-					error_in = meta['data_name']
-				}else{
-					jQuery('input:radio[name="'+meta['data_name']+'"]').closest('div').find('span.errors').html('').css({'border' : '','padding' : '0'});
-				}
-		}else if(type === 'file'){
-			
-				var $upload_box = jQuery('#nm-uploader-area-'+meta['data_name']);
-				var $uploaded_files = $upload_box.find('input:checkbox:checked');
-				if(meta['required'] === "on" && $uploaded_files.length === 0 && $upload_box.css('display') != 'none'){
-					$upload_box.find('span.errors').html(error_message).css('color', 'red');
-					has_error = false;
-					error_in = meta['data_name']
-				}else{
-					$upload_box.find('span.errors').html('').css({'border' : '','padding' : '0'});
-				}
-		}else if(type === 'image'){
-			
-			var $image_box = jQuery('#pre-uploaded-images-'+meta['data_name']);
-			if(meta['required'] === "on" && jQuery('input:radio[name="'+meta['data_name']+'"]:checked').length === 0 && jQuery('input:checkbox[name="'+meta['data_name']+'[]"]:checked').length === 0 && $image_box.css('display') != 'none'){
-				$image_box.find('span.errors').html(error_message).css('color', 'red');
-				has_error = false;
-				error_in = meta['data_name']
-			}else{
-				$image_box.find('span.errors').html('').css({'border' : '','padding' : '0'});
-			}
-		}else if(type === 'masked'){
-			
-			var input_control = jQuery('#'+meta['data_name']);
-			
-			if(meta['required'] === "on" && (jQuery(input_control).val() === '' || jQuery(input_control).attr('data-ismask') === 'no') && jQuery(input_control).closest('div').css('display') != 'none'){
-				jQuery(input_control).closest('div').find('span.errors').html(error_message).css('color', 'red');
-				has_error = false;
-				error_in = meta['data_name'];
-			}else{
-				jQuery(input_control).closest('div').find('span.errors').html('').css({'border' : '','padding' : '0'});
-			}
-		}
-		
-	});
-	
-	//console.log( error_in ); return false;
-	return has_error;
-}
-	//-->
-</script>
-
-<?php
-}	//ending if() ajax based validation

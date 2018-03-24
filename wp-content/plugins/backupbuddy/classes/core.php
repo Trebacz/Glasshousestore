@@ -28,7 +28,6 @@ class backupbuddy_core {
 		return false; // Not found.
 	}
 
-
 	public static function prettyFunctionTitle( $function, $args = '' ) {
 
 		if ( $function == 'backup_create_database_dump' ) {
@@ -747,7 +746,7 @@ class backupbuddy_core {
 	 *	function description
 	 *	
 	 *	@param		int		$destination_id		ID number (index of the destinations array) to send it.
-	 *	@param		string	$file				Full file path of file to send.
+	 *	@param		string	$file				Full file path of file to send. MAY be an array of files.
 	 *	@param		string	$trigger			What triggered this backup. Valid values: scheduled, manual.
 	 *	@param		bool	$send_importbuddy	Whether or not importbuddy.php should also be sent with the file to destination.
 	 *	@param		bool	$delete_after		Whether or not to delete after send success after THIS send.
@@ -756,23 +755,29 @@ class backupbuddy_core {
 	 */
 	public static function send_remote_destination( $destination_id, $file, $trigger = '', $send_importbuddy = false, $delete_after = false, $identifier = '', $destination_settings = '' ) {
 		
-		if ( ! file_exists( $file ) ) {
-			// Check if utf8 decoding the filename helps us find it.
-			$utf_decoded_filename = utf8_decode( $file );
-			if ( file_exists( $utf_decoded_filename ) ) {
-				$file = $utf_decoded_filename;
-			} else {
-				pb_backupbuddy::status( 'error', 'Error #8583489734: Unable to send file `' . $file . '` to remote destination as it no longer exists. It may have been deleted or permissions are invalid.' );
-				return false;
+		if ( ! is_array( $file ) ) {
+			if ( ! file_exists( $file ) ) {
+				// Check if utf8 decoding the filename helps us find it.
+				$utf_decoded_filename = utf8_decode( $file );
+				if ( file_exists( $utf_decoded_filename ) ) {
+					$file = $utf_decoded_filename;
+				} else {
+					pb_backupbuddy::status( 'error', 'Error #8583489734: Unable to send file `' . $file . '` to remote destination as it no longer exists. It may have been deleted or permissions are invalid.' );
+					return false;
+				}
 			}
 		}
 		
 		$migrationkey_transient_time = 60*60*24;
 		
-		if ( '' == $file ) {
-			$backup_file_size = 50000; // not sure why anything current would be sending importbuddy but NOT sending a backup but just in case...
+		if ( ! is_array( $file ) ) {
+			if ( '' == $file ) {
+				$backup_file_size = 50000; // not sure why anything current would be sending importbuddy but NOT sending a backup but just in case...
+			} else {
+				$backup_file_size = filesize( $file );
+			}
 		} else {
-			$backup_file_size = filesize( $file );
+			$backup_file_size = -1;
 		}
 		
 		// Generate remote send ID for reference and add it as a new logging serial for better recording details.
@@ -785,7 +790,11 @@ class backupbuddy_core {
 			set_transient( 'pb_backupbuddy_migrationkey', $identifier, $migrationkey_transient_time );
 		}
 		
-		pb_backupbuddy::status( 'details', 'Sending file `' . $file . '` to remote destination `' . $destination_id . '` with ID `' . $identifier . '` triggered by `' . $trigger . '`.' );
+		if ( ! is_array( $file ) ) {
+			pb_backupbuddy::status( 'details', 'Sending file `' . $file . '` to remote destination `' . $destination_id . '` with ID `' . $identifier . '` triggered by `' . $trigger . '`.' );
+		} else {
+			pb_backupbuddy::status( 'details', 'Sending multiple files (' . count( $file ) . ') in single pass to remote destination `' . $destination_id . '` with ID `' . $identifier . '` triggered by `' . $trigger . '`.' );
+		}
 		
 		//pb_backupbuddy::status( 'details', 'About to create initial fileoptions data.' );
 		require_once( pb_backupbuddy::plugin_path() . '/classes/fileoptions.php' );
@@ -1185,7 +1194,6 @@ class backupbuddy_core {
 		if ( FALSE !== stristr( $temp_dir, ABSPATH ) ) { // Temp dir is within webroot.
 			pb_backupbuddy::anti_directory_browsing( $destination );
 		}
-		unset( $temp_dir );
 		
 		$destFilename = 'temp_dat_read-' . $serial . '.php';
 		$extractions = array( $find => $destFilename );
@@ -1193,7 +1201,7 @@ class backupbuddy_core {
 		if ( false === $extract_result ) { // failed.
 			return array();
 		} else {
-			$datArray = self::get_dat_file_array( $destination . 'temp_dat_read-' . $serial . '.php' );
+			$datArray = self::get_dat_file_array( rtrim( $destination, '\\/' ) . '/temp_dat_read-' . $serial . '.php' );
 			@unlink( $temp_dir . $destFilename );
 			if ( is_array( $datArray ) ) {
 				return $datArray;
@@ -1755,7 +1763,7 @@ class backupbuddy_core {
 	 *	@return		boolean		True on success, string error message otherwise.
 	 */
 	public static function loopback_test() {
-		$loopback_url = admin_url('admin-ajax.php');
+		$loopback_url = admin_url('admin-ajax.php?action=itbub_http_loop_back_test') . '&serial=' . pb_backupbuddy::$options['log_serial'];
 		pb_backupbuddy::status( 'details', 'Testing loopback connections by connecting back to site at the URL: `' . $loopback_url . '`. It should display simply "0" or "-1" in the body.' );
 
 		$response = wp_remote_get(
@@ -2503,11 +2511,12 @@ class backupbuddy_core {
 			return array( false, $error );
 		}
 		
+		/*
 		if ( true === $doCleanup ) {
 			pb_backupbuddy::status( 'details', 'NOT skipping cleanup procedures at end of importbuddy Deployment based on advanced Deployment settings.' );
 		} else {
 			pb_backupbuddy::status( 'details', 'SKIPPING CLEANUP procedures at end of importbuddy Deployment based on advanced Deployment settings.' );
-		}
+		}*/
 		
 		$backupSerial = backupbuddy_core::get_serial_from_file( $backupFile );
 		
@@ -2531,12 +2540,12 @@ class backupbuddy_core {
 		$state['databaseSettings']['password'] = DB_PASSWORD;
 		$state['databaseSettings']['prefix'] = $wpdb->prefix;
 		$state['databaseSettings']['renamePrefix'] = true;
-		$state['cleanup']['deleteImportBuddy'] = $doCleanup;
-		$state['cleanup']['deleteImportBuddyDirectory'] = $doCleanup;
-		$state['cleanup']['deleteImportLog'] = $doCleanup;
+		//$state['cleanup']['deleteImportBuddy'] = $doCleanup;
+		//$state['cleanup']['deleteImportBuddyDirectory'] = $doCleanup;
+		//$state['cleanup']['deleteImportLog'] = $doCleanup;
 		
 		if ( is_array( $additionalStateInfo ) ) {
-			$state = array_merge( $state, $additionalStateInfo );
+			$state = array_merge_recursive( $state, $additionalStateInfo );
 		}
 		
 		//error_log( print_r( $state, true ) );
@@ -2548,7 +2557,7 @@ class backupbuddy_core {
 			pb_backupbuddy::status( 'error', $error);
 			return array( false, $error );
 		}
-		fwrite( $file_handle, "<?php die('Access Denied.'); // <!-- ?>\n" . base64_encode( serialize( $state ) ) );
+		fwrite( $file_handle, "<?php die('Access Denied.'); // <!-- ?>\n" . base64_encode( json_encode( $state ) ) );
 		fclose( $file_handle );
 		
 		
@@ -2714,8 +2723,14 @@ class backupbuddy_core {
 			$type = 'files';
 		} elseif ( stristr( $file, '-themes-' ) !== false ) {
 			$type = 'themes';
+		} elseif ( stristr( $file, '-media-' ) !== false ) {
+			$type = 'media';
 		} elseif ( stristr( $file, '-plugins-' ) !== false ) {
 			$type = 'plugins';
+		} elseif ( false !== stristr( $filename, 'importbuddy.php' ) ) {
+			$type = 'ImportBuddy Tool';
+		} elseif ( stristr( $file, '-export-' ) !== false ) {
+			$type = 'export';
 		}
 		
 		if ( isset( $type ) ) {
@@ -2803,14 +2818,23 @@ class backupbuddy_core {
 	 *
 	 * Calculate comparison data for all files within a path. Useful for tracking file changes between two locations.
 	 *
-	 * @param	array 	$excludes		Directories to exclude, RELATIVE to the root. Include LEADING slash for each entry.
-	 * @param	array	$utf8_encode	Should we encode any file names that are in UTF-8 format?
-	 * @return	array 					Nested array of file/directory structure.
+	 * @param  string $root            ABSOLUTE full path.
+	 * @param  array  $excludes        Directories to exclude, RELATIVE to the root. Include LEADING slash for each entry.
+	 * @param  array  $utf8_encode	Should we encode any file names that are in UTF-8 format?
+	 * @param  string $prependPath	String path to prepend in the resulting array key returned. Does not impact actual calculations.
+	 * @return array 				Nested array of file/directory structure.
 	 */
-	public static function hashGlob( $root, $generate_sha1 = false, $excludes = array(), $utf8_encode = false ) {
-		
+	public static function hashGlob( $root, $generate_sha1 = false, $excludes = array(), $utf8_encode = false, $prependPath = '' ) {
+		//error_log( 'excludes:' );
+		//error_log( print_r( $excludes, true ) );
 		$root = rtrim( $root, '/\\' ); // Make sure no trailing slash.
-		$excludes = str_replace( $root, '', $excludes );
+		$excludes = str_replace( $root, '', $excludes ); // Make sure all relative to the root.
+		
+		if ( ! file_exists( $root ) ) {
+			pb_backupbuddy::status( 'warning', 'Warning #8949834934: Unable to read hashGlob of dir as it does not exist: `' . $root . '`. SKIPPING OVER.' );
+			return array();
+		}
+		
 		$files = (array) pb_backupbuddy::$filesystem->deepscandir( $root ); // As of v7.0 changed from deepscan to deepglob to get any dirs or files beginning with a period.
 		$root_len = strlen( $root );
 		$hashedFiles = array();
@@ -2840,6 +2864,8 @@ class backupbuddy_core {
 				$new_file = utf8_encode( $new_file );
 			}
 			
+			$new_file = $prependPath . $new_file;
+			
 			$hashedFiles[$new_file] = array(
 				'size'		=> $stat['size'],
 				'modified'	=> $stat['mtime'],
@@ -2861,9 +2887,10 @@ class backupbuddy_core {
 	} // End hashGlob.
 	
 	
-	
 	// search backwards starting from haystack length characters from the end
 	public static function startsWith($haystack, $needle) {
+		//return ( strncmp( $string, $search, strlen($search) ) == 0 );
+		
 		if ( '' == $needle ) { // Blank needle is invalid so always say false, it does not start with a blank.
 			return false;
 		}
@@ -3645,6 +3672,31 @@ class backupbuddy_core {
 	
 	
 	
+	// Get a http header. Returns blank string if not set.
+	public static function getHttpHeader( $header ) {
+		$header = str_replace( '-', '_', $header ); // Populated vars get dash replaced with underscore.
+		if ( ! isset( $_SERVER['HTTP_' . strtoupper( $header ) ] ) ) {
+			//if ( ! function_exists( 'getallheaders' ) ) {
+				return '';
+			//}
+			
+			// Try to get Apache headers.
+			/*
+			$headers = getallheaders();
+			$headers = array_change_key_case( $headers, CASE_UPPER );
+			
+			if ( isset( $headers[ $header ] ) ) {
+				return $headers[ $header ];
+			} else {
+				return '';
+			}
+			*/
+		}
+		return $_SERVER['HTTP_' . strtoupper( $header ) ];
+	} // End getHttpHeader().
+
+
+
 	// Attrib: http://stackoverflow.com/questions/190421/caller-function-in-php-5/
 	public static function getCallingFunctionName($completeTrace=false) {
         $trace=debug_backtrace();
@@ -3667,6 +3719,43 @@ class backupbuddy_core {
         }
         return $str;
     }
+    
+    
+     // Complements to Drupal:
+	// Returns a file size limit in bytes based on the PHP upload_max_filesize.
+	// and post_max_size
+	public static function file_upload_max_size() {
+	  static $max_size = -1;
+
+	  if ($max_size < 0) {
+	    // Start with post_max_size.
+	    $post_max_size = backupbuddy_core::parse_php_size(ini_get('post_max_size'));
+	    if ($post_max_size > 0) {
+	      $max_size = $post_max_size;
+	    }
+
+	    // If upload_max_size is less, then reduce. Except if upload_max_size is
+	    // zero, which indicates no limit.
+	    $upload_max = backupbuddy_core::parse_php_size(ini_get('upload_max_filesize'));
+	    if ($upload_max > 0 && $upload_max < $max_size) {
+	      $max_size = $upload_max;
+	    }
+	  }
+	  return $max_size;
+	}
+	
+	// Complements to Drupal:
+	public static function parse_php_size($size) {
+	  $unit = preg_replace('/[^bkmgtpezy]/i', '', $size); // Remove the non-unit characters from the size.
+	  $size = preg_replace('/[^0-9\.]/', '', $size); // Remove the non-numeric characters from the size.
+	  if ($unit) {
+	    // Find the position of the unit in the ordered string which is the power of magnitude to multiply a kilobyte by.
+	    return round($size * pow(1024, stripos('bkmgtpezy', $unit[0])));
+	  }
+	  else {
+	    return round($size);
+	  }
+	}
 
 	
 	

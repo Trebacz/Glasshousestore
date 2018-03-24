@@ -28,7 +28,6 @@ $old_comment = pb_backupbuddy::$classes['zipbuddy']->get_comment( $backup_file )
 $comment = backupbuddy_core::normalize_comment_data( $old_comment );
 $comment['note'] = $note;
 
-//$new_comment = base64_encode( serialize( $comment ) );
 
 $comment_result = pb_backupbuddy::$classes['zipbuddy']->set_comment( $backup_file, $comment );
 

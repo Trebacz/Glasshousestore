@@ -124,7 +124,7 @@ if ( ( ( pb_backupbuddy::$options['profiles'][0]['integrity_check'] == '0' ) ) &
 	pb_backupbuddy::status( 'details', 'Integrity check disabled. Skipping scan.' );
 	$file_stats = @stat( $file );
 	if ( $file_stats === false ) { // stat failure.
-		pb_backupbuddy::status( 'error', 'Error #4539774. Unable to get file details ( via stat() ) for file `' . $file . '`. The file may be corrupt or too large for the server.' );
+		pb_backupbuddy::status( 'error', 'Error #4539774. Unable to get file details ( via stat() ) for file `' . $file . '`. The file may be corrupt, too large for the server, or been deleted unexpectedly. Check that the file exists and can be accessed.' );
 		$file_size = 0;
 		$file_modified = 0;
 	} else { // stat success.
@@ -453,7 +453,7 @@ pb_backupbuddy::status( 'details', 'Status: `' . $integrity_status . '`. Descrip
 pb_backupbuddy::status( 'details', 'Getting file details such as size, timestamp, etc.' );
 $file_stats = @stat( $file );
 if ( $file_stats === false ) { // stat failure.
-	pb_backupbuddy::status( 'error', 'Error #4539774b. Unable to get file details ( via stat() ) for file `' . $file . '`. The file may be corrupt or too large for the server.' );
+	pb_backupbuddy::status( 'error', 'Error #4539774b. Unable to get file details ( via stat() ) for file `' . $file . '`. The file may be corrupt, too large for the server, or been deleted unexpectedly. Check that the file exists and can be accessed.' );
 	$file_size = 0;
 	$file_modified = 0;
 } else { // stat success.

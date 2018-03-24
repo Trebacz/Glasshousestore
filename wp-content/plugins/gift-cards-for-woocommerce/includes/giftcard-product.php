@@ -10,7 +10,7 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-	
+
 
 function rpgc_extra_check( $product_type_options ) {
 
@@ -18,8 +18,8 @@ function rpgc_extra_check( $product_type_options ) {
 		'giftcard' => array(
 			'id' => '_giftcard',
 			'wrapper_class' => 'show_if_simple show_if_variable',
-			'label' => __( 'Gift Card', 'rpgiftcards' ),
-			'description' => __( 'Make product a gift card.', 'rpgiftcards' )
+			'label' => __( 'Gift Card', 'kodiak-giftcards' ),
+			'description' => __( 'Make product a gift card.', 'kodiak-giftcards' )
 		),
 	);
 
@@ -40,7 +40,7 @@ function rpgc_process_meta( $post_id, $post ) {
 		if( $is_giftcard == 'yes' ) {
 
 			update_post_meta( $post_id, '_giftcard', $is_giftcard );
-			
+
 			if ( get_option( "woocommerce_enable_multiples") != "yes" ) {
 				update_post_meta( $post_id, '_sold_individually', $is_giftcard );
 			}
@@ -79,7 +79,7 @@ function wpr_uniqueID($cart_item_data, $product_id) {
 		$cart_item_data['unique_key'] = $unique_cart_item_key;
 
 	}
-	
+
 	return apply_filters( 'wpr_uniqueID', $cart_item_data, $product_id );
 }
 add_filter('woocommerce_add_cart_item_data','wpr_uniqueID',10,2);
@@ -95,7 +95,7 @@ function wpr_change_add_to_cart_button ( $link ) {
 		if( $giftCard_button <> '' ){
 			$giftCardText = get_option( "woocommerce_giftcard_button" );
 		} else {
-			$giftCardText = 'Customize';
+			$giftCardText = __( 'Customize', 'kodiak-giftcards' );
 		}
 
 		$link = '<a href="' . esc_url( get_permalink( $post->ID ) ) . '" rel="nofollow" data-product_id="' . esc_attr( $post->ID ) . '" data-product_sku="' . esc_attr( $post->ID ) . '" class="button product_type_' . esc_attr( $post->product_type ) . '">' . $giftCardText . '</a>';
@@ -129,44 +129,44 @@ function rpgc_cart_fields( ) {
 		$is_physical	= get_post_meta( $post->ID, '_wpr_physical_card', true );
 
 		do_action( 'rpgc_before_all_giftcard_fields', $post );
-		
+
 		$rpgc_to 			= ( isset( $_POST['rpgc_to'] ) ? sanitize_text_field( $_POST['rpgc_to'] ) : "" );
-		$rpgc_to_email 		= ( isset( $_POST['rpgc_to_email'] ) ? sanitize_text_field( $_POST['rpgc_to_email'] ) : "" );
+		$rpgc_to_email 	= ( isset( $_POST['rpgc_to_email'] ) ? sanitize_text_field( $_POST['rpgc_to_email'] ) : "" );
 		$rpgc_note			= ( isset( $_POST['rpgc_note'] ) ? sanitize_text_field( $_POST['rpgc_note'] ) : ""  );
 		$rpgc_address		= ( isset( $_POST['rpgc_address'] ) ? sanitize_text_field( $_POST['rpgc_address'] ) : ""  );
 		$rpgc_reloading		= ( isset( $_POST['rpgc_reload_check'] ) ? sanitize_text_field( $_POST['rpgc_reload_check'] ) : ""  );
 		$rpgc_reload_number	= ( isset( $_POST['rpgc_reload_card'] ) ? sanitize_text_field( $_POST['rpgc_reload_card'] ) : ""  );
 
-		$rpw_to_check 		= ( get_option( 'woocommerce_giftcard_to' ) <> NULL ? get_option( 'woocommerce_giftcard_to' ) : __('To', 'rpgiftcards' ) );
-		$rpw_toEmail_check 	= ( get_option( 'woocommerce_giftcard_toEmail' ) <> NULL ? get_option( 'woocommerce_giftcard_toEmail' ) : __('To Email', 'rpgiftcards' )  );
-		$rpw_note_check		= ( get_option( 'woocommerce_giftcard_note' ) <> NULL ? get_option( 'woocommerce_giftcard_note' ) : __('Note', 'rpgiftcards' )  );
-		$rpw_address_check	= ( get_option( 'woocommerce_giftcard_address' ) <> NULL ? get_option( 'woocommerce_giftcard_address' ) : __('Address', 'rpgiftcards' )  );
-		//$wpr_physical_card 	= ( get_option( 'woocommerce_giftcard_to' ) <> NULL ? get_option( 'woocommerce_giftcard_to' ) : __('To', 'rpgiftcards' ) );
+		$rpw_to_check 		= ( get_option( 'woocommerce_giftcard_to' ) <> NULL ? get_option( 'woocommerce_giftcard_to' ) : __('To', 'kodiak-giftcards' ) );
+		$rpw_toEmail_check 	= ( get_option( 'woocommerce_giftcard_toEmail' ) <> NULL ? get_option( 'woocommerce_giftcard_toEmail' ) : __('To Email', 'kodiak-giftcards' )  );
+		$rpw_note_check		= ( get_option( 'woocommerce_giftcard_note' ) <> NULL ? get_option( 'woocommerce_giftcard_note' ) : __('Note', 'kodiak-giftcards' )  );
+		$rpw_address_check	= ( get_option( 'woocommerce_giftcard_address' ) <> NULL ? get_option( 'woocommerce_giftcard_address' ) : __('Address', 'kodiak-giftcards' )  );
+		//$wpr_physical_card 	= ( get_option( 'woocommerce_giftcard_to' ) <> NULL ? get_option( 'woocommerce_giftcard_to' ) : __('To', 'kodiak-giftcards' ) );
 		?>
 
 		<div>
 			<?php if ( $is_required_field_giftcard == "yes" ) { ?>
-				<div class="rpw_product_message hide-on-reload"><?php _e('All fields below are required', 'rpgiftcards' ); ?></div>
+				<div class="rpw_product_message hide-on-reload"><?php _e('All fields below are required', 'kodiak-giftcards' ); ?></div>
 			<?php } else { ?>
-				<div class="rpw_product_message hide-on-reload"><?php _e('All fields below are optional', 'rpgiftcards' ); ?></div>
+				<div class="rpw_product_message hide-on-reload"><?php _e('All fields below are optional', 'kodiak-giftcards' ); ?></div>
 			<?php } ?>
-			
+
 			<?php  do_action( 'rpgc_before_product_fields' ); ?>
 
-			<input type="hidden" id="rpgc_description" name="rpgc_description" value="<?php _e('Generated from the website.', 'rpgiftcards' ); ?>" />
+			<input type="hidden" id="rpgc_description" name="rpgc_description" value="<?php _e('Generated from the website.', 'kodiak-giftcards' ); ?>" />
 			<input type="text" name="rpgc_to" id="rpgc_to" class="input-text hide-on-reload" style="margin-bottom:5px;" placeholder="<?php echo $rpw_to_check; ?>" value="<?php echo $rpgc_to; ?>">
-			
+
 			<?php if ( $is_physical == 'yes' ) { ?>
 				<textarea class="input-text hide-on-reload" id="rpgc_address" name="rpgc_address" rows="2" style="margin-bottom:5px;" placeholder="<?php echo $rpw_address_check; ?>"><?php echo $rpgc_address; ?></textarea>
-			<?php } else { ?> 
+			<?php } else { ?>
 				<input type="email" name="rpgc_to_email" id="rpgc_to_email" class="input-text hide-on-reload" placeholder="<?php echo $rpw_toEmail_check; ?>" style="margin-bottom:5px;" value="<?php echo $rpgc_to_email; ?>">
 			<?php } ?>
 			<?php if ( get_option( 'wpr_woocommerce_disable_notes' ) != 'yes' ) { ?>
 				<textarea class="input-text hide-on-reload" id="rpgc_note" name="rpgc_note" rows="2" style="margin-bottom:5px;" placeholder="<?php echo $rpw_note_check; ?>"><?php echo $rpgc_note; ?></textarea>
 			<?php } ?>
 			<?php if ( $is_reload == "yes" ) { ?>
-				<input type="checkbox" name="rpgc_reload_check" id="rpgc_reload_check" <?php if ( $rpgc_reloading == "on") { echo "checked=checked"; } ?>> <?php _e('Reload existing Gift Card', 'rpgiftcards' ); ?>
-				<input type="text" name="rpgc_reload_card" id="rpgc_reload_card" class="input-text show-on-reload" style="margin-bottom:5px; display:none;" placeholder="<?php _e('Enter Gift Card Number', 'rpgiftcards' ); ?>" value="<?php echo $rpgc_reload_number; ?>">
+				<input type="checkbox" name="rpgc_reload_check" id="rpgc_reload_check" <?php if ( $rpgc_reloading == "on") { echo "checked=checked"; } ?>> <?php _e('Reload existing Gift Card', 'kodiak-giftcards' ); ?>
+				<input type="text" name="rpgc_reload_card" id="rpgc_reload_card" class="input-text show-on-reload" style="margin-bottom:5px; display:none;" placeholder="<?php _e('Enter Gift Card Number', 'kodiak-giftcards' ); ?>" value="<?php echo $rpgc_reload_number; ?>">
 			<?php } ?>
 
 			<?php  do_action( 'rpgc_after_product_fields', $post->ID ); ?>
@@ -178,7 +178,7 @@ function rpgc_cart_fields( ) {
 			echo '
 				<script>
 					jQuery( document ).ready( function( $ ){ $( ".quantity" ).hide( ); });
-					
+
 					jQuery("#rpgc_reload_check").change( function( $ ) {
 						jQuery(".hide-on-reload").toggle();
 					});
@@ -198,7 +198,7 @@ function wpr_add_to_cart_validation( $passed, $product_id, $quantity ) {
 		if ( ( $_POST['rpgc_reload_check'] == "on" ) && ( $_POST['rpgc_reload_card'] != "" ) ) {
 
 			if ( ! wpr_get_giftcard_by_code( wc_clean( $_POST['rpgc_reload_card'] ) ) ) {
-				$notice = __( 'Gift card number not Found.', 'rpgiftcards' );
+				$notice = __( 'Gift card number not Found.', 'kodiak-giftcards' );
 				wc_add_notice( $notice, 'error' );
 				$passed = false;
 			}
@@ -206,32 +206,32 @@ function wpr_add_to_cart_validation( $passed, $product_id, $quantity ) {
 			$passed = apply_filters( 'wpr_other_validations', $passed, $product_id, $quantity );
 		}
 	}
-	
+
 	if ( $is_required_field_giftcard == "yes" && $is_giftcard == "yes" ) {
-		
+
 		if ( ! isset( $_POST['rpgc_to_email'] ) || $_POST['rpgc_to_email'] == "" ) {
 			if ( get_post_meta( $product_id, '_wpr_physical_card', true ) == "no" ) {
-				$notice = __( 'Please enter an email address for the gift card.', 'rpgiftcards' );
+				$notice = __( 'Please enter an email address for the gift card.', 'kodiak-giftcards' );
 				wc_add_notice( $notice, 'error' );
 				$passed = false;
 			}
 		}
-		
+
 		if ( ! isset( $_POST['rpgc_to'] ) || $_POST['rpgc_to'] == "" ) {
-			$notice = __( 'Please enter a name for the gift card.', 'rpgiftcards' );
+			$notice = __( 'Please enter a name for the gift card.', 'kodiak-giftcards' );
 			wc_add_notice( $notice, 'error' );
 			$passed = false;
 		}
-		
-		if ( ! isset( $_POST['rpgc_note'] ) || $_POST['rpgc_note'] == "" ) {
-			$notice = __( 'Please enter a note for the gift card.', 'rpgiftcards' );
+
+		if ( ( ( ! isset( $_POST['rpgc_note'] ) || $_POST['rpgc_note'] == "" ) ) && ( get_option( 'wpr_woocommerce_disable_notes' ) != 'yes'  ) ) {
+			$notice = __( 'Please enter a note for the gift card.', 'kodiak-giftcards' );
 			wc_add_notice( $notice, 'error' );
 			$passed = false;
 		}
-		
+
 		$passed = apply_filters( 'wpr_other_validations', $passed, $product_id, $quantity );
 	}
-	
+
 	return $passed;
 }
 add_filter( 'woocommerce_add_to_cart_validation', 'wpr_add_to_cart_validation', 10, 3 );
@@ -244,11 +244,11 @@ function rpgc_add_card_data( $cart_item_key, $product_id, $quantity ) {
 
 	if ( $is_giftcard == "yes" ) {
 
-		$rpw_to_check 				= ( get_option( 'woocommerce_giftcard_to' ) <> NULL ? get_option( 'woocommerce_giftcard_to' ) : __('To', 'rpgiftcards' ) );
-		$rpw_toEmail_check 			= ( get_option( 'woocommerce_giftcard_toEmail' ) <> NULL ? get_option( 'woocommerce_giftcard_toEmail' ) : __('To Email', 'rpgiftcards' )  );
-		$rpw_note_check				= ( get_option( 'woocommerce_giftcard_note' ) <> NULL ? get_option( 'woocommerce_giftcard_note' ) : __('Note', 'rpgiftcards' )  );
-		$rpw_reload_card			= ( get_option( 'woocommerce_giftcard_reload_card' ) <> NULL ? get_option( 'woocommerce_giftcard_reload_card' ) : __('Card Number', 'rpgiftcards' )  );
-		$rpw_address_check			= ( get_option( 'woocommerce_giftcard_address' ) <> NULL ? get_option( 'woocommerce_giftcard_address' ) : __('Address', 'rpgiftcards' )  );
+		$rpw_to_check 				= ( get_option( 'woocommerce_giftcard_to' ) <> NULL ? get_option( 'woocommerce_giftcard_to' ) : __('To', 'kodiak-giftcards' ) );
+		$rpw_toEmail_check 			= ( get_option( 'woocommerce_giftcard_toEmail' ) <> NULL ? get_option( 'woocommerce_giftcard_toEmail' ) : __('To Email', 'kodiak-giftcards' )  );
+		$rpw_note_check				= ( get_option( 'woocommerce_giftcard_note' ) <> NULL ? get_option( 'woocommerce_giftcard_note' ) : __('Note', 'kodiak-giftcards' )  );
+		$rpw_reload_card			= ( get_option( 'woocommerce_giftcard_reload_card' ) <> NULL ? get_option( 'woocommerce_giftcard_reload_card' ) : __('Card Number', 'kodiak-giftcards' )  );
+		$rpw_address_check			= ( get_option( 'woocommerce_giftcard_address' ) <> NULL ? get_option( 'woocommerce_giftcard_address' ) : __('Address', 'kodiak-giftcards' )  );
 
 		$giftcard_data = array(
 			$rpw_to_check    	=> '',
@@ -259,13 +259,13 @@ function rpgc_add_card_data( $cart_item_key, $product_id, $quantity ) {
 
 		);
 
-		if ( isset( $_POST['rpgc_to'] ) && ( $_POST['rpgc_to'] <> '' ) ) 
+		if ( isset( $_POST['rpgc_to'] ) && ( $_POST['rpgc_to'] <> '' ) )
 			$giftcard_data[$rpw_to_check] = wc_clean( $_POST['rpgc_to'] );
 
-		if ( isset( $_POST['rpgc_to_email'] ) && ( $_POST['rpgc_to_email'] <> '' ) ) 
+		if ( isset( $_POST['rpgc_to_email'] ) && ( $_POST['rpgc_to_email'] <> '' ) )
 			$giftcard_data[$rpw_toEmail_check] = wc_clean( $_POST['rpgc_to_email'] );
 
-		if ( isset( $_POST['rpgc_note'] ) && ( $_POST['rpgc_note'] <> '' ) ) 
+		if ( isset( $_POST['rpgc_note'] ) && ( $_POST['rpgc_note'] <> '' ) )
 			$giftcard_data[$rpw_note_check] = wc_clean( $_POST['rpgc_note'] );
 
 		if ( isset( $_POST['rpgc_address'] ) && ( $_POST['rpgc_address'] <> '' ) ) {
@@ -281,7 +281,7 @@ function rpgc_add_card_data( $cart_item_key, $product_id, $quantity ) {
 		WC()->cart->cart_contents[$cart_item_key]["variation"] = $giftcard_data;
 		return $woocommerce;
 	}
-	
+
 }
 add_action( 'woocommerce_add_to_cart', 'rpgc_add_card_data', 10, 6 );
 
@@ -292,11 +292,11 @@ function rpgc_ajax_add_card_data( $product_id ) {
 
 	if ( $is_giftcard == "yes" ) {
 
-		$rpw_to_check 				= ( get_option( 'woocommerce_giftcard_to' ) <> NULL ? get_option( 'woocommerce_giftcard_to' ) : __('To', 'rpgiftcards' ) );
-		$rpw_toEmail_check 			= ( get_option( 'woocommerce_giftcard_toEmail' ) <> NULL ? get_option( 'woocommerce_giftcard_toEmail' ) : __('To Email', 'rpgiftcards' )  );
-		$rpw_note_check				= ( get_option( 'woocommerce_giftcard_note' ) <> NULL ? get_option( 'woocommerce_giftcard_note' ) : __('Note', 'rpgiftcards' )  );
-		$rpw_reload_card			= ( get_option( 'woocommerce_giftcard_reload_card' ) <> NULL ? get_option( 'woocommerce_giftcard_reload_card' ) : __('Card Number', 'rpgiftcards' )  );
-		$rpw_address_check			= ( get_option( 'woocommerce_giftcard_address' ) <> NULL ? get_option( 'woocommerce_giftcard_address' ) : __('Address', 'rpgiftcards' )  );
+		$rpw_to_check 				= ( get_option( 'woocommerce_giftcard_to' ) <> NULL ? get_option( 'woocommerce_giftcard_to' ) : __('To', 'kodiak-giftcards' ) );
+		$rpw_toEmail_check 			= ( get_option( 'woocommerce_giftcard_toEmail' ) <> NULL ? get_option( 'woocommerce_giftcard_toEmail' ) : __('To Email', 'kodiak-giftcards' )  );
+		$rpw_note_check				= ( get_option( 'woocommerce_giftcard_note' ) <> NULL ? get_option( 'woocommerce_giftcard_note' ) : __('Note', 'kodiak-giftcards' )  );
+		$rpw_reload_card			= ( get_option( 'woocommerce_giftcard_reload_card' ) <> NULL ? get_option( 'woocommerce_giftcard_reload_card' ) : __('Card Number', 'kodiak-giftcards' )  );
+		$rpw_address_check			= ( get_option( 'woocommerce_giftcard_address' ) <> NULL ? get_option( 'woocommerce_giftcard_address' ) : __('Address', 'kodiak-giftcards' )  );
 
 		$giftcard_data = array(
 			$rpw_to_check    	=> '',
@@ -307,13 +307,13 @@ function rpgc_ajax_add_card_data( $product_id ) {
 
 		);
 
-		if ( isset( $_POST['rpgc_to'] ) && ( $_POST['rpgc_to'] <> '' ) ) 
+		if ( isset( $_POST['rpgc_to'] ) && ( $_POST['rpgc_to'] <> '' ) )
 			$giftcard_data[$rpw_to_check] = wc_clean( $_POST['rpgc_to'] );
 
-		if ( isset( $_POST['rpgc_to_email'] ) && ( $_POST['rpgc_to_email'] <> '' ) ) 
+		if ( isset( $_POST['rpgc_to_email'] ) && ( $_POST['rpgc_to_email'] <> '' ) )
 			$giftcard_data[$rpw_toEmail_check] = wc_clean( $_POST['rpgc_to_email'] );
 
-		if ( isset( $_POST['rpgc_note'] ) && ( $_POST['rpgc_note'] <> '' ) ) 
+		if ( isset( $_POST['rpgc_note'] ) && ( $_POST['rpgc_note'] <> '' ) )
 			$giftcard_data[$rpw_note_check] = wc_clean( $_POST['rpgc_note'] );
 
 		if ( isset( $_POST['rpgc_address'] ) && ( $_POST['rpgc_address'] <> '' ) ) {
@@ -329,7 +329,7 @@ function rpgc_ajax_add_card_data( $product_id ) {
 		WC()->cart->cart_contents[$cart_item_key]["variation"] = $giftcard_data;
 		return $woocommerce;
 	}
-	
+
 }
 add_action( 'woocommerce_ajax_added_to_cart', 'rpgc_ajax_add_card_data', 10, 1 );
 
@@ -340,7 +340,7 @@ function wpr_add_giftcard_data_tab( $product_data_tabs ) {
 
 	$giftcard = array(
 				'giftcard' => array(
-					'label'  => __( 'Giftcard', 'rpgiftcards' ),
+					'label'  => __( 'Giftcard', 'kodiak-giftcards' ),
 					'target' => 'giftcard_product_data',
 					'class'  => array( 'hide_if_not_giftcard' ),
 				));
@@ -358,11 +358,11 @@ function wpr_add_giftcard_panel () {
 		<?php
 
 		echo '<div class="options_group">';
-			woocommerce_wp_checkbox( array( 'id' => '_wpr_allow_reload', 'wrapper_class' => 'show_if_simple show_if_variable', 'label' => __( 'Allow Reload', 'rpgiftcards' ), 'description' => __( 'Enable this allow people to enter in their gift card number to reload funds.', 'rpgiftcards' ) ) );
+			woocommerce_wp_checkbox( array( 'id' => '_wpr_allow_reload', 'wrapper_class' => 'show_if_simple show_if_variable', 'label' => __( 'Allow Reload', 'kodiak-giftcards' ), 'description' => __( 'Enable this allow people to enter in their gift card number to reload funds.', 'kodiak-giftcards' ) ) );
 		echo '</div>';
 
 		echo '<div class="options_group">';
-			woocommerce_wp_checkbox( array( 'id' => '_wpr_physical_card', 'wrapper_class' => 'show_if_simple show_if_variable', 'label' => __( 'Physical Card?', 'rpgiftcards' ), 'description' => __( 'Enable this if you are sending out physical cards.', 'rpgiftcards' ) ) );
+			woocommerce_wp_checkbox( array( 'id' => '_wpr_physical_card', 'wrapper_class' => 'show_if_simple show_if_variable', 'label' => __( 'Physical Card?', 'kodiak-giftcards' ), 'description' => __( 'Enable this if you are sending out physical cards.', 'kodiak-giftcards' ) ) );
 		echo '</div>';
 
 		do_action( 'woocommerce_product_options_giftcard_data' );

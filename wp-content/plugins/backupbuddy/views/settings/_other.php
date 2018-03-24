@@ -208,6 +208,8 @@ plugin_information( pb_backupbuddy::settings( 'slug' ), array( 'name' => pb_back
 	<a href="<?php echo pb_backupbuddy::page_url(); ?>&cancel_running_backups=1&tab=3" class="button secondary-button"><?php _e('Force Cancel of all backups & transfers', 'it-l10n-backupbuddy' );?></a>
 	&nbsp;
 	<a href="javascript:void(0);" class="button secondary-button" onClick="jQuery( '#backupbuddy-extra-log' ).toggle();"><?php _e('Show Extraneous Log (do NOT send to support)', 'it-l10n-backupbuddy' );?></a>
+	&nbsp;
+	<a href="javascript:void(0);" class="button secondary-button" onClick="jQuery( '#backupbuddy-remoteapi-log' ).toggle();"><?php _e('Show Remote API Log (incoming calls)', 'it-l10n-backupbuddy' );?></a>
 	<br><br>
 	
 </div>
@@ -225,6 +227,26 @@ plugin_information( pb_backupbuddy::settings( 'slug' ), array( 'name' => pb_back
 
 	<?php
 	echo '<textarea readonly="readonly" style="width: 100%;" wrap="off" cols="65" rows="7" id="backupbuddy_logFile">';
+	echo '*** Loading log file. Please wait ...';
+	echo '</textarea>';
+	echo '<a href="' . pb_backupbuddy::page_url() . '&reset_log=true&tab=3" class="button secondary-button">' . __('Clear Log', 'it-l10n-backupbuddy' ) . '</a>';
+	echo '<br><br><br>';
+echo '</div>';
+?>
+
+
+
+
+<br><br><br>
+
+
+<div id="backupbuddy-remoteapi-log" style="display: none;">
+	<h3><?php _e( 'Remote API Log (incoming calls)', 'it-l10n-backupbuddy' ); ?></h3>
+
+	<br><br>
+
+	<?php
+	echo '<textarea readonly="readonly" style="width: 100%;" wrap="off" cols="65" rows="7" id="backupbuddy_remoteapi_logFile">';
 	echo '*** Loading log file. Please wait ...';
 	echo '</textarea>';
 	echo '<a href="' . pb_backupbuddy::page_url() . '&reset_log=true&tab=3" class="button secondary-button">' . __('Clear Log', 'it-l10n-backupbuddy' ) . '</a>';

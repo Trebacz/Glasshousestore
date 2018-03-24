@@ -326,6 +326,21 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 		// Local filters
 		add_filter('ppom_meta_data', array($this, 'register_meta_wpml'));
 		
+		/**
+		 * adding extra column in products list for meta show
+		 * @since 8.0
+		 **/
+		add_filter('manage_product_posts_columns' , 'ppom_show_product_meta');
+		add_action( 'manage_product_posts_custom_column' , 'ppom_product_meta_column', 10, 2 );
+		
+		add_action('ppom_after_files_moved', 'ppom_send_files_in_email', 10, 2 );
+		
+		/**
+		 * re-calculate price matrix prices if 
+		 * variation options included from settings of price matrix
+		 * @since 8.5
+		 **/
+		add_filter('ppom_price_matrix_post', 'ppom_adjust_price_matrix_for_option_price', 10, 3);
 	}
 	
 	/*
@@ -376,20 +391,24 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 					
 					$price_range = array();
 					$single_meta = $this -> get_product_meta ( $selected_meta_id );
-					$existing_meta = json_decode ( $single_meta->the_meta );
+					$existing_meta = json_decode ( $single_meta->the_meta, true );
 					if($existing_meta){
 						foreach($existing_meta as $meta){
 							
-							if($meta -> type == 'pricematrix'){
-								foreach($meta -> options as $matrix_option){
-									$price_range[] = $matrix_option->price;
+							if($meta['type'] == 'pricematrix'){
+								
+								$ranges = $meta['options'];
+								$ranges = ppom_handle_price_matrix($ranges, $product->get_price());
+								
+								foreach($ranges as $range){
+									$price_range[] = $range['price'];
 								}
 							}
 						}
 					}
 					if($price_range){
 						sort($price_range);
-						//nm_personalizedproduct_pa($price_range);
+						// nm_personalizedproduct_pa($price_range);
 						$price = wc_price($price_range[0]).'-'.wc_price($price_range[count($price_range)-1]);
 					}
 				}
@@ -592,11 +611,11 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 		}
 		
 		
-		$single_form = $this -> get_product_meta ( $this -> productmeta_id );
-		
 		// ajax validation script
 		$single_form = $this -> get_product_meta ( $this -> productmeta_id );
-		wp_enqueue_script( 'woopa-ajax-validation', $this->plugin_meta['url'].'/js/woopa-ajaxvalidation.js', array('jquery'));
+		if( $single_form -> productmeta_validation == 'yes'){
+			wp_enqueue_script( 'woopa-ajax-validation', $this->plugin_meta['url'].'/js/woopa-ajaxvalidation.js', array('jquery'));
+		}
 			
 		$woopa_vars = array('fields_meta' => stripslashes($single_form -> the_meta),
 							'default_error_message'	=> __('it is a required field.', 'nm-personalizedproduct'));
@@ -732,7 +751,7 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 	function add_product_meta_to_cart($the_cart_data, $product_id) {
 		global $woocommerce;
 		
-		//nm_personalizedproduct_pa($_POST); exit;
+		// nm_personalizedproduct_pa($_POST);
 		
 		$selected_meta_id = get_post_meta ( $product_id, '_product_meta_id', true );
 		
@@ -768,6 +787,8 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 		
 		$all_files = array();
 		$price_matrix = '';
+		$price_matrix_option_added = '';
+		$quantities_option_price = '';
 		$var_price = 0;
 		$fixed_price = 0;
 		$file_cost = 0;
@@ -928,10 +949,16 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 		
 		//price_matrix
 		if(isset($_POST['_pricematrix'])){
-			$price_matrix = $_POST['_pricematrix'];
+			$price_matrix = apply_filters('ppom_price_matrix_post', $_POST['_pricematrix'], $_POST, $product_id);
+			$price_matrix_option_added = (isset($_POST['_pricematrix_option_added'])) ? $_POST['_pricematrix_option_added'] : '';
 		}
 		
-		//nm_personalizedproduct_pa($product_meta_data); exit;
+		//quantities options prices total
+		if(isset($_POST['_quantities_option_price'])){
+			$quantities_option_price = apply_filters('ppom_quantities_option_price_post', $_POST['_quantities_option_price'], $_POST, $product_id);
+		}
+		
+		// nm_personalizedproduct_pa($product_meta_data); exit;
 		
 		$the_cart_data ['product_meta'] = array (
 				'meta_data' => $product_meta_data,
@@ -939,13 +966,15 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 				'fixed_price'	=> stripslashes($fixed_price),
 				'file_cost'     => stripslashes($file_cost),
 				'price_matrix'	=> stripslashes($price_matrix),
+				'price_matrix_option_added'	=> $price_matrix_option_added,
 				'bulkquantity_price' => $bulkquantity_price,
 				'bulkquantity'	=> $bulkquantity,
-				'_product_attached_files'	=> $all_files
+				'_product_attached_files'	=> $all_files,
+				'quantities_option_price'	=> $quantities_option_price,
 		);
 		
 		
-		//nm_personalizedproduct_pa($the_cart_data); exit;
+		// nm_personalizedproduct_pa($the_cart_data); exit;
 		
 		return $the_cart_data;
 	}
@@ -955,7 +984,8 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 	 */
 	function get_cart_session_data($cart_items, $values) {
 		                          
-		//nm_personalizedproduct_pa($cart_items);
+		// nm_personalizedproduct_pa($values);
+		
 		if($cart_items == '')
 			return;
 			
@@ -968,19 +998,22 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 		endif;
 		
 		$var_price = $values['product_meta']['var_price'];
+		
 		$cart_price = 0;
 		
 		
 		if( isset($values ['product_meta']['price_matrix']) && $values ['product_meta']['price_matrix'] != NULL ){	
-			$cart_price = $this->get_matrix_price($cart_items['quantity'], $values ['product_meta']['price_matrix']);			
+			
+			$cart_price = $this->get_matrix_price($cart_items['quantity'], $values ['product_meta']['price_matrix']);
+			
+			
 		}else{			
 			$cart_price = ($cart_items ['data'] -> get_price());
 		}
 		
-		
-		if($var_price){
-			$cart_price = $cart_price + $var_price;
-		}	
+		if( $var_price && $values ['product_meta']['price_matrix_option_added'] != 'on'){
+			$cart_price = wc_format_decimal( $cart_price + $var_price, wc_get_price_decimals());
+		}
 		
 		/**
 		 * also checking price with bulkquantity
@@ -993,7 +1026,7 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 		
 		$cart_items['data'] -> set_price($cart_price);
 		
-		//nm_personalizedproduct_pa($cart_items); exit;
+		// nm_personalizedproduct_pa($cart_items); exit;
 		
 		return $cart_items;
 	}
@@ -1012,6 +1045,8 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 		    
 			$fixed_price = json_decode($value['product_meta']['fixed_price'], true);
 			$file_cost   = json_decode($value['product_meta']['file_cost'], true);
+			$quantities_option_price = $value['product_meta']['quantities_option_price'];
+		
 			
 			if ($fixed_price){
 				
@@ -1029,7 +1064,7 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 				
 				foreach ($file_cost as $option => $fixed){
 					
-					$fixed_fee 	 = (isset($fixed['fee']) ? $fixed['fee'] : 0);
+					$fixed_fee 	 = (isset($fixed['fee']) ? wc_format_decimal($fixed['fee']) : 0);
 					$fee_taxable = (isset($fixed['taxable']) ? true : true);
 					$custom_price += $fixed_fee;
 					$custom_title .= $option;
@@ -1039,6 +1074,15 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 					if($custom_price)
 						$cart_object -> add_fee( __( esc_html($custom_title), 'woocommerce'), $custom_price, $taxable );
 				}
+			}
+			
+			/**
+			 * adding quantities option total prices
+			 * @since 8.6
+			 **/
+			if( $quantities_option_price ){
+				$cart_object -> add_fee( __( 'Extra Options', 'nm-personalizedproduct'), $quantities_option_price );
+				// $cart_price = wc_format_decimal( $cart_price + $quantities_option_price, wc_get_price_decimals());
 			}
 		}
 	
@@ -1141,64 +1185,15 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 	/*
 	 * Adding item meta to order from $cart_item On checkout page, saving meta from CART to ITEM__ORDER
 	 */
-	function order_item_meta($item_id, $cart_item, $order_id) {
+	function order_item_meta($item_id, $cart_item, $cart_item_key) {
 
-		// nm_personalizedproduct_pa($cart_item); exit;
+		$order_data = ppom_make_meta_data( $cart_item );
 		
-		if ( ! isset ( $cart_item ['product_meta'] )) {
-			return;
-		}
-		 // removing the _File(s) attached key
-		 if (isset( $cart_item ['product_meta'] ['meta_data']['_File(s) attached'] )) {
-		 	unset( $cart_item ['product_meta'] ['meta_data']['_File(s) attached']);
-		 }
-		 
-		
-		
+		$order_data = apply_filters('ppom_add_item_meta', $order_data, $cart_item);
+		if( $order_data ){
 			
-		foreach ( $cart_item ['product_meta'] ['meta_data'] as $key => $val ) {
-			// $item_meta->add( $key, $val );
-			
-			if (is_array($val)) {
-				if($val['type'] == 'image' || $val['type'] == 'audio'){
-						
-					// if selected designs are more then one
-					
-					$order_val = '';
-					
-					if(is_array($val['selected'])){
-			
-						$_v = '';
-						foreach ($val['selected'] as $selected){
-							$selecte_image_meta = json_decode(stripslashes( $selected ));
-							$_v .= $selecte_image_meta -> title.',';
-						}
-						
-						$order_val = $_v;
-					}else{
-						$selecte_image_meta = json_decode(stripslashes( $val['selected'] ));
-						$order_val = $selecte_image_meta -> title;
-					}
-					
-					
-				}elseif($val['type'] == 'bulkquantity'){
-						
-					// if selected designs are more then one
-					
-					$order_val = '';
-					$data = $val['data'];
-					$val = sprintf(__('%s (%d)', 'nm-personalizedproduct'), $data['option'], intval($data['qty']));
-					
-					$order_val = $val;
-					
-				}
-			}else{
-			
-				$order_val = stripslashes( $val );
-			}
-			
-			if($val){
-				nm_wc_add_order_item_meta ( $item_id, $key, $order_val );
+			foreach($order_data as $key => $value){
+				nm_wc_add_order_item_meta ( $item_id, $key, $value );
 			}
 		}
 		
@@ -1213,7 +1208,6 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 		
 		// adding _product_attached_files
 		nm_wc_add_order_item_meta ( $item_id, '_product_attached_files', $cart_item ['product_meta']['_product_attached_files'] );
-	
 	}
 	
 	
@@ -1533,6 +1527,7 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 				'productmeta_name'          => $productmeta_name,
 				'productmeta_validation'	=> $productmeta_validation,
                 'dynamic_price_display'     => $dynamic_price_hide,
+                'send_file_attachment'		=> $send_file_attachment,
                 'show_cart_thumb'			=> $show_cart_thumb,
 				'aviary_api_key'            => trim ( $aviary_api_key ),
 				'productmeta_style'         => $productmeta_style,
@@ -1594,6 +1589,7 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 				'productmeta_name'          => $productmeta_name,
 				'productmeta_validation'    => $productmeta_validation,
                 'dynamic_price_display'     => $dynamic_price_hide,
+                'send_file_attachment'		=> $send_file_attachment,
                 'show_cart_thumb'			=> $show_cart_thumb,
 				'aviary_api_key'            => trim ( $aviary_api_key ),
 				'productmeta_style'         => $productmeta_style,
@@ -1710,7 +1706,7 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 					
 					$percent_price = $price;
 					$price = (intval($price) / 100) * $baseprice;
-					$price = number_format( $price, 2, '.', '' );
+					$price = wc_format_decimal($price); //number_format( $price, 2, '.', '' );
 					$html .= $option . ' ('.$percent_price.') ' . wc_price($price) . '<br>';
 				}else{
 					$html .= $option . ' ' . wc_price($price) . '<br>';
@@ -1745,15 +1741,15 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 		}
 		
 		
-		$total_price = $option_total_price + $baseprice;
+		$total_price = wc_format_decimal($option_total_price + $baseprice);
 		
 		$html .= '<strong>' . __('Total: ', 'nm-personalizedproduct') . wc_price($total_price) . '</strong>';
 		
 		
 		
 		$option_prices = array(	'prices_html' 	=> $html, 
-								'option_total'	=> $option_total_price,
-								'total_price' 	=> $total_price,
+								'option_total'	=> wc_format_decimal($option_total_price),
+								'total_price' 	=> wc_format_decimal($total_price),
 								'onetime_fee'	=> $fixed_fee,
 								'onetime_meta'	=> $fixed_fee_meta,
 								'variation_price' => $variation_price,
@@ -1770,8 +1766,10 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 	 */
 	function get_matrix_price($qty, $pricematrix){
 		
-		
 		$pricematrix = json_decode( $pricematrix, true);
+		
+		// nm_personalizedproduct_pa($pricematrix);
+		
 		$last_range2 = 0;
 		$price		= 0;
 		foreach ($pricematrix as $mx){
@@ -1801,6 +1799,7 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 			$price_set = $price;
 		}
 		
+		
 		return $price_set;
 		
 	}
@@ -1826,7 +1825,6 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 	 * uploading file here
 	 */
 	function upload_file() {
-		
 		
 		header ( "Expires: Mon, 26 Jul 1997 05:00:00 GMT" );
 		header ( "Last-Modified: " . gmdate ( "D, d M Y H:i:s" ) . " GMT" );
@@ -2034,8 +2032,8 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 		
 		$thumb_url = $file_meta = $file_tools = $_html = '';
 		
-		$settings = json_decode(stripslashes($settings), true);
-		//$this -> pa($settings);
+		// $settings = json_decode(stripslashes($settings), true);
+		// $this -> pa($settings);
 		$file_id = 'thumb_'.time();
 
 		if($is_image){
@@ -2055,16 +2053,16 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 			$file_tools .= '<a href="#" class="nm-file-tools u_i_c_tools_del" title="'.__('Remove', 'nm-personalizedproduct').'"><span class="fa fa-times"></span></a>';	//delete icon
 			$file_tools .= '<a href="#TB_inline?width='.$tb_width.'&height='.$tb_height.'&inlineId=u_i_c_big_'.$file_id.'" class="nm-file-tools u_i_c_tools_zoom thickbox" title="'.sprintf(__('%s', 'nm-personalizedproduct'), $file_name).'"><span class="fa fa-expand"></span></a>';	//big view icon
 			
-			if($settings['photo-editing'] == 'on' && $settings['aviary-api-key'] != ''){
-				parse_str ( $settings['editing-tools'], $tools );
-				if (isset( $tools['editing_tools'] ) && $tools['editing_tools'])
-					$editing_tools = implode(',', $tools['editing_tools']);
-				$file_tools .= '<a href="javascript:;" onclick="launch_aviary_editor(\''.$file_id.'\', \''.$this -> get_file_dir_url() . $file_name.'\', \''.$file_name.'\', \''.$editing_tools.'\')" class="nm-file-tools" title="'.__('Edit image', 'nm-personalizedproduct').'"><span class="fa fa-pencil"></span></a>';	//big view icon	
+			if($settings['photo_editing'] == 'on'){
+				$editing_tools = isset($settings['editing_tools']) ? $settings['editing_tools'] : '';
+				$cropping_preset = isset($settings['aviary_crop_preset']) ? $settings['aviary_crop_preset'] : '';
+				
+				$file_tools .= '<a href="javascript:;" onclick="launch_aviary_editor(\''.$file_id.'\', \''.$this -> get_file_dir_url() . $file_name.'\', \''.$file_name.'\', \''.$editing_tools.'\', \''.$cropping_preset.'\')" class="nm-file-tools" title="'.__('Edit image', 'nm-personalizedproduct').'"><span class="fa fa-pencil"></span></a>';	//big view icon	
 			}
 			
-			if($settings['cropping-ratio'] != NULL){
+			if($settings['cropping_ratio'] != NULL && $settings['cropping_ratio'] != 'false'){
 				
-				$cropping_ratios = json_encode($settings['cropping-ratio']);
+				$cropping_ratios = json_encode($settings['cropping_ratio']);
 				//echo $cropping_ratios;
 				$file_tools .= '<a href="javascript:;" onclick="launch_crop_editor(\''.$file_id.'\', \''.$this -> get_file_dir_url() . $file_name.'\', \''.$file_name.'\', \''.esc_attr($cropping_ratios).'\')" class="nm-file-tools" title="'.__('Crop image', 'nm-personalizedproduct').'"><span class="fa fa-crop"></span></a>';	//big view icon
 			}
@@ -2141,7 +2139,6 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 					continue;
 				$product_meta = json_decode ( $single_meta->the_meta );
 		
-				// nm_personalizedproduct_pa($product_meta);
 				if($product_meta){
 						
 					foreach ( $product_meta as $meta => $data ) {
@@ -2157,6 +2154,8 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 							$product_files = $product_files[$data -> title];
 							$product_id = $item ['product_id'];
 								
+							// nm_personalizedproduct_pa($product_files); exit;
+							
 							if ($product_files) {
 								
 								echo '<strong>';
@@ -2186,12 +2185,12 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 										
 										
 									echo '<table>';
-									echo '<tr><td width="100"><img src="' . $src_thumb . '"><td><td><a href="' . $src_file . '">' . __ ( 'Download ' ) . $file_name . '</a> ' . $this -> size_in_kb ( $file_name ) . '</td>';
+									echo '<tr><td width="100"><img src="' . esc_url($src_thumb) . '"><td><td><a href="' . esc_url($src_file) . '">' . sprintf(__ ( "Download %s", 'nm-personalizedproduct'), $file).'</a> ' . $this -> size_in_kb ( $file_name ) . '</td>';
 										
 									$edited_path = $this->get_file_dir_path() . 'edits/' . $file;
 									if (file_exists($edited_path)) {
 										$file_url_edit = $this->get_file_dir_url () .  'edits/' . $file;
-										echo '<td><a href="' . $file_url_edit . '" target="_blank">' . __ ( 'Download edited image', $this->plugin_meta ['shortname'] ) . '</a></td>';
+										echo '<td><a href="' . esc_url($file_url_edit) . '" target="_blank">' . __ ( 'Download edited image', 'nm-personalizedproduct') . '</a></td>';
 									}
 										
 									echo '</tr>';
@@ -2449,7 +2448,7 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 	
 	public static function activate_plugin() {
 		global $wpdb;
-		$plugin_db_version = '6.4';
+		$plugin_db_version = '8.1';
 		/*
 		 * meta_for: this is to make this table to contact more then one metas for NM plugins in future in this plugin it will be populated with: forms
 		 */
@@ -2460,6 +2459,7 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 		productmeta_name VARCHAR(50) NOT NULL,
 		productmeta_validation VARCHAR(3),
         dynamic_price_display VARCHAR(3),
+        send_file_attachment VARCHAR(3),
         show_cart_thumb VARCHAR(3),
 		aviary_api_key VARCHAR(40),
 		productmeta_style MEDIUMTEXT,
@@ -2653,7 +2653,7 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 	
 		// getting product id in cart
 		$cart = $woocommerce->cart->get_cart();
-	
+		
 		$base_path 	= $this -> setup_file_directory();
 		$confirmed_dir = $this -> setup_file_directory() . 'confirmed/';
 		$edits_dir = $this -> setup_file_directory() . 'edits/';
@@ -2663,6 +2663,8 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 				die('Error while created directory '.$confirmed_dir);
 		}	
 	
+		// since 8.1, files will be send to email as attachment
+		$moved_files = array();
 		
 		//nm_personalizedproduct_pa($cart); exit;
 		foreach ($cart as $item){
@@ -2679,18 +2681,25 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 						$source_file = $base_path . $file;
 						$destination = $confirmed_dir . $new_filename;
 						
-						if (file_exists ( $destination ))
+						if (file_exists ( $destination )) {
+							
 							break;
+						}
 						
 						if (file_exists ( $source_file )) {
 							
-							if (! rename ( $source_file, $destination ))
+							if (! rename ( $source_file, $destination )) {
 								die ( 'Error while re-naming order image ' . $source_file );
+							} else{
+								$moved_files[] = array($product_id => $destination);
+							}
 						}
 						
 						//renaming edited files
 						$source_file_edit = $edits_dir . $file;
 						$destination_edit = $edits_dir . $new_filename;
+						
+						
 						if (file_exists ( $source_file_edit )) {
 							
 							if (! rename ( $source_file_edit, $destination_edit )){
@@ -2702,6 +2711,8 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 						}
 					}
 				}
+				
+				do_action('ppom_after_files_moved', $moved_files, $order_id);
 			}
 		}
 	}
@@ -2886,6 +2897,7 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 	    $qry .= " (productmeta_name,
 	    			productmeta_validation,
 	    			dynamic_price_display,
+	    			send_file_attachment,
 	    			show_cart_thumb,
 	    			aviary_api_key, 
 	    			productmeta_style,
@@ -2978,4 +2990,8 @@ class NM_PersonalizedProduct extends NM_Framwork_V1 {
 		
 		return $meta_data;
 	}
+}
+
+function PPOM(){
+	return NM_PersonalizedProduct::get_instance();
 }

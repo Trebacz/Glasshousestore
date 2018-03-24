@@ -15,6 +15,12 @@ wp_enqueue_script( 'jquery-ui-progressbar' );
 wp_print_styles( 'jquery-ui-progressbar' );
 
 //pb_backupbuddy::disalert( 'backup_stash_advert', 'Active BackupBuddy customers already have a <b>BackupBuddy Stash</b> account with <span class="pb_label pb_label">1 GB Free Storage</span>. Just login on the <a href="?page=pb_backupbuddy_destinations">Remote Destinations</a> page.' );
+
+
+$deployment_enabled_status = __( 'disabled', 'it-l10n-backupbuddy' );
+if ( defined( 'BACKUPBUDDY_API_ENABLE' ) && ( TRUE == BACKUPBUDDY_API_ENABLE ) ) {
+	$deployment_enabled_status = __( 'enabled', 'it-l10n-backupbuddy' );
+}
 ?>
 
 
@@ -58,7 +64,7 @@ wp_print_styles( 'jquery-ui-progressbar' );
 		
 		jQuery('#screen-meta-links').append(
 			'<div id="backupbuddy-meta-link-wrap" class="hide-if-no-js screen-meta-toggle">' +
-				'<a href="javascript:void(0)" class="show-settings" onClick="jQuery(\'.backupbuddy_api_key-hide\').slideToggle(); jQuery(this).toggleClass(\'screen-meta-active\'); return false; return false;"><?php _e( "Deployment Key", "it-l10n-backupbuddy" ); ?></a>' +
+				'<a href="javascript:void(0)" class="show-settings" onClick="jQuery(\'.backupbuddy_api_key-hide\').slideToggle(); jQuery(this).toggleClass(\'screen-meta-active\'); return false; return false;"><?php _e( "Deployment Key", "it-l10n-backupbuddy" ); echo ' (' . $deployment_enabled_status . ')'; ?></a>' +
 			'</div>'
 		);
 		
@@ -148,7 +154,9 @@ wp_print_styles( 'jquery-ui-progressbar' );
 			<input type="hidden" name="regenerate_api_key" value="1">
 				<h3 style="margin-top: 0;"><?php _e( 'Deployment Key', 'it-l10n-backupbuddy' ); ?></h3>
 				<p>
-					Copy this Deployment Key into the other BackupBuddy Site you wish to have access to Push to or Pull from this site.
+					<?php _e( 'Copy this Deployment Key into the other BackupBuddy Site you wish to have access to Push to or Pull from this site.', 'it-l10n-backupbuddy' ); ?>
+					<br>
+					<?php _e( 'If this site\'s URL changes you will need to generate a new key and update other sites\' destination settings using the old key.', 'it-l10n-backupbuddy' ); ?>
 				</p>
 				<textarea id="backupbuddy-deployment-regenerateKey-textarea" cols="90" rows="4" style="padding: 15px; background: #fcfcfc;" readonly="readonly" onClick="this.focus();this.select();"><?php echo pb_backupbuddy::$options['remote_api']['keys'][0]; ?></textarea>
 				<br><br>
@@ -160,16 +168,15 @@ wp_print_styles( 'jquery-ui-progressbar' );
 	} else {
 		?>
 		<h3 style="margin-top: 0;"><?php _e( 'Deployment', 'it-l10n-backupbuddy' ); ?></h3>
-		Remote API Access allows other sites with your API access key entered to push to or pull data from this site.
+		Remote API Access allows other sites with your API access key entered to push to or pull data from this site. 
 		<br><br>
-		<button class="button button-primary" style="vertical-align: 1px;" onClick="jQuery('.backupbuddy_api_wpconfig-hide').toggle(); jQuery(this).hide(); return false;"><?php _e( 'Enable Deployment', 'it-l10n-backupbuddy' ); ?></button>
-		<span class="backupbuddy_api_wpconfig-hide" style="display: none;">
-			<b>For added security you must manually enable the API. To do this <i>add the following to your wp-config.php file ABOVE the line commenting "That's all, stop editing!"</i>. <i>Refresh this page after adding</i> the following:</b>
-			<br>
+		<b>For added security you must manually enable the API via an entry into your wp-config.php file.
+		<br><br>
+		To do this <i>add the following to your wp-config.php file ABOVE the line commenting "That's all, stop editing!"</i>. <i>Refresh this page after adding</i> the following:</b>
+		<br>
 <textarea style="width: 100%; padding: 15px;" readonly="readonly" onClick="this.focus();this.select();">
 define( 'BACKUPBUDDY_API_ENABLE', true ); // Enable BackupBuddy Deployment access.
 </textarea><!-- define( 'BACKUPBUDDY_API_SALT', '<?php echo pb_backupbuddy::random_string( 32 ); ?>' ); // Random security identifier. 5+ characters. -->
-		</span>
 		<br>
 		<?php
 	}

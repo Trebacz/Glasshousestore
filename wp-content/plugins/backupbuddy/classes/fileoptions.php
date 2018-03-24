@@ -409,14 +409,6 @@ class pb_backupbuddy_fileoptions {
 			}
 			
 			foreach( $this->options as $optionKey => $optionItem ) {
-				/*
-				if ( null == $optionItem ) {
-					error_log( 'nullval for key: ' . $optionKey );
-					continue;
-				}
-				*/
-				
-				//$optionItem = base64_encode( serialize( $optionItem ) );
 				$optionItem = json_encode( $optionItem, JSON_FORCE_OBJECT );
 				
 				if ( false === ( $written = @fwrite( $fso, $optionKey . '|' . $optionItem . "\n" ) ) ) {
@@ -506,7 +498,7 @@ class pb_backupbuddy_fileoptions {
 		if ( false === $handle ) { // Failed creating file.
 			if ( file_exists( $lockFile ) ) {
 				$this->_last_seen_lock_id = @file_get_contents( $lockFile );
-				pb_backupbuddy::status( 'error', 'Error #437479545: Unable to create fileoptions lock file as it already exists: `' . $lockFile . '`. Lock file ID: ' . $this->_last_seen_lock_id . '.' );
+				pb_backupbuddy::status( 'warning', 'Warning #437479545: Unable to create fileoptions lock file as it already exists: `' . $lockFile . '`. Lock file ID: ' . $this->_last_seen_lock_id . '.' );
 			} else {
 				pb_backupbuddy::status( 'error', 'Error #48943743: Unable to create fileoptions lock file `' . $lockFile . '`. Verify permissions on this directory.' );
 			}

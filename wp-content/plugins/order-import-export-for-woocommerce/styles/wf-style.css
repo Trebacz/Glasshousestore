@@ -123,3 +123,145 @@
     top: 0;
     width: 100%;
 }
+
+
+
+
+
+
+.clearfix{
+    clear: both;
+}
+.nav-tab-wrapper .nav-tab-premium {
+    background: #5ccc96;
+    color: white;
+    border-color: #5ccc96;
+}
+.orderimpexp-main-box{
+    width: 100%;
+}
+.orderimpexp-main-box input {
+    box-shadow: none;
+    padding: 7px 10px;
+}
+.orderimpexp-view{
+    width:65%;
+    float: left;
+}
+.market-box{
+    width:30%;
+    float: right;
+}
+.bg-white {
+    background: #fff;
+}
+.p-20p {
+    padding: 20px;
+}
+.getting-started-video{
+    background: #fff;
+    padding: 5px;
+    margin-bottom: 23px;
+}
+.getting-started-video h2{
+    text-align: center;
+    padding: 5px;
+}
+
+.getting-started-video iframe{
+    margin:5px auto 25px auto; 
+    display: block;
+}
+.orderimpexp-premium-features{
+    background: #fff;
+    padding:5px;
+}
+.orderimpexp-premium-features ul {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.orderimpexp-premium-features li {
+    margin-bottom: 15px;
+    padding-left: 15px;
+}
+.orderimpexp-premium-features li:before
+{
+    font-family: dashicons;
+    text-decoration: inherit;
+    font-weight: 400;
+    font-style: normal;
+    vertical-align: top;
+    text-align: center;
+    content: "\f147";
+    margin-right: 10px;
+    margin-left: -25px;
+    font-size: 16px;
+    color: #3085bb;
+}
+.orderimpexp-premium-features .button {
+    margin-bottom: 20px;
+}
+.orderimpexp-premium-features .button-go-pro {
+    box-shadow: none;
+    border: 0;
+    text-shadow: none;
+    padding: 10px 15px;
+    height: auto;
+    font-size: 18px;
+    border-radius: 4px;
+    font-weight: 600;
+    background: #00cb95;
+    margin-top: 20px;
+}
+.orderimpexp-premium-features .button-go-pro:hover,
+.orderimpexp-premium-features .button-go-pro:focus,
+.orderimpexp-premium-features .button-go-pro:active {
+    background: #00a378;
+}
+.orderimpexp-premium-features .button-doc-demo {
+    border: 0;
+    background: #d8d8dc;
+    box-shadow: none;
+    padding: 10px 15px;
+    font-size: 15px;
+    height: auto;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+.orderimpexp-premium-features .button-doc-demo:hover,
+.orderimpexp-premium-features .button-doc-demo:focus,
+.orderimpexp-premium-features .button-doc-demo:active {
+    background: #dfdfe4;
+}
+.xa-orderimpexp-rating-link{color:#ffc600;}
+
+.orderimpexp-review-widget{    
+    background: #fff;
+    padding: 5px;
+    margin-top: 23px;
+}
+.orderimpexp-review-widget p{
+    margin-right:5px;
+    margin-left:5px;
+}
+.button-show-more {
+    text-align: center;
+}
+.button-show-more .button,
+.button-show-more .button:hover,
+.button-show-more .button:focus{
+    box-shadow: none;
+    border: 0;
+    height: auto;
+    line-height: 1;
+    color: #4e71a5;
+    text-shadow: none;
+    font-weight: 500;
+    background: transparent;
+}
+
+.button-show-more .button .dashicons {
+    font-size: 12px;
+    line-height: 1.5;
+}

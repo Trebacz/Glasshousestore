@@ -1,9 +1,9 @@
 <?php
 
 /* * ******************************************************************
- * Version 1.2
- * Modified: 24-03-2017
- * Copyright 2017 Accentio. All rights reserved.
+ * Version 1.3
+ * Modified: 08-02-2018
+ * Copyright 2018 Accentio. All rights reserved.
  * License: None
  * By: Michel Jongbloed
  * ****************************************************************** */
@@ -61,6 +61,7 @@ if ( !class_exists( 'WPPFM_Channel' ) ) :
 				new Channel( '19', 'ricardo', 'Ricardo.ch' ),
 				new Channel( '20', 'ebay', 'eBay' ),
 				new Channel( '21', 'shopzilla', 'Shopzilla' ),
+				new Channel( '22', 'converto', 'Converto' ),
 				new Channel( '998', 'marketingrobot_csv', 'Custom CSV Export' ),
 				new Channel( '999', 'marketingrobot', 'Custom XML Export')
 			);
@@ -226,7 +227,7 @@ if ( !class_exists( 'WPPFM_Channel' ) ) :
 				}
 			} else {
 				
-				if ( stripos( $this->_uri, '/wp-admin/admin.php?page=' . MYPLUGIN_PLUGIN_NAME ) ) {
+				if ( stripos( $this->_uri, '/wp-admin/admin.php?page=' . WPPFM_PLUGIN_NAME ) ) {
 
 					echo wppfm_show_wp_error( __( "Channel " . $channel_name . " is not installed correctly. Please try to Deactivate and then Activate the Feed Manager Plugin in your Plugins page.", 'wp-product-feed-manager' ) );
 					wppfm_write_log_file( "Error: Channel " . $channel_name . " is not installed correctly." );

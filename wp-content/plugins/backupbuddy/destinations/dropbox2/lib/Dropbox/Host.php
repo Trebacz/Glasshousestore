@@ -14,14 +14,14 @@ final class Host
 {
     /**
      * Returns a Host object configured with the three standard Dropbox host: "api.dropbox.com",
-     * "api-content.dropbox.com", and "www.dropbox.com"
+     * "content.dropboxapi.com", and "www.dropbox.com"
      *
      * @return Host
      */
     static function getDefault()
     {
         if (!self::$defaultValue) {
-            self::$defaultValue = new Host("api.dropbox.com", "api-content.dropbox.com", "www.dropbox.com");
+            self::$defaultValue = new Host("api.dropbox.com", "content.dropboxapi.com", "www.dropbox.com");
         }
         return self::$defaultValue;
     }

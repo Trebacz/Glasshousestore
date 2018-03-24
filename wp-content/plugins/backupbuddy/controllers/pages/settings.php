@@ -28,6 +28,22 @@
 		
 	}); // end on ready.
 	
+	jQuery(document).ready( function() {		
+		jQuery( '.bb-tab-other' ).click( function(){
+			jQuery.post( '<?php echo pb_backupbuddy::ajax_url( 'getRemoteApiLog' ); ?>', { }, 
+				function(data) {
+					//data = jQuery.trim( data );
+					jQuery( '#backupbuddy_remoteapi_logFile' ).text( data );
+				}
+			);
+		});
+		
+		<?php if ( '2' == pb_backupbuddy::_GET( 'tab' ) ) { ?>
+		jQuery( '.nav-tab-2' ).trigger( 'click' );
+		<?php } ?>
+		
+	}); // end on ready.
+	
 </script>
 
 
@@ -91,7 +107,6 @@ if ( isset( $_POST['pb_backupbuddy_backup_directory'] ) ) {
 	if ( false === $prevent_backup_dir_change ) {
 		pb_backupbuddy::anti_directory_browsing( $backup_directory, $die = false );
 		if ( ! file_exists( $backup_directory ) ) {
-			error_log( 'APPLES' );
 			pb_backupbuddy::alert( 'Error #4838594589: Selected backup directory does not exist and it could not be created. Verify the path is correct or manually create the directory and set proper permissions. Reset to previous path.', true );
 			$_POST['pb_backupbuddy_backup_directory'] = backupbuddy_core::getBackupDirectory(); // Set back to previous value (aka unchanged).
 			$prevent_backup_dir_change = true;

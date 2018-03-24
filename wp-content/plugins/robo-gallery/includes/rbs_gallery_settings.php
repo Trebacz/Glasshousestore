@@ -8,7 +8,7 @@
 *      Created: 2015
 *      Licensed under the GPLv2 license - http://opensource.org/licenses/gpl-2.0.php
 *
-*      Copyright (c) 2014-2016, Robosoft. All rights reserved.
+*      Copyright (c) 2014-2018, Robosoft. All rights reserved.
 *      Available only in  https://robosoft.co/robogallery/ 
 */
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -38,6 +38,8 @@ class Robo_Gallery_Settings {
 
 
 	function settings(){
+		register_setting( 'robo_gallery_settings_cache', ROBO_GALLERY_PREFIX.'cache' );
+
 		register_setting( 'robo_gallery_settings_comp', ROBO_GALLERY_PREFIX.'categoryShow' );
 		register_setting( 'robo_gallery_settings_comp', ROBO_GALLERY_PREFIX.'jqueryVersion' );
 		register_setting( 'robo_gallery_settings_comp', ROBO_GALLERY_PREFIX.'fontLoad' );
@@ -55,6 +57,9 @@ class Robo_Gallery_Settings {
 	function tabs( ){
 		echo '
 		<h2 class="nav-tab-wrapper">
+			<a href="edit.php?post_type=robo_gallery_table&page=robo-gallery-settings&tab=cache" class="nav-tab '.( $this->active_tab == 'cache' ? 'nav-tab-active' : '' ).'">
+		    	'.__('Cache Settings', 'robo-gallery').'
+		    </a>
 		    <a href="edit.php?post_type=robo_gallery_table&page=robo-gallery-settings&tab=comp" class="nav-tab '.( $this->active_tab == 'comp' ? 'nav-tab-active' : '' ).'">
 		    	'.__('Compatibility Settings', 'robo-gallery').'
 		    </a>
@@ -78,23 +83,25 @@ class Robo_Gallery_Settings {
 		
 		$this->enqueue();
 
-		$this->active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'comp';
+		$this->active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'cache';
 
 		echo '
 		<div class="wrap">
-			<h1>'.__('Robo Gallery', 'robo-gallery').'</h1>';
+			<h1>'.__('Robo Gallery Settings', 'robo-gallery').'</h1>';
+		
+		settings_errors();
 
 		$this->tabs();
 
 		echo '<form method="post" action="options.php?tab='.$this->active_tab.'">';
-
-			
-			
-			settings_errors();
 			
 			echo '<table class="form-table">';
 
-		    if( $this->active_tab == 'comp' ) {
+			if( $this->active_tab == 'cache' ) {
+		    	settings_fields( 'robo_gallery_settings_cache' ); 
+				do_settings_sections( 'robo_gallery_settings_cache' ); 
+		        $this->cacheOptions();
+		    } elseif( $this->active_tab == 'comp' ) {
 		    	settings_fields( 'robo_gallery_settings_comp' ); 
 				do_settings_sections( 'robo_gallery_settings_comp' ); 
 		        $this->compOptions();
@@ -115,11 +122,31 @@ class Robo_Gallery_Settings {
 		echo '
 			</form>
 		</div>
-		<div class="rbs_about_string2">Copyright &copy; 2014 - 2017 <a href="https://robosoft.co/robogallery">RoboSoft</a> All Rights Reserved</div>';
+		<div class="rbs_about_string2">Copyright &copy; 2014 - 2018 <a href="https://robosoft.co/robogallery">RoboSoft</a> All Rights Reserved</div>';
 
 	}
 
-
+	function cacheOptions(){
+		$option_cache = (int) get_option(ROBO_GALLERY_PREFIX.'cache', '12');
+		if(!$option_cache) $option_cache = 12;
+		 ?>
+			<tr>
+				<th scope="row"><?php _e('Clear cache timeout', 'robo-gallery'); ?></th>
+				<td>
+					<fieldset>
+						<input name="<?php echo ROBO_GALLERY_PREFIX.'cache'; ?>" id="<?php echo ROBO_GALLERY_PREFIX.'cache'; ?>" value="<?php echo $option_cache; ?>" class="small-text" type="text"> hours
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<p class="description">
+						<?php _e("This is timeout for the clear gallery cache option. Value in hours for the cleaning period of the cached resources.", 'robo-gallery'); ?>
+					</p>
+				</td>
+			</tr>
+		<?php
+	}
 
 	function compOptions(){
 		 ?>

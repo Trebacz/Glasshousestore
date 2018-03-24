@@ -78,7 +78,7 @@ class pluginbuddy_ms_import {
 		
 		// Set advanced options if they have been passed along.
 		if ( isset( $_POST['global_options'] ) && ( $_POST['global_options'] != '' ) ) {
-			$this->advanced_options = unserialize( base64_decode( $_POST['global_options'] ) );
+			$this->advanced_options = json_decode( base64_decode( $_POST['global_options'] ), true );
 		}
 		
 		$this->time_start = microtime( true );

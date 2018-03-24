@@ -49,7 +49,7 @@ class WC_Gateway_PayPal_Express_Function_AngellEYE {
     }
 
     public function ec_is_express_checkout() {
-        if (sizeof(WC()->session) == 0) {
+        if ( ! class_exists( 'WooCommerce' ) || WC()->session == null ) {
             return false;
         }
         $paypal_express_checkout = WC()->session->get( 'paypal_express_checkout' );
@@ -70,7 +70,7 @@ class WC_Gateway_PayPal_Express_Function_AngellEYE {
                     'result' => 'success',
                     'redirect' => $this->ec_get_checkout_url('set_express_checkout'),
                 );
-                if (isset($_POST['terms']) && wc_get_page_id('terms') > 0) {
+                if ((isset($_POST['terms']) || isset($_POST['legal'])) && wc_get_page_id('terms') > 0) {
                     WC()->session->set( 'paypal_express_terms', 1);
                 }
                 if (is_ajax()) {
@@ -113,15 +113,24 @@ class WC_Gateway_PayPal_Express_Function_AngellEYE {
     }
     
     public function angelleye_paypal_for_woocommerce_needs_shipping($SECFields) {
+        $is_required = 0;
+        $is_not_required = 0;
         if (sizeof(WC()->cart->get_cart()) != 0) {
             foreach ( WC()->cart->get_cart() as $cart_item_key => $cart_item ) {
                 $product_id = apply_filters( 'woocommerce_cart_item_product_id', $cart_item['product_id'], $cart_item, $cart_item_key );
                 $_no_shipping_required = get_post_meta($product_id, '_no_shipping_required', true);
                 if( $_no_shipping_required == 'yes' ) {
-                    $SECFields['noshipping'] = 1;
-                    return $SECFields;
+                    $is_not_required = $is_not_required + 1;
+                } else {
+                    $is_required = $is_required + 1;
                 }   
             }
+        }
+        if( $is_required > 0 ) {
+            return $SECFields;
+        } elseif ($is_not_required > 0) {
+            $SECFields['noshipping'] = 1;
+            return $SECFields;
         }
         return $SECFields;
     }

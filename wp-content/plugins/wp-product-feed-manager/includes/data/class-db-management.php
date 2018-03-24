@@ -59,7 +59,7 @@ if ( !class_exists( 'WPPFM_Db_Management' ) ) :
 			// store a copy of the new feed
 			$new_feed_id = $queries_class->insert_feed( $feed_data->channel_id, $feed_data->country_id, $feed_data->language,
 				$feed_data->source_id, $feed_data->title, $feed_data->feed_title, $feed_data->feed_description, $feed_data->main_category, $feed_data->include_variations, 
-				$feed_data->is_aggregator, $feed_data->url, $feed_data->status_id, $feed_data->schedule );
+				$feed_data->is_aggregator, $feed_data->url, $feed_data->status_id, $feed_data->base_status_id, $feed_data->schedule );
 			
 			$result = $new_feed_id > 0 ? $queries_class->insert_meta_data( $new_feed_id, $meta_data, $category_mapping ) : false;
 			
@@ -138,7 +138,7 @@ if ( !class_exists( 'WPPFM_Db_Management' ) ) :
 
 			if ( file_exists( $backup_path ) ) {
 				
-				$table_queries = [];
+				$table_queries = array();
 				$backup_string = file_get_contents( $backup_file );
 				
 				// remove the date string
@@ -225,13 +225,14 @@ if ( !class_exists( 'WPPFM_Db_Management' ) ) :
 			}
 		}
 		
+		public static function clean_options_table() {
+			$queries_class = new WPPFM_Queries();
+			$queries_class->clear_feed_batch_options();
+		}
+		
 		private static function remove_left_data_part( $data_string ) {
 			$ds = ltrim( $data_string, '#' );
 			return substr( $ds, stripos( $ds, '#' ) );
-		}
-		
-		private static function get_backupfile_version_number( $file ) {
-			
 		}
 	}
 

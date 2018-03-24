@@ -420,6 +420,25 @@ class WC_Predictive_Search_Global_Settings extends WC_Predictive_Search_Admin_UI
 			),
 
 			array(
+            	'name' 		=> __( 'Default Results Description Source', 'woocommerce-predictive-search' ),
+            	'desc'		=> __( "Use the switch below to set where Predictive Search should source each found results description, if you have 'Show Results Description' activated in a PS Search Widget, Search Function, shortcode and on the All Results page. The 2 options are from the long description or short extract. If for any product the selected 'Default' source is empty PS will auto fallback to use the other source.", 'woocommerce-predictive-search' ),
+                'type' 		=> 'heading',
+                'id'		=> 'predictive_search_description_source_box',
+				'is_box'	=> true,
+           	),
+           	array(
+				'name' 		=> __( 'Default Source', 'woocommerce-predictive-search' ),
+				'class'		=> 'predictive_search_description_source',
+				'id' 		=> 'predictive_search_description_source',
+				'type' 		=> 'switcher_checkbox',
+				'default'	=> 'content',
+				'checked_value'		=> 'content',
+				'unchecked_value'	=> 'excerpt',
+				'checked_label'		=> __( 'DESCRIPTION', 'woocommerce-predictive-search' ),
+				'unchecked_label' 	=> __( 'EXTRACT', 'woocommerce-predictive-search' ),
+			),
+
+			array(
             	'name' 		=> __( 'Predictive Search Focus Keywords', 'woocommerce-predictive-search' ),
 				'desc'		=> __( '<strong>Important!</strong> Do not turn this feature on unless you have or will be adding Focus Keywords to your products. ON and Predictive search will query every product in searches checking for Focus Keywords. Increased and unnecessary queries ( if you have not set Focus Keywords ) can and on larger stores will degrade the search speed.', 'woocommerce-predictive-search' ),
                 'type' 		=> 'heading',

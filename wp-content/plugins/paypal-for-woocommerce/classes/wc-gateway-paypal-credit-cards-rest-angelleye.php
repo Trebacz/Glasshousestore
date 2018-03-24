@@ -10,7 +10,7 @@ class WC_Gateway_PayPal_Credit_Card_Rest_AngellEYE extends WC_Payment_Gateway_CC
     /**
      * Constructor
      */
-    protected $paypal_rest_api;
+    public $paypal_rest_api;
     public $customer_id;
 
     function __construct() {
@@ -59,6 +59,7 @@ class WC_Gateway_PayPal_Credit_Card_Rest_AngellEYE extends WC_Payment_Gateway_CC
             $this->rest_client_id = $this->get_option('rest_client_id', false);
             $this->rest_secret_id = $this->get_option('rest_secret_id', false);
         }
+        $this->payment_action = $this->get_option('payment_action', 'sale');
         $this->softdescriptor = $this->get_option('softdescriptor', '');
         add_action('woocommerce_update_options_payment_gateways_' . $this->id, array($this, 'process_admin_options'));
         add_action('admin_notices', array($this, 'checks'));
@@ -84,7 +85,15 @@ class WC_Gateway_PayPal_Credit_Card_Rest_AngellEYE extends WC_Payment_Gateway_CC
             <h3><?php echo (!empty($this->method_title) ) ? $this->method_title : __('Settings', 'paypal-for-woocommerce'); ?></h3>
             <?php echo (!empty($this->method_description) ) ? wpautop($this->method_description) : ''; ?>
             <table class="form-table">
-                <?php $this->generate_settings_html(); ?>
+            <?php 
+                if(version_compare(WC_VERSION,'2.6','<')) {
+                    AngellEYE_Utility::woo_compatibility_notice();    
+                } elseif (version_compare(phpversion(), '5.3.0', '<')) {
+                    echo '<div class="error angelleye-notice" style="display:none;"><div class="angelleye-notice-logo"><span></span></div><div class="angelleye-notice-message">' . __('PayPal for WooCommerce requires PHP version 5.3.0 or higher.','paypal-for-woocommerce') . '</div></div>';
+                } else {
+                   $this->generate_settings_html();
+                }
+            ?>
             </table>
             <script type="text/javascript">
                 jQuery('#woocommerce_paypal_credit_card_rest_testmode').change(function () {
@@ -100,7 +109,7 @@ class WC_Gateway_PayPal_Credit_Card_Rest_AngellEYE extends WC_Payment_Gateway_CC
                 }).change();
             </script><?php
         } else {
-            ?><div class="inline error"><p><strong><?php _e('Gateway Disabled', 'paypal-for-woocommerce'); ?></strong>: <?php _e('PayPal does not support your store currency.', 'paypal-for-woocommerce'); ?></p></div> <?php
+            ?><div class="error angelleye-notice" style="display:none;"><div class="angelleye-notice-logo"><span></span></div><div class="angelleye-notice-message"><strong><?php _e('Gateway Disabled', 'paypal-for-woocommerce'); ?></strong>: <?php _e('PayPal does not support your store currency.', 'paypal-for-woocommerce'); ?></div></div> <?php
         }
     }
 
@@ -151,6 +160,17 @@ class WC_Gateway_PayPal_Credit_Card_Rest_AngellEYE extends WC_Payment_Gateway_CC
              $this->form();
         }
         do_action('payment_fields_saved_payment_methods', $this);
+    }
+    
+    public function save_payment_method_checkbox() {
+        printf(
+                '<p class="form-row woocommerce-SavedPaymentMethods-saveNew">
+                        <input id="wc-%1$s-new-payment-method" name="wc-%1$s-new-payment-method" type="checkbox" value="true" style="width:auto;" />
+                        <label for="wc-%1$s-new-payment-method" style="display:inline;">%2$s</label>
+                </p>',
+                esc_attr( $this->id ),
+                apply_filters( 'cc_form_label_save_to_account', __( 'Save payment method to my account.', 'woocommerce' ), $this->id)
+        );
     }
 
     /**
@@ -277,15 +297,15 @@ class WC_Gateway_PayPal_Credit_Card_Rest_AngellEYE extends WC_Payment_Gateway_CC
         if ($current_gateway_id == $this->id) {
             $fields = array(
                 'card-number-field' => '<p class="form-row form-row-wide">
-                        <label for="' . esc_attr($this->id) . '-card-number">' . __('Card number', 'paypal-for-woocommerce') . ' <span class="required">*</span></label>
+                        <label for="' . esc_attr($this->id) . '-card-number">' .  apply_filters( 'cc_form_label_card_number', __('Card number', 'paypal-for-woocommerce'), $this->id) . ' <span class="required">*</span></label>
                         <input id="' . esc_attr($this->id) . '-card-number" class="input-text wc-credit-card-form-card-number" inputmode="numeric" autocomplete="cc-number" autocorrect="no" autocapitalize="no" spellcheck="no" type="tel" placeholder="&bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull;" ' . $this->field_name('card-number') . ' />
                     </p>',
                 'card-expiry-field' => '<p class="form-row form-row-first">
-                        <label for="' . esc_attr($this->id) . '-card-expiry">' . __('Expiry (MM/YY)', 'paypal-for-woocommerce') . ' <span class="required">*</span></label>
+                        <label for="' . esc_attr($this->id) . '-card-expiry">' . apply_filters( 'cc_form_label_expiry', __('Expiry (MM/YY)', 'paypal-for-woocommerce'), $this->id) . ' <span class="required">*</span></label>
                         <input id="' . esc_attr($this->id) . '-card-expiry" class="input-text wc-credit-card-form-card-expiry" inputmode="numeric" autocomplete="cc-exp" autocorrect="no" autocapitalize="no" spellcheck="no" type="tel" placeholder="' . esc_attr__('MM / YY', 'paypal-for-woocommerce') . '" ' . $this->field_name('card-expiry') . ' />
                     </p>',
                 '<p class="form-row form-row-last">
-                        <label for="' . esc_attr($this->id) . '-card-cvc">' . __('Card code', 'paypal-for-woocommerce') . ' <span class="required">*</span></label>
+                        <label for="' . esc_attr($this->id) . '-card-cvc">' . apply_filters( 'cc_form_label_card_code', __('Card code', 'paypal-for-woocommerce'), $this->id) . ' <span class="required">*</span></label>
                         <input id="' . esc_attr($this->id) . '-card-cvc" class="input-text wc-credit-card-form-card-cvc" inputmode="numeric" autocomplete="off" autocorrect="no" autocapitalize="no" spellcheck="no" type="tel" maxlength="4" placeholder="' . esc_attr__('CVC', 'paypal-for-woocommerce') . '" ' . $this->field_name('card-cvc') . ' style="width:100px" />
                     </p>'
             );

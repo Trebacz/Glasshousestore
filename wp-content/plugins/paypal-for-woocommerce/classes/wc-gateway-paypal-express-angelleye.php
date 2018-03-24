@@ -13,6 +13,7 @@ class WC_Gateway_PayPal_Express_AngellEYE extends WC_Payment_Gateway {
 
     public function __construct() {
         $this->id = 'paypal_express';
+        $this->home_url = is_ssl() ? home_url('/', 'https') : home_url('/'); 
         $this->method_title = __('PayPal Express Checkout ', 'paypal-for-woocommerce');
         $this->method_description = __('PayPal Express Checkout is designed to make the checkout experience for buyers using PayPal much more quick and easy than filling out billing and shipping forms.  Customers will be taken directly to PayPal to sign in and authorize the payment, and are then returned back to your store to choose a shipping method, review the final order total, and complete the payment.', 'paypal-for-woocommerce');
         $this->has_fields = false;
@@ -34,6 +35,36 @@ class WC_Gateway_PayPal_Express_AngellEYE extends WC_Payment_Gateway {
             $this->is_us_or_uk = true;
         } else {
             $this->is_us_or_uk = false;
+        }
+        if(substr(get_option("woocommerce_default_country"), 0, 2) == 'US') {
+            $this->is_us = true;
+        } else {
+            $this->is_us = false;
+        }
+        if( $this->is_us_or_uk ) {
+            $this->disallowed_funding_methods_array = array(
+                'credit' => __('PayPal Credit', 'paypal-for-woocommerce'),
+                'card' => __('Credit or Debit card', 'paypal-for-woocommerce'),
+                'elv' => __('ELV', 'paypal-for-woocommerce')
+            );
+            $this->button_label_array = array(
+                'checkout' => __('Checkout', 'paypal-for-woocommerce'),
+                'credit' => __('Credit', 'paypal-for-woocommerce'),
+                'pay' => __('Pay', 'paypal-for-woocommerce'),
+                'buynow' => __('Buy Now', 'paypal-for-woocommerce'),
+                'paypal' => __('PayPal', 'paypal-for-woocommerce')
+            );
+        } else {
+            $this->disallowed_funding_methods_array = array(
+                'card' => __('Credit or Debit card', 'paypal-for-woocommerce'),
+                'elv' => __('ELV', 'paypal-for-woocommerce')
+            );
+            $this->button_label_array = array(
+                'checkout' => __('Checkout', 'paypal-for-woocommerce'),
+                'pay' => __('Pay', 'paypal-for-woocommerce'),
+                'buynow' => __('Buy Now', 'paypal-for-woocommerce'),
+                'paypal' => __('PayPal', 'paypal-for-woocommerce')
+            );
         }
         $this->init_form_fields();
         $this->init_settings();
@@ -78,6 +109,10 @@ class WC_Gateway_PayPal_Express_AngellEYE extends WC_Payment_Gateway {
         $this->cancel_page_id = $this->get_option('cancel_page', '');
         $this->fraud_management_filters = $this->get_option('fraud_management_filters', 'place_order_on_hold_for_further_review');
         $this->invoice_id_prefix = $this->get_option('invoice_id_prefix', '');
+        $this->paypal_marketing_solutions_cid_production = $this->get_option('paypal_marketing_solutions_cid_production', '');
+        $this->show_on_minicart = $this->get_option('show_on_minicart', 'yes');
+        $this->pending_authorization_order_status = $this->get_option('pending_authorization_order_status', 'On Hold');
+        $this->enable_in_context_checkout_flow = $this->get_option('enable_in_context_checkout_flow', 'yes');
         if ($this->enable_notifyurl == 'yes') {
             $this->notifyurl = $this->get_option('notifyurl');
             if (isset($this->notifyurl) && !empty($this->notifyurl)) {
@@ -109,7 +144,8 @@ class WC_Gateway_PayPal_Express_AngellEYE extends WC_Payment_Gateway {
         $this->version = "64";
         $this->Force_tls_one_point_two = get_option('Force_tls_one_point_two', 'no');
         $this->page_style = $this->get_option('page_style', '');
-        add_action('woocommerce_update_options_payment_gateways_' . $this->id, array($this, 'process_admin_options'));
+        
+        add_action('woocommerce_update_options_payment_gateways_' . $this->id, array($this, 'process_admin_options'), 999);
         add_filter('woocommerce_settings_api_sanitized_fields_' . $this->id, array($this, 'angelleye_express_checkout_encrypt_gateway_api'), 10, 1);
         if (!has_action('woocommerce_api_' . strtolower('WC_Gateway_PayPal_Express_AngellEYE'))) {
             add_action('woocommerce_api_' . strtolower('WC_Gateway_PayPal_Express_AngellEYE'), array($this, 'handle_wc_api'));
@@ -120,9 +156,25 @@ class WC_Gateway_PayPal_Express_AngellEYE extends WC_Payment_Gateway {
         $this->function_helper = new WC_Gateway_PayPal_Express_Function_AngellEYE();
         $this->order_button_text = ($this->function_helper->ec_is_express_checkout() == false) ?  __('Proceed to PayPal', 'paypal-for-woocommerce') :  __( 'Place order', 'paypal-for-woocommerce' );
         do_action( 'angelleye_paypal_for_woocommerce_multi_account_api_' . $this->id, $this, null, null );
+        
+        
     }
 
     public function admin_options() {
+        ?>
+        <h3><?php _e('PayPal Express Checkout', 'paypal-for-woocommerce'); ?></h3>
+        <p><?php _e($this->method_description, 'paypal-for-woocommerce'); ?></p>
+        <table class="form-table">
+             <?php 
+            if(version_compare(WC_VERSION,'2.6','<')) {
+                AngellEYE_Utility::woo_compatibility_notice();    
+            } else {
+               $this->generate_settings_html(); 
+            }
+            ?>
+        </table> 
+        <?php
+        add_thickbox();
         $guest_checkout = get_option('woocommerce_enable_guest_checkout', 'yes');
         if( 'yes' === get_option( 'woocommerce_registration_generate_username' ) && 'yes' === get_option( 'woocommerce_registration_generate_password' ) ) {
             $guest_checkout = 'yes';
@@ -136,50 +188,243 @@ class WC_Gateway_PayPal_Express_AngellEYE extends WC_Payment_Gateway {
         } else {
             $display_disable_terms = 'no';
         }
+        $this->paypal_marketing_solutions_cid_production = $this->get_option('paypal_marketing_solutions_cid_production', '');
+        $report_home = 'https://business.paypal.com/merchantdata/reportHome?cid='.$this->paypal_marketing_solutions_cid_production;
         ?>
-        <h3><?php _e('PayPal Express Checkout', 'paypal-for-woocommerce'); ?></h3>
-        <p><?php _e($this->method_description, 'paypal-for-woocommerce'); ?></p>
-        <table class="form-table">
-            <?php $this->generate_settings_html(); ?>
-            <script type="text/javascript">
-                var display_disable_terms = "<?php echo $display_disable_terms; ?>";
-        <?php if ($guest_checkout === 'no') { ?>
-                    jQuery("#woocommerce_paypal_express_skip_final_review").prop("checked", false);
-                    jQuery("#woocommerce_paypal_express_skip_final_review").attr("disabled", true);
+        <script>
+        function display_notice_and_disable_marketing_solution() {
+            jQuery("#woocommerce_paypal_express_paypal_marketing_solutions_enabled").prop('disabled', 'disabled');
+            jQuery("#woocommerce_paypal_express_paypal_marketing_solutions_enabled").prop('readonly', 'readonly'); 
+            jQuery('.display_msg_when_activated').html('');
+            jQuery('.display_msg_when_activated').html('<span class="pms-red">PayPal Marketing Solutions only available for Live mode.<br/><br/></span>');
+        }
+        </script>
+        <?php if( $this->is_us == true ) { ?>
+        <div id="more-info-popup" style="display:none;">
+          <iframe width="889" height="554" src="https://www.youtube.com/embed/hXWFn8_jUDc" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
+        </div>
+        
+        <script src='https://www.paypalobjects.com/muse/partners/muse-button-bundle.js'></script>
+        <script>
+        
+        <?php if (!empty($this->paypal_marketing_solutions_cid_production)) { ?>
+        var muse_options_production = {
+            onContainerCreate: callback_onsuccess_production,
+            url: '<?php echo $this->home_url; ?>',
+            parnter_name: 'Angell EYE',
+            bn_code: 'AngellEYE_SP_MarketingSolutions',
+            promotionsEnabled: 'True',
+            env: 'production',
+            cid: '<?php echo $this->paypal_marketing_solutions_cid_production; ?>'
+        }
         <?php } ?>
-                jQuery('#woocommerce_paypal_express_skip_final_review').change(function () {
-                    disable_term = jQuery('#woocommerce_paypal_express_disable_term').closest('tr');
-                    if (jQuery(this).is(':checked')) {
-                        if (display_disable_terms === 'yes') {
-                            disable_term.show();
-                        } else {
-                            disable_term.hide();
+        jQuery('#woocommerce_paypal_express_paypal_marketing_solutions_cid_production').closest('tr').hide();
+        jQuery('#woocommerce_paypal_express_paypal_marketing_solutions_enabled').closest('tr').find('th').hide(); 
+        
+        <?php
+        if (!empty($this->paypal_marketing_solutions_cid_production)) {
+            ?> jQuery('#pms-paypalInsightsLink').show();
+                jQuery('.display_when_deactivated').hide();
+                jQuery('.pms-view-more').hide();
+                
+                jQuery('#woocommerce_paypal_express_paypal_marketing_solutions_enabled').closest('table').css({'display': 'none'}); 
+            <?php
+        } else {
+            ?> 
+            display_notice_and_disable_marketing_solution();
+            jQuery('#woocommerce_paypal_express_paypal_marketing_solutions_enabled').closest('table').css({'width': '50%', 'top': '-65px'}); jQuery('#pms-paypalInsightsLink').hide(); jQuery('#angelleye_wp_marketing_solutions_button_production').hide(); 
+            <?php
+        }
+        ?>
+        
+         jQuery('.view-paypal-insight-result').on('click', function (event) {
+            event.preventDefault();
+            var win = window.open('<?php echo $report_home; ?>', '_blank');
+            win.focus();
+        });
+        <?php if (!empty($this->paypal_marketing_solutions_cid_production)) { ?>
+        function callback_onsuccess_production(containerId) {
+            muse_options_production.cid = containerId;
+        }
+        MUSEButton('angelleye_wp_marketing_solutions_button_production', muse_options_production);
+        <?php } ?>
+        </script>
+        <?php } ?>
+        <script type="text/javascript">
+            function is_funding_icon_should_show_php() {
+                var disallowed_funding_methods = jQuery('#woocommerce_paypal_express_disallowed_funding_methods').val();
+                if (disallowed_funding_methods === null) {
+                    disallowed_funding_methods = [];
+                }
+                if (jQuery.inArray('card', disallowed_funding_methods)  > -1 ) {
+                    return false;
+                } else {
+                    if( jQuery("#woocommerce_paypal_express_button_layout").val() === "vertical" ) {
+                        return false;
+                    }
+                    return true;
+                }
+            }
+            jQuery("#woocommerce_paypal_express_testmode, #woocommerce_paypal_express_api_username, #woocommerce_paypal_express_api_password, #woocommerce_paypal_express_api_signature").on('keyup change keypress', function (){
+            if (jQuery(this).is(':checked') === false) {
+                var api_username = (jQuery('#woocommerce_paypal_express_api_username').val().length > 0) ? jQuery('#woocommerce_paypal_express_api_username').val() : jQuery('#woocommerce_paypal_express_api_username').text();
+                    var api_password = (jQuery('#woocommerce_paypal_express_api_password').val().length > 0) ? jQuery('#woocommerce_paypal_express_api_password').val() : jQuery('#woocommerce_paypal_express_api_password').text();
+                    var api_signature = (jQuery('#woocommerce_paypal_express_api_signature').val().length > 0) ? jQuery('#woocommerce_paypal_express_api_signature').val() : jQuery('#woocommerce_paypal_express_api_signature').text();
+                    if( api_username.length > 0 && api_password.length > 0 && api_signature.length > 0 ) {
+                        jQuery('.display_msg_when_activated').html('');
+                        jQuery("#woocommerce_paypal_express_paypal_marketing_solutions_enabled").prop('disabled', '');
+                        jQuery("#woocommerce_paypal_express_paypal_marketing_solutions_enabled").prop('readonly', '');
+                    } else {
+                        display_notice_and_disable_marketing_solution();
+                    }
+            } else { 
+                display_notice_and_disable_marketing_solution();
+            }
+        }).change();
+        
+        
+         jQuery("#woocommerce_paypal_express_button_layout").change(function () {
+           var angelleye_button_label =  jQuery("#woocommerce_paypal_express_button_label").closest('tr');
+           var angelleye_button_tagline =  jQuery("#woocommerce_paypal_express_button_tagline").closest('tr');
+           var angelleye_button_fundingicons =  jQuery("#woocommerce_paypal_express_button_fundingicons").closest('tr');
+            if ( this.value === 'vertical' ) {
+                jQuery('#woocommerce_paypal_express_button_size option[value="small"]').remove();
+                angelleye_button_label.hide();
+                angelleye_button_tagline.hide();
+                if( is_funding_icon_should_show_php() === false) {
+                    angelleye_button_fundingicons.hide();
+                }
+            } else {
+                if( jQuery("#woocommerce_paypal_express_button_size option[value='small']").length == 0) {
+                    jQuery('#woocommerce_paypal_express_button_size').append(jQuery("<option></option>").attr("value","small").text("Small")); 
+                }
+                angelleye_button_label.show();
+                if( is_funding_icon_should_show_php() === true) {
+                    angelleye_button_fundingicons.show();
+                }
+                if(jQuery('#woocommerce_paypal_express_button_fundingicons').val() !== 'true') {
+                    angelleye_button_tagline.show();
+                }
+            }
+        }).change();
+            jQuery('#woocommerce_paypal_express_payment_action').change(function () {
+                if ( this.value === 'Authorization' ) {
+                    jQuery('#woocommerce_paypal_express_pending_authorization_order_status').closest('tr').show();
+                } else {
+                    jQuery('#woocommerce_paypal_express_pending_authorization_order_status').closest('tr').hide();
+                }
+            }).change();
+             jQuery('#woocommerce_paypal_express_button_label').change(function () {
+                var paypal_express_button_tagline = jQuery('#woocommerce_paypal_express_button_tagline').closest('tr').hide();
+                if ( this.value === 'credit' ) {
+                    jQuery('#woocommerce_paypal_express_button_color').closest('tr').hide();
+                    jQuery('#woocommerce_paypal_express_button_fundingicons').closest('tr').hide();
+                    if( jQuery("#woocommerce_paypal_express_button_layout").val() !== 'vertical' ) {
+                        paypal_express_button_tagline.show();
+                    }
+                } else {
+                    jQuery('#woocommerce_paypal_express_button_color').closest('tr').show();
+                    if( is_funding_icon_should_show_php() === true) {
+                        jQuery('#woocommerce_paypal_express_button_fundingicons').closest('tr').show();
+                        if(jQuery('#woocommerce_paypal_express_button_fundingicons').val() !== 'true') {
+                            if( jQuery("#woocommerce_paypal_express_button_layout").val() !== 'vertical' ) {
+                                paypal_express_button_tagline.show();
+                            }
                         }
+                    } else {
+                        if( jQuery("#woocommerce_paypal_express_button_layout").val() !== 'vertical' ) {
+                            paypal_express_button_tagline.show();
+                        }
+                    }
+                    
+                }
+                if( jQuery('#woocommerce_paypal_express_button_label').val() === 'buynow' ) {
+                    paypal_express_button_tagline.hide();
+                }
+            }).change();
+            var display_disable_terms = "<?php echo $display_disable_terms; ?>";
+            <?php if ($guest_checkout === 'no') { ?>
+                        jQuery("#woocommerce_paypal_express_skip_final_review").prop("checked", false);
+                        jQuery("#woocommerce_paypal_express_skip_final_review").attr("disabled", true);
+            <?php } ?>
+            jQuery('#woocommerce_paypal_express_skip_final_review').change(function () {
+                disable_term = jQuery('#woocommerce_paypal_express_disable_term').closest('tr');
+                if (jQuery(this).is(':checked')) {
+                    if (display_disable_terms === 'yes') {
+                        disable_term.show();
                     } else {
                         disable_term.hide();
                     }
-                }).change();
-                jQuery('#woocommerce_paypal_express_disable_term').change(function () {
-                    term_notice = jQuery('.terms_notice');
-                    if (jQuery(this).is(':checked')) {
-                        term_notice.hide();
-                    } else {
-                        term_notice.show();
+                } else {
+                    disable_term.hide();
+                }
+            }).change();
+            jQuery('#woocommerce_paypal_express_disable_term').change(function () {
+                term_notice = jQuery('.terms_notice');
+                if (jQuery(this).is(':checked')) {
+                    term_notice.hide();
+                } else {
+                    term_notice.show();
+                }
+            }).change();
+            jQuery('#woocommerce_paypal_express_show_on_cart').change(function () {
+                var show_on_minicart = jQuery('#woocommerce_paypal_express_show_on_minicart').closest('tr');
+                if (jQuery(this).is(':checked')) {
+                    show_on_minicart.show();
+                } else {
+                    show_on_minicart.hide();
+                }
+            }).change();
+            jQuery('#woocommerce_paypal_express_testmode').change(function () {
+                sandbox = jQuery('#woocommerce_paypal_express_sandbox_api_username, #woocommerce_paypal_express_sandbox_api_password, #woocommerce_paypal_express_sandbox_api_signature').closest('tr'),
+                production = jQuery('#woocommerce_paypal_express_api_username, #woocommerce_paypal_express_api_password, #woocommerce_paypal_express_api_signature').closest('tr');
+                if (jQuery(this).is(':checked')) {
+                    sandbox.show();
+                    production.hide();
+                } else {
+                    sandbox.hide();
+                    production.show();
+                }
+            }).change();
+            jQuery('#woocommerce_paypal_express_button_fundingicons').change(function () {
+                var paypal_express_button_tagline = jQuery('#woocommerce_paypal_express_button_tagline').closest('tr').hide();
+                if (this.value === 'true') {
+                    paypal_express_button_tagline.hide();
+                } else {
+                    if( jQuery("#woocommerce_paypal_express_button_layout").val() !== 'vertical' ) {
+                        if( jQuery('#woocommerce_paypal_express_button_label').val() !== 'buynow' ) {
+                            paypal_express_button_tagline.show();
+                        }
+                       
                     }
-                }).change();
-                jQuery('#woocommerce_paypal_express_testmode').change(function () {
-                    sandbox = jQuery('#woocommerce_paypal_express_sandbox_api_username, #woocommerce_paypal_express_sandbox_api_password, #woocommerce_paypal_express_sandbox_api_signature').closest('tr'),
-                            production = jQuery('#woocommerce_paypal_express_api_username, #woocommerce_paypal_express_api_password, #woocommerce_paypal_express_api_signature').closest('tr');
-                    if (jQuery(this).is(':checked')) {
-                        sandbox.show();
-                        production.hide();
-                    } else {
-                        sandbox.hide();
-                        production.show();
+                    
+                }
+        }).change();
+        jQuery('#woocommerce_paypal_express_disallowed_funding_methods').change(function () {
+            if( jQuery.inArray('credit', jQuery('#woocommerce_paypal_express_disallowed_funding_methods').val()) ) {
+                
+                if( jQuery("#woocommerce_paypal_express_button_label option[value='credit']").length === 0) {
+                    jQuery('#woocommerce_paypal_express_button_label').append(jQuery("<option></option>").attr("value","credit").text("Credit"));
+                }
+                
+            } else {
+                 jQuery('#woocommerce_paypal_express_button_label option[value="credit"]').remove();
+            }
+            
+            if( is_funding_icon_should_show_php() === false) {
+                jQuery("#woocommerce_paypal_express_button_fundingicons").closest('tr').hide();
+                if( jQuery('#woocommerce_paypal_express_button_label').val() !== 'buynow' ) {
+                    if( jQuery("#woocommerce_paypal_express_button_layout").val() !== 'vertical' ) {
+                        jQuery('#woocommerce_paypal_express_button_tagline').closest('tr').show();
                     }
-                }).change();
-            </script>
-        </table> <?php
+                }
+            } else {
+                 jQuery("#woocommerce_paypal_express_button_fundingicons").closest('tr').show();
+                 jQuery('#woocommerce_paypal_express_button_tagline').closest('tr').hide();
+            }
+        }).change();
+        </script>
+         <?php
     }
 
     /**
@@ -216,14 +461,15 @@ class WC_Gateway_PayPal_Express_AngellEYE extends WC_Payment_Gateway {
             }
             $icon = "<img src=\"$image_path\" alt='" . __('Pay with PayPal', 'paypal-for-woocommerce') . "'/>";
             $icon_two = "<img src=\"$image_path_two\" alt='" . __('Pay with PayPal', 'paypal-for-woocommerce') . "'/>";
-            return apply_filters('woocommerce_paypal_express_icon', $icon.$icon_two, $this->id);
+            return apply_filters('angelleye_ec_checkout_icon', $icon.$icon_two, $this->id);
         } else {
             $icon = "<img src=\"$image_path\" alt='" . __('Pay with PayPal', 'paypal-for-woocommerce') . "'/>";
-            return apply_filters('woocommerce_paypal_express_icon', $icon, $this->id);
+            return apply_filters('angelleye_ec_checkout_icon', $icon, $this->id);
         }
     }
 
     public function init_form_fields() {
+        $rest_url = get_admin_url() . 'admin.php?page=wc-settings&tab=checkout&section=paypal_express&pms_reset=true';
         $require_ssl = '';
         if (!AngellEYE_Gateway_Paypal::is_ssl()) {
             $require_ssl = __('This image requires an SSL host.  Please upload your image to <a target="_blank" href="http://www.sslpic.com">www.sslpic.com</a> and enter the image URL here.', 'paypal-for-woocommerce');
@@ -231,7 +477,6 @@ class WC_Gateway_PayPal_Express_AngellEYE extends WC_Payment_Gateway {
         $skip_final_review_option_not_allowed_guest_checkout = '';
         $skip_final_review_option_not_allowed_terms = '';
         $skip_final_review_option_not_allowed_tokenized_payments = '';
-        
         $woocommerce_enable_guest_checkout = get_option('woocommerce_enable_guest_checkout');
         if( 'yes' === get_option( 'woocommerce_registration_generate_username' ) && 'yes' === get_option( 'woocommerce_registration_generate_password' ) ) {
             $woocommerce_enable_guest_checkout = 'yes';
@@ -268,6 +513,8 @@ class WC_Gateway_PayPal_Express_AngellEYE extends WC_Payment_Gateway {
         foreach ($pages as $p) {
             $cancel_page[$p->ID] = $p->post_title;
         }
+        $this->testmode = 'yes' === $this->get_option('testmode', 'yes');
+        $this->paypal_marketing_solutions_cid_production = $this->get_option('paypal_marketing_solutions_cid_production', '');
         $this->form_fields = array(
             'enabled' => array(
                 'title' => __('Enable/Disable', 'paypal-for-woocommerce'),
@@ -316,7 +563,7 @@ class WC_Gateway_PayPal_Express_AngellEYE extends WC_Payment_Gateway {
             'api_username' => array(
                 'title' => __('Live API User Name', 'paypal-for-woocommerce'),
                 'type' => 'text',
-                'description' => __('Get your live account API credentials from your PayPal account profile under the API Access section <br />or by using <a target="_blank" href="https://www.paypal.com/us/cgi-bin/webscr?cmd=_login-api-run">this tool</a>.', 'paypal-for-woocommerce'),
+                'description' => __('Get your live account API credentials from your PayPal account profile <br />or by using <a target="_blank" href="https://www.paypal.com/us/cgi-bin/webscr?cmd=_login-api-run">this tool</a>.', 'paypal-for-woocommerce'),
                 'default' => ''
             ),
             'api_password' => array(
@@ -378,6 +625,12 @@ class WC_Gateway_PayPal_Express_AngellEYE extends WC_Payment_Gateway {
             'show_on_cart' => array(
                 'title' => __('Cart Page', 'paypal-for-woocommerce'),
                 'label' => __('Show Express Checkout button on shopping cart page.', 'paypal-for-woocommerce'),
+                'type' => 'checkbox',
+                'default' => 'yes'
+            ),
+            'show_on_minicart' => array(
+                'title' => __('Minicart', 'paypal-for-woocommerce'),
+                'label' => __('Show Express Checkout button in the WooCommerce Minicart.', 'paypal-for-woocommerce'),
                 'type' => 'checkbox',
                 'default' => 'yes'
             ),
@@ -539,6 +792,19 @@ class WC_Gateway_PayPal_Express_AngellEYE extends WC_Payment_Gateway {
                 'default' => 'Sale',
                 'desc_tip' => true,
             ),
+            'pending_authorization_order_status' => array(
+                'title' => __('Pending Authorization Order Status', 'paypal-for-woocommerce'),
+                'label' => __('Pending Authorization Order Status.', 'paypal-for-woocommerce'),
+                'description' => __('Set the order status you would like to use when an order has been authorized but has not yet been captured.'),
+                'type' => 'select',
+                'class'    => 'wc-enhanced-select',
+                'options' => array(
+                    'On Hold' => 'On Hold',
+                    'Processing' => 'Processing'
+                ),
+                'default' => 'On Hold',
+                'desc_tip' => true,
+            ),
             'billing_address' => array(
                 'title' => __('Billing Address', 'paypal-for-woocommerce'),
                 'label' => __('Set billing address in WooCommerce using the address returned by PayPal.', 'paypal-for-woocommerce'),
@@ -635,16 +901,9 @@ class WC_Gateway_PayPal_Express_AngellEYE extends WC_Payment_Gateway {
             'save_abandoned_checkout' => array(
                 'title' => __('Save Abandoned Checkouts', 'paypal-for-woocommerce'),
                 'type' => 'checkbox',
-                'label' => __('If a buyer clicks to pay with PayPal, but they never return from PayPal, this will save the order as pending with all available details to that point.', 'paypal-for-woocommerce'),
+                'label' => __('If a buyer choose to pay with PayPal from the WooCommerce checkout page, but they never return from PayPal, this will save the order as pending with all available details to that point.  Note that this will not work when Express Checkout Shortcut buttons are used.'),
                 'default' => 'no'
             ),
-            'enable_in_context_checkout_flow' => array(
-                'title' => __('Enable In-Context', 'paypal-for-woocommerce'),
-                'type' => 'checkbox',
-                'label' => __('The enhanced PayPal Express Checkout with In-Context gives your customers a simplified checkout experience that keeps them at your website throughout the payment authorization process.', 'paypal-for-woocommerce'),
-                'default' => 'no'
-            ),
-            
             'debug' => array(
                 'title' => __('Debug', 'paypal-for-woocommerce'),
                 'type' => 'checkbox',
@@ -657,8 +916,194 @@ class WC_Gateway_PayPal_Express_AngellEYE extends WC_Payment_Gateway {
                 'type' => 'hidden',
                 'default' => 'yes',
                 'class' => ''
-            )
-        );
+            ),
+            'display_enable_in_context_checkout_flow_section' => array(
+                'title' => __('<hr />', 'paypal-for-woocommerce'),
+                'type' => 'title',
+                'class' => '',
+                'description' => __('', 'paypal-for-woocommerce'),
+            ),
+            'enable_in_context_checkout_flow' => array(
+                'title' => __('Enable Smart Buttons', 'paypal-for-woocommerce'),
+                'type' => 'checkbox',
+                'label' => __('The enhanced PayPal Express Checkout with In-Context gives your customers a simplified checkout experience that keeps them at your website throughout the payment authorization process.', 'paypal-for-woocommerce'),
+                'default' => 'yes'
+            ),
+            'button_styles' => array(
+                'title' => __('', 'paypal-for-woocommerce'),
+                'type' => 'title',
+                'class' => 'in_context_checkout_part',
+                'description' => '<div class="in_context_checkout_part angelleye_button_settings_selector">Customize your PayPal button with colors, sizes, shapes, layout and funding sources.</div>',
+            ),
+            'disallowed_funding_methods' => array(
+                'title' => __('Hide Funding Method(s)', 'paypal-for-woocommerce'),
+                'type' => 'multiselect',
+                'class' => 'wc-enhanced-select in_context_checkout_part',
+                'description' => __('Funding methods selected here will be hidden from buyers during checkout.', 'paypal-for-woocommerce'),
+                'default' => 'medium',
+                'desc_tip' => true,
+                'options' => $this->disallowed_funding_methods_array,
+            ),
+            'button_layout' => array(
+                'title' => __('Button Layout', 'paypal-for-woocommerce'),
+                'type' => 'select',
+                'class' => 'wc-enhanced-select in_context_checkout_part',
+                'description' => __('Select Vertical for stacked buttons, and Horizontal for side-by-side buttons.', 'paypal-for-woocommerce'),
+                'default' => 'horizontal',
+                'desc_tip' => true,
+                'options' => array(
+                    'horizontal' => __('Horizontal', 'paypal-for-woocommerce'),
+                    'vertical' => __('Vertical', 'paypal-for-woocommerce')
+                ),
+            ),
+            'button_size' => array(
+                'title' => __('Button Size', 'paypal-for-woocommerce'),
+                'type' => 'select',
+                'class' => 'wc-enhanced-select in_context_checkout_part',
+                'description' => __('Set the size of the buttons you would like displayed.  Responsive will fit to the current element on the page.', 'paypal-for-woocommerce'),
+                'default' => 'small',
+                'desc_tip' => true,
+                'options' => array(
+                    'small' => __('Small', 'paypal-for-woocommerce'),
+                    'medium' => __('Medium', 'paypal-for-woocommerce'),
+                    'large' => __('Large', 'paypal-for-woocommerce'),
+                    'responsive' => __('Responsive', 'paypal-for-woocommerce'),
+                ),
+            ),
+            'button_label' => array(
+                'title' => __('Button Label', 'paypal-for-woocommerce'),
+                'type' => 'select',
+                'class' => 'wc-enhanced-select in_context_checkout_part',
+                'description' => __('Set the label type you would like to use for the PayPal button.', 'paypal-for-woocommerce'),
+                'default' => 'checkout',
+                'desc_tip' => true,
+                'options' => $this->button_label_array,
+            ),
+            'button_color' => array(
+                'title' => __('Button Color', 'paypal-for-woocommerce'),
+                'type' => 'select',
+                'class' => 'wc-enhanced-select in_context_checkout_part',
+                'description' => __('Set the color you would like to use for the PayPal button.', 'paypal-for-woocommerce'),
+                'default' => 'gold',
+                'desc_tip' => true,
+                'options' => array(
+                    'gold' => __('Gold', 'paypal-for-woocommerce'),
+                    'blue' => __('Blue', 'paypal-for-woocommerce'),
+                    'silver' => __('Silver', 'paypal-for-woocommerce'),
+                    'black' => __('Black', 'paypal-for-woocommerce')
+                ),
+            ),
+            'button_shape' => array(
+                'title' => __('Button Shape', 'paypal-for-woocommerce'),
+                'type' => 'select',
+                'class' => 'wc-enhanced-select in_context_checkout_part',
+                'description' => __('Set the shape you would like to use for the buttons.', 'paypal-for-woocommerce'),
+                'default' => 'pill',
+                'desc_tip' => true,
+                'options' => array(
+                    'pill' => __('Pill', 'paypal-for-woocommerce'),
+                    'rect' => __('Rect', 'paypal-for-woocommerce')
+                ),
+            ),
+            'button_fundingicons' => array(
+                'title' => __('Credit Card Icons ', 'paypal-for-woocommerce'),
+                'type' => 'select',
+                'class' => 'wc-enhanced-select in_context_checkout_part',
+                'description' => __('Enable this to display credit card icons below the PayPal buttons.', 'paypal-for-woocommerce'),
+                'default' => 'false',
+                'desc_tip' => true,
+                'options' => array(
+                    'false' => __('Disable', 'paypal-for-woocommerce'),
+                    'true' => __('Enable', 'paypal-for-woocommerce')
+                ),
+            ),
+            'button_tagline' => array(
+                'title' => __('Button Tagline ', 'paypal-for-woocommerce'),
+                'type' => 'select',
+                'class' => 'wc-enhanced-select in_context_checkout_part_tagline in_context_checkout_part',
+                'description' => __('Enable this to display a tagline below the PayPal buttons..', 'paypal-for-woocommerce'),
+                'default' => 'false',
+                'desc_tip' => true,
+                'options' => array(
+                    'false' => __('Disable', 'paypal-for-woocommerce'),
+                    'true' => __('Enable', 'paypal-for-woocommerce')
+                ),
+            ),
+            'enable_google_analytics_click' => array(
+                'title' => __('Google Analytics', 'paypal-for-woocommerce'),
+                'type' => 'checkbox',
+                'label' => __('Enable Google Analytics Click Tracking.'),
+                'default' => 'no'
+            ),
+             'angelleye_smart_button_preview_title' => array(
+                'title' => __('', 'paypal-for-woocommerce'),
+                'type' => 'title',
+                'class' => '',
+                'description' => '<div><div class="display_smart_button_previews_button"></div><div class="display_smart_button_previews"></div></div>',
+            ),
+            
+         );
+        
+        if( $this->is_us == true ) {
+            $this->form_fields['paypal_marketing_solutions'] = array(
+                'title'       => __( '<hr></hr>PayPal Marketing Solutions', 'paypal-for-woocommerce' ),
+		'type'        => 'title',
+		'description' => __( '<div id="pms-muse-container">
+				<div class="pms-muse-left-container">
+					<div class="pms-muse-description">
+						<p>' . __('Get free business insights into your customers’ shopping habits; like how often they shop, how much they spend, and how they interact with your website.', 'wp-paypal-marketing-solutions') . '</p>
+                                                <p>' . __('Help drive sales by displaying relevant PayPal offers and promotional messages to your customers on your website. Manage Settings to choose which messages, if any, you want to show, as well as how and where these messages appear on your website.', 'wp-paypal-marketing-solutions') . '</p>
+                                                <p class="display_when_deactivated">' . __('All FREE to you as a valued PayPal merchant. Simply ‘Enable’ now!', 'wp-paypal-marketing-solutions') . '</p>
+                                                <p class="display_when_deactivated">' . __('By enabling, you acknowledge that you have the right to use the PayPal Insights tool and to collect information from shoppers on your site.  See <a target="_blank" href="https://www.paypal.com/webapps/mpp/ua/useragreement-full">terms and conditions</a>.', 'wp-paypal-marketing-solutions') . '</p> 
+                                                <p class="display_when_deactivated">' . __('By enabling, you acknowledge that you have agreed to, and accepted the terms of, the PayPal User Agreement, including the <a target="_blank" href="https://www.paypal.com/webapps/mpp/ua/useragreement-full">terms and conditions</a> thereof applicable to the PayPal Advertising Program.', 'wp-paypal-marketing-solutions') . '</p> 
+                                                <p class="display_msg_when_activated"></p>
+					</div>
+                                        <div class="wrap">
+                                            <div id="angelleye_wp_marketing_solutions_button_production"></div>
+                                            <div id="pms-paypalInsightsLink"><button class="paypal-px-btn view-paypal-insight-result">' . __('View Shopper Insights', '') . '</button></div>
+                                        </div>
+				</div>
+				<div class="pms-muse-right-container">
+					<div>
+                                            <img src="' . PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'assets/images/muse1.png"/>
+                                            <div><p>' . __('Merchants like you have increased their average order value (AOV) by <b>up to 68%*</b>.', 'wp-paypal-marketing-solutions') . '</p></div>
+					</div>
+					<div>
+                                            <img src="' . PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'assets/images/muse2.png"/>
+                                            <div><p>' . __('Join <b>20,000 merchants</b> who are promoting financing options on their site to boost sales.', 'wp-paypal-marketing-solutions') . '</p></div>
+					</div>
+					<div>
+                                            <img src="' . PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'assets/images/muse3.png"/>
+                                            <div><p>' . __('<b>Get insights</b> about your visitors and how they shop on your site.', 'wp-paypal-marketing-solutions') . '</p></div>
+					</div>
+                                        <div class="wrap pms-center-moreinfo">
+                                        <div>
+                                            <div><a href="#TB_inline?&width=889&height=558&inlineId=more-info-popup" class="thickbox"><button class="pms-view-more paypal-px-btn">More Info</button></a></div>
+                                        </div>
+				</div>
+			</div>
+                ', 'paypal-for-woocommerce' ),
+            );
+            $this->form_fields['paypal_marketing_solutions_enabled'] = array(
+                  'title'       => __( '', 'paypal-for-woocommerce' ),
+                  'type'        => 'checkbox',
+                  'label'       => '&nbsp;&nbsp;Enable PayPal Marketing Solutions',
+                  'default'     => 'no',
+                 'class' => 'checkbox',
+                  'desc_tip'    => true,
+                  'description' => __( 'This enables PayPal Marketing Solutions for valuable customer insights.' ),
+            );
+            $this->form_fields['paypal_marketing_solutions_cid_production'] = array(
+                'type'        => 'hidden',
+                'default'     => '',
+
+            );
+            $this->form_fields['paypal_marketing_solutions_details_note'] = array(
+                'type'        => 'title',
+                'default'     => '',
+                'description' => '<p class="font11">' . __("* As reported in Nielsen’s PayPal Credit Average Order Value Study for activity occurring from April 2015 to March 2016 (small merchants) and October 2015 to March 2016 (midsize merchants), which compared PayPal Credit transactions to credit and debit card transactions on websites that offer PayPal Credit as a payment option or within the PayPal Wallet. Nielsen measured 284890 transactions across 27 mid and small merchants. Copyright Nielsen 2016.", 'paypal-for-woocommerce') . '<hr>',
+            );
+        }
         $this->form_fields = apply_filters('angelleye_ec_form_fields', $this->form_fields);
     }
 
@@ -694,6 +1139,17 @@ class WC_Gateway_PayPal_Express_AngellEYE extends WC_Payment_Gateway {
                 do_action('payment_fields_saved_payment_methods', $this);
             }
         }
+    }
+    
+    public function save_payment_method_checkbox() {
+        printf(
+                '<p class="form-row woocommerce-SavedPaymentMethods-saveNew">
+                        <input id="wc-%1$s-new-payment-method" name="wc-%1$s-new-payment-method" type="checkbox" value="true" style="width:auto;" />
+                        <label for="wc-%1$s-new-payment-method" style="display:inline;">%2$s</label>
+                </p>',
+                esc_attr( $this->id ),
+                apply_filters( 'cc_form_label_save_to_account', __( 'Save payment method to my account.', 'woocommerce' ), $this->id)
+        );
     }
 
     public function process_subscription_payment($order_id) {
@@ -885,7 +1341,7 @@ class WC_Gateway_PayPal_Express_AngellEYE extends WC_Payment_Gateway {
             switch ($_GET['pp_action']) {
                 case 'cancel_order':
                     $this->function_helper->ec_clear_session_data();
-                     $cancel_url = !empty($this->cancel_page_id) ? get_permalink($this->cancel_page_id) : WC()->cart->get_cart_url();
+                     $cancel_url = !empty($this->cancel_page_id) ? get_permalink($this->cancel_page_id) : wc_get_cart_url();
                      wp_safe_redirect( $cancel_url );
                      exit;
                 case 'set_express_checkout':
@@ -960,12 +1416,18 @@ class WC_Gateway_PayPal_Express_AngellEYE extends WC_Payment_Gateway {
                                 $paypal_express_checkout = WC()->session->get( 'paypal_express_checkout' );
                                 if( !empty($paypal_express_checkout['shipping_details']['email'])) {
                                     $this->posted['billing_email'] = $paypal_express_checkout['shipping_details']['email'];
+                                } elseif( !empty ($paypal_express_checkout['ExpresscheckoutDetails']['EMAIL'])) {
+                                    $this->posted['billing_email'] = $paypal_express_checkout['ExpresscheckoutDetails']['EMAIL'];
                                 }
                                 if( !empty($paypal_express_checkout['shipping_details']['first_name'])) {
                                     $this->posted['billing_first_name'] = $paypal_express_checkout['shipping_details']['first_name'];
+                                } elseif( !empty ($paypal_express_checkout['ExpresscheckoutDetails']['FIRSTNAME'])) {
+                                    $this->posted['billing_first_name'] = $paypal_express_checkout['ExpresscheckoutDetails']['FIRSTNAME'];
                                 }
                                 if( !empty($paypal_express_checkout['shipping_details']['last_name'])) {
                                     $this->posted['billing_last_name'] = $paypal_express_checkout['shipping_details']['last_name'];
+                                } elseif( !empty ($paypal_express_checkout['ExpresscheckoutDetails']['LASTNAME'])) {
+                                    $this->posted['billing_last_name'] = $paypal_express_checkout['ExpresscheckoutDetails']['LASTNAME'];
                                 }
                                 $this->posted['payment_method'] = $this->id;
                             }
@@ -1144,17 +1606,20 @@ class WC_Gateway_PayPal_Express_AngellEYE extends WC_Payment_Gateway {
                             $billing_agreement_id = $billing_result['BILLINGAGREEMENTID'];
                             $token = new WC_Payment_Token_CC();
                             $customer_id = get_current_user_id();
-                            $token->set_user_id($customer_id);
                             $token->set_token($billing_agreement_id);
                             $token->set_gateway_id($this->id);
                             $token->set_card_type('PayPal Billing Agreement');
                             $token->set_last4(substr($billing_agreement_id, -4));
                             $token->set_expiry_month(date('m'));
                             $token->set_expiry_year(date('Y', strtotime('+20 year')));
-                            
-                            $save_result = $token->save();
-                            wp_redirect(wc_get_account_endpoint_url('payment-methods'));
-                            exit();
+                            $token->set_user_id($customer_id);
+                            if( $token->validate() ) {
+                                $save_result = $token->save();
+                                wp_redirect(wc_get_account_endpoint_url('payment-methods'));
+                                exit();
+                            } else {
+                                throw new Exception( __( 'Invalid or missing payment token fields.', 'paypal-for-woocommerce' ) );
+                            }
                         }
                     }
                 } else {
@@ -1183,7 +1648,7 @@ class WC_Gateway_PayPal_Express_AngellEYE extends WC_Payment_Gateway {
             $message .= __('Error Severity Code: ', 'paypal-for-woocommerce') . $ErrorSeverityCode . "\n";
             $message .= __('Short Error Message: ', 'paypal-for-woocommerce') . $ErrorShortMsg . "\n";
             $message .= __('Detailed Error Message: ', 'paypal-for-woocommerce') . $ErrorLongMsg . "\n";
-            $message .= __('User IP: ', 'paypal-for-woocommerce') . $this->get_user_ip() . "\n";
+            $message .= __('User IP: ', 'paypal-for-woocommerce') . AngellEYE_Utility::get_user_ip() . "\n";
             $error_email_notify_mes = apply_filters('ae_ppec_error_email_message', $message, $ErrorCode, $ErrorSeverityCode, $ErrorShortMsg, $ErrorLongMsg);
             $subject = "PayPal Express Checkout Error Notification";
             $error_email_notify_subject = apply_filters('ae_ppec_error_email_subject', $subject);
@@ -1197,7 +1662,12 @@ class WC_Gateway_PayPal_Express_AngellEYE extends WC_Payment_Gateway {
         }
         $error_display_type_message = apply_filters('ae_ppec_error_user_display_message', $error_display_type_message, $ErrorCode, $ErrorLongMsg);
         if( AngellEYE_Utility::is_cart_contains_subscription() == false ) {
-            wc_add_notice($error_display_type_message, 'error');
+            if(function_exists('wc_add_notice')) {
+                wc_add_notice($error_display_type_message, 'error');
+            }
+        }
+        if(is_admin()) {
+            return false;
         }
         if (!is_ajax()) {
             wp_redirect($redirect_url);
@@ -1210,7 +1680,10 @@ class WC_Gateway_PayPal_Express_AngellEYE extends WC_Payment_Gateway {
         }
     }
 
-    public static function log($message, $level = 'info') {
+    public static function log($message, $level = 'info', $source = null) {
+        if($source == null ) {
+            $source = 'paypal_express';
+        }
         if (self::$log_enabled) {
             if (version_compare(WC_VERSION, '3.0', '<')) {
                 if (empty(self::$log)) {
@@ -1221,13 +1694,9 @@ class WC_Gateway_PayPal_Express_AngellEYE extends WC_Payment_Gateway {
                 if (empty(self::$log)) {
                     self::$log = wc_get_logger();
                 }
-                self::$log->log($level, $message, array('source' => 'paypal_express'));
+                self::$log->log($level, $message, array('source' => $source));
             }
         }
-    }
-
-    public function get_user_ip() {
-        return (isset($_SERVER['HTTP_X_FORWARD_FOR']) && !empty($_SERVER['HTTP_X_FORWARD_FOR'])) ? $_SERVER['HTTP_X_FORWARD_FOR'] : $_SERVER['REMOTE_ADDR'];
     }
 
     public function angelleye_ec_get_posted_address_data($key, $type = 'billing') {
@@ -1285,8 +1754,12 @@ class WC_Gateway_PayPal_Express_AngellEYE extends WC_Payment_Gateway {
     public function process_refund($order_id, $amount = null, $reason = '') {
         require_once( PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/angelleye-includes/express-checkout/class-wc-gateway-paypal-express-request-angelleye.php' );
         $paypal_express_request = new WC_Gateway_PayPal_Express_Request_AngellEYE($this);
-        $bool = $paypal_express_request->angelleye_process_refund($order_id, $amount, $reason);
-        if($bool == true) {
+        $response = $paypal_express_request->angelleye_process_refund($order_id, $amount, $reason);
+        if ( is_wp_error( $response ) ) {
+            self::log('Refund Error: ' . $response->get_error_message());
+            throw new Exception( $response->get_error_message() );
+        }
+        if($response == true) {
             return true;
         }
     }

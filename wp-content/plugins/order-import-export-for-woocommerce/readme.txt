@@ -1,10 +1,10 @@
 === Order / Coupon / Subscription Export Import Plugin for WooCommerce (BASIC) ===
-Contributors: xadapter, niwf, mujeebur
+Contributors: xadapter, mujeebur
 Donate link: 
 Tags: order, coupon, subscription, export, import, woocommerce
 Requires at least: 3.0.1
-Tested up to: 4.8
-Stable tag: 1.2.5
+Tested up to: 4.9.4
+Stable tag: 1.2.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -45,7 +45,7 @@ Please refer the <a rel="nofollow" href="https://www.xadapter.com/setting-up-ord
 <li>Excellent Support for setting it up!</li>
 </ul>
 
-For complete list of features and details, Please visit <a rel="nofollow" href="http://www.xadapter.com/product/order-import-export-plugin-for-woocommerce/">Order Export Import Plugin for WooCommerce</a> for more details
+For complete list of features and details, Please visit <a rel="nofollow" href="https://www.xadapter.com/product/order-import-export-plugin-for-woocommerce/">Order Export Import Plugin for WooCommerce</a> for more details
 
 </blockquote>
 
@@ -75,8 +75,19 @@ Yes. You can import or export order line item details.
 3. Exported sample order Screen
 
 == Changelog ==
+
+= 1.2.9 =
+* Improved UI
+* Uninstall feedback
+= 1.2.8 =
+* WC 3.3.3 Tested OK
+* Keeping Order ID in order import
+= 1.2.7 =
+* WP 4.9.4 and WC 3.3.1 Tested OK
+= 1.2.6 =
+* WP 4.9 and WC 3.2.4 Tested OK
 = 1.2.5 =
-* WP 4.8 and WC 3.1 Tested.
+* WP4.8 , WC3.1 and PHP7 Compatibility Tested OK
 = 1.2.4 =
 * Fixed some warnings.
 = 1.2.3 =
@@ -130,56 +141,6 @@ Yes. You can import or export order line item details.
 * Export /Import WooCommerce Orders.
 
 == Upgrade Notice ==
-= 1.2.5 =
-* WP 4.8 and WC 3.1 Tested.
-= 1.2.4 =
-* Fixed some warnings.
-= 1.2.3 =
-* Minor Content Change.
-= 1.2.2 =
-* Minor Content Change.
-= 1.2.1 =
-* Bug fix: Fixed Coupon import warnings.
-= 1.2.0 =
-* Bug fix: Fixed WC Log issues.
-= 1.1.9 =
-* Minor Content Change.
-= 1.1.8 =
-* Compatibility with WC 3.0.3 ( fixed issue with order_date )
-= 1.1.7 =
-* Compatibility with WC 2.7
-= 1.1.6 =
-* Sample CSV file updated
-= 1.1.5 =
-* Plugin Icon Change.
-= 1.1.4 =
-* Support Content Change.
-= 1.1.3 =
-* Minor Content Change.
-= 1.1.2 =
-* Optimized order line item import.
-= 1.1.1 =
-* Introduced coupon export import.
-* Support for Subscription Orders export import in premium.
-= 1.1.0 =
-* Security related improvements and bug fixes.
-= 1.0.9 =
-* Security related improvements.
-= 1.0.8 =
-* Order line items linking improvements.
-= 1.0.7 =
-* Updated customer linking with order details.
-= 1.0.6 =
-* CSV Parsing improvements.
-= 1.0.5 =
-* Minor modification.
-= 1.0.4 =
-* Shipping related fields updated in import.
-= 1.0.3 =
-* German Translation file added.
-= 1.0.2 =
-* Export order limit updated to unlimited.
-= 1.0.1 =
-* Minor modification.
-= 1.0.0 =
-* Export /Import WooCommerce Orders.
+= 1.2.9 =
+* Improved UI
+* Uninstall feedback

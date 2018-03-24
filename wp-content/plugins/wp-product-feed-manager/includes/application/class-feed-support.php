@@ -46,6 +46,8 @@ if ( !class_exists( 'WPPFM_Feed_Support_Class' ) ) :
 					break;
 				}
 			}
+			
+			$relations_table = null;
 
 			return $result;
 		}

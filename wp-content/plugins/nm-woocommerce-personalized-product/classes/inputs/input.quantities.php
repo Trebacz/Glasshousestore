@@ -114,6 +114,9 @@ class NM_Quantities_wooproduct extends NM_Inputs_wooproduct{
 	 * @params: $options
 	*/
 	function render_input($args, $options="", $default=""){
+		
+		echo '<input type="hidden" name="_quantities_option_price" id="_quantities_option_price">';
+		
 		if (isset($args['horizontal_layout']) && $args['horizontal_layout'] == 'on') { ?>
 		<div class="nm-horizontal-layout">
 			<table class="shop_table cart sizes-input">
@@ -136,12 +139,22 @@ class NM_Quantities_wooproduct extends NM_Inputs_wooproduct{
 	            <?php foreach($options as $opt){ ?>
                 	<td>
                 		<?php
+                		
+                			$the_price = isset($opt['price']) ? $opt['price'] : 0;
+                			
 	            			$name = $args['id'].'['.$opt['option'].']';
 	            			$min = (isset($opt['min']) ? $opt['min'] : 0 );
 	            			$max = (isset($opt['max']) ? $opt['max'] : 10000 );
 	            			
 	            			$required = ($args['data-req'] == 'on' ? 'required' : '');
-            				echo '<input style="width:50px;text-align:center" '.$required.' min="'.$min.'" max="'.$max.'" data-option="'.$opt['option'].'" min="0" name="'.$name.'" type="number" class="quantity" value="0" data-price="'.$opt['price'].'">';
+            				// echo '<input style="width:50px;text-align:center" '.$required.' min="'.$min.'" max="'.$max.'" data-option="'.$opt['option'].'" min="0" name="'.$name.'" type="number" class="ppom-quantity" value="0" data-price="'.$the_price.'">';
+							$input_html	 = '<input style="width:50px;text-align:center" '.$required;
+            				$input_html	.=' min="'.$min.'" max="'.$max.'" ';
+            				$input_html	.= 'data-option="'.$opt['option'].'" ';
+            				$input_html	.= 'name="'.$name.'" type="number" class="ppom-quantity" ';
+            				$input_html	.= 'value="0" data-price="'.$the_price.'">';          
+            				
+            				echo $input_html;
                 		?>
                 	</td>
 	            <?php } ?>
@@ -172,7 +185,13 @@ class NM_Quantities_wooproduct extends NM_Inputs_wooproduct{
 			            			$max = (isset($opt['max']) ? $opt['max'] : 10000 );
 			            			
 			            			$required = ($args['data-req'] == 'on' ? 'required' : '');
-		            				echo '<input style="width:50px;text-align:center" '.$required.' min="'.$min.'" max="'.$max.'" data-option="'.$opt['option'].'" min="0" name="'.$name.'" type="number" class="quantity" value="0" data-price="'.$opt['price'].'">';
+		            				$input_html	 = '<input style="width:50px;text-align:center" '.$required;
+		            				$input_html	.=' min="'.$min.'" max="'.$max.'" ';
+		            				$input_html	.= 'data-option="'.$opt['option'].'" ';
+		            				$input_html	.= 'name="'.$name.'" type="number" class="ppom-quantity" ';
+		            				$input_html	.= 'value="0" data-price="'.$opt['price'].'">';
+		            				
+		            				echo $input_html;
 		                		?>
 		                	</th>
 				    </tr>
@@ -181,7 +200,20 @@ class NM_Quantities_wooproduct extends NM_Inputs_wooproduct{
 
 		<?php } ?>
 		
-		<div class="display-total-price"></div>
+		<div id="display-total-price">
+			<span style="display:none;font-weight:700" class="ppom-total-option-price">
+				<?php echo __("Options Total: ", 'nm-personalizedproduct'); printf(__(get_woocommerce_price_format(), 'nm-personalizedproduct'), get_woocommerce_currency_symbol(), '<span class="ppom-price"></span>');?>
+			</span><br>
+			<span style="display:none;font-weight:700" class="ppom-total-price">
+				<?php echo __("Product Total: ", 'nm-personalizedproduct'); printf(__(get_woocommerce_price_format(), 'nm-personalizedproduct'), get_woocommerce_currency_symbol(), '<span class="ppom-price"></span>');?>
+			</span>
+			<span style="display:none;font-weight:700" class="ppom-grand-total-price">
+			<hr style="margin: 0">
+				<?php echo __("Grand Total: ", 'nm-personalizedproduct'); printf(__(get_woocommerce_price_format(), 'nm-personalizedproduct'), get_woocommerce_currency_symbol(), '<span class="ppom-price"></span>');?>
+			</span>
+			
+			
+		</div>
 		
 		<?php
 	}

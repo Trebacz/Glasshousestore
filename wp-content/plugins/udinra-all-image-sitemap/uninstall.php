@@ -26,11 +26,16 @@ function udinra_uninstall_image_plugin () {
 }
 
 function udinra_delete_image_options () {
+	delete_option('udinra_image_sitemap_cat');
+	delete_option('udinra_image_sitemap_tag');
+	delete_option('udinra_image_sitemap_auth');
+	delete_option('udinra_image_sitemap_post_type');	
+	delete_option('udinra_image_sitemap_exclude');
+	delete_option('udinra_image_sitemap_url_count');
 	delete_option('udinra_image_sitemap_freq');
-	delete_option('udinra_image_sitemap_count');
-	delete_option('udinra_image_sitemap_index');
-	delete_option('udinra_image_sitemap_ping');
-	delete_option('udinra_image_sitemap_multisite');
+	delete_option('udinra_image_sitemap_response');
+    delete_option('udinra_image_Sitemap_cdn');
+    delete_option('udinra_image_sitemap_multisite');
 }
 
 ?>

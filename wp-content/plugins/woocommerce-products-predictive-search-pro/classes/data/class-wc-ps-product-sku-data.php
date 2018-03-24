@@ -63,6 +63,14 @@ class WC_PS_Product_SKU_Data
 		$orderby = array();
 
 		$items_excluded = $wc_ps_exclude_data->get_array_items( 'product' );
+
+		$woocommerce_search_exclude_out_stock = get_option('woocommerce_search_exclude_out_stock');
+		if ( 'yes' == $woocommerce_search_exclude_out_stock ) {
+			global $wc_ps_postmeta_data;
+			$items_out_of_stock = $wc_ps_postmeta_data->get_array_products_out_of_stock();
+			$items_excluded = array_merge( $items_out_of_stock, $items_excluded );
+		}
+
 		$id_excluded    = '';
 		if ( ! empty( $items_excluded ) ) {
 			$id_excluded = implode( ',', $items_excluded );
@@ -234,6 +242,22 @@ class WC_PS_Product_SKU_Data
 	public function empty_table() {
 		global $wpdb;
 		return $wpdb->query( "TRUNCATE {$wpdb->ps_product_sku}" );
+	}
+
+	/**
+	 * Check if post_arent field is not existed then add it to ps_product_sku table
+	 */
+	public function check_post_parent_field_existed() {
+		global $wpdb;
+
+		$column = $wpdb->get_results( $wpdb->prepare(
+			"SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = %s AND TABLE_NAME = %s AND COLUMN_NAME = %s ",
+			DB_NAME, $wpdb->ps_product_sku, 'post_parent' ) );
+
+		if ( empty( $column ) ) {
+			$wpdb->query( "ALTER TABLE {$wpdb->ps_product_sku} ADD post_parent BIGINT NOT NULL DEFAULT 0" );
+			$wpdb->query( "ALTER TABLE {$wpdb->ps_product_sku} ADD INDEX post_parent (post_parent)" );
+		}
 	}
 }
 

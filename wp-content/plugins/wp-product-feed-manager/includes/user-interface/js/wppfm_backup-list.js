@@ -45,7 +45,6 @@ function wppfm_resetOptionSettings() {
 			var options = JSON.parse( optionsString );
 			
 			$jq( '#wppfm_auto_feed_fix_mode' ).prop( "checked", options[1] === "true" ? true : false );
-			$jq( '#wppfm_debug_mode' ).prop( "checked", options[1] === "true" ? true : false );
 		}
 	} );
 }

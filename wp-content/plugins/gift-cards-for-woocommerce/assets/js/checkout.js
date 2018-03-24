@@ -18,7 +18,7 @@ jQuery( function( $ ) {
 			if ( $form.is('.processing') ) return false;
 
 			$form.addClass('processing').block({
-				message: null, 
+				message: null,
 				overlayCSS: {
 					background: '#fff',
 					opacity: 0.6

@@ -482,6 +482,15 @@ if ( pb_backupbuddy::$options['data_version'] < 17 ) {
 }
 // ********** END 8.0 UPGRADE **********
 
+// ********** BEGIN 8.2 UPGRADE **********
+if ( pb_backupbuddy::$options['data_version'] < 18 ) {
+	pb_backupbuddy::$options['data_version'] = '18';
+	
+	pb_backupbuddy::$options['ignore_zip_warnings'] = '1';
+	
+	pb_backupbuddy::save();
+}
+// ********** END 8.2 UPGRADE **********
 
 
 // ***** MISC BELOW *****

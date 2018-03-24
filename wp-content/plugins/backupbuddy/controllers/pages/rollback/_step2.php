@@ -7,7 +7,7 @@ pb_backupbuddy::verify_nonce();
 
 $nextStep = 3;
 
-$restoreData = unserialize( base64_decode( pb_backupbuddy::_POST( 'restoreData' ) ) );
+$restoreData = json_decode( base64_decode( pb_backupbuddy::_POST( 'restoreData' ) ), true );
 require_once( pb_backupbuddy::plugin_path() . '/classes/restore.php' );
 $rollback = new backupbuddy_restore( 'rollback', $restoreData );
 
@@ -46,6 +46,6 @@ $restoreData = $rollback->getState();
 
 <form id="pb_backupbuddy_rollback_form" method="post" action="?action=pb_backupbuddy_backupbuddy&function=rollback&step=<?php echo $nextStep; ?>&archive=<?php echo basename( $restoreData['archive'] ); ?>">
 	<?php pb_backupbuddy::nonce(); ?>
-	<input type="hidden" name="restoreData" value="<?php echo base64_encode( serialize( $restoreData ) ); ?>">
+	<input type="hidden" name="restoreData" value="<?php echo base64_encode( json_encode( $restoreData ) ); ?>">
 	<input type="submit" name="submitForm" class="button button-primary" value="<?php echo __('Next Step') . ' &raquo;'; ?>" style="visibility: hidden;">
 </form>

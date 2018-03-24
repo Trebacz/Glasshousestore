@@ -718,7 +718,15 @@ class backupbuddy_housekeeping {
 							$destination_type = backupbuddy_core::pretty_destination_type( pb_backupbuddy::$options['remote_destinations'][$fileoptions_obj->options['destination'] ]['type'] );
 						}
 						
-						$error_message = 'A remote destination send of file `' . basename( $fileoptions_obj->options['file'] ) . '` started `' . pb_backupbuddy::$format->time_ago( $fileoptions_obj->options['start_time'] ) . '` ago sending to the destination titled `' . $destination_title . '` of type `' . $destination_type . '` likely timed out. BackupBuddy will attempt to retry this failed transfer ONCE. If the second atempt succeeds the failed attempt will be replaced in the recent sends list. Check the error log for further details and/or manually send a backup to test for problems.';
+						if ( is_array( $fileoptions_obj->options['file'] ) ) {
+							$filename = '';
+							foreach( $fileoptions_obj->options['file'] as $file ) {
+								$filename .= '; ' . basename( $file );
+							}
+						} else {
+							$filename = basename( $fileoptions_obj->options['file'] );
+						}
+						$error_message = 'A remote destination send of file `' . $filename . '` started `' . pb_backupbuddy::$format->time_ago( $fileoptions_obj->options['start_time'] ) . '` ago sending to the destination titled `' . $destination_title . '` of type `' . $destination_type . '` likely timed out. BackupBuddy will attempt to retry this failed transfer ONCE. If the second attempt succeeds the failed attempt will be replaced in the recent sends list. Check the error log for further details and/or manually send a backup to test for problems.';
 						pb_backupbuddy::status( 'error', $error_message );
 						if ( $secondsAgo < backupbuddy_constants::CLEANUP_MAX_AGE_TO_NOTIFY_TIMEOUT ) { // Prevents very old timed out backups from triggering email send.
 							backupbuddy_core::mail_error( $error_message );

@@ -6,8 +6,9 @@ Plugin URI: https://www.xadapter.com/product/order-import-export-plugin-for-wooc
 Description: Export and Import Order detail including line items, From and To your WooCommerce Store.
 Author: XAdapter
 Author URI: https://www.xadapter.com/
-Version: 1.2.5
+Version: 1.2.9
 Text Domain: wf_order_import_export
+WC tested up to: 3.3.3
 */
 
 if ( ! defined( 'ABSPATH' ) || ! is_admin() ) {
@@ -19,6 +20,10 @@ define( "WF_WOOCOMMERCE_ORDER_IM_EX", "wf_woocommerce_order_im_ex" );
 
 define("WF_CPN_IMP_EXP_ID", "wf_cpn_imp_exp");
 define("wf_coupon_csv_im_ex", "wf_coupon_csv_im_ex");
+
+if (!defined('WF_ORDERIMPEXP_CURRENT_VERSION')) {
+    define("WF_ORDERIMPEXP_CURRENT_VERSION", "1.2.9");
+}
 
 /**
  * Check if WooCommerce is active
@@ -36,8 +41,12 @@ if (in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', ge
 		 * Constructor
 		 */
 		public function __construct() {
-			define( 'WF_OrderImpExpCsv_FILE', __FILE__ );
-
+			
+                        define( 'WF_OrderImpExpCsv_FILE', __FILE__ );
+                        
+                        if (!defined('WT_OrdImpExpCsv_BASE')) {
+                            define('WT_OrdImpExpCsv_BASE', plugin_dir_path(__FILE__));
+                        }
 
 			add_filter( 'woocommerce_screen_ids', array( $this, 'woocommerce_screen_ids' ) );
 			add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'wf_plugin_action_links' ) );
@@ -52,6 +61,9 @@ if (in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', ge
 			if ( defined('DOING_AJAX') ) {
 				include_once( 'includes/class-wf-orderimpexpcsv-ajax-handler.php' );
 			}
+                        
+                        // uninstall feedback catch
+                        include_once 'includes/class-wf-orderimpexp-plugin-uninstall-feedback.php';
 		}
 		
 		public function wf_plugin_action_links( $links ) {
@@ -60,6 +72,9 @@ if (in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', ge
                                 '<a href="https://www.xadapter.com/product/order-import-export-plugin-for-woocommerce/" target="_blank" style="color:#3db634;">' . __( 'Premium Upgrade', 'wf_order_import_export' ) . '</a>',	
                                 '<a href="https://wordpress.org/support/plugin/order-import-export-for-woocommerce">' . __( 'Support', 'wf_order_import_export' ) . '</a>',
 			);
+                        if (array_key_exists('deactivate', $links)) {
+                            $links['deactivate'] = str_replace('<a', '<a class="wforderimpexp-deactivate-link"', $links['deactivate']);
+                        }
 			return array_merge( $plugin_links, $links );
 		}
 		
@@ -146,8 +161,8 @@ if (in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', ge
              * Constructor
              */
             public function __construct() {
+                
                 define('WF_CpnImpExpCsv_FILE', __FILE__);
-
 
                 if (is_admin()) {
                     add_action('admin_notices', array($this, 'wf_coupon_ie_admin_notice'), 15);
@@ -161,13 +176,10 @@ if (in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', ge
 
                 include_once( 'includes/class-wf-cpnimpexpcsv-admin-screen.php' );
                 include_once( 'includes/importer/class-wf-cpnimpexpcsv-importer.php' );
-
                
-
                 if (defined('DOING_AJAX')) {
                     include_once( 'includes/class-wf-cpnimpexpcsv-ajax-handler.php' );
                 }
-
                 
             }
 
@@ -266,6 +278,5 @@ if (in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', ge
         endif;
 
     new WF_Coupon_Import_Export_CSV();
-
 
 }

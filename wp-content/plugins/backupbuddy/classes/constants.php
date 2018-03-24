@@ -43,24 +43,43 @@ class backupbuddy_constants {
 	public static $HARDCODED_DIR_EXCLUSIONS = array( // Directories to exclude from all backups (traditional & Live).
 		'/importbuddy/',
 		'/importbuddy.php',
+		
+		// Misc.
 		'/.sucuriquarantine/', // Infected files.
 		'/wp-content/uploads/sucuri/', // Temp files such as IP bans.
+		
+		// Backup plugins
 		'/wp-content/envato-backups/', // Don't backup backups of other plugins.
 		'/wp-content/uploads/backwpup', // No trailing slash so anything after is removed. Don't backup backups of other plugins.
 		'/wp-content/backup-db/', // Don't backup backups of other plugins.
 		'/wp-snapshots/', // Don't backup backups of other plugins.
 		'/wp-content/ai1wm-backups/', // All in One WordPress Migration backups. Don't backup backups of other plugins.
-		'/wp-content/plugins/wordfence/tmp/', // Temporary wordfence data.
-		'/wp-content/cache/supercache/', // WP Super Cache temp data.
-		'/error_log', // Can be very large; server-specific and unlikely to need.
-		'/wp-content/cache/',
+		'/wp-content/updraft/', // Updraft stuff.
 		'/wp-content/mysql.sql',
+		'/wp-content/uploads/snapshots/',
+		'/wp-content/backups/',
+		
+		// Cache plugins
+		'/wp-content/cache/supercache/', // WP Super Cache temp data.
 		'/wp-content/wfcache/',
+		'/wp-content/wflogs/',
+		'/wp-content/cache/',
+		'/wp-content/plugins/wordfence/tmp/', // Temporary wordfence data.
+		
+		// Hosting-related
+		'/error_log', // Can be very large; server-specific and unlikely to need.
 		'/wp-admin/error_log',
 		'/logs/',
 		'/wp-content/mysql.sql', // WPEngine's stuff.
 		'/_wpeprivate/', // WPEngine's stuff.
-		'/wp-content/updraft/', // Updraft stuff.
+		'/wp-content/plugins/wpengine-snapshot/snapshots/',
+		
+		// Other
+		'/ics-importer-cache/',
+		'/gt-cache/',
+		'/wp-config-sample.php',
+		'/wp-content/managewp/',
+		'/wp-content/upgrade/',
 	);
 	
 	// Remote Sends

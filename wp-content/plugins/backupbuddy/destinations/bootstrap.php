@@ -31,7 +31,14 @@ class pb_backupbuddy_destinations {
 	 * @return	array|false 							Array with key value pairs. Keys: class, settings, info. Bool FALSE on failure.
 	 *
 	 */
-	private static function _init_destination( $destination_settings ) {
+	private static function _init_destination( $destination_settings_or_id ) {
+		if ( is_array( $destination_settings_or_id ) ) { // Settings array.
+			$destination_settings = $destination_settings_or_id;
+		} else { // ID number.
+			$destination_settings = pb_backupbuddy::$options['remote_destinations'][ $destination_settings_or_id ];
+		}
+		unset( $destination_settings_or_id );
+		
 		pb_backupbuddy::status( 'details', 'Initializing destination.' );
 		if ( ( ! isset( $destination_settings['type'] ) ) || ( '' == $destination_settings['type'] ) ) {
 			$error = 'Error #8548833: Missing destination settings parameters. Details: `' . print_r( $destination_settings, true ) . '`.';
@@ -103,6 +110,19 @@ class pb_backupbuddy_destinations {
 		}
 		
 		return $destination['info'];
+		
+	} // End get_details().
+	
+	
+	public static function get_normalized_settings( $settings ) {
+		
+		// Initialize destination.
+		if ( false === ( $destination = self::_init_destination( $settings ) ) ) {
+			pb_backupbuddy::status( 'warning',  'Unable to load destination `' . $destination_type . '` Some destinations require a newer PHP version.' );
+			return false;
+		}
+		
+		return $destination['settings'];
 		
 	} // End get_details().
 	
@@ -287,7 +307,7 @@ class pb_backupbuddy_destinations {
 	 *	function description
 	 *	
 	 *	@param		array			$destination_settings	Array of settings to pass to destination.
-	 *	@param		string			$file					Full file path + filename to send. Was array pre-6.1.0.1.
+	 *	@param		string			$file					Full file path + filename to send. Was array pre-6.1.0.1. Can be array for Deployment.
 	 *	@return		boolean|array	true success, false on failure, array for multipart send information (transfer is being chunked up into parts).
 	 */
 	public static function send( $destination_settings, $file, $send_id = '', $delete_after = false, $isRetry = false, $trigger = '', $destination_id = '' ) {
@@ -302,13 +322,18 @@ class pb_backupbuddy_destinations {
 			}
 		}
 		
-		if ( is_array( $file ) ) { // As of v6.1.0.1 no longer accepting multiple files to send.
-			$file = $file[0];
-		}
-		
-		if ( ! file_exists ( $file ) ) {
-			pb_backupbuddy::status( 'error', 'Error #3892383: File `' . $file . '` does not exist or blocked by permissions. Was it deleted?' );
-			return false;
+		if ( ! is_array( $file ) ) {
+			if ( ! file_exists ( $file ) ) {
+				pb_backupbuddy::status( 'error', 'Error #3892383: File `' . $file . '` does not exist or blocked by permissions. Was it deleted?' );
+				return false;
+			}
+		} else {
+			foreach( $file as $fileItem ) {
+				if ( ! file_exists ( $fileItem ) ) {
+					pb_backupbuddy::status( 'error', 'Error #38232392383: File `' . $fileItem . '` does not exist or blocked by permissions. Was it deleted?' );
+					return false;
+				}
+			}
 		}
 		
 		if ( '' == $send_id ) {
@@ -318,7 +343,12 @@ class pb_backupbuddy_destinations {
 		
 		if ( '' != $send_id ) {
 			pb_backupbuddy::add_status_serial( 'remote_send-' . $send_id );
-			pb_backupbuddy::status( 'details', '----- Initiating master send function for BackupBuddy v' . pb_backupbuddy::settings( 'version' ) . ' for basename file: `' . basename( $file ) . '`. Post-send deletion: ' . $delete_after );
+			pb_backupbuddy::status( 'details', '----- Initiating master send function for BackupBuddy v' . pb_backupbuddy::settings( 'version' ) . '.' );
+			if ( is_array( $file ) ) {
+				pb_backupbuddy::status( 'details', 'Sending multiple files (' . count( $file ) . ') in this single send. Post-send deletion: ' . $delete_after );
+			} else {
+				pb_backupbuddy::status( 'details', 'Basename file: `' . basename( $file ) . '`. Post-send deletion: ' . $delete_after );
+			}
 			
 			require_once( pb_backupbuddy::plugin_path() . '/classes/fileoptions.php' );
 			$fileoptions_file = backupbuddy_core::getLogDirectory() . 'fileoptions/send-' . $send_id . '.txt';
@@ -354,7 +384,11 @@ class pb_backupbuddy_destinations {
 			}
 			$fileoptions['update_time'] = microtime(true);
 			$fileoptions['deleteAfter'] = $delete_after;
-			$fileoptions['file_size'] = filesize( $file );
+			if ( is_array( $file ) ) {
+				$fileoptions['file_size'] = -1;
+			} else {
+				$fileoptions['file_size'] = filesize( $file );
+			}
 			if ( '' != $trigger ) {
 				$fileoptions['trigger'] = $trigger;
 			}
@@ -365,16 +399,14 @@ class pb_backupbuddy_destinations {
 			if ( true === $isRetry ) {
 				$fileoptions['retries']++;
 				pb_backupbuddy::status( 'details', '~~~ This is RETRY attempt #' . $fileoptions['retries'] . ' of a previous failed send step potentially due to timeout. ~~~' );
-				/* NOTE: Not doing this here as it will block manual retries.
-				if ( $fileoptions['retries'] > pb_backupbuddy::$options['remote_send_timeout_retries'] ) {
-					pb_backupbuddy::status( 'error', 'Error #398333: A remote send retry exceeded the maximum number of retry attempts.  Cancelling send.' );
+				if ( $fileoptions['retries'] > ( 10 ) ) { // Backup safety beyond the normal retry attempt limiting system. Hardcoded to prevent runaway attempts.
+					pb_backupbuddy::status( 'error', 'Error #398333: A remote send retry exceeded the maximum hard limit number of retry attempts.  Cancelling send to prevent runaway situation.' );
 					$fileoptions_obj->options['status'] = 'failure'; // Mark as failed so it won't retry anymore.
 					$fileoptions_obj->options['finish_time'] = '-1'; // Mark as failed so it won't retry anymore.
 					$fileoptions_obj->save();
 					unset( $fileoptions_obj );
 					return false;
 				}
-				*/
 			}
 			
 			// Make sure remote send is not extremely old.  Give up on any sends that began over a month ago as a failsafe.
@@ -402,7 +434,7 @@ class pb_backupbuddy_destinations {
 		if ( false === ( $destination = self::_init_destination( $destination_settings ) ) ) {
 			$error = '{Error #546893498a. Destination configuration file missing. Destination may have been deleted.}';
 			echo $error;
-			pb_backupbuddy::status( error, $error );
+			pb_backupbuddy::status( 'error', $error );
 			if ( '' != $send_id ) {
 				pb_backupbuddy::remove_status_serial( 'remote_send-' . $send_id );
 			}
@@ -410,7 +442,7 @@ class pb_backupbuddy_destinations {
 		}
 		
 		$destination_settings = $destination['settings']; // Settings with defaults applied, normalized, etc.
-		if ( ! file_exists( $file ) ) {
+		if ( ! is_array( $file ) && ( ! file_exists( $file ) ) ) {
 			pb_backupbuddy::status( 'error', 'Error #58459458743. The file that was attempted to be sent to a remote destination, `' . $file . '`, was not found. It either does not exist or permissions prevent accessing it. Check that local backup limits are not causing it to be deleted.' );
 			if ( '' != $send_id ) {
 				pb_backupbuddy::remove_status_serial( 'remote_send-' . $send_id );
@@ -441,11 +473,11 @@ class pb_backupbuddy_destinations {
 		 */
 		
 		if ( $result === false ) {
-			$error_details = implode( '; ', $pb_backupbuddy_destination_errors );
+			$error_details = print_r( $pb_backupbuddy_destination_errors, true );
 			if ( '' != $error_details ) {
 				$error_details = ' Details: ' . $error_details;
 			}
-			pb_backupbuddy::status( 'error', 'Error #8239823: One or more errors were encountered attempting to send. See log above for more information such as specific error numbers or the following details. Details: `' . $error_details . '`.' );
+			pb_backupbuddy::status( 'error', 'Error #8239823: One or more errors were encountered attempting to send. See log above for more information such as specific error numbers or the following details. Details: `' . print_r( $error_details, true ) . '`.' );
 			
 			$log_directory = backupbuddy_core::getLogDirectory();
 			
@@ -523,6 +555,9 @@ class pb_backupbuddy_destinations {
 			pb_backupbuddy::status( 'details', 'Fileoptions data loaded.' );
 			$fileoptions = &$fileoptions_obj->options;
 			$fileoptions['updated_time'] = microtime(true);
+			if ( true === $result ) {
+				$fileoptions['finish_time'] = microtime(true);
+			}
 			
 			unset( $fileoptions_obj );
 		}
@@ -530,8 +565,18 @@ class pb_backupbuddy_destinations {
 		// File transfer completely finished successfully.
 		if ( true === $result ) {
 			
-			$fileSize = filesize( $file );
-			$serial = backupbuddy_core::get_serial_from_file( $file );
+			if ( ! is_array( $file ) ) {
+				$fileSize = filesize( $file );
+				$prettyFileSize = pb_backupbuddy::$format->file_size( $fileSize );
+			} else {
+				$fileSize = -1;
+				$prettyFileSize = 'n/a';
+			}
+			if ( is_array( $file ) ) {
+				$serial = '';
+			} else {
+				$serial = backupbuddy_core::get_serial_from_file( $file );
+			}
 			
 			// Handle deletion of send file if enabled.
 			if ( ( true === $delete_after ) && ( false !== $result ) ) {
@@ -583,7 +628,7 @@ class pb_backupbuddy_destinations {
 				$data['serial'] = $serial;
 				$data['file'] = $file;
 				$data['size'] = $fileSize;
-				$data['pretty_size'] = pb_backupbuddy::$format->file_size( $fileSize );
+				$data['pretty_size'] = $prettyFileSize;
 				backupbuddy_core::addNotification( 'remote_send_success', 'Remote file transfer completed', 'A file has successfully completed sending to a remote location.', $data );
 			}
 		}

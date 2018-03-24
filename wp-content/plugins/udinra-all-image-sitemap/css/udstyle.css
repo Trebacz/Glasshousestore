@@ -191,8 +191,9 @@ hr{border:0;border-top:1px solid #eee;margin:20px 0}
 .w3-border-grey,.w3-hover-border-grey:hover,.w3-border-gray,.w3-hover-border-gray:hover{border-color:#bbb!important}
 .UdinraSelect {
     width: 100%;
-    padding: 16px 20px;
-    border: none;
+	height:50px;
+    padding: 12px 20px;
+	box-sizing: border-box;
+    border: 2px solid #ccc;
     border-radius: 4px;
-    background-color: lightblue;
 }

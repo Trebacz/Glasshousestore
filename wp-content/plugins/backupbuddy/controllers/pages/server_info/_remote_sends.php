@@ -144,9 +144,8 @@ foreach( $remote_sends as $send_id => $remote_send ) {
 	}
 	
 	$trigger = ucfirst( $remote_send['trigger'] );
-	//print_r( $remote_send['file'] );
 	if ( is_array( $remote_send['file'] ) ) {
-		$base_file = '-multiple files/dir-';
+		$base_file = '-' . __( 'Multiple files', 'it-l10n-backupbuddy' ) . '-';
 	} else {
 		$base_file = basename( $remote_send['file'] );
 	}

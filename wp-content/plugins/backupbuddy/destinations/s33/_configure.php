@@ -106,6 +106,7 @@ $settings_form->add_setting( array(
 								's3-sa-east-1.amazonaws.com'		=>		'sa-east-1 &nbsp;|&nbsp; South America East 1 (Sao Paulo)',
 								
 								's3-cn-north-1.amazonaws.com.cn'	=>		'cn-north-1 &nbsp;|&nbsp; China North 1 (Beijing)',
+								's3-cn-northwest-1.amazonaws.com.cn' =>		'cn-northwest-1 &nbsp;|&nbsp; China Northwest 1 (Ningxia)',
 								
 								/*
 								's3-us-gov-west-1.amazonaws.com'			=>		'US GovCloud',

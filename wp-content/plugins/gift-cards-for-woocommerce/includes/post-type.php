@@ -10,26 +10,26 @@
 // Exit if accessed directly
 if( !defined( 'ABSPATH' ) ) exit;
 
-function rpgc_create_post_type() {
+function kodiak_giftcard_create_post_type() {
     $show_in_menu = current_user_can( 'manage_woocommerce' ) ? 'woocommerce' : false;
 
     register_post_type( 'rp_shop_giftcard',
         array(
             'labels' => array(
-                'name'                  => __( 'Gift Cards', 'rpgiftcards' ),
-                'singular_name'         => __( 'Gift Card', 'rpgiftcards' ),
-                'menu_name'             => _x( 'Gift Cards', 'Admin menu name', 'rpgiftcards' ),
-                'add_new'               => __( 'Add Gift Card', 'rpgiftcards' ),
-                'add_new_item'          => __( 'Add New Gift Card', 'rpgiftcards' ),
-                'edit'                  => __( 'Edit', 'rpgiftcards' ),
-                'edit_item'             => __( 'Edit Gift Card', 'rpgiftcards' ),
-                'new_item'              => __( 'New Gift Card', 'rpgiftcards' ),
-                'view'                  => __( 'View Gift Cards', 'rpgiftcards' ),
-                'view_item'             => __( 'View Gift Card', 'rpgiftcards' ),
-                'search_items'          => __( 'Search Gift Cards', 'rpgiftcards' ),
-                'not_found'             => __( 'No Gift Cards found', 'rpgiftcards' ),
-                'not_found_in_trash'    => __( 'No Gift Cards found in trash', 'rpgiftcards' ),
-                'parent'                => __( 'Parent Gift Card', 'rpgiftcards' )
+                'name'                  => __( 'Gift Cards', 'wpkodiak_giftcards' ),
+                'singular_name'         => __( 'Gift Card', 'wpkodiak_giftcards' ),
+                'menu_name'             => _x( 'Gift Cards', 'Admin menu name', 'wpkodiak_giftcards' ),
+                'add_new'               => __( 'Add Gift Card', 'wpkodiak_giftcards' ),
+                'add_new_item'          => __( 'Add New Gift Card', 'wpkodiak_giftcards' ),
+                'edit'                  => __( 'Edit', 'wpkodiak_giftcards' ),
+                'edit_item'             => __( 'Edit Gift Card', 'wpkodiak_giftcards' ),
+                'new_item'              => __( 'New Gift Card', 'wpkodiak_giftcards' ),
+                'view'                  => __( 'View Gift Cards', 'wpkodiak_giftcards' ),
+                'view_item'             => __( 'View Gift Card', 'wpkodiak_giftcards' ),
+                'search_items'          => __( 'Search Gift Cards', 'wpkodiak_giftcards' ),
+                'not_found'             => __( 'No Gift Cards found', 'wpkodiak_giftcards' ),
+                'not_found_in_trash'    => __( 'No Gift Cards found in trash', 'wpkodiak_giftcards' ),
+                'parent'                => __( 'Parent Gift Card', 'wpkodiak_giftcards' )
                 ),
 
             'public'                => true,
@@ -43,16 +43,16 @@ function rpgc_create_post_type() {
     );
 
     register_post_status( 'zerobalance', array(
-        'label'                     => __( 'Zero Balance', 'rpgiftcards' ),
+        'label'                     => __( 'Zero Balance', 'wpkodiak_giftcards' ),
         'public'                    => true,
         'exclude_from_search'       => false,
         'show_in_admin_all_list'    => true,
         'show_in_admin_status_list' => true,
-        'label_count'               => _n_noop( 'Zero Balance <span class="count">(%s)</span>', 'Zero Balance <span class="count">(%s)</span>', 'rpgiftcards' )
+        'label_count'               => _n_noop( 'Zero Balance <span class="count">(%s)</span>', 'Zero Balance <span class="count">(%s)</span>', 'wpkodiak_giftcards' )
     ) );
-    
+
 }
-add_action( 'init', 'rpgc_create_post_type' );
+add_action( 'init', 'kodiak_giftcard_create_post_type' );
 
 
 /**
@@ -60,6 +60,7 @@ add_action( 'init', 'rpgc_create_post_type' );
  * @param  string $column
  *
  */
+
 function rpgc_add_columns( $columns ) {
     $new_columns = ( is_array( $columns ) ) ? $columns : array();
     unset( $new_columns['title'] );
@@ -68,18 +69,18 @@ function rpgc_add_columns( $columns ) {
 
     //all of your columns will be added before the actions column on the Giftcard page
 
-    $new_columns["title"]       = __( 'Giftcard Number', 'rpgiftcards' );
-    $new_columns["amount"]      = __( 'Giftcard Amount', 'rpgiftcards' );
-    $new_columns["balance"]     = __( 'Remaining Balance', 'rpgiftcards' );
-    $new_columns["buyer"]       = __( 'Buyer', 'rpgiftcards' );
-    $new_columns["recipient"]   = __( 'Recipient', 'rpgiftcards' );
-    $new_columns["expiry_date"] = __( 'Expiry date', 'rpgiftcards' );
-    $new_columns["sentEmail"]   = __( 'Sent?', 'rpgiftcards' );
+    $new_columns["title"]       = __( 'Giftcard Number', 'wpkodiak_giftcards' );
+    $new_columns["amount"]      = __( 'Amount', 'wpkodiak_giftcards' );
+    $new_columns["buyer"]       = __( 'Buyer', 'wpkodiak_giftcards' );
+    $new_columns["recipient"]   = __( 'Recipient', 'wpkodiak_giftcards' );
+    $new_columns["expiry_date"] = __( 'Expiry date', 'wpkodiak_giftcards' );
+    $new_columns["sentEmail"]   = __( 'Sent?', 'wpkodiak_giftcards' );
+    $new_columns["order_actions"]     = __( 'Actions', 'wpkodiak_giftcards' );
 
-    $new_columns['comments']    = $columns['comments'];
-    $new_columns['date']        = __( 'Creation Date', 'rpgiftcards' );
+    //$new_columns['comments']    = $columns['comments'];
+    //$new_columns['date']        = __( 'Creation Date', 'wpkodiak_giftcards' );
 
-    return  apply_filters( 'rpgc_giftcard_columns', $new_columns);
+    return  apply_filters( 'kodiak_giftcard_columns', $new_columns);
 }
 add_filter( 'manage_edit-rp_shop_giftcard_columns', 'rpgc_add_columns' );
 
@@ -109,13 +110,15 @@ function rpgc_custom_columns( $column ) {
         break;
 
         case "amount" :
-            $price = isset( $giftcardInfo[ 'amount' ] ) ? $giftcardInfo[ 'amount' ] : '';
-            echo wc_price( $price );
-        break;
+            $amount = isset( $giftcardInfo[ 'amount' ] ) ? $giftcardInfo[ 'amount' ] : 0;
+            $balance = isset( $giftcardInfo[ 'balance' ] ) ? $giftcardInfo[ 'balance' ] : 0;
 
-        case "balance" :
-            $price = isset( $giftcardInfo[ 'balance' ] ) ? $giftcardInfo[ 'balance' ] : '';
-            echo wc_price( $price );
+            $originalValue = '';
+            if ( $amount != $balance ) {
+                $originalValue = ' / <small>' . wc_price( $amount ) . '</small>';
+            }
+
+            echo '<div class="kodiak_giftcard_balance">' . wc_price( $balance ) . $originalValue . '</div>';
         break;
 
         case "sentEmail" :
@@ -135,6 +138,44 @@ function rpgc_custom_columns( $column ) {
             else
                 echo '&ndash;';
         break;
+
+        case 'order_actions' :
+            $actions = array();
+
+//            $actions['cancel'] = array(
+//                'url'       => wp_nonce_url( add_query_arg( 'cancel', $post->ID ), 'cancel' ),
+//                'name'      => __( 'Cancel Gift Card', 'wpkodiak_giftcards' ),
+//                'action'    => "cancel",
+//            );
+//
+//            $actions['decrease'] = array(
+//                'url'       => wp_nonce_url( add_query_arg( 'decrease', $post->ID ), 'decrease' ),
+//                'name'      => __( 'Decrease Value', 'wpkodiak_giftcards' ),
+//                'action'    => "decrease",
+//            );
+
+
+            $actions['resend'] = array(
+                'url'       => wp_nonce_url( add_query_arg( array( 'kodiak_action' => 'giftcard_resend', 'post_id' => $post->ID ) ), 'kodiak-giftcard-resend' ),
+                'name'      => __( 'Resend Gift Card', 'wpkodiak_giftcards' ),
+                'action'    => "resend",
+            );
+
+            $actions['regen'] = array(
+
+                'url'       => wp_nonce_url( add_query_arg( array( 'kodiak_action' => 'giftcard_regenerate', 'post_id' => $post->ID ) ), 'kodiak-giftcard-regenerate' ),
+                'name'      => __( 'Regrenerate Gift Card Number', 'wpkodiak_giftcards' ),
+                'action'    => "regen",
+            );
+
+            $actions = apply_filters( 'kodiak_giftcard_user_actions', $actions, $post );
+
+            echo '<p>';
+            foreach ( $actions as $action ) {
+                printf( '<a class="button tips %s" href="%s" data-tip="%s">%s</a>', esc_attr( $action['action'] ), esc_url( $action['url'] ), esc_attr( $action['name'] ), esc_attr( $action['name'] ) );
+            }
+            echo '</p>';
+        break;
     }
 }
 add_action( 'manage_rp_shop_giftcard_posts_custom_column', 'rpgc_custom_columns', 2 );
@@ -142,15 +183,13 @@ add_action( 'manage_rp_shop_giftcard_posts_custom_column', 'rpgc_custom_columns'
 
 
 function wpfstop_change_default_title( $title ){
-
     $screen = get_current_screen();
 
     if ( 'rp_shop_giftcard' == $screen->post_type ){
-        $title = __( 'Enter Gift Card Number Here', 'rpgiftcards' );
+        $title = __( 'Enter Gift Card Number Here', 'wpkodiak_giftcards' );
     }
 
     return $title;
 }
-
 add_filter( 'enter_title_here', 'wpfstop_change_default_title' );
 

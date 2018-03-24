@@ -1,6 +1,6 @@
 <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
 <form name="form1" method="post" action="">
-<input type="hidden" name="<?php echo $this->hidden_field_name; ?>" value="Y">
+<?php wp_nonce_field( $this->namespace."-nonce", $this->namespace."-nonce", false ); ?>
 <table class="form-table">
 <tr valign="top">
 <th scope="row"><label for="<?php echo $this->publicly_available; ?>"><?php _e("Can Archived Posts be read publicly:", $this->namespace); ?></label></th>

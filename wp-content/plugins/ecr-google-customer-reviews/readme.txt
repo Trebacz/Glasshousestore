@@ -2,8 +2,8 @@
 Contributors: ecreationsllc, natekinkead
 Tags: WooCommerce, Google Customer Reviews, Google Merchant, Google Trusted Sites, Opt-in, Badge, Google Rating Badge, GCR
 Requires at least: 3.0.0
-Tested up to: 4.8.1
-Stable tag: 1.2
+Tested up to: 4.9.4
+Stable tag: 2.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/quick-guide-gplv3.html
 
@@ -13,7 +13,7 @@ Integrates Google Merchant Center's Google Customer Reviews survey opt-in and ba
 
 This is THE WordPress plugin to integrate Google Merchant Center's "Google Customer Reviews" into your WooCommerce store.
 
-It allows the Survey Opt-in code onto your Thank You (Order Received) page with the option to pick which location the popup will appear.
+It allows the Survey Opt-in code onto your Thank You (Order Received) page with the option to pick which location the popup will appear.  It can also send GTIN data to Google for each product purchase which enabled product reviews.
 
 It also integrates the Google Customer Reviews Badge onto your site.  You can choose to show it in the bottom left or bottom right.  You can also choose to only show the badge when users are in the WooCommerce area of your website.
 
@@ -34,8 +34,9 @@ Made with love by <a href="https://www.ecreations.net" target="_blank">eCreation
 * Integrates Google Customer Reviews on your WooCommerce store
 * Adds the Survey Opt-in code onto your Thank You (Order Received) page
 * Integrates the Google Customer Reviews Badge onto your site
-* Options to choose language, survey opt-in popup position, estimated delivery (days), rating badge potition, only show badge in shop
+* Options to choose language, survey opt-in popup position, estimated delivery (days), rating badge position, only show badge in shop
 * Supports the latest version of WooCommerce.  Yes, we're WooCommerce 3.0 compatible!
+* Extend this plugin using a hook to conditionally hide the Google Customer Reviews Badge on certain pages
 
 == Installation ==
 
@@ -54,6 +55,10 @@ To install Google Customer Reviews for WooCommerce, follow these steps:
 3. The settings page for Google Customer Reviews for WooCommerce plugin
 
 == Frequently Asked Questions ==
+
+= How do I add GTINs (Global Trade Item Numbers) to my products to enable Product Reviews? =
+
+Edit each product in WooCommerce.  In the "Product data" panel, click on the "Inventory" tab.  You should see a new field labeled "GTIN".  Enter your UPC, EAN, or ISBN for the product and click "Update".
 
 = Why is the survey opt-in not showing up? =
 
@@ -82,7 +87,7 @@ But, rest assured, if it works in Incognito Mode, then it should work for your c
 
 There is a setting for this plugin that allows you to choose the number of days that Google should wait before sending the email. This setting is called “Estimated Delivery (days)”. This is to make sure the survey goes out after the customer has received the item.
 
-Make sure you check that setting and wait that number of days for the email to come from Google.
+Please be aware that Google often will send the email 3-4 days after the amount of days that you provide in this setting.  I think that is to give the customer ample time to use the product in order to be able to give a review.
 
 = Why does the email address appear html encoded on the survey opt-in? =
 
@@ -90,7 +95,49 @@ In the rare case you are using another WordPress plugin that obfuscates email ad
 
 One such plugin that causes this issue is WP-Spamshield.  If using that plugin, check the option called "Disable email harvester protection" and that will fix the issue.
 
+= How do I use a hook to conditionally hide the Google Customer Reviews Badge on certain pages? =
+
+You can use the filter hook called 'ecr_show_gcr_badge'.  Return false inside of a condition to prevent it from displaying for that condition.  Here is an example that hides the badge for product ID 1280.
+
+`function my_gcr_badge_function($show) {
+	if(get_the_ID() == 1280) {
+		return false;
+	}
+	return $show;
+}
+add_filter('ecr_show_gcr_badge', 'my_gcr_badge_function');`
+
 == Changelog ==
+
+= 2.6 =
+* Bug fix
+
+= 2.5 =
+* Bug fix to only show GTIN if populated
+
+= 2.4 =
+* Bug fix
+* Added option to display the GTIN field in the product meta on the front-end
+
+= 2.3 =
+* Removed an action from a common manually-implemented duplicate GTIN field on simple products.
+
+= 2.2 =
+* Added GTIN support for Product Variations
+* GTIN field now shows a sample value of each meta key
+* Added ability to disable GTIN by selecting NONE in the dropdown
+* Added filter hook to conditionally hide the badge on certain pages
+* Removed the transient cache feature from the product post meta field on the plugin settings page
+
+= 2.1 =
+* Added the ability to select an existing product meta field that contains GTIN data.
+
+= 2.0 =
+* NEW support for GTIN integration for product reviews
+* Updated the list of available languages
+
+= 1.3 =
+* Updated to use WooCommerce 3.x getter methods with WooCommerce 2.x backward compatibility.
 
 = 1.0.3 =
 * Reverted unnecessary fix and updated FAQs.

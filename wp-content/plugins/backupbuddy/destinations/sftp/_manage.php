@@ -107,13 +107,7 @@ foreach( $files as $filename => $file ) {
 		continue;
 	}
 	
-	if ( stristr( $filename, '-db-' ) !== false ) {
-		$backup_type = 'Database';
-	} elseif( stristr( $filename, '-full-' ) !== false ) {
-		$backup_type = 'Full';
-	} else {
-		$backup_type = 'Unknown';
-	}
+	$backup_type = backupbuddy_core::getBackupTypeFromFile( $filename );
 	
 	$last_modified = $file['mtime'];
 	

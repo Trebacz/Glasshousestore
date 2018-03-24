@@ -24,16 +24,16 @@ function wpr_check_giftcard( $atts ) {
 	$return .= '<form class="check_giftcard_balance" method="post">';
 
 	$return .= '<p class="form-row form-row-first">';
-		$return .= '<input type="text" name="giftcard_code" class="input-text" placeholder="' . __( 'Gift card', 'rpgiftcards' ) . '" id="giftcard_code" value="" />';
+		$return .= '<input type="text" name="giftcard_code" class="input-text" placeholder="' . __( 'Gift card', 'kodiak-giftcards' ) . '" id="giftcard_code" value="" />';
 	$return .= '</p>';
 
 	$return .= '<p class="form-row form-row-last">';
-		$return .= '<input type="submit" class="button" name="check_giftcard" value="' . __( 'Check Balance', 'rpgiftcards' ) . '" />';
+		$return .= '<input type="submit" class="button" name="check_giftcard" value="' . __( 'Check Balance', 'kodiak-giftcards' ) . '" />';
 	$return .= '</p>';
 
 	$return .= '<div class="clear"></div>';
 	$return .= '</form>';
-	
+
 	$return .= '<div id="theBalance"></div>';
 
 	if ( isset( $_POST['giftcard_code'] ) ) {
@@ -57,16 +57,16 @@ function wpr_check_giftcard( $atts ) {
 				$oldBalance = wpr_get_giftcard_balance( $giftcard_found );
 				$giftCardBalance = (float) $oldBalance;
 
-				$return .= '<h3>' . __('Remaining Balance', 'rpgiftcards' ) . ': ' . wc_price( $giftCardBalance ) . '</h3>';
+				$return .= '<h3>' . __('Remaining Balance', 'kodiak-giftcards' ) . ': ' . wc_price( $giftCardBalance ) . '</h3>';
 			} else {
-				$return .= '<h3>' . __('Gift Card Has Expired', 'rpgiftcards' ) . '</h3>';
+				$return .= '<h3>' . __('Gift Card Has Expired', 'kodiak-giftcards' ) . '</h3>';
 			}
 		} else {
-			$return .= '<h3>' . __( 'Gift Card Does Not Exist', 'rpgiftcards' ) . '</h3>';
+			$return .= '<h3>' . __( 'Gift Card Does Not Exist', 'kodiak-giftcards' ) . '</h3>';
 
 		}
 
-		
+
 	}
 
 	return apply_filters( 'wpr_check_giftcard', $return) ;
@@ -83,26 +83,26 @@ function wpr_decrease_giftcard( $atts ) {
 			$giftCardNumber = sanitize_text_field( $_POST['giftcard_code'] );
 
 		if ( isset( $_POST['giftcard_debt'] ) )
-			$giftCardDebt = sanitize_text_field( $_POST['giftcard_debt'] );	
+			$giftCardDebt = sanitize_text_field( $_POST['giftcard_debt'] );
 
 		$return = '';
 		$return .= '<form class="check_giftcard_balance" method="post">';
 
 		$return .= '<p class="form-row form-row-first">';
-			$return .= '<input type="text" name="giftcard_code" class="input-text" placeholder="' . __( 'Gift card', 'rpgiftcards' ) . '" id="giftcard_code" value="" />';
+			$return .= '<input type="text" name="giftcard_code" class="input-text" placeholder="' . __( 'Gift card', 'kodiak-giftcards' ) . '" id="giftcard_code" value="" />';
 		$return .= '</p>';
 
 		$return .= '<p class="form-row form-row-first">';
-			$return .= '<input type="text" name="giftcard_debt" class="input-text" placeholder="' . __( 'Amount Used', 'rpgiftcards' ) . '" id="giftcard_debt" value="" />';
+			$return .= '<input type="text" name="giftcard_debt" class="input-text" placeholder="' . __( 'Amount Used', 'kodiak-giftcards' ) . '" id="giftcard_debt" value="" />';
 		$return .= '</p>';
 
 		$return .= '<p class="form-row form-row-last">';
-			$return .= '<input type="submit" class="button" name="check_giftcard" value="' . __( 'Submit', 'rpgiftcards' ) . '" />';
+			$return .= '<input type="submit" class="button" name="check_giftcard" value="' . __( 'Submit', 'kodiak-giftcards' ) . '" />';
 		$return .= '</p>';
 
 		$return .= '<div class="clear"></div>';
 		$return .= '</form>';
-		
+
 		$return .= '<div id="theBalance"></div>';
 
 
@@ -129,19 +129,19 @@ function wpr_decrease_giftcard( $atts ) {
 					} else {
 						$giftcard['balance'] = 0;
 						$giftcardRemaining = (float) $giftCardDebt - (float) $GiftcardBalance;
-						$return .= '<h3>' . __('Amount Remaining to Pay', 'rpgiftcards' ) . ': ' . wc_price( $giftcardRemaining ) . '</h3>';
+						$return .= '<h3>' . __('Amount Remaining to Pay', 'kodiak-giftcards' ) . ': ' . wc_price( $giftcardRemaining ) . '</h3>';
 					}
 
 					update_post_meta( $giftcard_found, '_wpr_giftcard', $giftcard );
 
-					
-					$return .= '<h3>' . __('Remaining Balance on Card', 'rpgiftcards' ) . ': ' . wc_price( $giftcard['balance'] ) . '</h3>';
+
+					$return .= '<h3>' . __('Remaining Balance on Card', 'kodiak-giftcards' ) . ': ' . wc_price( $giftcard['balance'] ) . '</h3>';
 
 				} else {
-					$return .= '<h3>' . __('Gift Card Has Expired', 'rpgiftcards' ) . '</h3>';
+					$return .= '<h3>' . __('Gift Card Has Expired', 'kodiak-giftcards' ) . '</h3>';
 				}
 			} else {
-				$return .= '<h3>' . __( 'Gift Card Does Not Exist', 'rpgiftcards' ) . '</h3>';
+				$return .= '<h3>' . __( 'Gift Card Does Not Exist', 'kodiak-giftcards' ) . '</h3>';
 
 			}
 		}

@@ -37,6 +37,8 @@ class pb_backupbuddy_backup {
 			require_once( pb_backupbuddy::plugin_path() . '/classes/core.php' );
 		}
 		
+		require_once( pb_backupbuddy::plugin_path() . '/destinations/bootstrap.php' );
+		
 		// Load zipbuddy if it has not been instantiated yet.
 		if ( !isset( pb_backupbuddy::$classes['zipbuddy'] ) ) {
 			require_once( pb_backupbuddy::plugin_path() . '/lib/zipbuddy/zipbuddy.php' );
@@ -221,17 +223,17 @@ class pb_backupbuddy_backup {
 			
 			unset( $this->_backup_options ); // File unlocking is handled on deconstruction.  Make sure unlocked before firing off another cron spawn.
 			
-			// If using alternate cron on a manually triggered backup then skip running the cron on this pageload to avoid header already sent warnings.
-			if ( ( $trigger != 'manual' ) || ( defined('ALTERNATE_WP_CRON') && ALTERNATE_WP_CRON ) ) {
-				$this->cron_next_step( $this->_backup['serial'], false );
+			if ( defined('ALTERNATE_WP_CRON') && ALTERNATE_WP_CRON ) {
+				pb_backupbuddy::status( 'details', 'IMPORTANT NOTE: ALTERNATE_WP_CRON defined AND enabled!' );
 			} else {
 				//$this->cron_next_step( true );
-				$this->cron_next_step( $this->_backup['serial'], false ); // as of Aug 9, 2013 no longer spawn the cron. Caused very odd issue of double code runs.
+				// as of Aug 9, 2013 no longer spawn the cron. Caused very odd issue of double code runs.
 			}
+			$this->cron_next_step( $this->_backup['serial'], false );
 			
 		} else { // Classic mode; everything runs in this single PHP page load.
 			
-			pb_backupbuddy::status( 'message', 'Running in classic backup mode based on settings.' );
+			pb_backupbuddy::status( 'message', 'Running in classic backup mode based on settings. Mode code: `' . $profile['backup_mode'] . '`.' );
 			$this->process_backup( $this->_backup['serial'], $trigger );
 			
 		}
@@ -389,7 +391,7 @@ class pb_backupbuddy_backup {
 		$custom_root = '';
 		// Files type profile with a custom root does NOT currently support exclusions at all. Strip all excludes.
 		if ( ( $type == 'files' ) && ( isset( $profile['custom_root'] ) ) && ( '' != $profile['custom_root'] ) ) {
-			$custom_root = ABSPATH . '/' . ltrim( $profile['custom_root'], '/\\' );
+			$custom_root = ABSPATH . ltrim( $profile['custom_root'], '/\\' );
 		}
 
 		// Force custom root trailing slash
@@ -461,7 +463,7 @@ class pb_backupbuddy_backup {
 			
 			// Support for custom root for files backup type if set.
 			if ( ( $this->_backup['type'] == 'files' ) && ( isset( $profile['custom_root'] ) ) && ( '' != $profile['custom_root'] ) ) {
-				$this->_backup['backup_root'] = ABSPATH . trim( $profile['custom_root'], '\\/' ) . '/';
+				$this->_backup['backup_root'] = ABSPATH . rtrim( trim( $profile['custom_root'], '\\/' ), '\\/' ) . '/';
 				pb_backupbuddy::status( 'warning', 'Warning #3894743: Custom backup root set. Use with caution. Custom root: `' . $this->_backup['backup_root'] . '`.' );
 				if ( ! file_exists( $this->_backup['backup_root'] ) ) {
 					pb_backupbuddy::status( 'error', 'Error #32893444. Custom backup root directory NOT found! Custom root: `' . $this->_backup['backup_root'] . '`.' );
@@ -861,7 +863,7 @@ class pb_backupbuddy_backup {
 				}
 				
 				$wait_time = $attempt_delay_base * $lock_attempts;
-				pb_backupbuddy::status( 'message', 'A scheduled step attempted to run before the previous step completed. The previous step may have failed or two steps may be attempting to run simultaneously.', $serial );
+				pb_backupbuddy::status( 'warning', 'Warning #893943466: (This is not a problem if no other errors/warnings are encountered). A scheduled step attempted to run before the previous step completed. The previous step may have failed or two steps may be attempting to run simultaneously.', $serial );
 				pb_backupbuddy::status( 'message', 'Waiting `' . $wait_time . '` seconds before continuing. Attempt #' . $lock_attempts . ' of ' . $max_attempts . ' max allowed before giving up.', $serial );
 				$this->cron_next_step( $this->_backup['serial'], false, $wait_time );
 				return false;
@@ -2271,13 +2273,14 @@ class pb_backupbuddy_backup {
 	} // End post_remote_delete().
 	
 	
+	// $sendFile may be an array of files BUT they must all be in the same $sendPath.
 	public function deploy_push_sendFile( $state, $sendFile, $sendPath, $sendType, $nextStep, $delete_after = false ) {
-		$destination_settings = &pb_backupbuddy::$options['remote_destinations'][ $state['destination_id'] ];
+		$destination_settings = pb_backupbuddy_destinations::get_normalized_settings( $state['destination_id'] );
 		$destination_settings['sendType'] = $sendType;
 		$destination_settings['sendFilePath'] = $sendPath;
 		$destination_settings['max_time'] = $state['minimumExecutionTime'];
 		
-		$identifier = $this->_backup['serial'] . '_' . md5( $sendFile . $sendType );
+		$identifier = $this->_backup['serial'] . '_' . md5( serialize( $sendFile ) . $sendType );
 		if ( false === backupbuddy_core::send_remote_destination( $state['destination_id'], $sendFile, 'Deployment', $send_importbuddy = false, $delete_after, $identifier, $destination_settings ) ) {
 			$sendFile = ''; // Since failed just set file to blank so we can proceed to next without waiting.
 		}
@@ -2287,9 +2290,14 @@ class pb_backupbuddy_backup {
 	} // End deploy_push_sendFile().
 	
 	
+	
 	public function deploy_sendWait( $state, $sendFile, $sendPath, $sendType, $nextStep ) {
-		$identifier = $this->_backup['serial'] . '_' . md5( $sendFile . $sendType );
-		pb_backupbuddy::status( 'details', 'Waiting for send to finish for file `' . $sendFile . '` with ID `' . $identifier . '`.' );
+		$identifier = $this->_backup['serial'] . '_' . md5( serialize( $sendFile ) . $sendType );
+		if ( is_array( $sendFile ) ) {
+			pb_backupbuddy::status( 'details', 'Waiting for send to finish for multiple files pass with ID `' . $identifier . '`.' );
+		} else {
+			pb_backupbuddy::status( 'details', 'Waiting for send to finish for file `' . $sendFile . '` with ID `' . $identifier . '`.' );
+		}
 		
 		$maxSendTime = 60*5;
 		
@@ -2325,6 +2333,11 @@ class pb_backupbuddy_backup {
 			);
 			$this->insert_next_step( $newStep );
 		} else { // Finished. Go to next step.
+			if ( count( $sendFile ) > 0 ) {
+				pb_backupbuddy::status( 'details', 'Send finished for multiple file (' . count( $sendFile ) . ') pass.' );
+			} else {
+				pb_backupbuddy::status( 'details', 'Send finished: `' . basename( $sendFile ) . '`.' );
+			}
 			$this->insert_next_step( $nextStep );
 		}
 		
@@ -2446,6 +2459,7 @@ class pb_backupbuddy_backup {
 		$pluginFileCount = 0;
 		$themeFileCount = 0;
 		$childThemeFileCount = 0;
+		$extraFileCount = 0;
 		if ( true === $state['sendMedia'] ) {
 			$mediaFileCount = count( $state['pullMediaFiles'] );
 		}
@@ -2459,7 +2473,7 @@ class pb_backupbuddy_backup {
 			$childThemeFileCount = count( $state['pullChildThemeFiles'] );
 		}
 		
-		$filesRemaining = $mediaFileCount + $pluginFileCount + $themeFileCount + $childThemeFileCount;
+		$filesRemaining = $mediaFileCount + $pluginFileCount + $themeFileCount + $childThemeFileCount + $extraFileCount;
 		if ( '' != $pullBackupArchive ) { // add in backup archive if not yet sent.
 			$filesRemaining++;
 		}
@@ -2489,7 +2503,7 @@ class pb_backupbuddy_backup {
 			pb_backupbuddy::status( 'details', 'No plugin files selected for transfer. Skipping send.' );
 		} else {
 			if ( $pluginFileCount > 0 ) { // Plugin files remain to send.
-				pb_backupbuddy::status( 'details', 'Plugins files remaining to send: ' . count( $state['pushPluginFiles'] ) );
+				pb_backupbuddy::status( 'details', 'Plugins files remaining to send: ' . count( $state['pullPluginFiles'] ) );
 				$getFile = array_pop( $state['pullPluginFiles'] ); // Pop off last item in array. Faster than shift.
 				$pluginPath = wp_normalize_path( WP_PLUGIN_DIR ) . '/';
 				$nextStep['args'] = array( $state );
@@ -2516,6 +2530,17 @@ class pb_backupbuddy_backup {
 				$childThemePath = get_stylesheet_directory(); // contains trailing slash.
 				$nextStep['args'] = array( $state );
 				return $this->deploy_getFile( $state, $childThemePath, $getFile, 'childTheme', $nextStep );
+			}
+		}
+		
+		if ( 0 == count( $state['sendExtras'] ) ) {
+			pb_backupbuddy::status( 'details', 'No extra files selected for transfer. Skipping send.' );
+		} else {
+			if ( $extraFileCount > 0 ) { // Plugin files remain to send.
+				pb_backupbuddy::status( 'details', 'Extra files remaining to send: ' . count( $state['pullExtraFiles'] ) );
+				$getFile = array_pop( $state['pullExtraFiles'] ); // Pop off last item in array. Faster than shift.
+				$nextStep['args'] = array( $state );
+				return $this->deploy_getFile( $state, ABSPATH, $getFile, 'extra', $nextStep );
 			}
 		}
 		
@@ -2566,6 +2591,8 @@ class pb_backupbuddy_backup {
 				pb_backupbuddy::status( 'error', 'Error #2373273: Unable to initiate file get via remote API.' );
 				return false;
 			}
+			//error_log( 'GOTRESPONSE:' );
+			//error_log( print_r( $response, true ) );
 			
 			if ( ! is_array( $response ) ) {
 				pb_backupbuddy::status( 'error', 'Error #38937324: Expected return array. Response: `' . htmlentities( $response ) . '`.' );
@@ -2573,13 +2600,22 @@ class pb_backupbuddy_backup {
 			}
 			
 			/* $response now contains an array from the server.
-			 *	filedata		string		base64 encoded file contents.
-			 *	filedatalen		int			length of the filedata param.
-			 *	filecrc			string		CRC of the filedata param.
-			 *	filedone		1|0			1 if this is the last of the file.
-			 *	filesize		int			Total file size in bytes.
-			 *	resumepoint		int			ftell resume point to pass to next fseek. 0 if filedone = 1.
-			 *	encoded			bool		True if filename needs to be utf8_decoded
+			 *	data			string		Binary file contents.
+			 *	datalen			int			length of the filedata param.
+			 *	done				bool			true if this is the last of the file.
+			 *	size			int			Total file size in bytes.
+			 *	resumepoint		int			ftell resume point to pass to next fseek. 0 if done = true.
+			 *	encoded			bool			True if filename needs to be utf8_decoded
+			 
+			 each files => array(
+			 'file'    => '',
+			 'data'    => '',
+			 'datalen' => 0,
+			 'size'    => '',
+			 'done'    => false,
+			 'test'    => false,
+			 'encoded' => false,
+			 )
 			 */
 			
 			$numSentThisRound++;
@@ -2618,7 +2654,7 @@ class pb_backupbuddy_backup {
 			}
 			
 			// Write to file.
-			if ( false === ( $bytesWritten = fwrite( $fs, base64_decode( $response['filedata'] ) ) ) ) { // Failed writing.
+			if ( false === ( $bytesWritten = fwrite( $fs, $response['data'] ) ) ) { // Failed writing.
 				@fclose( $fs );
 				@unlink( $saveFile );
 				$message = 'Error #4873474: Error writing to file `' . $saveFile . '`.';
@@ -2634,7 +2670,7 @@ class pb_backupbuddy_backup {
 			$elapsed = microtime( true ) - $timeStart;
 			
 			// Handle finishing up or chunking if needed.
-			if ( '1' == $response['filedone'] ) { // Transfer finished.
+			if ( '1' == $response['done'] ) { // Transfer finished.
 				pb_backupbuddy::status( 'deployFileSent', 'File sent.' );
 				pb_backupbuddy::status( 'details', 'Retrieval of complete file + writing took `' . $elapsed .'` secs.');
 				$keepSending = false;
@@ -2642,7 +2678,7 @@ class pb_backupbuddy_backup {
 				$this->insert_next_step( $finalNextStep );
 				return true;
 			} else { // More chunks remain.
-				pb_backupbuddy::status( 'details', 'Retrieval of chunk + writing took `' . $elapsed . '` seconds. Wrote `' . pb_backupbuddy::$format->file_size( $bytesWritten ) . '` of max limit of `' . pb_backupbuddy::$format->file_size( $maxPayload ) . '` MB per chunk after seeking to `' . $seekTo . '`. Encoded size received: `' . strlen( $response['filedata'] ) . '` bytes.');
+				pb_backupbuddy::status( 'details', 'Retrieval of chunk + writing took `' . $elapsed . '` seconds. Wrote `' . pb_backupbuddy::$format->file_size( $bytesWritten ) . '` of max limit of `' . $maxPayload . '` MB per chunk after seeking to `' . $seekTo . '`. Encoded size received: `' . strlen( $response['data'] ) . '` bytes.');
 				$seekTo = $response['resumepoint']; // Next chunk fseek to this point (got by ftell).
 				
 				if ( ( ( $elapsed + $TIME_WIGGLE_ROOM ) * ( $numSentThisRound + 1 ) ) >= $state['minimumExecutionTime'] ) { // Could we have time to send another piece based on average send time?
@@ -2694,6 +2730,9 @@ class pb_backupbuddy_backup {
 		$additionalStateInfo = array(
 			'maxExecutionTime' => $state['minimumExecutionTime'],
 			'doImportCleanup' => $state['doImportCleanup'],
+			'cleanup' => array(
+				'set_blog_public' => $state['setBlogPublic'],
+			),
 		);
 		
 		$importFileSerial = backupbuddy_core::deploymentImportBuddy( $importbuddyPassword, $state['pullLocalArchiveFile'], $additionalStateInfo, $state['doImportCleanup'] );
@@ -2807,6 +2846,7 @@ class pb_backupbuddy_backup {
 		$pluginFileCount = 0;
 		$themeFileCount = 0;
 		$childThemeFileCount = 0;
+		$extraFileCount = 0;
 		if ( true === $state['sendMedia'] ) {
 			$mediaFileCount = count( $state['pushMediaFiles'] );
 		}
@@ -2819,7 +2859,10 @@ class pb_backupbuddy_backup {
 		if ( true === $state['sendChildTheme'] ) {
 			$childThemeFileCount = count( $state['pushChildThemeFiles'] );
 		}
-		$filesRemaining = $mediaFileCount + $pluginFileCount + $themeFileCount + $childThemeFileCount;
+		if ( true === $state['sendExtras'] ) {
+			$extraFileCount = count( $state['pushExtraFiles'] );
+		}
+		$filesRemaining = $mediaFileCount + $pluginFileCount + $themeFileCount + $childThemeFileCount + $extraFileCount;
 		pb_backupbuddy::status( 'deployFilesRemaining', $filesRemaining );
 		pb_backupbuddy::status( 'details', 'Files remaining to send: ' . $filesRemaining );
 		
@@ -2829,8 +2872,8 @@ class pb_backupbuddy_backup {
 			if ( $mediaFileCount > 0 ) { // Media files remain to send.
 				$sendFile = array_pop( $state['pushMediaFiles'] ); // Pop off last item in array. Faster than shift.
 				$wp_upload_dir = wp_upload_dir();
-				$nextStep['args'] = array( $state );
-				return $this->deploy_push_sendFile( $state, $wp_upload_dir['basedir'] . '/' . $sendFile, $sendFile, 'media', $nextStep );
+				
+				return $this->deploy_queue_push_files( $state, 'pushMediaFiles', $wp_upload_dir['basedir'], 'media', $nextStep );
 			}
 		}
 		
@@ -2839,10 +2882,10 @@ class pb_backupbuddy_backup {
 		} else {
 			if ( $pluginFileCount > 0 ) { // Plugin files remain to send.
 				pb_backupbuddy::status( 'details', 'Plugins files remaining to send: ' . count( $state['pushPluginFiles'] ) );
-				$sendFile = array_pop( $state['pushPluginFiles'] ); // Pop off last item in array. Faster than shift.
+				
 				$pluginPath = wp_normalize_path( WP_PLUGIN_DIR ) . '/';
-				$nextStep['args'] = array( $state );
-				return $this->deploy_push_sendFile( $state, $pluginPath . $sendFile, $sendFile, 'plugin', $nextStep );
+				
+				return $this->deploy_queue_push_files( $state, 'pushPluginFiles', $pluginPath, 'plugin', $nextStep );
 			}
 		}
 		
@@ -2852,8 +2895,8 @@ class pb_backupbuddy_backup {
 			if ( $themeFileCount > 0 ) { // Plugin files remain to send.
 				$sendFile = array_pop( $state['pushThemeFiles'] ); // Pop off last item in array. Faster than shift.
 				$themePath = get_template_directory(); // contains trailing slash.
-				$nextStep['args'] = array( $state );
-				return $this->deploy_push_sendFile( $state, $themePath . $sendFile, $sendFile, 'theme', $nextStep );
+				
+				return $this->deploy_queue_push_files( $state, 'pushThemeFiles', $themePath, 'theme', $nextStep );
 			}
 		}
 		
@@ -2863,8 +2906,18 @@ class pb_backupbuddy_backup {
 			if ( $childThemeFileCount > 0 ) { // Plugin files remain to send.
 				$sendFile = array_pop( $state['pushChildThemeFiles'] ); // Pop off last item in array. Faster than shift.
 				$childThemePath = get_stylesheet_directory(); // contains trailing slash.
-				$nextStep['args'] = array( $state );
-				return $this->deploy_push_sendFile( $state, $childThemePath . $sendFile, $sendFile, 'childTheme', $nextStep );
+				
+				return $this->deploy_queue_push_files( $state, 'pushChildThemeFiles', $childThemePath, 'childTheme', $nextStep );
+			}
+		}
+		
+		if ( 0 == count( $state['sendExtras'] ) ) {
+			pb_backupbuddy::status( 'details', 'No extra files selected for transfer. Skipping send.' );
+		} else {
+			if ( $extraFileCount > 0 ) { // Plugin files remain to send.
+				pb_backupbuddy::status( 'details', 'Extra files remaining to send: ' . count( $state['pushExtraFiles'] ) );
+				
+				return $this->deploy_queue_push_files( $state, 'pushExtraFiles', ABSPATH, 'extra', $nextStep );
 			}
 		}
 		
@@ -2883,6 +2936,68 @@ class pb_backupbuddy_backup {
 	
 	
 	
+	function deploy_queue_push_files( $state, $stateSendKey, $path, $type, $nextStep ) {
+		$sendFile = array_pop( $state[ $stateSendKey ] ); // Pop off last item in array. Faster than shift.
+		
+		pb_backupbuddy::status( 'details', 'Queue file (A): `' . $path . $sendFile . '`.' );
+		$files = array( $path . $sendFile ); // First file.
+		$filesSize = @filesize( $path . $sendFile );
+		$relativePath = str_replace( $path, '', dirname( $sendFile ) );
+		
+		$destination_settings = pb_backupbuddy_destinations::get_normalized_settings( $state['destination_id'] );
+		
+		// See if we want to send multiple files in this single pass.
+		$findNext = true;
+		$maxPayload = $destination_settings['max_payload']; // Max payload size in mb.
+		
+		// Check if the remote server reports an upload limit lower than defined max payload. Use lower value if so.
+		//error_log( 'php max upload:' );
+		//error_log( print_r( $state, true ) );
+		//error_log( $state['remoteInfo']['php']['upload_max_filesize'] );
+		
+		// If remote site's max upload is less than defined upload use it. Ignore if remote reports 0 upload or negative.
+		if ( ( (int)$state['remoteInfo']['php']['upload_max_filesize'] > 0 ) && ( (int)$state['remoteInfo']['php']['upload_max_filesize'] < $maxPayload ) ) {
+			$maxPayload = (int)$state['remoteInfo']['php']['upload_max_filesize'];
+			pb_backupbuddy::status( 'details', 'Decreased max payload/chunk size to `' . $maxPayload . '` MB because remote server reported lesser limit than destination is configured for (`' . $destination_settings['max_payload'] . '` MB).' );
+		}
+		
+		$maxPayload = ( $maxPayload - $maxPayload*.05 ) * 1024 * 1024; // Reduce by 5% overhead. Convert to bytes.
+		while( true === $findNext ) {
+			if ( count( $files ) >= $destination_settings['max_files_per_pass'] ) { // Limit number of files per payload.
+				pb_backupbuddy::status( 'details', 'Max number of files per pass met at `' . count( $files ) . '` files.' );
+				break;
+			}
+			if ( false === $upcomingFile = end( $state[ $stateSendKey ] ) ) { // Peek end of array. Break if at end.
+				pb_backupbuddy::status( 'details', 'No more of files of this type for this pass.' );
+				$findNext = false;
+				break;
+			}
+			if ( dirname( $upcomingFile ) != dirname( $sendFile ) ) { // Break if next file not in the exact same directory. We require same path per api call.
+				pb_backupbuddy::status( 'details', 'Next file in different directory `' . dirname( $upcomingFile ) . '` from current: `' . dirname( $sendFile ) . '`.' );
+				$findNext = false;
+				break;
+			}
+			$upcomingFileSize = @filesize( $upcomingFile );
+			if ( ( $filesSize + $upcomingFileSize ) > $maxPayload ) { // Too big to fit upcoming next file. Both vars in bytes. Break if too big.
+				pb_backupbuddy::status( 'details', 'Approaching size limit for this send pass.' );
+				$findNext = false;
+				break;
+			}
+			// Made it here so pop file and add file into queue.
+			$filesSize += $upcomingFileSize;
+			$addFile = $path . array_pop( $state[ $stateSendKey ] );
+			$files[] = $addFile;
+			pb_backupbuddy::status( 'details', 'Queue file (B): `' . $addFile . '`.' );
+		}
+		
+		$nextStep['args'] = array( $state );
+		
+		pb_backupbuddy::status( 'details', 'Queued `' . count( $files ) . '` files. Total: `' . $filesSize . '` bytes (' . pb_backupbuddy::$format->file_size( $filesSize ) . ') to send this pass.' );
+		return $this->deploy_push_sendFile( $state, $files, $relativePath, $type, $nextStep );
+	}
+	
+	
+	
 	public function deploy_push_renderImportBuddy( $state ) {
 		
 		$timeout = 10;
@@ -2897,14 +3012,18 @@ class pb_backupbuddy_backup {
 			$cleanupStringBool = 'false';
 		}
 		
+		$payloadSettings = array(
+			'backupFile' => basename( $this->_backup['archive_file'] ),
+			'max_execution_time' => $state['minimumExecutionTime'],
+			'doImportCleanup' => $cleanupStringBool,
+			'setBlogPublic' => $state['setBlogPublic'],
+		);
+		pb_backupbuddy::status( 'details', 'Remote call to render importbuddy with payload settings: `' . print_r( $payloadSettings, true ) . '`.' );
+		
 		if ( false === ( $response = backupbuddy_remote_api::remoteCall(
 				$state['destination'],
 				'renderImportBuddy',
-				array(
-					'backupFile' => basename( $this->_backup['archive_file'] ),
-					'max_execution_time' => $state['minimumExecutionTime'],
-					'doImportCleanup' => $cleanupStringBool,
-				),
+				$payloadSettings,
 				$state['minimumExecutionTime']
 			) ) ) {
 			pb_backupbuddy::status( 'error', 'Error #4448985: Unable to render importbuddy via remote API.' );

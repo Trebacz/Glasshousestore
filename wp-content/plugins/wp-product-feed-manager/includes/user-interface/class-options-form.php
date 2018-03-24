@@ -58,7 +58,7 @@ if ( !class_exists( 'WPPFM_Options_Form' ) ) :
 		 */
 		private function settings() {
 			$html_code = '';
-			$third_party_attribute_keywords = get_option( 'wppfm_third_party_attribute_keywords', '%_wpmr_%, %_cpf_%, %_unit%, %_bto_%' );
+			$third_party_attribute_keywords = get_option( 'wppfm_third_party_attribute_keywords', '%wpmr%,%cpf%,%unit%,%bto%,%yoast%' );
 
 			$auto_fix_feed_option = get_option( 'wppfm_auto_feed_fix', true );
 			$auto_feed_fix_checked = true === $auto_fix_feed_option || $auto_fix_feed_option === 'true' ? ' checked ' : '';
@@ -73,19 +73,6 @@ if ( !class_exists( 'WPPFM_Options_Form' ) ) :
 			$html_code .= $auto_feed_fix_checked . '> ' . __( 'Automatically fix feeds that are failed (default on). Change this setting if a feed keeps failing.', 'wp-product-feed-manager') . '</label></fieldset>';
 			$html_code .= '</td></tr>';
 
-//			$debug_option = get_option( 'wppfm_debug_mode', false );
-//			$debug_option_checked = true === $debug_option || $debug_option === 'true' ? ' checked ' : '';
-//
-//			$html_code .= '<tr valign="top" class="">';
-//			$html_code .= '<th scope="row" class="titledesc">' . __( 'Debug Mode', 'wp-product-feed-manager' ) . '</th>';
-//			$html_code .= '<td class="forminp forminp-checkbox">';
-//			$html_code .= '<fieldset>';
-//			$html_code .= '<legend class="screen-reader-text"><span>' . __( 'Debug Mode', 'wp-product-feed-manager' ) . '</span></legend>';
-//			$html_code .= '<label for="wppfm_debug_mode">';
-//			$html_code .= '<input name="wppfm_debug_mode" id="wppfm_debug_mode" type="checkbox" value="1"';
-//			$html_code .= $debug_option_checked . '> ' . __( 'Switch this option only on request of the support team.', 'wp-product-feed-manager') . '</label></fieldset>';
-//			$html_code .= '</td></tr>';
-//
 			$html_code .= '<tr valign="top" class="">';
 			$html_code .= '<th scope="row" class="titledesc">' . __( 'Third Party Attributes', 'wp-product-feed-manager' ) . '</th>';
 			$html_code .= '<td class="forminp forminp-checkbox">';
@@ -94,6 +81,13 @@ if ( !class_exists( 'WPPFM_Options_Form' ) ) :
 			$html_code .= '<label for="wppfm_third_party_attr_keys">';
 			$html_code .= '<input name="wppfm_third_party_attr_keys" id="wppfm_third_party_attr_keys" type="text" class="" value="' . $third_party_attribute_keywords . '"> ';
 			$html_code .= __( 'Enter comma separated keywords and wildcards to use third party attributes.', 'wp-product-feed-manager') . '</label></fieldset>';
+			$html_code .= '</td></tr>';
+			
+			$html_code .= '<tr valign="top" class="">';
+			$html_code .= '<th scope="row" class="titledesc">' . __( 'Clear feed process', 'wp-product-feed-manager' ) . '</th>';
+			$html_code .= '<td class="forminp forminp-checkbox">';
+			$html_code .= '<input class="button-primary" type="button" name="clear" value="' . __( 'Clear feed process', 'wp-product-feed-manager' ) . '" id="wppfm-clear-feed-process-button" /> ';
+			$html_code .= __( 'Use this option when feeds get stuck processing - does not delete your current feeds or settings.', 'wp-product-feed-manager' );
 			$html_code .= '</td></tr>';
 			
 			$html_code .= '<tr valign="top" class="">';

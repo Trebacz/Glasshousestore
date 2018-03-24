@@ -1,290 +1,334 @@
 <?php
 /**
- * @package Wsal
+ * View Manager.
  *
  * This Class load all the views, initialize them and shows the active one.
  * It creates also the menu items.
+ *
+ * @package Wsal
  */
-class WSAL_ViewManager
-{
-    /**
-     * @var WSAL_AbstractView[]
-     */
-    public $views = array();
+class WSAL_ViewManager {
 
-    /**
-     * @var WpSecurityAuditLog
-     */
-    protected $_plugin;
+	/**
+	 * Array of views.
+	 *
+	 * @var WSAL_AbstractView[]
+	 */
+	public $views = array();
 
-    /**
-     * @var WSAL_AbstractView|null
-     */
-    protected $_active_view = false;
+	/**
+	 * Instance of WpSecurityAuditLog.
+	 *
+	 * @var object
+	 */
+	protected $_plugin;
 
-    public function __construct(WpSecurityAuditLog $plugin)
-    {
-        $this->_plugin = $plugin;
+	/**
+	 * Active view.
+	 *
+	 * @var WSAL_AbstractView|null
+	 */
+	protected $_active_view = false;
 
-        // load views
-        foreach (glob(dirname(__FILE__) . '/Views/*.php') as $file) {
-            $this->AddFromFile($file);
-        }
+	/**
+	 * Method: Constructor.
+	 *
+	 * @param  WpSecurityAuditLog $plugin - Instance of WpSecurityAuditLog.
+	 * @author Ashar Irfan
+	 * @since  1.0.0
+	 */
+	public function __construct( WpSecurityAuditLog $plugin ) {
+		$this->_plugin = $plugin;
 
-        // add menus
-        add_action('admin_menu', array($this, 'AddAdminMenus'));
-        add_action('network_admin_menu', array($this, 'AddAdminMenus'));
+		$skip_views = array();
 
-        // add plugin shortcut links
-        add_filter('plugin_action_links_' . $plugin->GetBaseName(), array($this, 'AddPluginShortcuts'));
+		// Array of views to skip for premium version.
+		if ( wsal_freemius()->is_plan__premium_only( 'starter' ) ) {
+			$skip_views[] = dirname( __FILE__ ) . '/Views/EmailNotifications.php';
+			$skip_views[] = dirname( __FILE__ ) . '/Views/ExternalDB.php';
+			$skip_views[] = dirname( __FILE__ ) . '/Views/Licensing.php';
+			$skip_views[] = dirname( __FILE__ ) . '/Views/LogInUsers.php';
+			$skip_views[] = dirname( __FILE__ ) . '/Views/Reports.php';
+			$skip_views[] = dirname( __FILE__ ) . '/Views/Search.php';
+		}
 
-        // render header
-        add_action('admin_enqueue_scripts', array($this, 'RenderViewHeader'));
+		// Load views.
+		foreach ( glob( dirname( __FILE__ ) . '/Views/*.php' ) as $file ) {
+			if ( empty( $skip_views ) || ! in_array( $file, $skip_views ) ) {
+				$this->AddFromFile( $file );
+			}
+		}
 
-        // render footer
-        add_action('admin_footer', array($this, 'RenderViewFooter'));
-    }
+		// Add menus.
+		add_action( 'admin_menu', array( $this, 'AddAdminMenus' ) );
+		add_action( 'network_admin_menu', array( $this, 'AddAdminMenus' ) );
 
-    /**
-     * Add new view from file inside autoloader path.
-     * @param string $file Path to file.
-     */
-    public function AddFromFile($file)
-    {
-        $this->AddFromClass($this->_plugin->GetClassFileClassName($file));
-    }
+		// Add plugin shortcut links.
+		add_filter( 'plugin_action_links_' . $plugin->GetBaseName(), array( $this, 'AddPluginShortcuts' ) );
 
-    /**
-     * Add new view given class name.
-     * @param string $class Class name.
-     */
-    public function AddFromClass($class)
-    {
-        $this->AddInstance(new $class($this->_plugin));
-    }
+		// Render header.
+		add_action( 'admin_enqueue_scripts', array( $this, 'RenderViewHeader' ) );
 
-    /**
-     * Add newly created view to list.
-     * @param WSAL_AbstractView $view The new view.
-     */
-    public function AddInstance(WSAL_AbstractView $view)
-    {
-        $this->views[] = $view;
-    }
+		// Render footer.
+		add_action( 'admin_footer', array( $this, 'RenderViewFooter' ) );
+	}
 
-    /**
-     * Order views by their declared weight.
-     */
-    public function ReorderViews()
-    {
-        usort($this->views, array($this, 'OrderByWeight'));
-    }
+	/**
+	 * Add new view from file inside autoloader path.
+	 *
+	 * @param string $file Path to file.
+	 */
+	public function AddFromFile( $file ) {
+		$this->AddFromClass( $this->_plugin->GetClassFileClassName( $file ) );
+	}
 
-    /**
-     * @internal This has to be public for PHP to call it.
-     * @param WSAL_AbstractView $a
-     * @param WSAL_AbstractView $b
-     * @return int
-     */
-    public function OrderByWeight(WSAL_AbstractView $a, WSAL_AbstractView $b)
-    {
-        $wa = $a->GetWeight();
-        $wb = $b->GetWeight();
-        switch (true) {
-            case $wa < $wb:
-                return -1;
-            case $wa > $wb:
-                return 1;
-            default:
-                return 0;
-        }
-    }
+	/**
+	 * Add new view given class name.
+	 *
+	 * @param string $class Class name.
+	 */
+	public function AddFromClass( $class ) {
+		$this->AddInstance( new $class( $this->_plugin ) );
+	}
 
-    /**
-     * Wordpress Action
-     */
-    public function AddAdminMenus()
-    {
-        $this->ReorderViews();
+	/**
+	 * Add newly created view to list.
+	 *
+	 * @param WSAL_AbstractView $view The new view.
+	 */
+	public function AddInstance( WSAL_AbstractView $view ) {
+		$this->views[] = $view;
+	}
 
-        if ($this->_plugin->settings->CurrentUserCan('view') && count($this->views)) {
-            // add main menu
-            $this->views[0]->hook_suffix = add_menu_page(
-                'WP Security Audit Log',
-                'Audit Log',
-                'read', // no capability requirement
-                $this->views[0]->GetSafeViewName(),
-                array($this, 'RenderViewBody'),
-                $this->views[0]->GetIcon(),
-                '2.5' // right after dashboard
-            );
+	/**
+	 * Order views by their declared weight.
+	 */
+	public function ReorderViews() {
+		usort( $this->views, array( $this, 'OrderByWeight' ) );
+	}
 
-            // add menu items
-            foreach ($this->views as $view) {
-                if ($view->IsAccessible()) {
-                    if ($this->GetClassNameByView($view->GetName())) {
-                        continue;
-                    }
-                    $view->hook_suffix = add_submenu_page(
-                        $view->IsVisible() ? $this->views[0]->GetSafeViewName() : null,
-                        $view->GetTitle(),
-                        $view->GetName(),
-                        'read', // no capability requirement
-                        $view->GetSafeViewName(),
-                        array($this, 'RenderViewBody'),
-                        $view->GetIcon()
-                    );
-                }
-            }
-        }
-    }
+	/**
+	 * Get page order by its weight.
+	 *
+	 * @internal This has to be public for PHP to call it.
+	 * @param WSAL_AbstractView $a - First view.
+	 * @param WSAL_AbstractView $b - Second view.
+	 * @return int
+	 */
+	public function OrderByWeight( WSAL_AbstractView $a, WSAL_AbstractView $b ) {
+		$wa = $a->GetWeight();
+		$wb = $b->GetWeight();
+		switch ( true ) {
+			case $wa < $wb:
+				return -1;
+			case $wa > $wb:
+				return 1;
+			default:
+				return 0;
+		}
+	}
 
-    /**
-     * Wordpress Filter
-     */
-    public function AddPluginShortcuts($old_links)
-    {
-        $this->ReorderViews();
+	/**
+	 * WordPress Action
+	 */
+	public function AddAdminMenus() {
+		$this->ReorderViews();
 
-        $new_links = array();
-        foreach ($this->views as $view) {
-            if ($view->HasPluginShortcutLink()) {
-                $new_links[] =
-                    '<a href="'
-                        . admin_url('admin.php?page=' . $view->GetSafeViewName())
-                        . '">'
-                        . $view->GetName()
-                    . '</a>';
-            }
-        }
-        return array_merge($new_links, $old_links);
-    }
+		if ( $this->_plugin->settings->CurrentUserCan( 'view' ) && count( $this->views ) ) {
+			// Add main menu.
+			$this->views[0]->hook_suffix = add_menu_page(
+				'WP Security Audit Log',
+				'Audit Log',
+				'read', // No capability requirement.
+				$this->views[0]->GetSafeViewName(),
+				array( $this, 'RenderViewBody' ),
+				$this->views[0]->GetIcon(),
+				'2.5' // Right after dashboard.
+			);
 
-    /**
-     * @return int Returns page id of current page (or false on error).
-     */
-    protected function GetBackendPageIndex()
-    {
-        if (isset($_REQUEST['page'])) {
-            foreach ($this->views as $i => $view) {
-                if ($_REQUEST['page'] == $view->GetSafeViewName()) {
-                    return $i;
-                }
-            }
-        }
-        return false;
-    }
+			// Add menu items.
+			foreach ( $this->views as $view ) {
+				if ( $view->IsAccessible() ) {
+					if ( $this->GetClassNameByView( $view->GetSafeViewName() ) ) {
+						continue;
+					}
 
-    /**
-     * @return WSAL_AbstractView|null Returns the current active view or null if none.
-     */
-    public function GetActiveView()
-    {
-        if ($this->_active_view === false) {
-            $this->_active_view = null;
+					if ( ( 'wsal-togglealerts' === $view->GetSafeViewName()
+							|| 'wsal-settings' === $view->GetSafeViewName()
+							|| 'wsal-ext-settings' === $view->GetSafeViewName()
+						)
+						&& ! $this->_plugin->settings->CurrentUserCan( 'edit' ) ) {
+						continue;
+					}
 
-            if (isset($_REQUEST['page'])) {
-                foreach ($this->views as $view) {
-                    if ($_REQUEST['page'] == $view->GetSafeViewName()) {
-                        $this->_active_view = $view;
-                    }
-                }
-            }
+					$view->hook_suffix = add_submenu_page(
+						$view->IsVisible() ? $this->views[0]->GetSafeViewName() : null,
+						$view->GetTitle(),
+						$view->GetName(),
+						'read', // No capability requirement.
+						$view->GetSafeViewName(),
+						array( $this, 'RenderViewBody' ),
+						$view->GetIcon()
+					);
+				}
+			}
+		}
+	}
 
-            if ($this->_active_view) {
-                $this->_active_view->is_active = true;
-            }
-        }
-        return $this->_active_view;
-    }
+	/**
+	 * WordPress Filter
+	 *
+	 * @param array $old_links - Array of old links.
+	 */
+	public function AddPluginShortcuts( $old_links ) {
+		$this->ReorderViews();
 
-    /**
-     * Render header of the current view.
-     */
-    public function RenderViewHeader()
-    {
-        if (!!($view = $this->GetActiveView())) {
-            $view->Header();
-        }
-    }
+		$new_links = array();
+		foreach ( $this->views as $view ) {
+			if ( $view->HasPluginShortcutLink() ) {
+				$new_links[] =
+					'<a href="'
+						. admin_url( 'admin.php?page=' . $view->GetSafeViewName() )
+						. '">'
+						. $view->GetName()
+					. '</a>';
+			}
+		}
+		return array_merge( $new_links, $old_links );
+	}
 
-    /**
-     * Render footer of the current view.
-     */
-    public function RenderViewFooter()
-    {
-        if (!!($view = $this->GetActiveView())) {
-            $view->Footer();
-        }
-    }
+	/**
+	 * Returns page id of current page (or false on error).
+	 *
+	 * @return int
+	 */
+	protected function GetBackendPageIndex() {
+		// Get current view via $_GET array.
+		$current_view = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
 
-    /**
-     * Render content of the current view.
-     */
-    public function RenderViewBody()
-    {
-        $view = $this->GetActiveView();
-        ?><div class="wrap"><?php
-            $view->RenderIcon();
-            $view->RenderTitle();
-            $view->RenderContent();
-        ?></div><?php
-    }
+		if ( isset( $current_view ) ) {
+			foreach ( $this->views as $i => $view ) {
+				if ( $current_view === $view->GetSafeViewName() ) {
+					return $i;
+				}
+			}
+		}
+		return false;
+	}
 
-    /**
-     * Returns view instance corresponding to its class name.
-     * @param string $className View class name.
-     * @return WSAL_AbstractView The view or false on failure.
-     */
-    public function FindByClassName($className)
-    {
-        foreach ($this->views as $view) {
-            if ($view instanceof $className) {
-                return $view;
-            }
-        }
-        return false;
-    }
+	/**
+	 * Returns the current active view or null if none.
+	 *
+	 * @return WSAL_AbstractView|null
+	 */
+	public function GetActiveView() {
+		if ( false === $this->_active_view ) {
+			$this->_active_view = null;
 
-    private function GetClassNameByView($name_view)
-    {
-        $not_show = false;
-        switch ($name_view) {
-            case 'Notifications Email':
-                if (class_exists('WSAL_NP_Plugin')) {
-                    $not_show = true;
-                }
-                break;
-            case 'Logged In Users':
-                if (class_exists('WSAL_User_Management_Plugin')) {
-                    $not_show = true;
-                }
-                break;
-            case 'Reports':
-                if (class_exists('WSAL_Rep_Plugin')) {
-                    $not_show = true;
-                }
-                break;
-            case 'Search':
-                if (class_exists('WSAL_SearchExtension')) {
-                    $not_show = true;
-                }
-                break;
-            case 'External DB ':
-                if (class_exists('WSAL_Ext_Plugin')) {
-                    $not_show = true;
-                }
-                break;
-            case ' Add Functionality':
-                if (class_exists('WSAL_NP_Plugin') ||
-                    class_exists('WSAL_User_Management_Plugin') ||
-                    class_exists('WSAL_Rep_Plugin') ||
-                    class_exists('WSAL_SearchExtension') ||
-                    class_exists('WSAL_Ext_Plugin')) {
-                    $not_show = true;
-                }
-                break;
-        }
-        return $not_show;
-    }
+			// Get current view via $_GET array.
+			$current_view = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
+
+			if ( isset( $current_view ) ) {
+				foreach ( $this->views as $view ) {
+					if ( $current_view === $view->GetSafeViewName() ) {
+						$this->_active_view = $view;
+					}
+				}
+			}
+
+			if ( $this->_active_view ) {
+				$this->_active_view->is_active = true;
+			}
+		}
+		return $this->_active_view;
+	}
+
+	/**
+	 * Render header of the current view.
+	 */
+	public function RenderViewHeader() {
+		if ( ! ! ($view = $this->GetActiveView()) ) {
+			$view->Header();
+		}
+	}
+
+	/**
+	 * Render footer of the current view.
+	 */
+	public function RenderViewFooter() {
+		if ( ! ! ($view = $this->GetActiveView()) ) {
+			$view->Footer();
+		}
+	}
+
+	/**
+	 * Render content of the current view.
+	 */
+	public function RenderViewBody() {
+		$view = $this->GetActiveView();
+			?>
+			<div class="wrap">
+				<?php
+					$view->RenderIcon();
+					$view->RenderTitle();
+					$view->RenderContent();
+				?>
+			</div>
+		<?php
+	}
+
+	/**
+	 * Returns view instance corresponding to its class name.
+	 *
+	 * @param string $class_name View class name.
+	 * @return WSAL_AbstractView The view or false on failure.
+	 */
+	public function FindByClassName( $class_name ) {
+		foreach ( $this->views as $view ) {
+			if ( $view instanceof $class_name ) {
+				return $view;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Method: Returns class name of the view using view name.
+	 *
+	 * @param  string $view_slug - Slug of view.
+	 * @since  1.0.0
+	 */
+	private function GetClassNameByView( $view_slug ) {
+		$not_show = false;
+		switch ( $view_slug ) {
+			case 'wsal-emailnotifications':
+				if ( class_exists( 'WSAL_NP_Plugin' ) ) {
+					$not_show = true;
+				}
+				break;
+			case 'wsal-loginusers':
+				if ( class_exists( 'WSAL_User_Management_Plugin' ) ) {
+					$not_show = true;
+				}
+				break;
+			case 'wsal-reports':
+				if ( class_exists( 'WSAL_Rep_Plugin' ) ) {
+					$not_show = true;
+				}
+				break;
+			case 'wsal-search':
+				if ( class_exists( 'WSAL_SearchExtension' ) ) {
+					$not_show = true;
+				}
+				break;
+			case 'wsal-externaldb':
+				if ( class_exists( 'WSAL_Ext_Plugin' ) ) {
+					$not_show = true;
+				}
+				break;
+			default:
+				break;
+		}
+		return $not_show;
+	}
 }

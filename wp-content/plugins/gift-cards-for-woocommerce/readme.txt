@@ -2,12 +2,12 @@
 Contributors: rpletcher
 Tags: woocommerce, gift, gift card, payment, gift certificate, certificate
 Requires at least: 3.0
-Tested up to: 4.8.0
-Stable tag: 2.5.10
+Tested up to: 4.9.1
+Stable tag: 2.6.1
 Donate link: https://ryanpletcher.com/donate/
 License: GPLv2 or later
 
-Gift Cards for WooCommerce allows you to create gift cards that your customers purchase on your site. 
+Gift Cards for WooCommerce allows you to create gift cards that your customers purchase on your site.
 
 == Description ==
 
@@ -20,16 +20,14 @@ If you have an interest in translating this plugin please let me know.
 == Installation ==
 1. Install the WooCommerce Gift Cards plugin (Install and activate <a href="http://wordpress.org/plugins/woocommerce/">Woocommerce</a> first)
 2. Activate the plugin
-3. Create Gift Card Products (Static price only - must set Giftcard as a single product)
-
+3. Create Gift Card Products (Static price only - must set Giftcard as a single product
 
 == Frequently Asked Questions ==
-
 Q: I want to be able to do ______ with my gift card but you dont have the feature included.  How can I get that?
 A: You can find more plugins at <a href="http://wp-ronin.com">wp-ronin.com</a> that will extend the features of the plugin.
 
 Q: How do i create a gift card for my customers to purchase?
-A: You will need to create a product like every other product you sell.  You will need to select the gift card option during the creation 
+A: You will need to create a product like every other product you sell.  You will need to select the gift card option during the creation
 
 Q: The gift card is not sending automatically when the customer purchases it online.  Why not?
 A: This is a feature that is not included in the free version of the gift card.  You can get this option <a href="https://wp-ronin.com/downloads/auto-send-email-woocommerce-gift-cards/">here</a>.
@@ -40,13 +38,34 @@ A: You can do this with one of my premium plugins that I offer on my site <a hre
 Q: Can I customize the email that is sent out?
 A: Unfortunately that is not a current feature.  The format of the email will match the email format of your site.  I will be looking into making it a feature in the future.
 
+Q: Whats coming soon?
+A: Add a better search option in the admin to search for Gift cards. More quick action buttons for gift cards
+
 == Changelog ==
+= 2.6.1 =
+* FIX: Changing experation date input field from email to text
+
+= 2.6.0 =
+* NOTE: Do not upgrade this plugin if you are using an old version of the PRO plugin.  Ensure you have or can install version 1.6.0 of the pro version before upgradeing.
+*           Make sure to review the settings once you have upgraded.
+* FIX: Issue preventing manual orders from being placed
+* FIX: Issues with Wocommerce Updates
+* FIX: Minor updates to
+* ADD: New Email customizer
+* CHANGE: Emailing system used to send gift cards
+* CHANGE: Giftcard table layout in admin
+* CHANGE: Text Domain for all of my plugins match now in preperation of company name change
+* UPDATE: Added a resend and regenerate button on Gift card table in admin
+
+= 2.5.11 =
+* FIX: General Compatibility Issues
+
 = 2.5.10 =
 * FIX: Text domain issue
 * FIX: Multiple small updates throughout the plugin
 
 = 2.5.9 =
-* FIX: Issue with creating multiple 
+* FIX: Issue with creating multiple
 
 = 2.5.8 =
 * FIX: Add additional fixes for woocommerce update
@@ -191,7 +210,7 @@ A: Unfortunately that is not a current feature.  The format of the email will ma
 * FIX: Number generation for site not using english
 * FIX: Expiration reporting on emails
 
-= 1.6.2 
+= 1.6.2
 * FIX: Gift Card Number Creation for translated sites
 * FIX: Updated localization scripts
 * FIX: Adding gift card to cart procedure
@@ -290,7 +309,7 @@ A: Unfortunately that is not a current feature.  The format of the email will ma
 
 = 1.2 =
 * ADD: Automatic email sent when gift card is created in admin control panel
-* ADD: Check mark option in product to set as a gift card 
+* ADD: Check mark option in product to set as a gift card
 * ADD: Remaining balance of card displayed on receipt
 * ADD: Fields add to gift card product to enter information
 * FIX: Information on gift card on order can not be update
@@ -312,4 +331,6 @@ A: Unfortunately that is not a current feature.  The format of the email will ma
 6. Gift card value added to totals
 
 == Upgrade Notice ==
-Make sure that you back up your database before upgrading.  You will need to run the gift card updater to use the new version and I dont want you to loose any information. Documentation coming soon and additional payment gateways will also be added soon.
+Make sure to review the settings once you have upgraded.
+Make sure that you back up your database before upgrading.
+!!! Do not upgrade this plugin if you are using an old version of the PRO plugin.  Ensure you have or can install version 1.6.0 of the pro version before upgradeing. !!!

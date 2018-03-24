@@ -47,7 +47,7 @@ class WC_PS_Term_Relationships_Data
 	 *
 	 * @return void
 	 */
-	public function get_sql( $term_id, $field_post_id = 'post_id' ) {
+	public function get_sql( $term_id, $field_post_id = 'post_id', $sencond_field = '', $related_fields = 'OR' ) {
 		if ( $term_id > 0)
 
 		global $wpdb;
@@ -60,7 +60,15 @@ class WC_PS_Term_Relationships_Data
 		if ( is_array( $items_include ) && count( $items_include ) > 0 ) {
 			$ids_include    = implode( ',', $items_include );
 
-			$where[] = " AND pp.{$field_post_id} IN ({$ids_include}) ";
+			$where_line = " AND ";
+
+			if ( ! empty( $sencond_field ) ) {
+				$where_line .= " ( pp.{$field_post_id} IN ({$ids_include}) " . $related_fields . " pp.{$sencond_field} IN ({$ids_include}) ) ";
+			} else {
+				$where_line .= " pp.{$field_post_id} IN ({$ids_include}) ";
+			}
+
+			$where[] = $where_line;
 
 			$sql['where'] = $where;
 		}

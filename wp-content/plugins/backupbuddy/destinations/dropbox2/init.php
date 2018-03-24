@@ -390,17 +390,17 @@ class pb_backupbuddy_destination_dropbox2 { // Ends with destination slug.
 			$bkupprefix = backupbuddy_core::backup_prefix();
 			
 			$backups = array();
-			foreach ( (array) $meta_data['contents'] as $looping_file ) {
-				
-				if ( $looping_file['is_dir'] == '1' ) { // JUST IN CASE. IGNORE anything that is a directory.
+			foreach ( (array) $meta_data['entries'] as $looping_file ) {
+				if ( $looping_file['.tag'] !== 'file' ) { // JUST IN CASE. IGNORE anything that is not explicitly a file.
 					continue;
 				}
 				
 				// check if file is backup
-				if ( ( strpos( $looping_file['path'], 'backup-' . $bkupprefix . '-' ) !== false ) ) { // Appears to be a backup file.
-					$backups[$looping_file['path']] = strtotime( $looping_file['modified'] );
+				if ( ( strpos( $looping_file['path_lower'], 'backup-' . $bkupprefix . '-' ) !== false ) ) { // Appears to be a backup file.
+					$backups[$looping_file['path_lower']] = strtotime( $looping_file['server_modified'] );
 				}
 			}
+			
 			arsort($backups);
 			
 			if ( ( count( $backups ) ) > $settings['archive_limit'] ) {
@@ -422,6 +422,8 @@ class pb_backupbuddy_destination_dropbox2 { // Ends with destination slug.
 				if ( $delete_fail_count !== 0 ) {
 					backupbuddy_core::mail_error( sprintf( __('Dropbox remote limit could not delete %s backups.', 'it-l10n-backupbuddy' ), $delete_fail_count) );
 				}
+			} else {
+				pb_backupbuddy::status( 'details',  'Dropbox backup file count of `' . count( $backups ) . '` does NOT exceed limit of `' . $settings['archive_limit'] . '`.' );
 			}
 		} else {
 			pb_backupbuddy::status( 'details',  'No Dropbox file limit to enforce.' );

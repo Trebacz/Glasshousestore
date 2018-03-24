@@ -494,28 +494,25 @@ class Order extends BaseEntity{
 					array_push ( $data, $item['line_total'] );
 					break;
 				
-				case 'item_variation' :
+				case 'item_variation' :					
 					
-					
-					//lets see if we can get the meta - updtaed in woo 2.4
-					$product = $order_details->get_product_from_item($item);
-					//$meta = new WC_Order_Item_Meta( $item['item_meta'], $product );
-					$meta = new WC_Order_Item_Meta( $item, $product );
-						
-					
-					
-					$meta_html = $meta->display( true, true , '_', ' | ' );
-						
-					//not all products have variations
-					if( !empty( $meta_html ) ){
-						
-						//so the wierd thing is the item knows it's variations, but when you spin up a WC_Porduct_variation it loses one!!!
-
-						
+					if(version_compare( WC_VERSION, '3.1', '<' )){
+                                            $product = $order_details->get_product_from_item($item);
+                                            $meta = new WC_Order_Item_Meta( $item, $product );
+                                            $meta_html = $meta->display( true, true , '_', ' | ' );
+                                        }else{
+                                            $meta_html = strip_tags( wc_display_item_meta( $item, array(
+                                                'before' => "",
+                                                'separator' => " | ",
+                                                'after' => "",
+                                                'echo' => false,
+                                                'autop' => false,
+                                                ) ) );
+                                        }
+					if( !empty( $meta_html ) ){												
 						array_push( $data, $meta_html );
 					} else {
 						array_push ( $data,  "" );
-						
 					}
 					break;
 			}
@@ -540,7 +537,8 @@ class Order extends BaseEntity{
 		
 				case 'order_id' :
 					//$data['order_id'] = $order_details->id;
-					$data['order_id'] =  is_callable( array( $order_details, 'get_id' ) ) ? $order_details->get_id() : $order_details->id;
+					//$data['order_id'] =  is_callable( array( $order_details, 'get_id' ) ) ? $order_details->get_id() : $order_details->id;
+					$data['order_id'] =  is_callable( array( $order_details, 'get_order_number' ) ) ? $order_details->get_order_number() : $order_details->id;
 					break;
 						
 				case 'order_date' :

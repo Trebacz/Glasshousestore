@@ -29,6 +29,7 @@ function wppfm_update_feeds() {
 	require_once ( __DIR__ . '/../wppfm-wpincludes.php' );
 	require_once ( __DIR__ . '/../data/wppfm-admin-functions.php' );
 	require_once ( __DIR__ . '/../user-interface/wppfm-messaging.php' );	
+	require_once ( __DIR__ . '/../application/wppfm-feed-processing-support.php' );
 
 	// WooCommerce needs to be installed and active
 	if ( !is_plugin_active( 'woocommerce/woocommerce.php' ) && !is_plugin_active_for_network( 'woocommerce/woocommerce.php' ) ) {
@@ -42,6 +43,9 @@ function wppfm_update_feeds() {
 	// include all required classes
 	include_classes();
 	include_channels();
+				
+	global $background_process;
+	$background_process = new WPPFM_Feed_Processor_Class();
 
 	// update the database if required
 	$db_management = new WPPFM_Database();
@@ -49,5 +53,5 @@ function wppfm_update_feeds() {
 	
 	// start updating the active feeds
 	$wppfm_schedules = new WPPFM_Schedules();
-	$wppfm_schedules->update_active_feeds( true );
+	$wppfm_schedules->update_active_feeds();
 }

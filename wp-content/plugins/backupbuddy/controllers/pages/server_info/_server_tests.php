@@ -451,6 +451,23 @@ if ( ! defined( 'PB_IMPORTBUDDY' ) ) {
 
 
 
+// Max upload file size limit.
+$max_upload = backupbuddy_core::file_upload_max_size();
+$parent_class_test = array(
+				'title'			=>		'PHP Maximum File Upload Size (server-reported)',
+				'suggestion'		=>		'>= 10 MB',
+				'value'			=>		pb_backupbuddy::$format->file_size( $max_upload ),
+				'tip'			=>		__('Maximum size of a file/data that this server allows to be uploaded/sent to it. Deployment uses this information to determine how much data can be sent per chunk, maximum.', 'it-l10n-backupbuddy' ),
+			);
+if ( $max_upload/1024/1024 < 10 ) { // < 10 MB warning
+	$parent_class_test['status'] = 'WARNING';
+} else {
+	$parent_class_test['status'] = 'OK';
+}
+array_push( $tests, $parent_class_test );
+
+
+
 // ERROR LOGGING ENABLED/DISABLED
 if ( true == ini_get( 'log_errors' ) ) {
 	$parent_class_val = 'enabled';
@@ -1134,5 +1151,27 @@ if ( !defined( 'PB_IMPORTBUDDY' ) ) {
 	} else {
 		$parent_class_test['status'] = 'OK';
 	}
+	array_push( $tests, $parent_class_test );
+}
+
+
+// Deployment API enabled?
+if ( !defined( 'PB_IMPORTBUDDY' ) ) {
+	$deployment_enabled = __( 'Disabled', 'it-l10n-backupbuddy' ) . ' (' . __( 'Setting Undetected', 'it-l10n-backupbuddy' ) . ')';
+	if ( defined( 'BACKUPBUDDY_API_ENABLE' ) ) {
+		if ( TRUE == BACKUPBUDDY_API_ENABLE ) {
+			$deployment_enabled = __( 'Enabled', 'it-l10n-backupbuddy' );
+		} else {
+			$deployment_enabled = __( 'Disabled', 'it-l10n-backupbuddy' );
+		}
+	}
+	
+	$parent_class_test = array(
+					'title'			=>		'BackupBuddy Deployment API wp-config setting',
+					'suggestion'		=>		'n/a',
+					'value'			=>		$deployment_enabled,
+					'tip'			=>		__( 'Enabling the BackupBuddy Deployment API via the wp-config.php allows other BackupBuddy installations supplied with the authentication key to Push to or Pull from this site\'s data. Useful for development purposes.', 'it-l10n-backupbuddy' ),
+				);
+	$parent_class_test['status'] = 'OK';
 	array_push( $tests, $parent_class_test );
 }

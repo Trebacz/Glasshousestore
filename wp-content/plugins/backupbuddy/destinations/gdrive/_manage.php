@@ -127,15 +127,7 @@ foreach( $files as $file ) {
 		continue;
 	}
 	
-	if ( stristr( $file->originalFilename, '-db-' ) !== FALSE ) {
-		$backup_type = 'Database';
-	} elseif ( stristr( $file->originalFilename, '-full-' ) !== FALSE ) {
-		$backup_type = 'Full';
-	} elseif( $file->originalFilename == 'importbuddy.php' ) {
-		$backup_type = 'ImportBuddy Tool';
-	} else {
-		$backup_type = 'Unknown';
-	}
+	$backup_type = backupbuddy_core::getBackupTypeFromFile( $file->originalFilename );
 	
 	$created = strtotime( $file->createdDate );
 	

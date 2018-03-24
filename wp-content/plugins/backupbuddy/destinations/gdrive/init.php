@@ -247,16 +247,7 @@ class pb_backupbuddy_destination_gdrive {
 		foreach( $files as $file ) {
 			
 			// Determine backup type for limiting later.
-			$backup_type = '';
-			if ( stristr( $file, '-db-' ) !== false ) {
-				$backup_type = 'db';
-			} elseif ( stristr( $file, '-full-' ) !== false ) {
-				$backup_type = 'full';
-			} elseif ( stristr( $file, '-files-' ) !== false ) {
-				$backup_type = 'files';
-			} elseif ( stristr( $file, '-export-' ) !== false ) {
-				$backup_type = 'export';
-			}
+			$backup_type = backupbuddy_core::getBackupTypeFromFile( $file );
 			
 			if ( ! file_exists( $file ) ) {
 				return self::_error( 'Error #37792: File selected to send not found: `' . $file . '`.' );
@@ -914,7 +905,6 @@ class pb_backupbuddy_destination_gdrive {
 	
 	
 	public static function printFolderSelector( $destinationID ) {
-		
 		// Only output into page once.
 		global $backupbuddy_gdrive_folderSelector_printed;
 		if ( true !== $backupbuddy_gdrive_folderSelector_printed ) {

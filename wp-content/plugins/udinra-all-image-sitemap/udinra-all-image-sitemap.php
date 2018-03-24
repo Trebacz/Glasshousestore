@@ -2,31 +2,47 @@
 /*
 Plugin Name: Udinra All Image Sitemap 
 Plugin URI: https://udinra.com/downloads/udinra-image-sitemap-pro
-Description: Automatically generates Google Image Sitemap and submits it to Google,Bing and Ask.com.
+Description: Automatically generates XML Image Sitemap and submits it to Google,Bing and Ask.com.
 Author: Udinra
-Version: 3.5.2
+Version: 3.6.1
 Author URI: https://udinra.com
 */
-
 if ( !defined( 'ABSPATH' ) ) {
     exit;
 }
 
 function Udinra_Image() {
-	$udinra_sitemap_response = '';
-	if(isset($_POST['save_option'])){
-		include 'lib/udinra_save_options.php';
-		$udinra_sitemap_response = "Options saved successfully";
-	}
-	if(isset($_POST['create_sitemap'])) {
-		udinra_image_sitemap_loop($udinra_sitemap_response);
+	switch (true) {
+		case isset($_POST['udswebsave']):
+		case isset($_POST['udsimgsave']):
+			include 'lib/udinra_save_options.php';
+			break;		
+		case isset($_POST['udscreate']):
+			udinra_image_sitemap_loop();
+			break;		
+		default:
+			update_option('udinra_image_sitemap_response','Select Options and Click Create Sitemap');
+			break;
 	}
 	include 'lib/udinra_panel_html.php';
 }
- 
-function udinra_image_sitemap_loop(&$udinra_sitemap_response) {
+
+function udinra_image_sitemap_loop() {
 	include 'init/udinra_init_image.php';
-	include 'img/udinra_img.php';
+	include 'img/udinra_imgtags.php';
+	include 'gallery/wpgallery/udinra_gallery.php';	
+
+	if(get_option('udinra_image_sitemap_cat') == 1) {
+		include 'web/udinra_sitemap_cat.php';
+	}
+		
+	if(get_option('udinra_image_sitemap_tag') == 1) {
+		include 'web/udinra_sitemap_tag.php';
+	}
+		
+	if(get_option('udinra_image_sitemap_auth') == 1) {
+		include 'web/udinra_sitemap_author.php';
+	}				
 	include 'exit/udinra_ping_image.php';
 }
 
@@ -36,11 +52,10 @@ function udinra_image_sitemap_admin() {
 	}
 }
 
-function udinra_image_admin_style($hook) {
-	
+function udinra_image_free_admin_style($hook) {
 	if($hook == 'settings_page_udinra-all-image-sitemap') {
-		wp_enqueue_style( 'udinra_image_pure_style', plugins_url('css/udstyle.css', __FILE__) );	
-		wp_enqueue_script( 'udinra_image_pure_js', plugins_url('js/udinra_slideshow.js', __FILE__),array(), '1.0.0', true );
+		wp_enqueue_style( 'udinra_image_free_pure_style', plugins_url('css/udstyle.css', __FILE__) );	
+		wp_enqueue_script( 'udinra_sitemap_script', plugins_url('js/udscript.js', __FILE__),null,null,false );	
     }
 }
 
@@ -70,7 +85,7 @@ add_action('admin_notices', 'udinra_image_admin_notice');
 add_action('admin_init', 'udinra_image_admin_ignore');
 add_action( 'do_feed_sitemap-index-image','load_sitemap_index_image',10,1 );
 add_action( 'wpmu_new_blog', 'udinra_image_new_blog', 10, 6);        
-add_action( 'admin_enqueue_scripts', 'udinra_image_admin_style' );
+add_action( 'admin_enqueue_scripts', 'udinra_image_free_admin_style' );
 add_filter( 'plugin_action_links', 'udinra_image_settings_plugin_link', 10, 2 );
 
 ?>

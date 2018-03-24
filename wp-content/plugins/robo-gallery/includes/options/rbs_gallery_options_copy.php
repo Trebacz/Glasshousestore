@@ -8,7 +8,7 @@
 *      Created: 2015
 *      Licensed under the GPLv2 license - http://opensource.org/licenses/gpl-2.0.php
 *
-*      Copyright (c) 2014-2016, Robosoft. All rights reserved.
+*      Copyright (c) 2014-2018, Robosoft. All rights reserved.
 *      Available only in  https://robosoft.co/robogallery/ 
 */
 
@@ -16,9 +16,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 if( isset($_GET['post']) ) $id = (int) $_GET['post'];
 
-if( !$id && isset($_POST['post_ID']) ) $id= $_POST['post_ID'];
+if( !isset($id)  && isset($_POST['post_ID']) ) $id= $_POST['post_ID'];
 
-if( !$id ) return ;
+if( !isset($id) || !$id ) return ;
 
 if( get_option( ROBO_GALLERY_PREFIX.'cloneBlock', 0 ) && !get_post_meta( $id,  ROBO_GALLERY_PREFIX.'options', true ) ){
 	return ;

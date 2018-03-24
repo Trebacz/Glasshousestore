@@ -1,25 +1,24 @@
 <?php
-
 /**
  * Plugin Name: WooCommerce Google Feed Manager
  * Plugin URI: https://www.wpmarketingrobot.com
  * Description: An easy to use WordPress plugin that generates and submits your product feeds to merchant centres.
- * Version: 1.9.4
- * Modified: 03-09-2017
+ * Version: 2.0.6
+ * Modified: 09-03-2018
  * Author: Michel Jongbloed
  * Author URI: https://www.wpmarketingrobot.com
  * Requires at least: 4.6
- * Tested up to: 4.8
+ * Tested up to: 4.9
  *
  * Text Domain: wp-product-feed-manager
  * Domain Path: /languages/
+ * 
+ * WC requires at least: 3.0.0
+ * WC tested up to: 3.3.0
  */
 
 // Prevent direct access
-if ( !defined( 'ABSPATH' ) ) {
-	echo 'Hi!  I\'m just a plugin, there\'s not much I can do when called directly.';
-	exit;
-}
+if ( !defined( 'ABSPATH' ) ) { exit; }
 
 if ( !class_exists( 'WP_Product_Feed_Manager' ) ) :
 
@@ -27,7 +26,6 @@ if ( !class_exists( 'WP_Product_Feed_Manager' ) ) :
 	 * The Main WP_Product_Feed_Manager Class
 	 * 
 	 * @class WP_Product_Feed_Manager
-	 * @version 1.9.4
 	 */
 	final class WP_Product_Feed_Manager {
 		/* --------------------------------------------------------------------------------------------------*
@@ -37,7 +35,7 @@ if ( !class_exists( 'WP_Product_Feed_Manager' ) ) :
 		/**
 		 * @var string containing the version number of the plugin
 		 */
-		public $version = '1.9.4';
+		public $version = '2.0.6';
 
 		/**
 		 * @var string countaining the authors name
@@ -57,35 +55,34 @@ if ( !class_exists( 'WP_Product_Feed_Manager' ) ) :
 		 * @return WP_Product_Feed_Manager Main instance
 		 */
 		public static function get_instance() {
-
 			if ( is_null( self::$instance ) ) { self::$instance = new self(); }
-			
 			return self::$instance;
 		}
 
 		/**
 		 * Cloning is not allowed.
-		 * @since 4.2.4
+		 * @since 0.9.1
 		 */
 		public function __clone() {
-			_doing_it_wrong( __FUNCTION__, __( 'Cloning is not allowed', 'wp-product-feed-manager' ), '4.2.4' );
+			_doing_it_wrong( __FUNCTION__, __( 'Cloning is not allowed', 'wp-product-feed-manager' ), '0.9.1' );
 		}
 
 		/**
 		 * Unserializing instances of this class is not allowed.
-		 * @since 4.2.4
+		 * @since 0.9.1
 		 */
 		public function __wakeup() {
-			_doing_it_wrong( __FUNCTION__, __( 'Unserializing instances of this class is not allowed', 'wp-product-feed-manager' ), '4.2.4' );
+			_doing_it_wrong( __FUNCTION__, __( 'Unserializing instances of this class is not allowed', 'wp-product-feed-manager' ), '0.9.1' );
 		}
 
 		/**
 		 * WP_Product_Feed_Manager Constructor
+		 * @since 0.9.1
 		 */
 		private function __construct() {
 			// set the constants to be used in this plugin
 			$this->define_constants();
-
+			
 			// hooks
 			$this->hooks();
 			
@@ -96,13 +93,19 @@ if ( !class_exists( 'WP_Product_Feed_Manager' ) ) :
 			$this->includes();
 			
 			// register my version
-			add_option( 'myplugin_version', MYPLUGIN_VERSION_NUM );
+			add_option( 'myplugin_version', WPPFM_VERSION_NUM );
 
 			// set up auto updating ref HWOTBERH
 			$this->auto_updater();
 			
 			// register my schedule
 			add_action( 'wppfm_feed_update_schedule', array( $this, 'activate_feed_update_schedules' ) );
+			add_action( 'wp_ajax_dismiss_admin_notice', array( $this, 'dismiss_admin_notice' ) );
+			
+			// register the background process
+			add_action( 'plugins_loaded', array( $this, 'initiate_background_process' ) );
+			
+			do_action( 'wp-product-feed-manager_loaded' );
 		}
 
 		/* --------------------------------------------------------------------------------------------------*
@@ -114,19 +117,19 @@ if ( !class_exists( 'WP_Product_Feed_Manager' ) ) :
 		 */
 		private function define_constants() {
 			// Store the name of the plugin
-			if ( !defined( 'MYPLUGIN_PLUGIN_NAME' ) ) { define( 'MYPLUGIN_PLUGIN_NAME', trim( dirname( plugin_basename( __FILE__ ) ), '/' ) ); }
+			if ( !defined( 'WPPFM_PLUGIN_NAME' ) ) { define( 'WPPFM_PLUGIN_NAME', trim( dirname( plugin_basename( __FILE__ ) ), '/' ) ); }
 
 			// Store the directory of the plugin
-			if ( !defined( 'MYPLUGIN_PLUGIN_DIR' ) ) { define( 'MYPLUGIN_PLUGIN_DIR', plugin_dir_path( __FILE__ ) ); }
+			if ( !defined( 'WPPFM_PLUGIN_DIR' ) ) { define( 'WPPFM_PLUGIN_DIR', plugin_dir_path( __FILE__ ) ); }
 
 			// Store the url of the plugin
-			if ( !defined( 'MYPLUGIN_PLUGIN_URL' ) ) { define( 'MYPLUGIN_PLUGIN_URL', plugins_url() . '/' . MYPLUGIN_PLUGIN_NAME );	}
+			if ( !defined( 'WPPFM_PLUGIN_URL' ) ) { define( 'WPPFM_PLUGIN_URL', plugins_url() . '/' . WPPFM_PLUGIN_NAME );	}
 
 			// Store the version of my plugin
-			if ( !defined( 'MYPLUGIN_VERSION_NUM' ) ) { define( 'MYPLUGIN_VERSION_NUM', $this->version ); }
+			if ( !defined( 'WPPFM_VERSION_NUM' ) ) { define( 'WPPFM_VERSION_NUM', $this->version ); }
 			
-			// Store the debug mode setting
-			if ( !defined( 'WPPFM_DEBUG_MODE' ) ) { define( 'WPPFM_DEBUG_MODE', get_option( 'wppfm_debug_mode', false ) ); }
+			// Store the transient alive time
+			if ( !defined( 'WPPFM_TRANSIENT_LIVE' ) ) { define( 'WPPFM_TRANSIENT_LIVE', 20*60 ); }
 
 			// Store the url to wpmarketingrobot.com
 			if ( !defined( 'EDD_SL_STORE_URL' ) ) { define( 'EDD_SL_STORE_URL', 'https://www.wpmarketingrobot.com/' ); }
@@ -161,7 +164,7 @@ if ( !class_exists( 'WP_Product_Feed_Manager' ) ) :
 
 			// store the folder that contains the channels data
 			if ( !defined( 'WPPFM_CHANNEL_DATA_DIR' ) ) {
-				define( 'WPPFM_CHANNEL_DATA_DIR', MYPLUGIN_PLUGIN_DIR . 'includes/application' );
+				define( 'WPPFM_CHANNEL_DATA_DIR', WPPFM_PLUGIN_DIR . 'includes/application' );
 			}
 
 			// store the folder that contains the backup files
@@ -172,12 +175,13 @@ if ( !class_exists( 'WP_Product_Feed_Manager' ) ) :
 		}
 
 		/**
-		 * Sets the hooks
+		 * Sets the activation and deactivation hooks
 		 */
 		private function hooks() {
 			// registeres the activation, deactivation and uninstall hooks
 			register_activation_hook( __FILE__, array( &$this, 'on_activation' ) );
 			register_deactivation_hook( __FILE__, array( &$this, 'on_deactivation' ) );
+			register_shutdown_function( array( $this, 'log_errors' ) );
 		}
 
 		/**
@@ -192,6 +196,7 @@ if ( !class_exists( 'WP_Product_Feed_Manager' ) ) :
 
 			if ( is_admin() ) {
 				// include the admin menu and the includes file
+				require_once ( 'includes/application/wppfm-feed-processing-support.php' );
 				require_once ( 'includes/user-interface/wppfm-admin-menu.php' );
 				require_once ( 'includes/data/wppfm-admin-functions.php' );
 				require_once ( 'includes/user-interface/wppfm-messaging.php' );
@@ -212,7 +217,7 @@ if ( !class_exists( 'WP_Product_Feed_Manager' ) ) :
 		// ref HWOTBERH
 		private function auto_updater() {
 			if ( !class_exists( 'WPMR_Plugin_Updater' ) ) {
-				require_once ( 'includes/wpmr_plugin_updater.php' );
+				require_once ( 'includes/libraries/wpmr_plugin_updater.php' );
 			}
 
 			$edd_updater = new WPMR_Plugin_Updater( EDD_SL_STORE_URL, __FILE__, array(
@@ -220,7 +225,7 @@ if ( !class_exists( 'WP_Product_Feed_Manager' ) ) :
 				'license'	 => trim( get_option( 'wppfm_lic_key' ) ),
 				'item_name'	 => EDD_SL_ITEM_NAME,
 				'author'	 => $this->author,
-				'url'		 => MYPLUGIN_PLUGIN_URL,
+				'url'		 => WPPFM_PLUGIN_URL,
 				'wp_override' => true
 			) );
 		}
@@ -238,18 +243,13 @@ if ( !class_exists( 'WP_Product_Feed_Manager' ) ) :
 			// if the old channel folder still exists then make the new folder structure and move the old channel files to the new structure
 			if ( file_exists( WP_PLUGIN_DIR . '/wp-product-feed-manager-support/channels' ) ) {
 				if ( !class_exists( 'WPPFM_Queries' ) ) { require_once ( __DIR__ . '/includes/data/class-queries.php' ); }
-
 				if ( !class_exists( 'WPPFM_File_Class' ) ) { require_once ( __DIR__ . '/includes/data/class-file.php' ); }
-
 				if ( !class_exists( 'WPPFM_Channel' ) ) { require_once ( __DIR__ . '/includes/data/class-channels.php' ); }
-
 				if ( !class_exists( 'WPPFM_Data_Class' ) ) { require_once ( __DIR__ . '/includes/data/class-data.php' ); }
-
 				if ( !class_exists( 'WPPFM_Database' ) ) { require_once ( __DIR__ . '/includes/setup/class-wp-db-management.php' );	}
 				
 				// make the new folder structure
 				WPPFM_Folders_Class::make_feed_support_folder();
-				
 				// if required move existing channel files to the new folders
 				WPPFM_Folders_Class::update_wppfm_channel_dir();
 				
@@ -259,7 +259,6 @@ if ( !class_exists( 'WP_Product_Feed_Manager' ) ) :
 			}
 			
 			if ( WPPFM_Folders_Class::folder_is_empty( $old_feed_folder ) ) { WPPFM_Folders_Class::delete_folder( $old_feed_folder ); }
-			
 			if ( WPPFM_Folders_Class::folder_is_empty( $old_support_folder ) ) { WPPFM_Folders_Class::delete_folder( $old_support_folder );	}
 		}
 
@@ -275,6 +274,13 @@ if ( !class_exists( 'WP_Product_Feed_Manager' ) ) :
 			
 			wppfm_update_feeds();
 		}
+		
+		/**
+		 * Registeres a dismiss notice action
+		 * 
+		 * @since 1.9.8
+		 */
+		public function dismiss_admin_notice() { if ( is_admin() ) { update_option( 'wppfm_license_notice_surpressed', true ); } }
 
 		/**
 		 * Performs the required actions on activation of the plugin
@@ -289,6 +295,22 @@ if ( !class_exists( 'WP_Product_Feed_Manager' ) ) :
 
 			wp_schedule_event( time(), 'hourly', 'wppfm_feed_update_schedule' );
 		}
+		
+		/**
+		 * Sets the global background process
+		 * 
+		 * @since 1.10.0
+		 * 
+		 * @global WPPFM_Feed_Processor_Class $background_process
+		 */
+		public function initiate_background_process() {
+//			global $wp_query;
+			
+			if ( class_exists( 'WPPFM_Feed_Processor_Class' ) ) {
+				global $background_process;
+				$background_process = new WPPFM_Feed_Processor_Class();
+			}
+		}
 
 		/**
 		 * Performs the required actions on deactivation of the plugin
@@ -299,6 +321,36 @@ if ( !class_exists( 'WP_Product_Feed_Manager' ) ) :
 		public function on_deactivation() {
 			// stop the scheduled feed update actions
 			wp_clear_scheduled_hook( 'wppfm_feed_update_schedule' );
+			// remove all keyed option items from the option table
+			WPPFM_Db_Management::clean_options_table();
+		}
+
+		/**
+		 * Gets triggered when the plugin quits and is used to fetch fatal errors
+		 *
+		 * @since 1.10.0
+		 */
+		public function log_errors() {
+			$error = error_get_last();
+			
+			// fetch fatal errors
+			if ( E_ERROR === $error['type'] ) {
+				// clear the feed queue
+				WPPFM_Feed_Controller_Class::clear_feed_queue();
+				
+				// the background process clearly has stopped
+				WPPFM_Feed_Controller_Class::set_feed_processing_flag( false );
+				
+				// remove all keyed option items from the option table
+				WPPFM_Db_Management::clean_options_table();
+				
+				wppfm_write_log_file( sprintf( "PHP Fatal error: %s in file %s on line %s", $error['message'], $error['file'], $error['line'] ) ); 
+			} elseif( E_WARNING === $error['type'] ) {
+
+				if ( (defined( 'WP_DEBUG' ) && WP_DEBUG) ) {
+					wppfm_write_log_file( sprintf( "PHP Warning: %s in file %s on line %s", $error['message'], $error['file'], $error['line'] ) ); 
+				}
+			}
 		}
 
 	}

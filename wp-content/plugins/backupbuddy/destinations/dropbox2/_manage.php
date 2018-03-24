@@ -61,17 +61,7 @@ foreach( $files_result['entries'] as $file ) { // Loop through files looking for
 	
 	$size = $file['size'];
 	
-	if ( false !== stristr( $filename, '-db-' ) ) {
-		$backup_type ='Database';
-	} elseif ( false !== stristr( $filename, '-full-' ) ) {
-		$backup_type ='Full';
-	} elseif ( false !== stristr( $filename, '-files-' ) ) {
-		$backup_type ='Files';
-	} elseif ( false !== stristr( $filename, 'importbuddy.php' ) ) {
-		$backup_type = 'ImportBuddy Tool';
-	} else {
-		$backup_type = 'Unknown';
-	}
+	$backup_type = backupbuddy_core::getBackupTypeFromFile( $filename );
 	
 	// Generate array of table rows.
 	$backup_files[$filename] = array(

@@ -36,20 +36,23 @@ class backupbuddy_deploy {
 				'destinationSettings' => $destinationSettings,
 				'startTime' => microtime(true),
 				'backupProfile' => '',
-				'sendTheme' => false, // Send active theme's differing files.
-				'sendChildTheme' => false, // Send active child theme's differing files.
-				'sendPlugins' => array(), // Array of pugin dirnames to send. Any not in here will be yanked out of the [push|pull]PluginFiles array in _backup-perform.php.
-				'sendMedia' => false, // Send differing media files.
+				'sendTheme' => false, // Send active theme's differing files?
+				'sendChildTheme' => false, // Send active child theme's differing files?
+				'sendPlugins' => false, // Send differing plugin files?
+				'sendMedia' => false, // Send differing media files?
+				'sendExtras' => false, // Send extra files/directories defined by user. Array of dirs/files?
 				
 				'pushThemeFiles' => array(),
 				'pushChildThemeFiles' => array(),
 				'pushPluginFiles' => array(),
 				'pushMediaFiles' => array(),
+				'pushExtraFiles' => array(),
 				
 				'pullThemeFiles' => array(),
 				'pullChildThemeFiles' => array(),
 				'pullPluginFiles' => array(),
 				'pullMediaFiles' => array(),
+				'pullExtraFiles' => array(),
 				
 				'pullLocalArchiveFile' => '', // Location of the archive we will be restoring once file is pulled.
 			);
@@ -71,7 +74,7 @@ class backupbuddy_deploy {
 		if ( isset( $this->_state['destinationSettings']['sha1'] ) ) {
 			$sha1 = $this->_state['destinationSettings']['sha1'];
 		}
-		if ( false === ( $this->_state['remoteInfo'] = backupbuddy_remote_api::remoteCall( $this->_state['destination'], 'getPreDeployInfo', array( 'sha1' => $sha1 ), $timeout = backupbuddy_core::adjustedMaxExecutionTime() ) ) ) {
+		if ( false === ( $this->_state['remoteInfo'] = backupbuddy_remote_api::remoteCall( $this->_state['destination'], 'getPreDeployInfo', array( 'sha1' => $sha1, 'destinationSettings' => $this->_state['destinationSettings'] ), $timeout = backupbuddy_core::adjustedMaxExecutionTime() ) ) ) {
 			return $this->_error( implode( ', ', backupbuddy_remote_api::getErrors() ) );
 		}
 		$this->_state['remoteInfo'] = $this->_state['remoteInfo']['data'];
@@ -107,6 +110,10 @@ class backupbuddy_deploy {
 		// Calculate media files that do not match.
 		$this->_state['pushMediaFiles'] = $this->calculateFileDiff( $sourceInfo['mediaSignatures'], $this->_state['remoteInfo']['mediaSignatures'] ); // was calculateMediaDiff().
 		$this->_state['pullMediaFiles'] = $this->calculateFileDiff( $this->_state['remoteInfo']['mediaSignatures'], $sourceInfo['mediaSignatures'] ); // was calculateMediaDiff().
+		
+		// Calculate additional extra inclusion files that do not match.
+		$this->_state['pushExtraFiles'] = $this->calculateFileDiff( $sourceInfo['extraSignatures'], $this->_state['remoteInfo']['extraSignatures'] ); // was calculateMediaDiff().
+		$this->_state['pullExtraFiles'] = $this->calculateFileDiff( $this->_state['remoteInfo']['extraSignatures'], $sourceInfo['extraSignatures'] ); // was calculateMediaDiff().
 		
 		// Store count of media files.
 		//$sourceInfo['mediaCount'] = count( $sourceInfo['mediaSignatures'] );

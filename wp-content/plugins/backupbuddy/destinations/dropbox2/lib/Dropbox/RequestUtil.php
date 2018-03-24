@@ -159,26 +159,22 @@ final class RequestUtil
         Checker::argStringNonEmpty("accessToken", $accessToken);
 
         $url = self::buildUri($host, $path);
-
-        //if ($params === null) $params = array();
-        //$params['locale'] = $userLocale;
-
         $curl = self::mkCurlWithOAuth($clientIdentifier, $url, $accessToken);
+        \pb_backupbuddy::status( 'details', 'URL: `' . $url . '`. Access token: `' . $accessToken . '`.' );
         
         $curl->set(CURLOPT_RETURNTRANSFER, true);
         $curl->set(CURLOPT_POST, true);
         
-        
-        
         if ( null === $headerAPI ) {
-        	\pb_backupbuddy::status( 'details', 'Putting params in header.' );
-        	//error_log( 'A' . print_r( $params, true ) );
+        	\pb_backupbuddy::status( 'details', 'Putting params in post field.' );
         	$curl->set(CURLOPT_POSTFIELDS, json_encode($params));
         } else {
-        	\pb_backupbuddy::status( 'details', 'Putting params in body.' );
+        	\pb_backupbuddy::status( 'details', 'Putting params in header. Header added (length=' . strlen( $headerAPI ) . '): `' . $headerAPI . '`.' );
+        	$curl->addHeader( 'Content-Length: 0' ); // DUSTIN IMPORTANT: Workaround for some servers defaulting to a length of -1 if the body is empty BUT Dropbox BLOCKS this as a 400 Bad Request of the Content-Length is -1. A length of 0 works okay.
         	$curl->addHeader( $headerAPI );
         }
         
+        \pb_backupbuddy::status( 'details', 'Content type: `' . $contentType . '`.' );
         return $curl->exec( $contentType );
     }
 

@@ -558,6 +558,7 @@ class WF_OrderImpExpCsv_Order_Import extends WP_Importer {
 			// check class-wc-checkout.php for reference
 
 			$order_data = array(
+                                'import_id'     => $post['order_number'],  //Suggest import to keep the given ID
 				'post_date'     => date( 'Y-m-d H:i:s', $post['date'] ),
 				'post_type'     => 'shop_order',
 				'post_title'    => 'Order &ndash; ' . date( 'F j, Y @ h:i A', $post['date'] ),

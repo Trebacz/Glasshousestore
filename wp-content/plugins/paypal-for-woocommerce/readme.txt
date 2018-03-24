@@ -1,10 +1,10 @@
 ﻿=== PayPal for WooCommerce ===
 Contributors: angelleye, angelleyesupport, Umangvaghela
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=SG9SQU2GBXJNA
-Tags: woocommerce, paypal, express checkout, payments pro, angelleye, payflow, dodirectpayment, braintree, payments advanced, rest
+Tags: woocommerce, paypal, express checkout, payments pro, angelleye, payflow, dodirectpayment, braintree, payments advanced, rest, credit cards, credit card payments, payments, payment
 Requires at least: 3.8
-Tested up to: 4.8
-Stable tag: 1.4.6.4
+Tested up to: 4.9.4
+Stable tag: 1.4.8.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -16,7 +16,7 @@ Upgrade your WooCommerce PayPal experience for free!  Developed by an Ace Certif
 
 Easily add PayPal payment options to your WordPress / WooCommerce website.
 
- * PayPal Express Checkout / PayPal Credit
+ * PayPal Express Checkout / PayPal Smart Payment Buttons
  * PayPal Website Payments Pro 3.0 (DoDirectPayment)
  * PayPal Payments Pro 2.0 (PayPal Manager / PayFlow Gateway)
  * PayPal Plus (Germany, Brazil, Mexico)
@@ -37,7 +37,11 @@ Fully supports WooCommerce payment tokens, so buyers can choose to save their pa
 If you are using WooCommerce Subscriptions to manage subscription profiles you will be able to accept any of our PayPal payment gateways for subscription sign-up and payments.
 
 = FREE PayPal Payments Pro Account =
-By using our plugin we can get you hooked up with PayPal Payments Pro with no monthly fee! (U.S. and Canada merchants only) [Contact us](https://www.angelleye.com/contact-us) for details.
+By using our plugin we can get you hooked up with PayPal Payments Pro with no monthly fee! (U.S. and Canada merchants only.)
+
+This availability is limited based on your monthly volume, so you will need to be doing at least $1,000/mo in sales in order to get this done.  If you are not at this level yet, enabling Express Checkout with our plugin will increase conversion rates on your site and help you get to that level.
+
+[Submit a request](https://www.angelleye.com/free-paypal-pro-account-request/?utm_source=paypal-for-woocommerce&utm_medium=readme&utm_campaign=free_paypal_pro) and we'll get you hooked up!
 
 = PayPal Plus Information =
 The BETA version of PayPal Plus that we had included with this plugin has been stripped out as of version 1.2.4.  We have moved PayPal Plus to its own separate plugin so that we may focus on all the different features and functionality it needs to work with the various countries it supports.  [Get the PayPal Plus Plugin!](https://www.angelleye.com/product/woocommerce-paypal-plus-plugin/)
@@ -68,7 +72,7 @@ Developers can contribute to the source code on the [PayPal for WooCommerce GitH
 
 = Minimum Requirements =
 
-* WooCommerce 2.6 or higher
+* WooCommerce 3.0 or higher
 
 = Automatic installation =
 
@@ -120,6 +124,102 @@ Automatic updates should work great for you.  As always, though, we recommend ba
 * If you are unsure, you may need to [contact PayPal](https://www.paypal.com/us/webapps/helpcenter/helphub/home/) and request the information.  Just let them know you need to enable a Payments Pro plugin on your website, but you're unsure whether you should use Website Payments Pro 3.0(DoDirectPayment) or Payments Pro 2.0 (PayFlow).  They can confirm which one you need to use.
 
 == Changelog ==
+
+= 1.4.8.2 - 03.24.2018 =
+* Fix - Resolves a redirect loop on the cart page caused by a jQuery conflict with Smart Buttons and some 3rd party plugins. ([#1038](https://github.com/angelleye/paypal-woocommerce/issues/1038))
+
+= 1.4.8.1 - 03.23.2018 =
+* Feature - Adds Google Analytics click tracking option and performance adjustments to PayPal Smart Payment Buttons. ([#1033](https://github.com/angelleye/paypal-woocommerce/issues/1033))
+* Tweak - Updates paypal_transaction post type arguments for better performance. ([#1031](https://github.com/angelleye/paypal-woocommerce/pull/1031))
+* Tweak - Adjustments to Woo Subscriptions token payments with Express Checkout to avoid sign-ups when reference transactions are not enabled. ([#1034](https://github.com/angelleye/paypal-woocommerce/issues/1034))
+
+= 1.4.8 - 03.22.2018 =
+* Feature - Adds the new Smart Payment Buttons to Express Checkout. ([#997](https://github.com/angelleye/paypal-woocommerce/issues/997)) ([#1026](https://github.com/angelleye/paypal-woocommerce/issues/1026)) ([#1010](https://github.com/angelleye/paypal-woocommerce/issues/1010))
+* Tweak - Adjusts CSS on checkout page to avoid conflicts. ([#1013](https://github.com/angelleye/paypal-woocommerce/issues/1013))
+* Tweak - Adjusts the way the addresses are sent to PayPal when the WooCommerce checkout page is used. ([#1014](https://github.com/angelleye/paypal-woocommerce/issues/1014))
+* Tweak - Performance adjustments in Express Checkout settings panel.  ([#1027](https://github.com/angelleye/paypal-woocommerce/issues/1027))
+* Fix - Resolves an issue with token payments in Paypal REST DCC. ([#1011](https://github.com/angelleye/paypal-woocommerce/issues/1011))
+* Fix - Resolves an issue with order notes being saved when API calls fails. ([#1022](https://github.com/angelleye/paypal-woocommerce/pull/1022))
+
+= 1.4.7.4 - 02.10.2018 =
+* Fix - Resolves a problem with PayFlow credit card button not displaying based on checkout settings. ([#996](https://github.com/angelleye/paypal-woocommerce/issues/996))
+
+= 1.4.7.3 - 02.09.2018 =
+* Tweak - Adjustments to Braintree Kount Custom functionality. ([#989](https://github.com/angelleye/paypal-woocommerce/issues/989)) ([#990](https://github.com/angelleye/paypal-woocommerce/issues/990))
+* Tweak - Adjustments to API calls with PayPal and WooCommerce to improve overall performance and load times. ([#991](https://github.com/angelleye/paypal-woocommerce/issues/991))
+* Tweak - Adjusts order notes for PayFlow transactions to specify "PayFlow" instead of just "PayPal Pro". ([#994](https://github.com/angelleye/paypal-woocommerce/issues/994))
+* Fix - Resolves a problem with commas being used as decimal in some payment requests. ([#985](https://github.com/angelleye/paypal-woocommerce/issues/985))
+* Fix - Resolves rounding issues that can occur in PayFlow gateway. ([#987](https://github.com/angelleye/paypal-woocommerce/issues/987))
+* Fix - Resolves an issue with "missing token" in some PayPal Pro requests. ([#993](https://github.com/angelleye/paypal-woocommerce/issues/993))
+
+= 1.4.7.2 - 01.16.2018 =
+* Tweak - Removes unused / commented code that was causing a false flag with the Sucuri service. ([#981](https://github.com/angelleye/paypal-woocommerce/issues/981))
+
+= 1.4.7.1 - 01.02.2018 =
+* Tweak - Adjusts hook name. ([#975](https://github.com/angelleye/paypal-woocommerce/issues/975))
+* Fix - Resolves an issue where WP user accounts were not created properly in some scenarios. ([#974](https://github.com/angelleye/paypal-woocommerce/issues/974))
+* Fix - Resolves an issue with PayPal Advanced where timeouts could occur with greater than 10 items in the shopping cart. ([#976](https://github.com/angelleye/paypal-woocommerce/issues/976))
+
+= 1.4.7 - 12.21.2017 =
+* Feature - WooCommerce 3.3 compatibility based on beta release. ([#961](https://github.com/angelleye/paypal-woocommerce/issues/961))
+* Feature - Adds an option for what order status should be set when an order is Authorized but has not yet been captured. ([#883](https://github.com/angelleye/paypal-woocommerce/issues/883))
+* Feature - Adds Authorization functionality to PayPal REST credit cards. ([#813](https://github.com/angelleye/paypal-woocommerce/issues/813))
+* Feature - Adds an option for PayPal Pro 2.0 (PayFlow) to set the default WooCommerce order status for orders where payment is completed. ([#965](https://github.com/angelleye/paypal-woocommerce/issues/965))
+* Feature - Adds filter hooks for credit card field labels. ([#898](https://github.com/angelleye/paypal-woocommerce/issues/898))
+* Tweak - Adds a video about Marketing Solutions under the More Info button in that section of Express Checkout settings. ([#964](https://github.com/angelleye/paypal-woocommerce/issues/964))
+* Tweak - Ensures that Express Checkout orders with no shipping required include the billing name/email in order details. ([#831](https://github.com/angelleye/paypal-woocommerce/issues/831))
+* Tweak - Passes the shipping address to PayPal when u sing REST direct credit cards. ([#775](https://github.com/angelleye/paypal-woocommerce/issues/775))
+* Tweak - Adjusts PayPal Credit button alignment. ([#766](https://github.com/angelleye/paypal-woocommerce/issues/766))
+* Tweak - Adjustments to allow / disallow gateways based on the PHP version used on the site. ([#640](https://github.com/angelleye/paypal-woocommerce/issues/640))
+* Tweak - Adjustments to the way reference transaction options are displayed on the WC order page based on screen options that are enabled. ([#867](https://github.com/angelleye/paypal-woocommerce/issues/867))
+* Tweak - Adjustments to default .pot language file. ([#877](https://github.com/angelleye/paypal-woocommerce/issues/877))
+* Tweak - Improvements for Google Analytics / Facebook Pixel tracking with Express Checkout. ([#929](https://github.com/angelleye/paypal-woocommerce/issues/929))
+* Tweak - Rearranges PayFlow credentials fields in settings to match the order displayed at manager.paypal.com. ([#940](https://github.com/angelleye/paypal-woocommerce/issues/940))
+* Tweak - Adjustments for PHP 7.2 compatibility. ([#942](https://github.com/angelleye/paypal-woocommerce/issues/942))
+* Tweak - Adds a notice in PayFlow about enabling reference transaction if you are using Woo token payments and/or Woo Subscriptions. ([#950](https://github.com/angelleye/paypal-woocommerce/issues/950))
+* Tweak - Adjusts alignment of the option to save payment method to account (token payment). ([#969](https://github.com/angelleye/paypal-woocommerce/issues/969))
+* Fix - Resolves an issue with PayPal Advanced where orders could fail when additional fees are added via other plugins. ([#767](https://github.com/angelleye/paypal-woocommerce/issues/767))
+* Fix - Resolves an issue with the Terms and Conditions acceptance from the Express Checkout order review page. ([#916](https://github.com/angelleye/paypal-woocommerce/issues/916))
+* Fix - Resolves an issue where the Express Checkout button would sometimes get hidden if a coupon code was entered which makes the order free. ([#924](https://github.com/angelleye/paypal-woocommerce/issues/924))
+* Fix - Resolves a layout conflict with Express Checkout Marketing Solutions and Woo Pay for Payments. ([#935](https://github.com/angelleye/paypal-woocommerce/issues/935))
+* Fix - Resolves an issue with Express Checkout In context based on button type and custom text settings. ([#938](https://github.com/angelleye/paypal-woocommerce/issues/938))
+* Fix - Resolves PHP errors that sometimes occur with PayPal REST credit card settings. ([#943](https://github.com/angelleye/paypal-woocommerce/issues/943))
+* Fix - Resolves PHP errors that occur if the order does not contain WC product data (ie. custom data store). ([#945](https://github.com/angelleye/paypal-woocommerce/issues/945))
+* Fix - Better error handling if PayPal Marketing Solutions API call results in an empty response. ([#946](https://github.com/angelleye/paypal-woocommerce/issues/946))
+* Fix - Resolves incorrect labels on AVS/CVV2 details provided in email notifications. ([#952](https://github.com/angelleye/paypal-woocommerce/issues/952))
+* Fix - Resolves an issue where sometimes the Express Checkout In Context functionality was not working from the WC mini cart. ([#953](https://github.com/angelleye/paypal-woocommerce/issues/953))
+* Fix - Resolves an issue where a duplicate refund call would be triggered if an order page that was already refunded was refreshed. ([#955](https://github.com/angelleye/paypal-woocommerce/issues/955))
+* Fix - Resolves an issue with refunds related to our Multi-Account premium extension plugin. ([#956](https://github.com/angelleye/paypal-woocommerce/issues/956))
+* Fix - Adjustments to ensure IPv4 is always used instead of IPv6 in API requests. ([#957](https://github.com/angelleye/paypal-woocommerce/issues/957))
+* Fix - Resolves compatibility issue with WPML translation. ([#959](https://github.com/angelleye/paypal-woocommerce/issues/959))
+* Fix - Resolves an issue where the PayPal Credit button was getting displayed on product pages even if no price was set for the product. ([#966](https://github.com/angelleye/paypal-woocommerce/issues/966))
+* Fix - Resolves design compatibility issue with AccessPress theme. ([#900](https://github.com/angelleye/paypal-woocommerce/issues/900))
+
+= 1.4.6.8 - 11.29.2017 =
+* Tweak - Adjustments to PayPal Marketing Solutions activation request. ([#948](https://github.com/angelleye/paypal-woocommerce/issues/948))
+
+= 1.4.6.7 - 11.15.2017 =
+* Fix - Resolves PHP warnings (only displayed when error reporting is enabled).  ([#933](https://github.com/angelleye/paypal-woocommerce/issues/933))
+
+= 1.4.6.6 - 11.15.2017 =
+* Feature - Adds PayPal Marketing Solutions (Insights & Promotions) to Express Checkout.  Activate to increase avg. order amount and conversion rates! ([#904](https://github.com/angelleye/paypal-woocommerce/issues/904))
+* Feature - Adds an option for whether or not to display the Express Checkout button in the Woo Minicart. ([#920](https://github.com/angelleye/paypal-woocommerce/issues/920))
+* Tweak - Adjustments to PayPal Pro / PayFlow checkout styles for better display on mobile devices. ([#912](https://github.com/angelleye/paypal-woocommerce/issues/912))
+* Tweak - Adjustments to cart total calculations class. ([#908](https://github.com/angelleye/paypal-woocommerce/issues/908))
+* Tweak - WooCommerce 3.2.2 compatibility check. ([#919](https://github.com/angelleye/paypal-woocommerce/issues/919))
+* Tweak - Adjustments to the way WC orders are created when Express Checkout is used from the WC checkout page. ([#903](https://github.com/angelleye/paypal-woocommerce/issues/903))
+* Tweak - Adjustments to Settings -> PayPal for WooCommerce screen. ([#901](https://github.com/angelleye/paypal-woocommerce/issues/901))
+* Fix - Resolves browser console errors displayed when Express Checkout is disabled on product pages. ([#905](https://github.com/angelleye/paypal-woocommerce/issues/905))
+* Fix - Resolves an issue causing Express Checkout to fail from saved/pending orders that are sent directly to the buyer for payment. ([#914](https://github.com/angelleye/paypal-woocommerce/issues/914))
+* Fix - Resolves an issue where IPv6 addresses are sometimes used in the PayPal request, which PayPal does not support.  Now we make sure IPv4 is used. ([#909](https://github.com/angelleye/paypal-woocommerce/issues/909))
+* Fix - Resolves an issue where orders with both items that need shipped and items with "no shipping required" are being treated as no shipping required. ([#928](https://github.com/angelleye/paypal-woocommerce/issues/928))
+* Fix - Resolves a broken admin notice link. ([#930](https://github.com/angelleye/paypal-woocommerce/issues/930))
+
+= 1.4.6.5 - 10.12.2017 =
+* Tweak - Clean up settings panel. ([#884](https://github.com/angelleye/paypal-woocommerce/issues/884))
+* Tweak - Adjustments related to JavaScript errors/logs. ([#886](https://github.com/angelleye/paypal-woocommerce/issues/886))
+* Fix - Resolves an issue related to discounts with Woo Subscription products. ([#888](https://github.com/angelleye/paypal-woocommerce/issues/888))
+* Fix - Resolves a conflict with WooCommerce 3.2 release. ([#899](https://github.com/angelleye/paypal-woocommerce/issues/899))
 
 = 1.4.6.4 - 09.27.2017 =
 * Feature - Adds hooks necessary for multi-account setup extension plugin we are building. ([#876](https://github.com/angelleye/paypal-woocommerce/issues/876))

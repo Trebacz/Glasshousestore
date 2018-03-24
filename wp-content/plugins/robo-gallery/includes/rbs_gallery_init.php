@@ -8,7 +8,7 @@
 *      Created: 2015
 *      Licensed under the GPLv2 license - http://opensource.org/licenses/gpl-2.0.php
 *
-*      Copyright (c) 2014-2017, Robosoft. All rights reserved.
+*      Copyright (c) 2014-2018, Robosoft. All rights reserved.
 *      Available only in  https://robosoft.co/robogallery/ 
 */
 
@@ -37,6 +37,7 @@ if(!function_exists('rbs_gallery_include')){
 		}
 	}
 }
+
 
 if( is_admin() ){
 	$photonic_options = get_option( 'photonic_options', array() );
@@ -113,6 +114,8 @@ function create_post_type_robo_gallery() {
 }
 add_action( 'init', 'create_post_type_robo_gallery' );
 
+rbs_gallery_include('cache.php', ROBO_GALLERY_INCLUDES_PATH);
+
 if(!function_exists('rbs_gallery_main_init')){
     function rbs_gallery_main_init() {
 
@@ -168,7 +171,9 @@ if(!function_exists('rbs_gallery_main_init')){
 		}
 
 		/* only backend */
-		if( is_admin() ) rbs_gallery_include(array('rbs_gallery_media.php', 'rbs_gallery_menu.php', 'rbs_gallery_settings.php' ), ROBO_GALLERY_INCLUDES_PATH);
+		if( is_admin() ){
+			rbs_gallery_include(array('rbs_gallery_media.php', 'rbs_gallery_menu.php', 'rbs_gallery_settings.php' ), ROBO_GALLERY_INCLUDES_PATH);
+		}
 
 		/* Frontend*/
 		rbs_gallery_include(array('rbs_gallery_source.php', 'rbs_gallery_helper.php', 'rbs_gallery_class_utils.php', 'rbs_gallery_class.php', 'rbs_gallery_frontend.php' ), ROBO_GALLERY_FRONTEND_PATH);
@@ -183,10 +188,12 @@ if(!function_exists('rbs_gallery_main_init')){
 			/* category init */
 		if( 
 			!get_option(ROBO_GALLERY_PREFIX.'categoryShow', 0) &&
-			!( isset($_GET['page']) && $_GET['page'] == 'robo-gallery-cat' ) 
+			!( isset($_GET['page']) && $_GET['page'] != 'robo-gallery-cat' ) 
 		){
 			rbs_gallery_include('category/category.init.php', 	ROBO_GALLERY_EXTENSIONS_PATH);
 		}
+
+		rbs_gallery_include('categoryPage/category.init.php', 	ROBO_GALLERY_EXTENSIONS_PATH);
 		
 			/* stats init */
 		rbs_gallery_include('stats/stats.init.php', 	ROBO_GALLERY_EXTENSIONS_PATH);

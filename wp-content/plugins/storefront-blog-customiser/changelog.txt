@@ -1,5 +1,8 @@
 *** Storefront Blog Customiser Changelog ***
 
+2018.03.08 - version 1.2.3
+* Fix - Apply custom display layout to all archive pages.
+
 2017.09.21 - version 1.2.2
 * Fix - Also apply custom display layout to search results.
 

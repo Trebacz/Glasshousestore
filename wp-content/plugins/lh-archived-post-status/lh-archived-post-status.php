@@ -3,7 +3,7 @@
  * Plugin Name: LH Archived Post Status
  * Plugin URI: https://lhero.org/plugins/lh-archived-post-status/
  * Description: Creates an archived post status. Content can be excluded from the main loop and feed (but visible with a message), or hidden entirely
- * Version: 2.18
+ * Version: 2.20
  * Author: Peter Shaw
  * Author URI: https://shawfactor.com/
  * Text Domain: lh_archive_post_status
@@ -21,7 +21,6 @@ var $newstatuslabel = 'archived';
 var $newstatuslabel_count = 'Archived <span class="count">(%s)</span>';
 var $title_label_field_name = 'lh_archive_post_status-title_label';
 var $message_field_name = 'lh_archive_post_status_message';
-var $hidden_field_name = 'lh_archive_post_status-submit_hidden';
 var $publicly_available = 'public';
 var $opt_name = 'lh_archive_post_status_options';
 var $namespace = 'lh_archive_post_status';
@@ -67,6 +66,8 @@ $my_post = array(
 
 
 private function archive_post_by_id($postid) { 
+    
+$GLOBALS['wp_rewrite'] = new wp_rewrite;
 
 $update = array( 'ID' => $postid, 'post_status' => $this->newstatusname );
 
@@ -128,6 +129,13 @@ $this->archive_post_by_id($post->ID);
 
 }
 
+
+
+}
+
+static function deactivate_hook() {
+
+wp_clear_scheduled_hook( 'lh_archived_post_status_run' ); 
 
 
 }
@@ -205,7 +213,7 @@ wp_enqueue_style('jquery-ui-css',plugins_url( '/styles/jquery-ui-fresh.min.css' 
 
 wp_enqueue_script( 'jquery-ui-datepicker' );
 wp_enqueue_script( 'jquery-ui-slider' );
-wp_enqueue_script('pw-spe-expiration', plugins_url( '/scripts/edit.js' , __FILE__ ), array(), '1.00', true  );
+wp_enqueue_script($this->namespace.'-spe_expiration', plugins_url( '/scripts/edit.js' , __FILE__ ), array(), '1.00', true  );
 
 }
 
@@ -322,8 +330,10 @@ function plugin_options() {
    
 
  // See if the user has posted us some information
-    // If they did, this hidden field will be set to 'Y'
-    if( isset($_POST[ $this->hidden_field_name ]) && $_POST[ $this->hidden_field_name ] == 'Y' ) {
+    // If they did, the nonce will be populated
+	if( isset($_POST[ $this->namespace."-nonce" ]) && wp_verify_nonce($_POST[ $this->namespace."-nonce" ], $this->namespace."-nonce" )) {
+	    
+	    
         // Read their posted value
 
 if (($_POST[ $this->publicly_available ] == "0") || ($_POST[ $this->publicly_available ] == "1")){	  
@@ -403,16 +413,15 @@ foreach ( get_post_types( array('public'   => true ), 'names' ) as $posttype ) {
 
 }
 
-function add_archived_message($content){
-
-global $post;
+public function add_archived_message($content){
 
 if (is_singular()){
 
-if (isset($post->post_status) and ($post->post_status == $this->newstatusname)){
+if (isset($post->post_status) and ($post->post_status == $this->newstatusname) and !empty($this->options[$this->message_field_name])){
+    
+$message = apply_filters( 'lh_archive_post_status_message_filter', $this->options[$this->message_field_name], content );
 
-
-$content = $this->options[$this->message_field_name].$content;
+$content = $message.$content;
 
 }
 
@@ -599,12 +608,7 @@ wp_schedule_single_event(time(), 'lh_archived_post_status_initial');
 }
 
 
-public function deactivate_hook() {
 
-wp_clear_scheduled_hook( 'lh_archived_post_status_run' ); 
-
-
-}
 
 public function run_processes(){
 
@@ -766,7 +770,7 @@ add_action( 'plugins_loaded', array($this,"plugins_loaded"), 10, 1);
 
 $lh_archived_post_status_instance = new LH_archived_post_status_plugin();
 register_activation_hook(__FILE__, array($lh_archived_post_status_instance,'on_activate'), 10, 1);
-register_deactivation_hook( __FILE__, array($lh_archived_post_status_instance,'deactivate_hook') );
+register_deactivation_hook( __FILE__, array('LH_archived_post_status_plugin','deactivate_hook') );
 
 function lh_archived_post_status_uninstall(){
 

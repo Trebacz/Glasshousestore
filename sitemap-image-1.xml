@@ -3,7 +3,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 	<url>
 		<loc>https://test.glasshousestore.com/</loc>
-		<lastmod>2017-05-31T19:25:51+00:00</lastmod>
+		<lastmod>2017-10-25T00:28:45+00:00</lastmod>
 		<priority>0.8</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2015/10/stained-glass-student-workshop-large.jpg</image:loc>
@@ -113,7 +113,7 @@
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/stained-glass/</loc>
-		<lastmod>2017-07-07T17:50:02+00:00</lastmod>
+		<lastmod>2017-10-14T10:52:49+00:00</lastmod>
 		<priority>0.8</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2015/10/2015_october_stained_glass_sale_flier.jpg</image:loc>
@@ -138,7 +138,7 @@
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/stained-glass/stained-glass-and-fusing-classes/</loc>
-		<lastmod>2017-08-06T13:53:24+00:00</lastmod>
+		<lastmod>2017-09-11T17:17:55+00:00</lastmod>
 		<priority>0.8</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2015/10/fusing-with-your-kids-class.jpg</image:loc>
@@ -218,7 +218,7 @@
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/about-us/</loc>
-		<lastmod>2017-05-21T14:49:31+00:00</lastmod>
+		<lastmod>2017-11-19T11:05:22+00:00</lastmod>
 		<priority>0.8</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2015/10/glass-house.jpg</image:loc>
@@ -257,7 +257,7 @@
 		</image:image>
 	</url>
 	<url>
-		<loc>https://test.glasshousestore.com/?wysijap=subscriptions</loc>
+		<loc>https://test.glasshousestore.com/subscriptions/</loc>
 		<lastmod>2015-10-28T17:27:05+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
@@ -288,7 +288,7 @@
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/unique-gifts/</loc>
-		<lastmod>2017-08-06T14:35:45+00:00</lastmod>
+		<lastmod>2017-11-18T10:41:47+00:00</lastmod>
 		<priority>0.8</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2015/11/night-light-2.jpg</image:loc>
@@ -359,11 +359,6 @@
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2015/11/th-br_1556.jpg</image:loc>
 			<image:caption>TH BR_1556</image:caption>
 			<image:title>TH BR_1556</image:title>
-		</image:image>
-		<image:image>
-			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2015/11/transfer-houser-brass-3d-ornament.jpg</image:loc>
-			<image:caption>Transfer Houser Brass 3D Ornament</image:caption>
-			<image:title>Transfer Houser Brass 3D Ornament</image:title>
 		</image:image>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2015/11/staleys-sm.jpg</image:loc>
@@ -548,7 +543,7 @@
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/triangle-pattern-bar-mold/</loc>
-		<lastmod>2017-06-05T21:23:00+00:00</lastmod>
+		<lastmod>2017-08-31T10:02:55+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/TRIAN-LAMP.jpg</image:loc>
@@ -568,7 +563,7 @@
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/stainless-steel-napkin-holder-mold/</loc>
-		<lastmod>2017-05-26T17:21:53+00:00</lastmod>
+		<lastmod>2017-08-31T10:02:45+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/308291c47ee3a67a-photo-full.jpeg</image:loc>
@@ -578,7 +573,7 @@
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/quilt-star-bevel-cluster/</loc>
-		<lastmod>2017-06-07T21:56:37+00:00</lastmod>
+		<lastmod>2017-08-23T11:37:48+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/quilt-star-bevel-cluster-mms-bevels.png</image:loc>
@@ -635,7 +630,7 @@
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/dichroic-star-bevel-cluster-mms-5005-di/</loc>
-		<lastmod>2017-04-25T14:30:47+00:00</lastmod>
+		<lastmod>2017-08-18T15:13:37+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/mms-5005-di-dichroic-clear-bevel-cluster-mms-bevels.png</image:loc>
@@ -644,25 +639,8 @@
 		</image:image>
 	</url>
 	<url>
-		<loc>https://test.glasshousestore.com/product/etched-stardust-bevel-cluster/</loc>
-		<lastmod>2016-11-02T13:19:38+00:00</lastmod>
-		<priority>0.70</priority>
-		<image:image>
-			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/mms-etched-stardust-bevel-cluster-mms-bevels.png</image:loc>
-			<image:caption>ETCHED STARDUST Etched Pressed-glass
-Center with Peach/Blue/Green/ or Teal
-Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
-			<image:title>mms etched stardust bevel cluster mms bevels</image:title>
-		</image:image>
-		<image:image>
-			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/mms-etched-stardust-bevel-cluster-finished-stained-glass-project-panel.jpeg</image:loc>
-			<image:caption>MMS Etched Stardust Bevel Cluster Finished Stained Glass Project Panel</image:caption>
-			<image:title>MMS Etched Stardust Bevel Cluster Finished Stained Glass Project Panel</image:title>
-		</image:image>
-	</url>
-	<url>
 		<loc>https://test.glasshousestore.com/product/clear-dichroic-bevel-cluster-mms-8010d/</loc>
-		<lastmod>2017-04-25T14:10:41+00:00</lastmod>
+		<lastmod>2017-08-18T15:24:55+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/mms-8010d-clear-dicro-bevel-cluster-mms-bevels.png</image:loc>
@@ -673,7 +651,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/shamrock-green-and-clear-bevel-cluster/</loc>
-		<lastmod>2017-04-25T14:50:18+00:00</lastmod>
+		<lastmod>2017-08-18T15:12:10+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/shamrock-green-and-clear-dicro-bevel-cluster-mms-bevels.png</image:loc>
@@ -688,7 +666,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/dichroic-bevel-cluster-mms-9001-dichroic/</loc>
-		<lastmod>2017-04-25T14:28:52+00:00</lastmod>
+		<lastmod>2017-08-18T15:11:52+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/mms-9001-dichroic-bevel-cluster-mms-bevels.png</image:loc>
@@ -698,7 +676,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/dichroic-glass-bevel-cluster-mms-9006/</loc>
-		<lastmod>2017-04-25T14:29:49+00:00</lastmod>
+		<lastmod>2017-08-18T15:11:35+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/mms-9006-dichroic-center-and-ends-bevel-cluster-mms-bevels.png</image:loc>
@@ -710,7 +688,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/clear-bevel-glass-cluster-mms-9005/</loc>
-		<lastmod>2017-04-25T14:17:16+00:00</lastmod>
+		<lastmod>2017-08-18T15:11:18+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/mms-9005-scalloped-center-bevel-cluster-mms-bevels.png</image:loc>
@@ -731,7 +709,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/teal-and-blue-glass-bevel-cluster-mms-9000/</loc>
-		<lastmod>2017-04-25T14:56:16+00:00</lastmod>
+		<lastmod>2017-10-07T13:11:36+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/mms-9000-teal-and-blue-dichroic-bevel-cluster-mms-bevels.png</image:loc>
@@ -741,13 +719,23 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 		</image:image>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/mms-9000-bevel-cluster-finished-stained-glass-project-panel.jpeg</image:loc>
-			<image:caption>MMS 9000 Bevel Cluster Finished Stained Glass Project Panel</image:caption>
-			<image:title>MMS 9000 Bevel Cluster Finished Stained Glass Project Panel</image:title>
+			<image:caption>MMS 9000 Teal and Blue Bevel Cluster Finished Stained Glass Project Panel</image:caption>
+			<image:title>MMS 9000 Teal and Blue Bevel Cluster Finished Stained Glass Project Panel</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/MMS-9000-Peach-and-Blue-Bevel-Cluster-MMS-Bevels.jpg</image:loc>
+			<image:caption>MMS 9000 Peach and Blue Bevel Cluster MMS Bevels</image:caption>
+			<image:title>MMS 9000 Peach and Blue Bevel Cluster MMS Bevels</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/MMS-9000-Blue-and-Clear-Bevel-Cluster-MMS-Bevels.jpg</image:loc>
+			<image:caption>MMS 9000 Blue and Clear Bevel Cluster MMS Bevels</image:caption>
+			<image:title>MMS 9000 Blue and Clear Bevel Cluster MMS Bevels</image:title>
 		</image:image>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/shamrock-green-and-clear-bevel-cluster-with-border/</loc>
-		<lastmod>2017-04-25T14:51:01+00:00</lastmod>
+		<lastmod>2017-08-18T15:10:17+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/mms-shamrock-green-and-clear-with-border-mms-bevels.png</image:loc>
@@ -769,7 +757,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/intrigue-beveled-glass-cluster/</loc>
-		<lastmod>2017-04-25T14:35:57+00:00</lastmod>
+		<lastmod>2017-08-18T15:09:47+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/mms-intrigue-glass-bevel-cluster-mms-bevels.png</image:loc>
@@ -784,7 +772,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/mms-7003-glass-bevels-cluster/</loc>
-		<lastmod>2016-12-02T11:56:54+00:00</lastmod>
+		<lastmod>2017-08-18T15:09:27+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/mms-7003-bevel-set-cluster-mms-bevels.png</image:loc>
@@ -800,7 +788,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/glue-chip-beveled-glass-cluster-mms-7011/</loc>
-		<lastmod>2017-04-25T14:33:59+00:00</lastmod>
+		<lastmod>2017-08-18T15:09:06+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/mms-7011-glue-chip-bevel-cluster-set-mms-bevels.png</image:loc>
@@ -812,7 +800,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/mms-7002-beveled-glass-cluster/</loc>
-		<lastmod>2017-04-25T14:00:59+00:00</lastmod>
+		<lastmod>2017-08-18T15:08:41+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/mms-7002-bevel-cluster-mms-bevels.png</image:loc>
@@ -828,7 +816,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/peach-and-clear-beveled-glass-mms-5000p/</loc>
-		<lastmod>2017-04-25T14:43:37+00:00</lastmod>
+		<lastmod>2017-08-18T15:08:21+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/mms-5000p-peach-and-clear-bevel-cluster-mms-bevels.png</image:loc>
@@ -838,7 +826,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/peach-glue-chip-clear-beveled-glass-cluster-mms-5001p/</loc>
-		<lastmod>2017-04-25T14:46:38+00:00</lastmod>
+		<lastmod>2017-08-18T15:07:18+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/mms-5001p-peach-clear-and-glue-chip-bevel-cluster-mms-bevels.png</image:loc>
@@ -853,7 +841,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/peach-glue-chip-clear-beveled-glass-kit-mms-5002p/</loc>
-		<lastmod>2017-04-25T14:47:30+00:00</lastmod>
+		<lastmod>2017-08-18T15:06:45+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/mms-5002p-peach-clear-and-glue-chip-bevel-cluster-mms-bevels.png</image:loc>
@@ -868,7 +856,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/peach-and-clear-beveled-glass-cluster-mms-5003p/</loc>
-		<lastmod>2017-04-25T14:44:20+00:00</lastmod>
+		<lastmod>2017-08-18T15:06:15+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/mms-5003p-peach-and-clear-bevel-cluster-mms-bevels.png</image:loc>
@@ -883,7 +871,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/peach-and-clear-beveled-glass-cluster-mms-5004p/</loc>
-		<lastmod>2017-04-25T14:45:18+00:00</lastmod>
+		<lastmod>2017-08-18T15:05:43+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/mms-5004p-peach-and-clear-bevel-cluster-mms-bevels.png</image:loc>
@@ -899,7 +887,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/comet-glass-bevel-cluster/</loc>
-		<lastmod>2017-04-25T14:27:00+00:00</lastmod>
+		<lastmod>2017-08-18T15:05:22+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/mms-comet-glass-bevel-cluster-mms-bevels.png</image:loc>
@@ -986,7 +974,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/peace-sign-beveled-glass-kit/</loc>
-		<lastmod>2017-07-06T13:03:21+00:00</lastmod>
+		<lastmod>2017-08-18T15:04:28+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/mms-5003p-peace-sign-clear-bevel-cluster-mms-bevels.png</image:loc>
@@ -1006,7 +994,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/clear-beveled-glass-cluster-mr-579a/</loc>
-		<lastmod>2017-08-15T17:00:16+00:00</lastmod>
+		<lastmod>2017-11-24T12:24:27+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/mms-mr-579a-clear-glass-bevel-cluster-mms-bevels.png</image:loc>
@@ -1016,7 +1004,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/glass-bevel-cluster-mpcl-28/</loc>
-		<lastmod>2017-04-25T14:31:40+00:00</lastmod>
+		<lastmod>2017-08-18T15:04:07+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/mms-mpcp-28-glass-bevel-set-mms-bevels.png</image:loc>
@@ -1027,7 +1015,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/mirage-glass-bevel-set/</loc>
-		<lastmod>2017-04-25T14:38:26+00:00</lastmod>
+		<lastmod>2017-08-18T15:03:47+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/mms-mirage-glass-bevel-set-mms-bevels.png</image:loc>
@@ -1043,7 +1031,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/quilt-medallion-gluechip-glass-bevel-cluster-with-engraved-center/</loc>
-		<lastmod>2017-04-25T14:48:40+00:00</lastmod>
+		<lastmod>2017-11-04T12:49:19+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/mms-quilt-medalion-gluechip-with-engraved-center-glass-bevel-cluster-mms-bevels.png</image:loc>
@@ -1054,7 +1042,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/astro-bevels-and-centerpiece-glass-kit/</loc>
-		<lastmod>2017-04-25T13:59:07+00:00</lastmod>
+		<lastmod>2017-08-18T15:02:57+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/mms-astro-23-piece-glass-bevel-cluster-with-engraved-center-mms-bevels.png</image:loc>
@@ -1065,7 +1053,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/glass-bevel-cluster-mpl-16/</loc>
-		<lastmod>2017-04-25T14:32:27+00:00</lastmod>
+		<lastmod>2017-08-18T15:02:35+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/mms-mpl-16-glass-bevel-cluster-mms-bevels.png</image:loc>
@@ -1108,7 +1096,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/ornate-cross-glass-bevel-cluster-kit-m1409/</loc>
-		<lastmod>2017-07-14T15:53:07+00:00</lastmod>
+		<lastmod>2017-08-18T15:02:03+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/mms-mi409-cross-clear-glass-bevel-cluster-mms-bevels.png</image:loc>
@@ -1130,7 +1118,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/mms-103-clear-cross-glass-bevel-cluster-set/</loc>
-		<lastmod>2017-07-14T15:52:50+00:00</lastmod>
+		<lastmod>2017-08-18T15:01:37+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/mms-103-cross-glass-bevel-cluster-mms-bevels.png</image:loc>
@@ -1171,7 +1159,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/wine-bottle-windchime-class/</loc>
-		<lastmod>2017-07-03T20:49:11+00:00</lastmod>
+		<lastmod>2017-10-30T14:09:44+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/wine-bottle-windchime-class-project.png</image:loc>
@@ -1213,10 +1201,25 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 			<image:caption>Student admiring example wine bottle project.</image:caption>
 			<image:title>wine bottle windchime class student admiring example</image:title>
 		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/Wine-bottle-Windchime-Fairy-e1506737810572.jpeg</image:loc>
+			<image:caption>Wine bottle Windchime: Fairy</image:caption>
+			<image:title>Wine bottle Windchime: Fairy</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/sweet-tooths-paradise-class/</loc>
+		<lastmod>2017-11-03T20:27:23+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/candy-cane-panel-new.jpeg</image:loc>
+			<image:caption>Candy Cane Panel - Sweet Tooth’s Paradise Class</image:caption>
+			<image:title>candy cane panel new</image:title>
+		</image:image>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/fused-santas-cookie-tray-class/</loc>
-		<lastmod>2017-01-28T13:00:36+00:00</lastmod>
+		<lastmod>2017-11-15T16:28:50+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/fused-christmas-cookie-tray-class-kiln-firing-student-santa-project.jpg</image:loc>
@@ -1298,10 +1301,35 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 			<image:caption>Fused tray student halloween project laid out.</image:caption>
 			<image:title>Fused tray student halloween project laid out</image:title>
 		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/46fe19c1862dccc0-photo-full.jpeg</image:loc>
+			<image:caption>Santa Cookie Plate Class 11/17</image:caption>
+			<image:title>Santa Cookie Plate Class 11/17</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/d970c5447e543fc2-photo-full.jpeg</image:loc>
+			<image:caption>Santa Cookie Plate Class 11/17 x</image:caption>
+			<image:title>Santa Cookie Plate Class 11/17 x</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/deffe0eb10f10f23-photo-full.jpeg</image:loc>
+			<image:caption>Santa Cookie Plate Class 11/17 xx</image:caption>
+			<image:title>Santa Cookie Plate Class 11/17 xx</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/faa862c8ecb320eb-photo-full.jpeg</image:loc>
+			<image:caption>Santa Cookie Plate Class 11/17 xxx</image:caption>
+			<image:title>Santa Cookie Plate Class 11/17 xxx</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/f1d99340fff63d3c-photo-full.jpeg</image:loc>
+			<image:caption>Santa Cookie Plate Class 11/17xxxx</image:caption>
+			<image:title>Santa Cookie Plate Class 11/17xxxx</image:title>
+		</image:image>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/pattern-bar-plate-class/</loc>
-		<lastmod>2017-01-28T13:00:21+00:00</lastmod>
+		<lastmod>2017-11-04T15:42:51+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/11/fused-pattern-bar-class.jpg</image:loc>
@@ -1321,7 +1349,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/fused-ornament-fun-class/</loc>
-		<lastmod>2017-01-28T13:00:07+00:00</lastmod>
+		<lastmod>2017-11-15T16:23:37+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/11/fused-ornament-class-designs.jpg</image:loc>
@@ -1385,6 +1413,16 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 		</image:image>
 	</url>
 	<url>
+		<loc>https://test.glasshousestore.com/product/decatur-millikin-university-ornament/</loc>
+		<lastmod>2017-06-24T11:31:50+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/ornament-millikin-university-on-included-stand.jpg</image:loc>
+			<image:caption>Decatur Millikin University ornament on stand</image:caption>
+			<image:title>ornament millikin university on included stand</image:title>
+		</image:image>
+	</url>
+	<url>
 		<loc>https://test.glasshousestore.com/product/decatur-macarthur-high-school-ornament/</loc>
 		<lastmod>2017-06-27T19:13:08+00:00</lastmod>
 		<priority>0.70</priority>
@@ -1416,7 +1454,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/before-glass-and-after-glass-tee-shirt/</loc>
-		<lastmod>2017-06-28T10:31:37+00:00</lastmod>
+		<lastmod>2017-11-12T14:34:48+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/before-glass-and-after-glass-tee-shirt-blue.jpeg</image:loc>
@@ -1446,7 +1484,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/genuine-glass-artists-tee-shirt/</loc>
-		<lastmod>2017-06-26T13:02:17+00:00</lastmod>
+		<lastmod>2017-11-12T14:31:33+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/genuine-glass-artists-t-shirt-blue.jpeg</image:loc>
@@ -1466,7 +1504,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/glass-artists-score-more-often-tee-shirt/</loc>
-		<lastmod>2017-06-28T10:54:23+00:00</lastmod>
+		<lastmod>2017-11-12T14:29:06+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/glass-artists-score-more-often-tee-shirt-green.jpeg</image:loc>
@@ -1486,7 +1524,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/glass-fusing-makes-me-hot-tee-shirt/</loc>
-		<lastmod>2017-07-09T09:04:45+00:00</lastmod>
+		<lastmod>2017-09-06T12:38:20+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/fusing-black-t.jpeg</image:loc>
@@ -1501,7 +1539,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/whats-your-super-power-tee-shirt-blue/</loc>
-		<lastmod>2017-07-08T08:41:51+00:00</lastmod>
+		<lastmod>2017-11-12T14:16:47+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/what-your-super-power-tshirt-pink.jpeg</image:loc>
@@ -1526,7 +1564,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/genuine-glass-artist-apron/</loc>
-		<lastmod>2017-06-30T11:53:08+00:00</lastmod>
+		<lastmod>2017-11-12T14:13:19+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/genuine-glass-artist-apron-black.jpeg</image:loc>
@@ -1536,7 +1574,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/glass-artists-get-all-the-breaks-t-shirt-black/</loc>
-		<lastmod>2017-08-15T15:54:25+00:00</lastmod>
+		<lastmod>2017-09-06T12:37:42+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/glass-artists-get-all-the-breaks-t-shirt-black.jpeg</image:loc>
@@ -1701,7 +1739,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/chicago-cubs-world-champions-ornament/</loc>
-		<lastmod>2017-08-16T13:37:58+00:00</lastmod>
+		<lastmod>2017-11-22T15:30:32+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/11/chicago-cubs-world-champions-2016-w-ornament.jpg</image:loc>
@@ -1731,7 +1769,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/harley-davidson-gifts/</loc>
-		<lastmod>2017-06-17T12:10:14+00:00</lastmod>
+		<lastmod>2017-10-23T16:02:09+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/11/harley-davidson-live-to-ride-lights.jpg</image:loc>
@@ -1761,7 +1799,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/illini-gifts/</loc>
-		<lastmod>2017-06-17T12:12:07+00:00</lastmod>
+		<lastmod>2017-11-04T15:06:06+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/mms-indian-chief-bevel-cluster-panel.jpeg</image:loc>
@@ -1786,7 +1824,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/chicago-cubs-gifts/</loc>
-		<lastmod>2017-08-16T13:33:15+00:00</lastmod>
+		<lastmod>2017-11-06T18:22:35+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/10/chicago-cubs-neon-light.jpeg</image:loc>
@@ -1799,7 +1837,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 			<image:title>Chicago Cubs Stainless Steel Coasters</image:title>
 		</image:image>
 		<image:image>
-			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/11/Cubs-Batter-Wine-Bottle-Holder.jpg</image:loc>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/11/Cubs-Batter-Wine-Bottle-Holder-e1505239609202.jpg</image:loc>
 			<image:caption>Chicago Cubs Batter Wine Bottle Holder</image:caption>
 			<image:title>Chicago Cubs Batter Wine Bottle Holder</image:title>
 		</image:image>
@@ -1829,6 +1867,11 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 		<lastmod>2017-06-24T11:02:09+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2015/11/transfer-houser-brass-3d-ornament.jpg</image:loc>
+			<image:caption>Transfer Houser Brass 3D Ornament</image:caption>
+			<image:title>Transfer Houser Brass 3D Ornament</image:title>
+		</image:image>
+		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/11/decatur-transfer-house-ornament-2-d-ornament.jpg</image:loc>
 			<image:caption>Decatur Transfer House Ornament 2-D Ornament</image:caption>
 			<image:title>Decatur Transfer House Ornament 2-D Ornament</image:title>
@@ -1846,7 +1889,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/chicago-cubs-world-series-champions-glasses/</loc>
-		<lastmod>2017-08-16T13:38:54+00:00</lastmod>
+		<lastmod>2017-08-22T10:38:12+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/07/cubs-championship-glasses.jpg</image:loc>
@@ -1856,7 +1899,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/chicago-cubs-world-series-champions-pint-glass/</loc>
-		<lastmod>2017-08-05T15:46:33+00:00</lastmod>
+		<lastmod>2017-11-15T14:55:37+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/12/chicago-cubs-world-series-champions-etched-16-ounce-pint-beer-glass.jpg</image:loc>
@@ -1876,7 +1919,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/chicago-cubs-world-series-champions-glass-mug/</loc>
-		<lastmod>2017-08-05T15:46:15+00:00</lastmod>
+		<lastmod>2017-11-11T08:25:41+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/12/chicago-cubs-world-series-champions-etched-24-ounce-glass-mug.jpg</image:loc>
@@ -1885,8 +1928,33 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 		</image:image>
 	</url>
 	<url>
+		<loc>https://test.glasshousestore.com/product/chicago-cubs-christmas-tree-topper/</loc>
+		<lastmod>2017-10-09T22:13:26+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/12/cub-treetopper.jpeg</image:loc>
+			<image:caption>cub treetopper</image:caption>
+			<image:title>cub treetopper</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/12/cub-treetopper-1.jpeg</image:loc>
+			<image:caption>cub treetopper</image:caption>
+			<image:title>cub treetopper</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/12/f9c2b522ca762a7c-photo.jpeg</image:loc>
+			<image:caption>f9c2b522ca762a7c-photo</image:caption>
+			<image:title>f9c2b522ca762a7c-photo</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/12/cub-tree-large-e1507385434865.jpeg</image:loc>
+			<image:caption>cub tree large</image:caption>
+			<image:title>cub tree large</image:title>
+		</image:image>
+	</url>
+	<url>
 		<loc>https://test.glasshousestore.com/product/suncatcher-window-suction-cup-hook/</loc>
-		<lastmod>2017-02-27T09:41:33+00:00</lastmod>
+		<lastmod>2017-10-12T11:19:08+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2016/12/1-5-8-inch-sun-catcher-suction-cup-side.jpg</image:loc>
@@ -1901,7 +1969,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/dinner-and-a-project-class/</loc>
-		<lastmod>2017-01-28T12:59:59+00:00</lastmod>
+		<lastmod>2017-08-31T10:42:02+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/01/dinner-and-a-project-class-.jpg</image:loc>
@@ -1916,17 +1984,27 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/chicago-cubs-bamvino-wine-bottle-holder/</loc>
-		<lastmod>2017-08-16T13:30:08+00:00</lastmod>
+		<lastmod>2017-11-07T13:03:49+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/01/bam-vino-chicago-cubs-w-2016-champions-wine-bottle.jpg</image:loc>
 			<image:caption>Bam Vino Chicago Cubs W holder with Engraved 2016 World Champions W wine bottle</image:caption>
 			<image:title>Bam Vino Chicago Cubs W holder with Engraved 2016 World Champions W wine bottle</image:title>
 		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/09/Cub-close-up.jpeg</image:loc>
+			<image:caption>Cub close up</image:caption>
+			<image:title>Cub close up</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/09/Cub-wine-holder.jpeg</image:loc>
+			<image:caption>Cub wine holder</image:caption>
+			<image:title>Cub wine holder</image:title>
+		</image:image>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/chicago-cubs-world-series-commemorative-wine-bottle/</loc>
-		<lastmod>2017-08-16T13:29:35+00:00</lastmod>
+		<lastmod>2017-08-21T10:42:57+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/01/chicago-cubs-2016-engraved-w-wine-bottle.jpg</image:loc>
@@ -1941,7 +2019,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/hot-glass-plant-stakes-class/</loc>
-		<lastmod>2017-02-13T10:09:42+00:00</lastmod>
+		<lastmod>2017-09-20T22:39:26+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/01/Fused-plant-stakes.jpeg</image:loc>
@@ -1951,7 +2029,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/mosaic-table-class/</loc>
-		<lastmod>2017-07-01T17:36:54+00:00</lastmod>
+		<lastmod>2017-10-11T21:12:56+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/02/LSA-Lion-table.jpeg</image:loc>
@@ -1976,7 +2054,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/painted-medallion-foil-class/</loc>
-		<lastmod>2017-02-13T10:10:19+00:00</lastmod>
+		<lastmod>2017-09-20T22:38:42+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/01/painted-medallion.jpeg</image:loc>
@@ -1986,7 +2064,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/wine-bottle-fairy-garden-class/</loc>
-		<lastmod>2017-08-14T13:49:56+00:00</lastmod>
+		<lastmod>2017-09-20T22:37:09+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/01/wine-bottle-fairy-garden.jpeg</image:loc>
@@ -2052,7 +2130,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/creators-bottle-cutter/</loc>
-		<lastmod>2017-08-14T17:16:04+00:00</lastmod>
+		<lastmod>2017-09-13T10:15:55+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/02/glass-bottle-cutter.jpg</image:loc>
@@ -2085,6 +2163,11 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 			<image:title>circle cutter on paper</image:title>
 		</image:image>
 		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/02/circle-w-rulerr.jpg</image:loc>
+			<image:caption>Circle cutter with ruler</image:caption>
+			<image:title>Circle cutter with ruler</image:title>
+		</image:image>
+		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/02/how-to-cut-circle-in-glass.jpg</image:loc>
 			<image:caption>How to easily cut a circle in glass</image:caption>
 			<image:title>how-to-cut-circle-in-glass</image:title>
@@ -2092,7 +2175,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/circle-cutter/</loc>
-		<lastmod>2017-05-18T18:23:43+00:00</lastmod>
+		<lastmod>2017-09-07T12:40:21+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/02/IMG_9195.jpg</image:loc>
@@ -2122,7 +2205,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/wine-bottle-led-light/</loc>
-		<lastmod>2017-08-06T16:58:48+00:00</lastmod>
+		<lastmod>2017-08-29T17:47:25+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/02/wine-bottle-cork-led-light-string-kit.jpg</image:loc>
@@ -2187,7 +2270,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/weller-100-w-soldering-iron/</loc>
-		<lastmod>2017-02-21T16:23:06+00:00</lastmod>
+		<lastmod>2017-10-31T12:42:08+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/02/125909.jpg</image:loc>
@@ -2217,7 +2300,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/toyo-pistol-grip-supercutter/</loc>
-		<lastmod>2017-02-21T16:22:27+00:00</lastmod>
+		<lastmod>2017-11-02T12:56:30+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/02/toyo-pistol-supercutter.jpg</image:loc>
@@ -2227,7 +2310,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/gryphon-pistol-grip-cutter/</loc>
-		<lastmod>2017-02-21T19:36:49+00:00</lastmod>
+		<lastmod>2017-11-21T16:02:29+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/02/gryphon-pistol-grip-cutter.jpg</image:loc>
@@ -2237,7 +2320,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/fletcher-pistol-grip-cutter/</loc>
-		<lastmod>2017-02-21T16:22:05+00:00</lastmod>
+		<lastmod>2017-11-02T12:55:56+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/02/fletcher-pistol-grip-glass-cutter.jpg</image:loc>
@@ -2257,7 +2340,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/fletcher-gold-tip-designer-ii-pencil-grip-cutter/</loc>
-		<lastmod>2017-02-21T19:30:19+00:00</lastmod>
+		<lastmod>2017-10-31T12:04:38+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/02/fletcher-glass-cutter.jpg</image:loc>
@@ -2267,7 +2350,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/cutter-cozy/</loc>
-		<lastmod>2017-02-26T12:57:11+00:00</lastmod>
+		<lastmod>2017-11-02T13:52:08+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/02/cutter-cozy.jpg</image:loc>
@@ -2282,7 +2365,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/pistol-grip-cozy/</loc>
-		<lastmod>2017-02-21T19:25:32+00:00</lastmod>
+		<lastmod>2017-11-02T13:51:44+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/02/pistol-grip-cutter-cozy.jpg</image:loc>
@@ -2292,12 +2375,22 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/large-circle-cutter/</loc>
-		<lastmod>2017-04-27T18:48:24+00:00</lastmod>
+		<lastmod>2017-10-14T09:25:17+00:00</lastmod>
 		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/03/side-view-of-circle-cutter.jpg</image:loc>
+			<image:caption>side view of circle cutter</image:caption>
+			<image:title>side view of circle cutter</image:title>
+		</image:image>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/03/large-circle-cutter.jpg</image:loc>
 			<image:caption>large circle cutter</image:caption>
 			<image:title>large circle cutter</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/03/circle-cutter-w-glass.jpg</image:loc>
+			<image:caption>circle cutter with glass circle</image:caption>
+			<image:title>circle cutter with glass circle</image:title>
 		</image:image>
 	</url>
 	<url>
@@ -2357,7 +2450,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/diamond-file-set/</loc>
-		<lastmod>2017-03-08T20:33:17+00:00</lastmod>
+		<lastmod>2017-10-10T16:21:29+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/03/Sm-Diamond-files-up-close.jpg</image:loc>
@@ -2372,7 +2465,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/diamond-sanding-pad-120-grit/</loc>
-		<lastmod>2017-04-05T14:52:01+00:00</lastmod>
+		<lastmod>2017-10-10T16:51:32+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/03/sm-120-grit-diamond-glass-sanding-pad.jpg</image:loc>
@@ -2382,7 +2475,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/diamond-sanding-pad-60-grit/</loc>
-		<lastmod>2017-04-05T14:51:47+00:00</lastmod>
+		<lastmod>2017-10-10T16:50:44+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/03/sm-60-grit-diamond-sanding-pad.jpg</image:loc>
@@ -2392,7 +2485,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/diamond-sanding-pad-200-grit/</loc>
-		<lastmod>2017-04-05T14:51:29+00:00</lastmod>
+		<lastmod>2017-10-10T16:50:01+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/03/sm-200-diamond-hand-sanding-pad.jpg</image:loc>
@@ -2402,7 +2495,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/diamond-sanding-pad-400/</loc>
-		<lastmod>2017-04-05T14:50:55+00:00</lastmod>
+		<lastmod>2017-10-10T16:52:47+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/03/sm-400-diamond-sanding-pad.jpg</image:loc>
@@ -2412,7 +2505,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/kaleidoscope-triangle-pattern-bar-mold/</loc>
-		<lastmod>2017-08-06T12:40:20+00:00</lastmod>
+		<lastmod>2017-08-31T10:01:44+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/04/kaleidoscope-round.jpeg</image:loc>
@@ -2457,7 +2550,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/diamond-drill-bit-12-piece-assortment/</loc>
-		<lastmod>2017-05-31T18:31:32+00:00</lastmod>
+		<lastmod>2017-09-20T13:02:18+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/04/diamond-glass-drill-bit-12-piece-assortment.jpg</image:loc>
@@ -2467,7 +2560,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/manhattan-bevel-kit/</loc>
-		<lastmod>2017-08-15T17:19:02+00:00</lastmod>
+		<lastmod>2017-08-23T11:46:53+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/04/MANHATTEN.jpg</image:loc>
@@ -2477,7 +2570,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/teardrop-bevel-shape/</loc>
-		<lastmod>2017-07-06T12:52:07+00:00</lastmod>
+		<lastmod>2017-09-30T16:39:15+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/04/tear-drop-glass-bevel.jpg</image:loc>
@@ -2492,7 +2585,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/glass-triangle-bevel/</loc>
-		<lastmod>2017-07-06T12:51:46+00:00</lastmod>
+		<lastmod>2017-09-22T14:37:44+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/04/triangle-glass-bevel.jpg</image:loc>
@@ -2507,7 +2600,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/kite-shape-bevel-glass/</loc>
-		<lastmod>2017-07-06T12:51:12+00:00</lastmod>
+		<lastmod>2017-09-30T16:35:16+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/04/kite-shaped-glass-bevel.jpg</image:loc>
@@ -2522,7 +2615,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/rectangle-bevel-small/</loc>
-		<lastmod>2017-07-06T12:50:49+00:00</lastmod>
+		<lastmod>2017-09-30T16:36:35+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/04/small-rectangle-glass-bevel.jpg</image:loc>
@@ -2536,23 +2629,8 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 		</image:image>
 	</url>
 	<url>
-		<loc>https://test.glasshousestore.com/product/rectangle-bevel-glass-large/</loc>
-		<lastmod>2017-07-06T12:50:30+00:00</lastmod>
-		<priority>0.70</priority>
-		<image:image>
-			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/04/large-rectangle-glass-bevel.jpg</image:loc>
-			<image:caption>Large Rectangle Glass Bevel</image:caption>
-			<image:title>Large Rectangle Glass Bevel</image:title>
-		</image:image>
-		<image:image>
-			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/05/2-x-10-bevel.jpg</image:loc>
-			<image:caption>2 x 10 bevel</image:caption>
-			<image:title>2 x 10 bevel</image:title>
-		</image:image>
-	</url>
-	<url>
 		<loc>https://test.glasshousestore.com/product/flame-shaped-bevel-glass/</loc>
-		<lastmod>2017-07-06T12:50:10+00:00</lastmod>
+		<lastmod>2017-09-22T14:36:42+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/04/flame-glass-bevel.jpg</image:loc>
@@ -2567,7 +2645,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/hexagonal-bevel-glass-shape-small/</loc>
-		<lastmod>2017-07-06T12:49:50+00:00</lastmod>
+		<lastmod>2017-11-21T21:11:42+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/04/hex-glass-bevel.jpg</image:loc>
@@ -2582,7 +2660,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/hexagonal-bevel-glass-shape-large/</loc>
-		<lastmod>2017-07-06T12:49:31+00:00</lastmod>
+		<lastmod>2017-11-21T13:05:24+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/05/large-hex.jpg</image:loc>
@@ -2592,7 +2670,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/flat-flow-bars/</loc>
-		<lastmod>2017-05-01T21:57:21+00:00</lastmod>
+		<lastmod>2017-08-31T10:01:26+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/04/FLAT-FLOW-BAR.jpg</image:loc>
@@ -2632,7 +2710,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/round-flow-bar-kit/</loc>
-		<lastmod>2017-04-28T10:06:21+00:00</lastmod>
+		<lastmod>2017-08-31T10:04:31+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/04/ROUND-FLOW-BAR.jpg</image:loc>
@@ -2702,7 +2780,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/round-pattern-bar-mold-1-14/</loc>
-		<lastmod>2017-07-27T14:31:13+00:00</lastmod>
+		<lastmod>2017-08-31T09:58:51+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/04/f5596190df132fa3-photo-full.jpeg</image:loc>
@@ -2722,7 +2800,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/i-have-a-glass-cutter-tee-shirt/</loc>
-		<lastmod>2017-06-26T12:49:03+00:00</lastmod>
+		<lastmod>2017-11-12T14:23:10+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/04/blue-i-have-a-glass-cutter-and-i-know-how-to-use-it-t-shirt.jpg</image:loc>
@@ -2751,88 +2829,8 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 		</image:image>
 	</url>
 	<url>
-		<loc>https://test.glasshousestore.com/stained-glass/spring-stained-glass-parking-lot-sale/</loc>
-		<lastmod>2017-05-20T11:27:22+00:00</lastmod>
-		<priority>0.8</priority>
-		<image:image>
-			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/04/Spring-May-20-and-22-Parking-Lot-Stained-Glass-Sale.jpg</image:loc>
-			<image:caption>Spring May 20 and 22 Parking Lot Stained Glass Sale</image:caption>
-			<image:title>Spring May 20 and 22 Parking Lot Stained Glass Sale</image:title>
-		</image:image>
-		<image:image>
-			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/05/EMAIL-HeaderS-xx.jpg</image:loc>
-			<image:caption>EMAIL HeaderS xx</image:caption>
-			<image:title>EMAIL HeaderS xx</image:title>
-		</image:image>
-		<image:image>
-			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/05/Spring-May-20-21-and-22-Parking-Lot-Stained-Glass-Sale.jpg</image:loc>
-			<image:caption>Spring May 20 21 and 22 Parking Lot Stained Glass Sale</image:caption>
-			<image:title>Spring May 20 21 and 22 Parking Lot Stained Glass Sale</image:title>
-		</image:image>
-		<image:image>
-			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/05/glass-crates-parking-lot-sales-2017-spring.jpg</image:loc>
-			<image:caption>Glass crates parking lot sales-2017-spring</image:caption>
-			<image:title>Glass crates parking lot sales-2017-spring</image:title>
-		</image:image>
-		<image:image>
-			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/05/daniel-forktruck-parking-lot-sales-2017-spring.jpg</image:loc>
-			<image:caption>Daniel forktruck parking lot sales-2017-spring</image:caption>
-			<image:title>Daniel-forktruck-parking-lot-sales-2017-spring</image:title>
-		</image:image>
-		<image:image>
-			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/05/bullseye-clear-parking-lot-sales-2017-spring.jpg</image:loc>
-			<image:caption>Bullseye clear glass parking lot sales-2017-spring</image:caption>
-			<image:title>Bullseye clear glass parking lot sales-2017-spring</image:title>
-		</image:image>
-		<image:image>
-			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/05/spectrum-glass-parking-lot-sales-2017-spring.jpg</image:loc>
-			<image:caption>Spectrum glass parking lot sales-2017-spring</image:caption>
-			<image:title>Spectrum glass parking lot sales-2017-spring</image:title>
-		</image:image>
-		<image:image>
-			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/05/full-sheets-parking-lot-sales-2017-spring.jpg</image:loc>
-			<image:caption>Full Stained Glass sheets parking lot sales-2017-spring</image:caption>
-			<image:title>Full Stained Glass sheets parking lot sales-2017-spring</image:title>
-		</image:image>
-		<image:image>
-			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/05/stained-glass-crates-parking-lot-sales-2017-spring.jpg</image:loc>
-			<image:caption>Stained glass crates parking lot sales-2017-spring</image:caption>
-			<image:title>Stained glass crates parking lot sales-2017-spring</image:title>
-		</image:image>
-		<image:image>
-			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/05/kokomo-head-glass-parking-lot-sales-2017-spring.jpg</image:loc>
-			<image:caption>Kokomo head glass parking lot sales-2017-spring</image:caption>
-			<image:title>Kokomo head glass parking lot sales-2017-spring</image:title>
-		</image:image>
-		<image:image>
-			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/05/michael-forktruck-parking-lot-sales-2017-spring.jpg</image:loc>
-			<image:caption>Michael fork truck parking-lot sales 2017-spring</image:caption>
-			<image:title>Michael fork truck parking-lot sales 2017-spring</image:title>
-		</image:image>
-		<image:image>
-			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/05/forktruck-moving-crates-parking-lot-sales-2017-spring.jpg</image:loc>
-			<image:caption>Fork truck moving crates parking lot sales 2017-spring</image:caption>
-			<image:title>Fork truck moving crates parking lot sales 2017-spring</image:title>
-		</image:image>
-		<image:image>
-			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/05/glass-crates-inside-parking-lot-sales-2017-spring.jpg</image:loc>
-			<image:caption>Glass crates inside parking lot sales 2017-spring</image:caption>
-			<image:title>Glass crates inside parking lot sales 2017-spring</image:title>
-		</image:image>
-		<image:image>
-			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/05/crate-glass-inside-parking-lot-sales-2017-spring.jpg</image:loc>
-			<image:caption>Crate glass inside parking lot sales 2017 spring</image:caption>
-			<image:title>Crate glass inside parking lot sales 2017 spring</image:title>
-		</image:image>
-		<image:image>
-			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/05/tent-parking-lot-sales-2017-spring.jpg</image:loc>
-			<image:caption>Tent parking lot sale 2017 spring</image:caption>
-			<image:title>Tent parking lot sale 2017 spring</image:title>
-		</image:image>
-	</url>
-	<url>
 		<loc>https://test.glasshousestore.com/product/fish-bevel-shape/</loc>
-		<lastmod>2017-07-06T12:49:15+00:00</lastmod>
+		<lastmod>2017-09-30T16:38:13+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/05/fish-bevel.jpg</image:loc>
@@ -2841,28 +2839,8 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 		</image:image>
 	</url>
 	<url>
-		<loc>https://test.glasshousestore.com/product/diamond-coated-half-round-file-set/</loc>
-		<lastmod>2017-08-14T17:06:30+00:00</lastmod>
-		<priority>0.70</priority>
-		<image:image>
-			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/05/diamond-coated-half-round-glass-file-set.jpg</image:loc>
-			<image:caption>Diamond Coated Half Round Glass File Set</image:caption>
-			<image:title>Diamond Coated Half Round Glass File Set</image:title>
-		</image:image>
-		<image:image>
-			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/05/diamond-file-set.jpg</image:loc>
-			<image:caption>diamond file set</image:caption>
-			<image:title>diamond file set</image:title>
-		</image:image>
-		<image:image>
-			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/05/diamond-coated-half-round-glass-bottle-file.jpg</image:loc>
-			<image:caption>Diamond Coated Half Round Glass Bottle File</image:caption>
-			<image:title>Diamond Coated Half Round Glass Bottle File</image:title>
-		</image:image>
-	</url>
-	<url>
 		<loc>https://test.glasshousestore.com/product/waffle-cutting-grid-6-pack/</loc>
-		<lastmod>2017-08-15T12:19:39+00:00</lastmod>
+		<lastmod>2017-11-20T21:04:19+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/05/glass-cutting-waffle-grid-package.jpg</image:loc>
@@ -2872,7 +2850,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/pattern-bar-class/</loc>
-		<lastmod>2017-08-06T12:38:03+00:00</lastmod>
+		<lastmod>2017-09-20T22:35:18+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/05/Fusible-Glass-Strips-for-Pattern-Bar-Class.jpg</image:loc>
@@ -2967,7 +2945,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/fused-glass-flowers/</loc>
-		<lastmod>2017-08-14T12:23:57+00:00</lastmod>
+		<lastmod>2017-09-20T22:34:19+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/05/orange-lily-flower-fused-glass-flowers-class-project.jpg</image:loc>
@@ -3022,7 +3000,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/stepping-stone-class/</loc>
-		<lastmod>2017-06-30T18:17:24+00:00</lastmod>
+		<lastmod>2017-09-20T22:33:25+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/05/glass-stepping-stone-class-flower-project.jpeg</image:loc>
@@ -3107,7 +3085,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/vitragraph-kiln-fun/</loc>
-		<lastmod>2017-06-05T16:38:13+00:00</lastmod>
+		<lastmod>2017-11-06T18:26:54+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/05/vitrigraph-kiln-fun-class-finished-butterfly-project.jpeg</image:loc>
@@ -3162,7 +3140,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/beveled-glass-cluster-pg-31/</loc>
-		<lastmod>2017-06-20T12:25:10+00:00</lastmod>
+		<lastmod>2017-08-18T15:00:33+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-pg-31-bevel-cluster.png</image:loc>
@@ -3172,7 +3150,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/beveled-glass-cluster-sb-061/</loc>
-		<lastmod>2017-06-20T12:24:53+00:00</lastmod>
+		<lastmod>2017-11-16T18:02:56+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-sb-061-glass-bevel-set.png</image:loc>
@@ -3187,7 +3165,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/beveled-glass-cluster-ma-19/</loc>
-		<lastmod>2017-06-20T12:24:40+00:00</lastmod>
+		<lastmod>2017-08-18T14:59:37+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-ma-19-glass-bevel-cluster.jpg</image:loc>
@@ -3201,18 +3179,8 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 		</image:image>
 	</url>
 	<url>
-		<loc>https://test.glasshousestore.com/product/beveled-glass-cluster-ma-102/</loc>
-		<lastmod>2017-06-19T23:18:14+00:00</lastmod>
-		<priority>0.70</priority>
-		<image:image>
-			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-ma-102-glass-bevel-cluster.jpg</image:loc>
-			<image:caption>MMS MA 102 glass bevel cluster</image:caption>
-			<image:title>MMS MA 102 glass bevel cluster</image:title>
-		</image:image>
-	</url>
-	<url>
 		<loc>https://test.glasshousestore.com/product/beveled-glass-cluster-tgp-100/</loc>
-		<lastmod>2017-06-19T23:18:02+00:00</lastmod>
+		<lastmod>2017-11-16T18:04:54+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-beveled-glass-cluster-tgp-100.jpg</image:loc>
@@ -3221,8 +3189,18 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 		</image:image>
 	</url>
 	<url>
+		<loc>https://test.glasshousestore.com/product/dolphin-beveled-glass-cluster-hb-201/</loc>
+		<lastmod>2017-11-16T17:45:24+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/dolphin-glass-bevel-hb-201.jpg</image:loc>
+			<image:caption>Dolphin Glass Bevel HB 201</image:caption>
+			<image:title>Dolphin Glass Bevel HB 201</image:title>
+		</image:image>
+	</url>
+	<url>
 		<loc>https://test.glasshousestore.com/product/dove-beveled-glass-cluster-hb-330/</loc>
-		<lastmod>2017-06-20T12:24:26+00:00</lastmod>
+		<lastmod>2017-11-16T17:45:59+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-hb-330-peace-dove-bevel.jpg</image:loc>
@@ -3231,18 +3209,8 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 		</image:image>
 	</url>
 	<url>
-		<loc>https://test.glasshousestore.com/product/seashell-beveled-glass-cluster-thb-331/</loc>
-		<lastmod>2017-06-19T23:17:34+00:00</lastmod>
-		<priority>0.70</priority>
-		<image:image>
-			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/seashell-glass-bevel-thb-331.jpg</image:loc>
-			<image:caption>Seashell Glass Bevel THB 331</image:caption>
-			<image:title>Seashell Glass Bevel THB 331</image:title>
-		</image:image>
-	</url>
-	<url>
 		<loc>https://test.glasshousestore.com/product/cowboy-hat-beveled-glass-cluster-hb-319/</loc>
-		<lastmod>2017-06-06T18:47:37+00:00</lastmod>
+		<lastmod>2017-11-16T11:08:11+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/cowboy-hat-beveled-glass-cluster-hb-319.jpg</image:loc>
@@ -3252,7 +3220,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/ribbon-beveled-glass-cluster-rib-02/</loc>
-		<lastmod>2017-07-01T16:49:21+00:00</lastmod>
+		<lastmod>2017-08-18T15:24:11+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/remember-ribbon-clear-glass-bevel-mms-rib-02.jpg</image:loc>
@@ -3267,7 +3235,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/leaves-beveled-glass-cluster-bc-220/</loc>
-		<lastmod>2017-06-20T12:24:02+00:00</lastmod>
+		<lastmod>2017-11-16T12:29:55+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/leaves-beveled-glass-cluster-bc-220.png</image:loc>
@@ -3277,7 +3245,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/beveled-glass-cluster-tc-104/</loc>
-		<lastmod>2017-06-20T12:23:48+00:00</lastmod>
+		<lastmod>2017-11-16T18:03:42+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/beveled-glass-cluster-tc-104.png</image:loc>
@@ -3287,7 +3255,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/beveled-glass-cluster-tnf-31/</loc>
-		<lastmod>2017-06-30T12:17:10+00:00</lastmod>
+		<lastmod>2017-11-16T18:06:12+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/beveled-glass-cluster-tnf-31.jpg</image:loc>
@@ -3302,7 +3270,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/beveled-glass-cluster-mms-6011/</loc>
-		<lastmod>2017-06-19T23:15:36+00:00</lastmod>
+		<lastmod>2017-11-16T18:01:49+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/beveled-glass-cluster-mms-6011.jpg</image:loc>
@@ -3311,18 +3279,8 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 		</image:image>
 	</url>
 	<url>
-		<loc>https://test.glasshousestore.com/product/beveled-glass-cluster-mms-3049/</loc>
-		<lastmod>2017-06-19T23:15:15+00:00</lastmod>
-		<priority>0.70</priority>
-		<image:image>
-			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/beveled-glass-cluster-mms-3049.jpg</image:loc>
-			<image:caption>Beveled Glass Cluster - MMS 3049</image:caption>
-			<image:title>Beveled Glass Cluster - MMS 3049</image:title>
-		</image:image>
-	</url>
-	<url>
 		<loc>https://test.glasshousestore.com/product/beveled-glass-cluster-k-1921a/</loc>
-		<lastmod>2017-06-19T23:15:04+00:00</lastmod>
+		<lastmod>2017-11-16T17:57:45+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/beveled-glass-cluster-k-1921a.jpg</image:loc>
@@ -3332,7 +3290,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/downing-bevel-glass-cluster/</loc>
-		<lastmod>2017-06-19T23:14:57+00:00</lastmod>
+		<lastmod>2017-08-18T14:53:07+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-downing-bevel-glass-cluster.jpg</image:loc>
@@ -3342,7 +3300,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/bevel-glass-cluster-mms-6037/</loc>
-		<lastmod>2017-06-20T12:23:20+00:00</lastmod>
+		<lastmod>2017-11-16T17:56:09+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/bevel-glass-cluster-mms-6037.jpg</image:loc>
@@ -3352,7 +3310,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/bevel-glass-cluster-mms-1040/</loc>
-		<lastmod>2017-06-20T12:22:59+00:00</lastmod>
+		<lastmod>2017-11-16T17:54:49+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/bevel-glass-cluster-mms-1040.jpg</image:loc>
@@ -3362,7 +3320,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/bevel-glass-cluster-pbc-160-glue-chip/</loc>
-		<lastmod>2017-07-24T10:51:28+00:00</lastmod>
+		<lastmod>2017-11-16T17:56:40+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/bevel-glass-cluster-pbc-160-glue-chip.jpg</image:loc>
@@ -3372,7 +3330,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/davis-glue-chip-bevel-glass-cluster/</loc>
-		<lastmod>2017-06-06T19:31:31+00:00</lastmod>
+		<lastmod>2017-08-18T14:50:46+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-davis-glue-chip-bevel.jpg</image:loc>
@@ -3382,7 +3340,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/duchess-beveled-glass-cluster/</loc>
-		<lastmod>2017-06-20T12:21:24+00:00</lastmod>
+		<lastmod>2017-08-18T14:50:27+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/duchess-beveled-glass-cluster.jpg</image:loc>
@@ -3412,7 +3370,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/beveled-clear-glass-cluster-mms-6042/</loc>
-		<lastmod>2017-07-24T10:50:23+00:00</lastmod>
+		<lastmod>2017-11-16T17:58:36+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/beveled-clear-glass-cluster-mms-6042.jpg</image:loc>
@@ -3427,7 +3385,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/glass-bevel-cluster-mms-205r/</loc>
-		<lastmod>2017-06-20T12:20:47+00:00</lastmod>
+		<lastmod>2017-08-18T14:49:41+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/clearmont.jpg</image:loc>
@@ -3442,7 +3400,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/glass-bevel-cluster-kb-1925/</loc>
-		<lastmod>2017-06-19T23:13:51+00:00</lastmod>
+		<lastmod>2017-08-18T14:49:20+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/glass-bevel-cluster-kb-1925.jpg</image:loc>
@@ -3562,7 +3520,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/clear-bevel-cluster-pg-47/</loc>
-		<lastmod>2017-06-19T23:12:21+00:00</lastmod>
+		<lastmod>2017-08-18T14:47:31+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/clear-bevel-cluster-pg-47.jpg</image:loc>
@@ -3572,7 +3530,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/clear-bevel-cluster-ma-31/</loc>
-		<lastmod>2017-07-24T10:55:16+00:00</lastmod>
+		<lastmod>2017-09-21T18:43:57+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/clear-bevel-cluster-ma-31.jpg</image:loc>
@@ -3581,18 +3539,8 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 		</image:image>
 	</url>
 	<url>
-		<loc>https://test.glasshousestore.com/product/clear-bevel-cluster-sb-17r/</loc>
-		<lastmod>2017-07-24T10:56:38+00:00</lastmod>
-		<priority>0.70</priority>
-		<image:image>
-			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/clear-bevel-cluster-sb-17r.jpg</image:loc>
-			<image:caption>Clear Bevel Cluster - SB 17R</image:caption>
-			<image:title>Clear Bevel Cluster - SB 17R</image:title>
-		</image:image>
-	</url>
-	<url>
 		<loc>https://test.glasshousestore.com/product/clear-bevel-cluster-mms-4000/</loc>
-		<lastmod>2017-06-19T23:09:41+00:00</lastmod>
+		<lastmod>2017-09-11T13:19:09+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/clear-bevel-cluster-mms-4000.jpg</image:loc>
@@ -3602,7 +3550,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/clear-bevel-cluster-ma-105/</loc>
-		<lastmod>2017-06-19T23:09:05+00:00</lastmod>
+		<lastmod>2017-08-18T14:46:28+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/clear-bevel-cluster-ma-105.jpg</image:loc>
@@ -3612,7 +3560,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/glue-chip-bevel-cluster-kbc-105-gc/</loc>
-		<lastmod>2017-06-19T23:09:35+00:00</lastmod>
+		<lastmod>2017-08-18T14:46:07+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/glue-chip-bevel-cluster-kbc-105-gc.jpg</image:loc>
@@ -3622,7 +3570,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/clear-bevel-cluster-m2014/</loc>
-		<lastmod>2017-06-19T23:08:40+00:00</lastmod>
+		<lastmod>2017-08-18T14:45:40+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/clear-bevel-cluster-m2014.jpg</image:loc>
@@ -3642,7 +3590,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/clear-bevel-cluster-309l/</loc>
-		<lastmod>2017-06-19T23:08:32+00:00</lastmod>
+		<lastmod>2017-08-18T14:45:01+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/clear-bevel-cluster-309l.jpg</image:loc>
@@ -3657,7 +3605,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/clear-beveled-glass-cluster-mh-08/</loc>
-		<lastmod>2017-06-20T12:17:12+00:00</lastmod>
+		<lastmod>2017-08-18T14:44:35+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/clear-beveled-glass-cluster-mh-08.jpg</image:loc>
@@ -3687,7 +3635,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/clear-beveled-glass-set-ma-112/</loc>
-		<lastmod>2017-06-19T23:08:08+00:00</lastmod>
+		<lastmod>2017-09-11T13:21:37+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/clear-beveled-glass-set-ma-112.jpg</image:loc>
@@ -3697,7 +3645,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/clearmont-beveled-glass-cluster/</loc>
-		<lastmod>2017-07-24T14:08:21+00:00</lastmod>
+		<lastmod>2017-09-13T16:23:13+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/clearmont-beveled-glass-cluster.jpg</image:loc>
@@ -3707,7 +3655,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/beveled-glass-cluster-mms-3042/</loc>
-		<lastmod>2017-06-19T23:07:50+00:00</lastmod>
+		<lastmod>2017-08-18T14:42:59+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/beveled-glass-cluster-mms-3042.jpg</image:loc>
@@ -3717,7 +3665,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/glue-chip-bevel-cluster-ml5bgc/</loc>
-		<lastmod>2017-06-19T23:07:42+00:00</lastmod>
+		<lastmod>2017-08-18T14:42:26+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/glue-chip-bevel-cluster-ml5bgc.jpg</image:loc>
@@ -3737,7 +3685,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/beveled-glass-cluster-mms-3055/</loc>
-		<lastmod>2017-07-24T11:05:11+00:00</lastmod>
+		<lastmod>2017-11-16T18:00:24+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-mms-3055-clear-beveled-glass-cluster.jpg</image:loc>
@@ -3747,7 +3695,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/beveled-glass-cluster-mms-205/</loc>
-		<lastmod>2017-06-20T12:16:48+00:00</lastmod>
+		<lastmod>2017-11-24T15:08:22+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-ns-205-clear-beveled-glass-cluster.jpg</image:loc>
@@ -3757,7 +3705,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/beveled-glass-cluster-mms-200/</loc>
-		<lastmod>2017-07-30T09:28:13+00:00</lastmod>
+		<lastmod>2017-11-16T18:06:43+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-ns-200-clear-beveled-glass-cluster.jpg</image:loc>
@@ -3767,7 +3715,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/devore-beveled-glass-cluster/</loc>
-		<lastmod>2017-07-29T09:33:25+00:00</lastmod>
+		<lastmod>2017-08-18T14:41:27+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-devore-clear-beveled-glass-cluster.jpg</image:loc>
@@ -3787,7 +3735,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/delray-beveled-glass-cluster/</loc>
-		<lastmod>2017-06-19T23:07:03+00:00</lastmod>
+		<lastmod>2017-08-18T14:41:05+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-delray-clear-beveled-glass-cluster.jpg</image:loc>
@@ -3797,7 +3745,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/bradley-beveled-glass-cluster/</loc>
-		<lastmod>2017-06-19T23:06:54+00:00</lastmod>
+		<lastmod>2017-11-16T18:07:13+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-bradley-clear-beveled-glass-cluster.jpg</image:loc>
@@ -3807,7 +3755,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/dana-beveled-glass-cluster/</loc>
-		<lastmod>2017-06-20T12:16:15+00:00</lastmod>
+		<lastmod>2017-08-18T14:40:19+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-dana-clear-beveled-glass-cluster.jpg</image:loc>
@@ -3817,7 +3765,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/beveled-glass-cluster-mms-1015/</loc>
-		<lastmod>2017-07-24T11:07:26+00:00</lastmod>
+		<lastmod>2017-11-16T17:59:09+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-1015-clear-beveled-glass-cluster.jpg</image:loc>
@@ -3827,7 +3775,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/beveled-glass-cluster-mms-6010/</loc>
-		<lastmod>2017-06-19T23:04:54+00:00</lastmod>
+		<lastmod>2017-11-16T18:01:19+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-mms-6010-clear-beveled-glass-cluster.jpg</image:loc>
@@ -3837,7 +3785,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/beveled-glass-cluster-tiv-01/</loc>
-		<lastmod>2017-07-24T11:08:43+00:00</lastmod>
+		<lastmod>2017-11-16T18:05:25+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-tiv-01-clear-beveled-glass-cluster.jpg</image:loc>
@@ -3847,7 +3795,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/beveled-glass-cluster-bc-36/</loc>
-		<lastmod>2017-07-24T11:09:43+00:00</lastmod>
+		<lastmod>2017-11-16T17:57:10+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-bc-36-clear-beveled-glass-cluster.jpg</image:loc>
@@ -3857,7 +3805,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/star-beveled-glass-cluster-star-200/</loc>
-		<lastmod>2017-06-20T12:15:42+00:00</lastmod>
+		<lastmod>2017-08-18T14:38:57+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-star-200-clear-beveled-glass-cluster.jpg</image:loc>
@@ -3867,7 +3815,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/star-beveled-glass-cluster-star-201/</loc>
-		<lastmod>2017-06-19T23:04:22+00:00</lastmod>
+		<lastmod>2017-08-18T14:38:34+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-star-201-clear-beveled-glass-cluster.jpg</image:loc>
@@ -3877,7 +3825,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/beveled-glass-cluster-pbc-1602/</loc>
-		<lastmod>2017-06-20T12:15:28+00:00</lastmod>
+		<lastmod>2017-11-16T18:02:21+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-pbc-1602-clear-beveled-glass-cluster.jpg</image:loc>
@@ -3887,7 +3835,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/glass-bevel-clear-cluster-mw-5130/</loc>
-		<lastmod>2017-06-20T12:15:10+00:00</lastmod>
+		<lastmod>2017-09-11T13:22:49+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-mw-5130-clear-beveled-glass-cluster.jpg</image:loc>
@@ -3897,7 +3845,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/glass-bevel-clear-border-top-mw-2102/</loc>
-		<lastmod>2017-06-11T13:09:16+00:00</lastmod>
+		<lastmod>2017-08-18T14:37:17+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-mw-2102-clear-beveled-glass-cluster.jpg</image:loc>
@@ -3907,7 +3855,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/glass-beveled-clear-cluster-mw-5106/</loc>
-		<lastmod>2017-07-24T11:10:57+00:00</lastmod>
+		<lastmod>2017-08-21T12:32:25+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-mw-5106-clear-beveled-glass-cluster.jpg</image:loc>
@@ -3917,7 +3865,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/glass-beveled-clear-cluster-k7/</loc>
-		<lastmod>2017-06-20T12:14:41+00:00</lastmod>
+		<lastmod>2017-10-07T14:20:05+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-k-7-clear-beveled-glass-cluster.jpg</image:loc>
@@ -3927,7 +3875,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/glass-beveled-clear-cluster-co21/</loc>
-		<lastmod>2017-06-19T23:03:49+00:00</lastmod>
+		<lastmod>2017-09-20T17:42:15+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-co21-clear-beveled-glass-cluster.jpg</image:loc>
@@ -3972,7 +3920,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/glass-beveled-clear-cluster-jo1/</loc>
-		<lastmod>2017-06-19T23:03:19+00:00</lastmod>
+		<lastmod>2017-08-18T14:36:06+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-jo1-clear-beveled-glass-cluster.jpg</image:loc>
@@ -3992,7 +3940,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/glass-beveled-clear-cluster-ma-3/</loc>
-		<lastmod>2017-06-11T13:33:33+00:00</lastmod>
+		<lastmod>2017-09-11T13:23:40+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-ma-3-clear-beveled-glass-cluster.jpg</image:loc>
@@ -4006,23 +3954,8 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 		</image:image>
 	</url>
 	<url>
-		<loc>https://test.glasshousestore.com/product/glass-beveled-clear-cluster-mms-6028/</loc>
-		<lastmod>2017-06-19T23:02:53+00:00</lastmod>
-		<priority>0.70</priority>
-		<image:image>
-			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-mms-6028-clear-beveled-glass-cluster.jpg</image:loc>
-			<image:caption>Glass Beveled Clear Cluster - MMS 6028</image:caption>
-			<image:title>Glass Beveled Clear Cluster - MMS 6028</image:title>
-		</image:image>
-		<image:image>
-			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-hc-01-clear-beveled-glass-cluster.jpg</image:loc>
-			<image:caption>Glass Beveled Clear Cluster - HC 01</image:caption>
-			<image:title>Glass Beveled Clear Cluster - HC 01</image:title>
-		</image:image>
-	</url>
-	<url>
 		<loc>https://test.glasshousestore.com/product/glass-beveled-clear-cluster-ml5b/</loc>
-		<lastmod>2017-06-19T23:02:41+00:00</lastmod>
+		<lastmod>2017-08-18T14:34:52+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-ml5b-clear-beveled-glass-cluster.jpg</image:loc>
@@ -4032,7 +3965,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/glass-beveled-clear-cluster-mms-3028/</loc>
-		<lastmod>2017-06-20T12:13:08+00:00</lastmod>
+		<lastmod>2017-08-18T14:34:24+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-mms-3028-clear-beveled-glass-cluster.jpg</image:loc>
@@ -4042,7 +3975,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/delta-glass-beveled-clear-cluster/</loc>
-		<lastmod>2017-06-19T23:02:24+00:00</lastmod>
+		<lastmod>2017-08-18T14:33:56+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-delta-clear-beveled-glass-cluster.jpg</image:loc>
@@ -4062,7 +3995,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/glass-beveled-clear-cluster-mms-3043/</loc>
-		<lastmod>2017-06-19T23:00:38+00:00</lastmod>
+		<lastmod>2017-08-18T14:33:28+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-mms-3043-clear-beveled-glass-cluster.jpg</image:loc>
@@ -4072,7 +4005,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/glass-beveled-clear-cluster-mms-3052/</loc>
-		<lastmod>2017-06-19T23:00:01+00:00</lastmod>
+		<lastmod>2017-08-18T14:33:05+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-mms-3052-clear-beveled-glass-cluster.jpg</image:loc>
@@ -4082,7 +4015,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/glass-beveled-clear-cluster-mms-7020/</loc>
-		<lastmod>2017-06-20T12:09:06+00:00</lastmod>
+		<lastmod>2017-08-18T14:32:35+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-mms-7020-clear-beveled-glass-cluster.jpg</image:loc>
@@ -4112,7 +4045,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/glass-beveled-clear-cluster-oj12/</loc>
-		<lastmod>2017-07-24T11:30:52+00:00</lastmod>
+		<lastmod>2017-08-23T14:00:39+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-oj12-clear-beveled-glass-cluster.jpg</image:loc>
@@ -4122,7 +4055,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/glass-beveled-clear-cluster-ma-109/</loc>
-		<lastmod>2017-07-24T11:31:45+00:00</lastmod>
+		<lastmod>2017-08-18T14:31:53+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-ma-109-clear-beveled-glass-cluster.jpg</image:loc>
@@ -4152,7 +4085,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/glass-beveled-clear-cluster-mr-357/</loc>
-		<lastmod>2017-07-24T11:34:13+00:00</lastmod>
+		<lastmod>2017-08-18T14:31:15+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-mr-357-clear-beveled-glass-cluster.jpg</image:loc>
@@ -4181,18 +4114,8 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 		</image:image>
 	</url>
 	<url>
-		<loc>https://test.glasshousestore.com/product/beveled-glass-glue-chip-cluster-mjr-126-gc/</loc>
-		<lastmod>2017-06-20T12:07:14+00:00</lastmod>
-		<priority>0.70</priority>
-		<image:image>
-			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-mjr-126-gc-clear-beveled-glass-cluster.jpg</image:loc>
-			<image:caption>Beveled Glass Glue Chip Cluster - MJR 126 GC</image:caption>
-			<image:title>Beveled Glass Glue Chip Cluster - MJR 126 GC</image:title>
-		</image:image>
-	</url>
-	<url>
 		<loc>https://test.glasshousestore.com/product/beveled-glass-glue-chip-cluster-mr-608/</loc>
-		<lastmod>2017-06-19T22:59:15+00:00</lastmod>
+		<lastmod>2017-08-18T14:29:51+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-mr-608-clear-beveled-glass-cluster.jpg</image:loc>
@@ -4252,7 +4175,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/clear-beveled-glass-cluster-mr-511/</loc>
-		<lastmod>2017-07-29T09:25:54+00:00</lastmod>
+		<lastmod>2017-08-18T14:28:36+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-mr-511-clear-beveled-glass-cluster.jpg</image:loc>
@@ -4337,7 +4260,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/indian-chief-beveled-glass-cluster/</loc>
-		<lastmod>2017-07-24T11:56:06+00:00</lastmod>
+		<lastmod>2017-11-21T16:28:40+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-indian-chief-clear-beveled-glass-cluster.jpg</image:loc>
@@ -4356,18 +4279,8 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 		</image:image>
 	</url>
 	<url>
-		<loc>https://test.glasshousestore.com/product/rose-beveled-glass-cluster/</loc>
-		<lastmod>2017-07-24T11:58:01+00:00</lastmod>
-		<priority>0.70</priority>
-		<image:image>
-			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-rose-clear-beveled-glass-cluster.jpg</image:loc>
-			<image:caption>Rose Beveled Glass Cluster</image:caption>
-			<image:title>Rose Beveled Glass Cluster</image:title>
-		</image:image>
-	</url>
-	<url>
 		<loc>https://test.glasshousestore.com/product/flying-duck-beveled-glass-cluster/</loc>
-		<lastmod>2017-07-24T11:59:43+00:00</lastmod>
+		<lastmod>2017-11-16T17:46:27+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-flying-duck-clear-beveled-glass-cluster.jpg</image:loc>
@@ -4417,7 +4330,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/corner-beveled-glass-cluster-mpcr-11/</loc>
-		<lastmod>2017-07-24T12:04:05+00:00</lastmod>
+		<lastmod>2017-09-13T16:24:32+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-mpcr-11-clear-beveled-glass-cluster.jpg</image:loc>
@@ -4427,7 +4340,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/corner-beveled-glass-cluster-mms-7006/</loc>
-		<lastmod>2017-06-19T22:53:08+00:00</lastmod>
+		<lastmod>2017-08-18T14:27:43+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-mms-7006-clear-beveled-glass-cluster.jpg</image:loc>
@@ -4467,7 +4380,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/corner-beveled-glass-cluster-ge-24/</loc>
-		<lastmod>2017-06-20T12:11:36+00:00</lastmod>
+		<lastmod>2017-08-18T14:26:56+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-ge-24-clear-beveled-glass-cluster.jpg</image:loc>
@@ -4497,7 +4410,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/corner-beveled-glass-cluster-ge121/</loc>
-		<lastmod>2017-06-19T22:52:40+00:00</lastmod>
+		<lastmod>2017-08-18T14:26:22+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-ge121-clear-beveled-glass-cluster.jpg</image:loc>
@@ -4507,7 +4420,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/corner-beveled-glass-cluster-ge122/</loc>
-		<lastmod>2017-07-24T12:29:09+00:00</lastmod>
+		<lastmod>2017-09-11T13:11:57+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-ge122-clear-beveled-glass-cluster.jpg</image:loc>
@@ -4517,7 +4430,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/angel-beveled-glass-cluster-ge-61/</loc>
-		<lastmod>2017-06-19T22:52:49+00:00</lastmod>
+		<lastmod>2017-10-25T12:03:01+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-ge-61-clear-glass-bevel-clusters.jpg</image:loc>
@@ -4527,7 +4440,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/angel-beveled-glass-cluster-ge-72/</loc>
-		<lastmod>2017-06-19T22:52:29+00:00</lastmod>
+		<lastmod>2017-08-18T14:25:34+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-ge-72-clear-glass-bevel-clusters.jpg</image:loc>
@@ -4542,7 +4455,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/angel-beveled-glass-cluster-ge-66/</loc>
-		<lastmod>2017-07-24T12:30:51+00:00</lastmod>
+		<lastmod>2017-10-25T12:05:39+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-ge-66-clear-glass-bevel-clusters.jpg</image:loc>
@@ -4552,7 +4465,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/angel-beveled-glass-cluster-ge-70/</loc>
-		<lastmod>2017-07-24T12:32:04+00:00</lastmod>
+		<lastmod>2017-10-25T12:07:02+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-ge-70-clear-glass-bevel-clusters.jpg</image:loc>
@@ -4562,7 +4475,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/angel-beveled-glass-cluster-ge-69/</loc>
-		<lastmod>2017-07-24T12:34:23+00:00</lastmod>
+		<lastmod>2017-10-25T12:06:24+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-ge-69-clear-glass-bevel-clusters.jpg</image:loc>
@@ -4572,7 +4485,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/angel-beveled-glass-cluster-ge-63/</loc>
-		<lastmod>2017-07-24T12:35:06+00:00</lastmod>
+		<lastmod>2017-10-25T12:03:58+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-ge-63-clear-glass-bevel-clusters.jpg</image:loc>
@@ -4582,7 +4495,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/angel-beveled-glass-cluster-thb-105/</loc>
-		<lastmod>2017-07-24T14:09:15+00:00</lastmod>
+		<lastmod>2017-10-25T12:07:57+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-thb-105-clear-glass-bevel-clusters.jpg</image:loc>
@@ -4592,7 +4505,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/joy-holly-beveled-glass-cluster/</loc>
-		<lastmod>2017-06-20T12:01:03+00:00</lastmod>
+		<lastmod>2017-08-18T14:23:10+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-joy-clear-glass-bevel-clusters.jpg</image:loc>
@@ -4627,7 +4540,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/star-beveled-glass-cluster-t1422ea09/</loc>
-		<lastmod>2017-07-24T12:37:06+00:00</lastmod>
+		<lastmod>2017-11-24T15:09:11+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-t1422ea09-clear-glass-bevel-clusters-1.jpg</image:loc>
@@ -4637,7 +4550,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/star-beveled-glass-cluster-thb-112/</loc>
-		<lastmod>2017-07-24T12:39:48+00:00</lastmod>
+		<lastmod>2017-08-23T13:58:38+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-thb-112-clear-glass-bevel-clusters.jpg</image:loc>
@@ -4667,7 +4580,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/snowflake-beveled-glass-cluster-mjh116/</loc>
-		<lastmod>2017-07-24T12:43:03+00:00</lastmod>
+		<lastmod>2017-09-11T13:15:11+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mms-mjh116-clear-glass-bevel-clusters.jpg</image:loc>
@@ -4716,8 +4629,18 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 		</image:image>
 	</url>
 	<url>
+		<loc>https://test.glasshousestore.com/product/dazzle-junior-stainless-steel-zig-zag-mold/</loc>
+		<lastmod>2017-10-16T22:22:44+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/IMG_7192.jpg</image:loc>
+			<image:caption>Dazzle Jr</image:caption>
+			<image:title>Dazzle Jr</image:title>
+		</image:image>
+	</url>
+	<url>
 		<loc>https://test.glasshousestore.com/product/aztec-sunface/</loc>
-		<lastmod>2017-06-20T12:00:02+00:00</lastmod>
+		<lastmod>2017-08-22T20:41:36+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/aztec-red-glass-sunface.jpeg</image:loc>
@@ -4727,7 +4650,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/irridized-cobalt-blue-moonfaces/</loc>
-		<lastmod>2017-06-19T22:42:32+00:00</lastmod>
+		<lastmod>2017-08-22T20:13:31+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/blue-irridized-glass-moon-face.jpeg</image:loc>
@@ -4737,7 +4660,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/irridized-red-moonfaces/</loc>
-		<lastmod>2017-06-19T22:42:47+00:00</lastmod>
+		<lastmod>2017-08-22T20:43:23+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/red-irridized-glass-moon-face.jpeg</image:loc>
@@ -4747,7 +4670,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/red-lady-bug-glass/</loc>
-		<lastmod>2017-06-19T22:42:21+00:00</lastmod>
+		<lastmod>2017-09-25T09:11:38+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/red-glass-lady-bug.jpeg</image:loc>
@@ -4757,7 +4680,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/bees-bug-glass/</loc>
-		<lastmod>2017-06-20T11:59:45+00:00</lastmod>
+		<lastmod>2017-09-14T16:42:45+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/minature-glass-bee.jpeg</image:loc>
@@ -4767,7 +4690,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/red-glass-hearts/</loc>
-		<lastmod>2017-06-20T11:59:06+00:00</lastmod>
+		<lastmod>2017-09-06T11:53:59+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/small-red-glass-hearts.jpeg</image:loc>
@@ -4777,7 +4700,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/gold-glass-hearts/</loc>
-		<lastmod>2017-06-20T11:58:48+00:00</lastmod>
+		<lastmod>2017-09-06T11:53:23+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/tiny-gold-glass-hearts.jpeg</image:loc>
@@ -4787,7 +4710,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/sun-and-moon-glass-goodies/</loc>
-		<lastmod>2017-06-19T22:41:57+00:00</lastmod>
+		<lastmod>2017-09-06T11:51:16+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/minature-moon-and-sun-glass.jpeg</image:loc>
@@ -4797,7 +4720,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/orca-whale-glass-goodies/</loc>
-		<lastmod>2017-06-19T22:42:01+00:00</lastmod>
+		<lastmod>2017-09-06T11:50:56+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/small-glass-orca-whales.jpeg</image:loc>
@@ -4807,7 +4730,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/mixed-hearts-glass-goodies/</loc>
-		<lastmod>2017-06-19T22:42:11+00:00</lastmod>
+		<lastmod>2017-09-25T09:11:07+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mixed-glass-hearts.jpeg</image:loc>
@@ -4817,7 +4740,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/halloween-pumpkins-glass-goodies/</loc>
-		<lastmod>2017-06-19T22:41:51+00:00</lastmod>
+		<lastmod>2017-09-06T11:55:23+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mainture-glass-haloween-pumpkins.jpeg</image:loc>
@@ -4837,7 +4760,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/mixed-stars-glass-goodies/</loc>
-		<lastmod>2017-06-20T11:58:32+00:00</lastmod>
+		<lastmod>2017-09-06T11:50:33+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mixed-stars.jpeg</image:loc>
@@ -4847,7 +4770,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/fish-glass-goodies/</loc>
-		<lastmod>2017-06-20T11:58:18+00:00</lastmod>
+		<lastmod>2017-09-06T11:50:10+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/miniature-glass-fish.jpeg</image:loc>
@@ -4857,7 +4780,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/halloween-ghosts-designer-glass-goodies/</loc>
-		<lastmod>2017-06-19T22:41:25+00:00</lastmod>
+		<lastmod>2017-09-06T11:49:49+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/small-glass-ghosts.jpeg</image:loc>
@@ -4867,7 +4790,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/red-apple-designer-glass-goodies/</loc>
-		<lastmod>2017-06-20T11:58:01+00:00</lastmod>
+		<lastmod>2017-09-06T11:49:27+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/miniature-glass-apple.jpeg</image:loc>
@@ -4877,7 +4800,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/angel-designer-glass-goodies/</loc>
-		<lastmod>2017-06-19T22:41:16+00:00</lastmod>
+		<lastmod>2017-09-06T11:49:10+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mixed-tiny-glass-angels.jpeg</image:loc>
@@ -4887,7 +4810,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/star-fish-designer-glass-goodies/</loc>
-		<lastmod>2017-06-19T22:41:20+00:00</lastmod>
+		<lastmod>2017-09-06T11:48:48+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/tiny-glass-starfish.jpeg</image:loc>
@@ -4897,7 +4820,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/snowman-designer-glass-goodies/</loc>
-		<lastmod>2017-06-19T22:41:34+00:00</lastmod>
+		<lastmod>2017-09-06T11:48:30+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/tiny-glass-snowman.jpeg</image:loc>
@@ -4907,7 +4830,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/christmas-stocking-designer-glass-goodies/</loc>
-		<lastmod>2017-06-19T22:41:12+00:00</lastmod>
+		<lastmod>2017-09-06T11:48:14+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/glass-christmas-stocking.jpeg</image:loc>
@@ -4917,7 +4840,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/ruby-red-lips-designer-glass-goodies/</loc>
-		<lastmod>2017-06-19T22:41:02+00:00</lastmod>
+		<lastmod>2017-09-06T11:47:56+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/small-glass-lips.jpeg</image:loc>
@@ -4927,7 +4850,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/santa-claus-face-designer-glass-goodies/</loc>
-		<lastmod>2017-06-19T22:40:47+00:00</lastmod>
+		<lastmod>2017-09-06T11:47:42+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/miniature-glass-santa-head.jpeg</image:loc>
@@ -4937,7 +4860,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/sea-horse-designer-glass-goodies/</loc>
-		<lastmod>2017-06-19T22:40:36+00:00</lastmod>
+		<lastmod>2017-09-06T11:47:24+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/miniature-glass-seahorses.jpeg</image:loc>
@@ -4952,7 +4875,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/spotted-cows-designer-glass-goodies/</loc>
-		<lastmod>2017-06-19T22:37:44+00:00</lastmod>
+		<lastmod>2017-09-06T11:46:37+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/tiny-glass-cows.jpeg</image:loc>
@@ -4962,7 +4885,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/magnet-green-glass-alligators/</loc>
-		<lastmod>2017-06-19T22:37:18+00:00</lastmod>
+		<lastmod>2017-08-22T20:08:01+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/glass-alligator-magnet.jpeg</image:loc>
@@ -4972,7 +4895,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/light-blue-glass-crescent-moon-faces/</loc>
-		<lastmod>2017-06-19T22:36:46+00:00</lastmod>
+		<lastmod>2017-08-29T15:50:02+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/moon-light-blue-minature-glass.jpeg</image:loc>
@@ -4982,7 +4905,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/dark-blue-glass-crescent-moon-faces/</loc>
-		<lastmod>2017-06-19T22:36:36+00:00</lastmod>
+		<lastmod>2017-08-29T15:49:43+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/moon-tiny-dark-blue-glass.jpeg</image:loc>
@@ -4992,7 +4915,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/ice-irridized-glass-crescent-moon-faces/</loc>
-		<lastmod>2017-06-19T22:34:07+00:00</lastmod>
+		<lastmod>2017-08-29T15:49:13+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/moon-tiny-clear-glass.jpeg</image:loc>
@@ -5037,7 +4960,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/magnet-glass-mixed-butterfly-box/</loc>
-		<lastmod>2017-06-19T22:33:26+00:00</lastmod>
+		<lastmod>2017-09-06T11:51:37+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mixed-butterfly-glass-magnets.jpg</image:loc>
@@ -5047,7 +4970,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/irridized-clear-moonfaces/</loc>
-		<lastmod>2017-06-19T22:33:17+00:00</lastmod>
+		<lastmod>2017-08-29T15:48:40+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/glass-goodie-clear-iridescent-moon-face.jpeg</image:loc>
@@ -5057,7 +4980,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/tree-designer-glass-goodies/</loc>
-		<lastmod>2017-06-19T22:33:03+00:00</lastmod>
+		<lastmod>2017-09-06T11:45:03+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/miniature-glass-christmas-tree.jpeg</image:loc>
@@ -5072,7 +4995,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/girl-and-a-bird-art-deco-fan-lamp-base/</loc>
-		<lastmod>2017-06-19T22:32:45+00:00</lastmod>
+		<lastmod>2017-09-21T12:08:58+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/girl-and-a-bird-art-deco-lamp-base-fan.jpg</image:loc>
@@ -5082,7 +5005,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/kneeling-lady-art-deco-fan-lamp-base/</loc>
-		<lastmod>2017-06-19T22:30:52+00:00</lastmod>
+		<lastmod>2017-09-12T15:27:02+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/kneeling-lady-art-deco-lamp-base.jpg</image:loc>
@@ -5092,7 +5015,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/two-dancers-art-deco-fan-lamp-base/</loc>
-		<lastmod>2017-06-19T22:30:37+00:00</lastmod>
+		<lastmod>2017-09-12T15:26:27+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/two-dancers-art-deco-lamp-base.jpg</image:loc>
@@ -5102,7 +5025,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/us-navy-etched-6-glass-bevel/</loc>
-		<lastmod>2017-06-21T10:34:09+00:00</lastmod>
+		<lastmod>2017-11-15T20:45:17+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/united-states-navy-etched-military-6-inch-glass-bevel.jpg</image:loc>
@@ -5112,7 +5035,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/us-marines-etched-6-glass-bevel/</loc>
-		<lastmod>2017-06-21T10:34:09+00:00</lastmod>
+		<lastmod>2017-09-20T14:33:21+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/united-states-marines-etched-military-6-inch-glass-bevel.jpg</image:loc>
@@ -5122,7 +5045,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/us-air-force-etched-6-glass-bevel/</loc>
-		<lastmod>2017-08-02T15:15:08+00:00</lastmod>
+		<lastmod>2017-09-20T14:26:28+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/united-states-air-force-etched-military-6-inch-glass-bevel.jpg</image:loc>
@@ -5132,7 +5055,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/us-army-etched-6-glass-bevel/</loc>
-		<lastmod>2017-06-21T10:35:30+00:00</lastmod>
+		<lastmod>2017-09-20T14:29:18+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/united-states-army-etched-military-6-inch-glass-bevel.jpg</image:loc>
@@ -5142,17 +5065,22 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/us-coast-guard-etched-6-glass-bevel/</loc>
-		<lastmod>2017-06-21T10:34:06+00:00</lastmod>
+		<lastmod>2017-09-20T14:31:27+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/coast-guard-etched-military-6-inch-glass-bevel.jpg</image:loc>
 			<image:caption>Coast Guard etched 6 inch glass bevel</image:caption>
 			<image:title>Coast Guard etched 6 inch glass bevel</image:title>
 		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/coast-guard.jpeg</image:loc>
+			<image:caption>Coast Guard Glass Bevel</image:caption>
+			<image:title>Coast Guard Glass Bevel</image:title>
+		</image:image>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/us-pow-mia-6-glass-bevel/</loc>
-		<lastmod>2017-06-21T10:34:03+00:00</lastmod>
+		<lastmod>2017-09-20T14:36:58+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/pow-mia-etched-military-6-inch-glass-bevel.jpg</image:loc>
@@ -5162,17 +5090,22 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/etched-harley-live-to-ride-6-motorcycle-glass-bevel/</loc>
-		<lastmod>2017-06-19T22:27:53+00:00</lastmod>
+		<lastmod>2017-09-20T11:35:32+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/harley-live-to-ride-bevels-etched-6-inch-glass-bevel.jpg</image:loc>
 			<image:caption>Harley motorcycle live to ride bevels etched 6 inch glass bevel</image:caption>
 			<image:title>Harley motorcycle live to ride bevels etched 6 inch glass bevel</image:title>
 		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/09/Live-to-ride.jpeg</image:loc>
+			<image:caption>Live to ride</image:caption>
+			<image:title>Live to ride</image:title>
+		</image:image>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/etched-harley-born-to-ride-6-motorcycle-glass-bevel/</loc>
-		<lastmod>2017-06-19T22:28:04+00:00</lastmod>
+		<lastmod>2017-09-20T11:34:37+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/harley-born-to-ride-bevels-etched-6-inch-glass-bevel.jpg</image:loc>
@@ -5182,17 +5115,22 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/etched-harley-born-to-ride-6-engine-glass-bevel/</loc>
-		<lastmod>2017-06-19T22:27:13+00:00</lastmod>
+		<lastmod>2017-09-20T11:17:10+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/harley-born-to-ride-v-twin-engine-etched-6-inch-glass-bevel.jpg</image:loc>
 			<image:caption>Harley born to ride v twin engine etched 6 inch glass bevel</image:caption>
 			<image:title>Harley born to ride v twin engine etched 6 inch glass bevel</image:title>
 		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/Harley-panel.jpg</image:loc>
+			<image:caption>Harley Davidson Born to Ride beveled glass panel</image:caption>
+			<image:title>Harley Davidson Born to Ride beveled glass window</image:title>
+		</image:image>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/tiffany-junior-5-12-dome-draper-mold/</loc>
-		<lastmod>2017-06-19T22:26:46+00:00</lastmod>
+		<lastmod>2017-10-07T15:43:37+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/Tiffany-Junior-5-1-2-inch-Dome-Drapper-Mold.jpg</image:loc>
@@ -5202,7 +5140,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/11-dome-draper-lamp-form/</loc>
-		<lastmod>2017-07-01T15:52:29+00:00</lastmod>
+		<lastmod>2017-10-07T15:41:45+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/11-inch-Stainless-Steel-Dome-Drapper-Mold.jpg</image:loc>
@@ -5212,7 +5150,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/flower-gems-glass-goodies/</loc>
-		<lastmod>2017-06-19T22:25:38+00:00</lastmod>
+		<lastmod>2017-11-20T21:11:17+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/flower-gems-glass-goodies.jpg</image:loc>
@@ -5237,7 +5175,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/diamond-colored-glass-bevel-1-12-x-2-12/</loc>
-		<lastmod>2017-07-06T12:40:58+00:00</lastmod>
+		<lastmod>2017-09-16T10:32:28+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/1-5x2-5-Diamond-Bevel.jpg</image:loc>
@@ -5247,7 +5185,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/diamond-colored-glass-bevel-1-34-x-3/</loc>
-		<lastmod>2017-07-06T12:40:06+00:00</lastmod>
+		<lastmod>2017-09-16T10:34:30+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/1-75x3-Diamond-Bevel.jpg</image:loc>
@@ -5257,7 +5195,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/diamond-colored-glass-bevel-2-x-4/</loc>
-		<lastmod>2017-07-06T12:39:05+00:00</lastmod>
+		<lastmod>2017-09-16T10:26:32+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/2x4-Diamond-Bevel.jpg</image:loc>
@@ -5267,7 +5205,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/diamond-colored-glass-bevel-2-x-6/</loc>
-		<lastmod>2017-07-06T12:38:11+00:00</lastmod>
+		<lastmod>2017-09-16T10:30:08+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/2x6-Diamond-Bevel.jpg</image:loc>
@@ -5277,7 +5215,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/diamond-colored-glass-bevel-3-x-5/</loc>
-		<lastmod>2017-07-06T12:37:10+00:00</lastmod>
+		<lastmod>2017-11-21T10:05:57+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/3x5-Diamond-Bevel.jpg</image:loc>
@@ -5287,7 +5225,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/square-colored-glass-bevel-1-x-1/</loc>
-		<lastmod>2017-07-06T12:35:16+00:00</lastmod>
+		<lastmod>2017-09-16T11:55:54+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/1x1-Bevel.jpg</image:loc>
@@ -5297,7 +5235,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/square-colored-glass-bevel-1-12-x-1-12/</loc>
-		<lastmod>2017-07-06T12:34:19+00:00</lastmod>
+		<lastmod>2017-09-16T11:54:30+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/1-5x1-5-Bevel.jpg</image:loc>
@@ -5307,7 +5245,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/square-colored-glass-bevel-2-x-2/</loc>
-		<lastmod>2017-07-06T12:32:49+00:00</lastmod>
+		<lastmod>2017-09-16T11:57:47+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/2x2-Bevel.jpg</image:loc>
@@ -5317,7 +5255,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/square-colored-glass-bevel-3-x-3/</loc>
-		<lastmod>2017-07-06T12:31:53+00:00</lastmod>
+		<lastmod>2017-09-16T11:59:15+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/3x3-Bevel.jpg</image:loc>
@@ -5327,7 +5265,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/rectangle-colored-glass-bevel-1-x-2/</loc>
-		<lastmod>2017-07-06T12:30:04+00:00</lastmod>
+		<lastmod>2017-09-16T11:12:22+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/1x2-Bevel.jpg</image:loc>
@@ -5337,7 +5275,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/rectangle-colored-glass-bevel-1-x-3/</loc>
-		<lastmod>2017-07-06T12:28:58+00:00</lastmod>
+		<lastmod>2017-09-16T11:13:45+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/1x3-Bevel.jpg</image:loc>
@@ -5347,7 +5285,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/rectangle-colored-glass-bevel-1-x-6/</loc>
-		<lastmod>2017-07-06T12:27:32+00:00</lastmod>
+		<lastmod>2017-09-16T11:42:06+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/1x6-Bevel.jpg</image:loc>
@@ -5357,7 +5295,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/rectangle-colored-glass-bevel-1-x-8/</loc>
-		<lastmod>2017-07-06T12:25:36+00:00</lastmod>
+		<lastmod>2017-09-16T11:47:11+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/1x8-Bevel.jpg</image:loc>
@@ -5367,7 +5305,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/rectangle-colored-glass-bevel-1-x-4/</loc>
-		<lastmod>2017-07-06T12:23:51+00:00</lastmod>
+		<lastmod>2017-09-16T11:17:11+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/1x4-Bevel.jpg</image:loc>
@@ -5377,7 +5315,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/rectangle-colored-glass-bevel-1-12-x-2/</loc>
-		<lastmod>2017-07-06T12:21:57+00:00</lastmod>
+		<lastmod>2017-09-16T10:38:23+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/1-5x2-Bevel.jpg</image:loc>
@@ -5387,7 +5325,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/rectangle-colored-glass-bevel-1-12-x-3/</loc>
-		<lastmod>2017-07-06T12:20:54+00:00</lastmod>
+		<lastmod>2017-09-16T10:40:29+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/1-5x3-Bevel.jpg</image:loc>
@@ -5407,7 +5345,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/rectangle-colored-glass-bevel-1-12-x-4/</loc>
-		<lastmod>2017-07-06T12:19:47+00:00</lastmod>
+		<lastmod>2017-09-16T10:43:56+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/1-5x4-Bevel.jpg</image:loc>
@@ -5417,7 +5355,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/rectangle-colored-glass-bevel-1-12-x-5/</loc>
-		<lastmod>2017-07-06T12:18:41+00:00</lastmod>
+		<lastmod>2017-09-16T10:45:47+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/1-5x5-Bevel.jpg</image:loc>
@@ -5427,7 +5365,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/rectangle-colored-glass-bevel-1-12-x-6/</loc>
-		<lastmod>2017-07-06T12:15:40+00:00</lastmod>
+		<lastmod>2017-09-16T11:10:11+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/1-5x6-Bevel.jpg</image:loc>
@@ -5437,7 +5375,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/rectangle-colored-glass-bevel-2-x-4/</loc>
-		<lastmod>2017-07-06T12:14:05+00:00</lastmod>
+		<lastmod>2017-09-16T11:50:15+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/2x4-Bevel.jpg</image:loc>
@@ -5447,7 +5385,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/rectangle-colored-glass-bevel-2-x-6/</loc>
-		<lastmod>2017-07-06T12:12:39+00:00</lastmod>
+		<lastmod>2017-09-16T11:52:31+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/2x6-Bevel.jpg</image:loc>
@@ -5457,7 +5395,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/square-dichroic-glass-bevel-1-12-x-1-12/</loc>
-		<lastmod>2017-07-09T11:54:01+00:00</lastmod>
+		<lastmod>2017-09-26T16:33:26+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/1-5x1-5-dichroic-bevel.jpg</image:loc>
@@ -5467,7 +5405,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/square-dichroic-glass-bevel-2-x-2/</loc>
-		<lastmod>2017-07-09T11:51:45+00:00</lastmod>
+		<lastmod>2017-11-10T10:43:34+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/2x2-dichroic-bevel.jpg</image:loc>
@@ -5482,7 +5420,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/square-dichroic-glass-bevel-3-x-3/</loc>
-		<lastmod>2017-07-09T11:52:30+00:00</lastmod>
+		<lastmod>2017-09-16T10:22:24+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/3x3-dichroic-bevel.jpg</image:loc>
@@ -5492,7 +5430,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/diamond-dichroic-glass-bevel-2-x-4/</loc>
-		<lastmod>2017-07-09T11:53:40+00:00</lastmod>
+		<lastmod>2017-09-16T10:08:09+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/2x4-dichroic-diamond-bevel.jpg</image:loc>
@@ -5502,7 +5440,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/diamond-dichroic-glass-bevel-2-x-6/</loc>
-		<lastmod>2017-07-09T11:53:17+00:00</lastmod>
+		<lastmod>2017-09-16T10:16:26+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/2x6-dichroic-diamond-bevel.jpg</image:loc>
@@ -5512,7 +5450,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/diamond-dichroic-glass-bevel-3-x-5/</loc>
-		<lastmod>2017-07-09T11:52:57+00:00</lastmod>
+		<lastmod>2017-11-11T16:14:56+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/3x5-dichroic-diamond-bevel.jpg</image:loc>
@@ -5522,7 +5460,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/ultimate-3d-snowflake-suncatcher-beveled-glass-kit/</loc>
-		<lastmod>2017-06-19T20:28:44+00:00</lastmod>
+		<lastmod>2017-10-13T14:41:53+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/MMS-bevels-ultimate-suncatcher-3D-snowflake-kit.jpg</image:loc>
@@ -5532,7 +5470,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/beetle-bit-glass-cutting-system/</loc>
-		<lastmod>2017-08-15T12:17:45+00:00</lastmod>
+		<lastmod>2017-11-20T21:02:14+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/beetle-bits-cutting-system.jpg</image:loc>
@@ -5542,7 +5480,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/flying-beetle-glass-cutter/</loc>
-		<lastmod>2017-08-15T12:18:45+00:00</lastmod>
+		<lastmod>2017-11-20T21:03:30+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/flying-beetle-cutting-head.jpg</image:loc>
@@ -5577,7 +5515,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/lighted-base-black/</loc>
-		<lastmod>2017-06-24T23:42:51+00:00</lastmod>
+		<lastmod>2017-11-22T15:10:26+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/9c2108a87bff08ca-photo-full.jpeg</image:loc>
@@ -5592,7 +5530,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/crystal-lighted-base/</loc>
-		<lastmod>2017-06-24T23:41:22+00:00</lastmod>
+		<lastmod>2017-11-22T15:16:58+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/87eef098761070a6-photo-full.jpeg</image:loc>
@@ -5627,7 +5565,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/glass-goddess-artist-apron/</loc>
-		<lastmod>2017-07-08T14:01:30+00:00</lastmod>
+		<lastmod>2017-11-12T14:14:01+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/07/Glass-Goddess-apron.jpeg</image:loc>
@@ -5637,7 +5575,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/rectangle-bevel-glass-1-1516-x-4-316/</loc>
-		<lastmod>2017-07-19T10:34:52+00:00</lastmod>
+		<lastmod>2017-09-30T16:18:41+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/07/rectangle-bevel-clear-glass-1-1516-e2-80-b3-x-4-316-e2-80-b3.jpeg</image:loc>
@@ -5647,7 +5585,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/marines-beveled-glass-cluster-mec-282/</loc>
-		<lastmod>2017-08-14T15:46:05+00:00</lastmod>
+		<lastmod>2017-11-21T16:05:16+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mec-282-marines-bevel-kit.jpg</image:loc>
@@ -5657,17 +5595,22 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/navy-beveled-glass-cluster-mec-281/</loc>
-		<lastmod>2017-08-14T15:44:59+00:00</lastmod>
+		<lastmod>2017-11-21T16:06:31+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/07/navy-beveled-glass-cluster-mec-281.jpg</image:loc>
 			<image:caption>Navy Beveled Glass Cluster – MEC 281</image:caption>
 			<image:title>Navy Beveled Glass Cluster – MEC 281</image:title>
 		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/07/IMG_7559.jpg</image:loc>
+			<image:caption>Navy panel</image:caption>
+			<image:title>Navy panel</image:title>
+		</image:image>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/coast-guard-beveled-glass-cluster-mec-284/</loc>
-		<lastmod>2017-07-24T13:36:12+00:00</lastmod>
+		<lastmod>2017-11-16T18:08:53+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mec-284-coast-guard-bevel-kit.jpg</image:loc>
@@ -5677,17 +5620,22 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/army-beveled-glass-cluster-mec-280/</loc>
-		<lastmod>2017-08-14T15:43:16+00:00</lastmod>
+		<lastmod>2017-11-21T16:05:58+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mec-280-army-bevel-kit.jpg</image:loc>
 			<image:caption>MEC 280 Army Bevel Kit</image:caption>
 			<image:title>MEC 280 Army Bevel Kit</image:title>
 		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/07/IMG_7566.jpg</image:loc>
+			<image:caption>Army Bevel</image:caption>
+			<image:title>Army Bevel</image:title>
+		</image:image>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/air-force-beveled-glass-cluster-mec-283/</loc>
-		<lastmod>2017-08-14T15:50:01+00:00</lastmod>
+		<lastmod>2017-11-21T16:04:43+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mec-283-air-force-bevel-kit.jpg</image:loc>
@@ -5697,7 +5645,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/celtic-cross-beveled-glass-cluster-mec-152/</loc>
-		<lastmod>2017-08-14T15:44:09+00:00</lastmod>
+		<lastmod>2017-11-16T18:07:46+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/06/mec-152-celtic-cross-bevel-kit.jpg</image:loc>
@@ -5707,7 +5655,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/celtic-cross-small-beveled-glass-cluster-mec-153/</loc>
-		<lastmod>2017-07-24T13:32:42+00:00</lastmod>
+		<lastmod>2017-11-21T16:03:49+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/07/celtic-cross-small-beveled-glass-cluster-mec-153.jpg</image:loc>
@@ -5717,7 +5665,7 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 	</url>
 	<url>
 		<loc>https://test.glasshousestore.com/product/square-colored-glass-bevel-34-x-34/</loc>
-		<lastmod>2017-07-09T11:41:04+00:00</lastmod>
+		<lastmod>2017-09-16T12:00:51+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/07/square-colored-glass-bevel-34-e2-80-b3-x-34-e2-80-b3-green.jpeg</image:loc>
@@ -5731,13 +5679,713 @@ Bevels &amp; Clear Irridized Glass Globs 11” x 11”</image:caption>
 		</image:image>
 	</url>
 	<url>
+		<loc>https://test.glasshousestore.com/diy-making-your-own-wine-bottle-fairy-garden/</loc>
+		<lastmod>2017-08-21T16:08:28+00:00</lastmod>
+		<priority>0.6</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/07/Finished-DIY-Wine-Bottle-Fairy-Garden-Project.jpeg</image:loc>
+			<image:caption>Finished DIY Wine Bottle Fairy Garden Project</image:caption>
+			<image:title>Finished DIY Wine Bottle Fairy Garden Project</image:title>
+		</image:image>
+	</url>
+	<url>
 		<loc>https://test.glasshousestore.com/product/wine-bottle-fairy-garden-assembly-kit/</loc>
-		<lastmod>2017-08-14T15:14:36+00:00</lastmod>
+		<lastmod>2017-08-21T14:35:28+00:00</lastmod>
 		<priority>0.70</priority>
 		<image:image>
 			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/08/Wine-Bottle-Fairy-Garden-Assembly-Kit-1024.jpeg</image:loc>
 			<image:caption>Wine Bottle Fairy Garden Assembly Kit</image:caption>
 			<image:title>Wine Bottle Fairy Garden Assembly Kit</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/spectrum-spirit-stripes-96-coe/</loc>
+		<lastmod>2017-09-10T15:10:01+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/08/7ac5af45aa9a0957-photo.jpeg</image:loc>
+			<image:caption>7ac5af45aa9a0957-photo</image:caption>
+			<image:title>7ac5af45aa9a0957-photo</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/08/13ad97774e5226f7-photo.jpeg</image:loc>
+			<image:caption>13ad97774e5226f7-photo</image:caption>
+			<image:title>13ad97774e5226f7-photo</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/08/af354814635a8e6c-photo.jpeg</image:loc>
+			<image:caption>af354814635a8e6c-photo</image:caption>
+			<image:title>af354814635a8e6c-photo</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/08/dd00360920589751-photo.jpeg</image:loc>
+			<image:caption>dd00360920589751-photo</image:caption>
+			<image:title>dd00360920589751-photo</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/08/278bc19b17b0671e-photo.jpeg</image:loc>
+			<image:caption>278bc19b17b0671e-photo</image:caption>
+			<image:title>278bc19b17b0671e-photo</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/harley-davidson-shield-neon-light/</loc>
+		<lastmod>2017-08-28T14:48:58+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/08/harley-neon-2.jpeg</image:loc>
+			<image:caption>harley neon 2</image:caption>
+			<image:title>harley neon 2</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/08/d48087a258e5a909-photo.jpeg</image:loc>
+			<image:caption>d48087a258e5a909-photo</image:caption>
+			<image:title>d48087a258e5a909-photo</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/grinder-cookie/</loc>
+		<lastmod>2017-08-30T10:53:10+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/08/Stained-Glass-Grinder-Cookie.jpg</image:loc>
+			<image:caption>Stained Glass Grinder Cookie</image:caption>
+			<image:title>Stained Glass Grinder Cookie</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/08/How-to-Use-Stained-Glass-Grinder-Cookie.jpg</image:loc>
+			<image:caption>How to Use Stained Glass Grinder Cookie</image:caption>
+			<image:title>How to Use Stained Glass Grinder Cookie</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/traditional-leaded-glass-windows-dvd-vicki-payne/</loc>
+		<lastmod>2017-09-06T12:52:37+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/09/Traditional-Leaded-Glass-Windows-DVD-Vicki-Payne.jpg</image:loc>
+			<image:caption>Traditional Leaded Glass Windows - DVD by Vicki Payne</image:caption>
+			<image:title>Traditional Leaded Glass Windows - DVD by Vicki Payne</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/frit-casting-fun/</loc>
+		<lastmod>2017-09-29T21:12:15+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/09/FullSizeRender-22.jpg</image:loc>
+			<image:caption>FullSizeRender-22</image:caption>
+			<image:title>FullSizeRender-22</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/glass-weaving-in-the-kiln/</loc>
+		<lastmod>2017-10-07T14:45:37+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/09/Weaving-mold-.jpeg</image:loc>
+			<image:caption>Weaving mold</image:caption>
+			<image:title>Weaving mold</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/09/f938100a6cf40eeb-photo.jpeg</image:loc>
+			<image:caption>f938100a6cf40eeb-photo</image:caption>
+			<image:title>f938100a6cf40eeb-photo</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/09/43ebcbbcf6be005f-photo.jpeg</image:loc>
+			<image:caption>43ebcbbcf6be005f-photo</image:caption>
+			<image:title>43ebcbbcf6be005f-photo</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/09/28ef74603834988c-photo.jpeg</image:loc>
+			<image:caption>28ef74603834988c-photo</image:caption>
+			<image:title>28ef74603834988c-photo</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/stained-glass/annual-stained-glass-parking-lot-sale/</loc>
+		<lastmod>2017-10-12T17:58:40+00:00</lastmod>
+		<priority>0.8</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/09/2017-Fall-Glass-Sale-October-21-22-and-23-Parking-Lot-Sale.jpg</image:loc>
+			<image:caption>2017 Fall Glass Sale October 21 22 and 23 Parking Lot Sale</image:caption>
+			<image:title>2017 Fall Glass Sale October 21 22 and 23 Parking Lot Sale</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/st-louis-cardinals-bamvino-wine-bottle-holder/</loc>
+		<lastmod>2017-09-12T13:31:40+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/09/Cardinal-Wine-holder-e1505241076654.jpeg</image:loc>
+			<image:caption>Cardinal Wine holder</image:caption>
+			<image:title>Cardinal Wine holder</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/09/cardinal-close-up.jpeg</image:loc>
+			<image:caption>cardinal close up</image:caption>
+			<image:title>cardinal close up</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/free-form-pendant-lamp-mold-large-stainless-steel/</loc>
+		<lastmod>2017-09-13T23:04:26+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/09/Large-pendant-w-lamp.jpeg</image:loc>
+			<image:caption>Large pendant w: lamp</image:caption>
+			<image:title>Large pendant w: lamp</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/spectrum-glass-fusers-reserve-c3-pack/</loc>
+		<lastmod>2017-09-21T18:57:11+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/09/3f9924fc74a1c309-photo-full.jpeg</image:loc>
+			<image:caption>Pink/purple spirit on clear</image:caption>
+			<image:title>Pink/purple spirit on clear</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/seabee-6-etched-glass-bevel/</loc>
+		<lastmod>2017-09-20T17:37:33+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/09/FullSizeRender-21.jpg</image:loc>
+			<image:caption>SeaBee Glass Bevel-6&quot;</image:caption>
+			<image:title>SeaBee Glass Bevel-6&quot;</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/glass-pro-flux/</loc>
+		<lastmod>2017-10-14T15:07:21+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/09/glass-pro-solder-flux-creative-craftsman-5001-4-oz.jpg</image:loc>
+			<image:caption>Glass Pro Solder Flux - 5001 4-oz by Creative Craftsman</image:caption>
+			<image:title>Glass Pro Solder Flux - 5001 4-oz</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/etched-4-x-6-oval/</loc>
+		<lastmod>2017-09-30T09:07:21+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/09/Wheat-4-x-6.jpeg</image:loc>
+			<image:caption>Wheat 4 x 6</image:caption>
+			<image:title>Wheat 4 x 6</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/illinois-stained-glass-accent-lamp/</loc>
+		<lastmod>2017-11-04T15:05:08+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/10/0103c822a0f1621b-photo.jpeg</image:loc>
+			<image:caption>0103c822a0f1621b-photo</image:caption>
+			<image:title>0103c822a0f1621b-photo</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/diamond-dichroic-glass-bevel-1-12-x-2-12-granite/</loc>
+		<lastmod>2017-10-15T11:37:30+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/10/199830.jpg</image:loc>
+			<image:caption>Dichroic 1 1/2&quot; x 2 1/2&quot; Diamond</image:caption>
+			<image:title>Dichroic 1 1/2&quot; x 2 1/2&quot; Diamond</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/hues-2-fuse-paint-set/</loc>
+		<lastmod>2017-10-15T15:37:11+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/10/IMG_7179.jpg</image:loc>
+			<image:caption>Hues 2 Fuse flier</image:caption>
+			<image:title>Hues 2 Fuse flier</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/10/IMG_7178.jpg</image:loc>
+			<image:caption>Hues 2 Fuse Paints</image:caption>
+			<image:title>Hues 2 Fuse Paints</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/10/DT26GM191Tut-2T.jpg</image:loc>
+			<image:caption>Hues to fuse project</image:caption>
+			<image:title>Hues to fuse project</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/beetle-bit-mini-cutting-system/</loc>
+		<lastmod>2017-10-31T12:40:57+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/10/3175b.jpg</image:loc>
+			<image:caption>3175b</image:caption>
+			<image:title>3175b</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/10/MBBB.jpg</image:loc>
+			<image:caption>Beetle Bit Mini</image:caption>
+			<image:title>Beetle Bit Mini</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/10/3175b-1.jpg</image:loc>
+			<image:caption>3175b</image:caption>
+			<image:title>3175b</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/cutters-mate-mini-cutting-system/</loc>
+		<lastmod>2017-10-31T12:37:04+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/10/212397-2.jpg</image:loc>
+			<image:caption>Cutters mate mini</image:caption>
+			<image:title>Cutters mate mini</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/chicago-cubs-clock/</loc>
+		<lastmod>2017-11-13T16:13:14+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/Cub-clock.jpeg</image:loc>
+			<image:caption>Cub clock</image:caption>
+			<image:title>Cub clock</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/chicago-cubs-clock.jpeg</image:loc>
+			<image:caption>Chicago Cubs clock</image:caption>
+			<image:title>Chicago Cubs clock</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/chicago-cubs-art-glass-ornament/</loc>
+		<lastmod>2017-11-08T18:16:49+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/chicago-cubs-art-glass-ornaments-e1510186500931.jpeg</image:loc>
+			<image:caption>Chicago Cubs Art Glass Ornaments</image:caption>
+			<image:title>Chicago Cubs Art Glass Ornaments</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/chicago-cubs-christmas-ornament-in-package.jpeg</image:loc>
+			<image:caption>Chicago Cubs Christmas Ornament in package</image:caption>
+			<image:title>Chicago Cubs Christmas Ornament in package</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/st-louis-cardinals-art-glass-ornament/</loc>
+		<lastmod>2017-11-04T15:03:48+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/st-louis-cardinals-art-glass-ornaments.jpeg</image:loc>
+			<image:caption>St. Louis Cardinals Art Glass Ornaments</image:caption>
+			<image:title>St</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/st-louis-christmas-ornament-package.jpeg</image:loc>
+			<image:caption>St. Louis Ornament package</image:caption>
+			<image:title>St</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/green-bay-art-glass-ornament/</loc>
+		<lastmod>2017-11-04T15:03:28+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/green-bay-packers-christmas-ornaments.jpeg</image:loc>
+			<image:caption>Green Bay Packers Christmas Ornaments</image:caption>
+			<image:title>Green Bay Packers Christmas Ornaments</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/chicago-cubs-art-glass-night-light/</loc>
+		<lastmod>2017-11-04T14:58:43+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/3aa45d08b0a5c5d6-photo-full.jpeg</image:loc>
+			<image:caption>Cubs Night Light</image:caption>
+			<image:title>Cubs Night Light</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/chicago-cubs-glass-night-light.jpeg</image:loc>
+			<image:caption>Chicago Cubs Art Glass Night Light</image:caption>
+			<image:title>Chicago Cubs Glass Night Light</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/cubs-night-light.jpeg</image:loc>
+			<image:caption>Cubs Night Light</image:caption>
+			<image:title>Cubs Night Light</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/chicago-cubs-art-glass-night-light.jpeg</image:loc>
+			<image:caption>Chicago Cubs Art Glass Night Light</image:caption>
+			<image:title>Chicago Cubs Art Glass Night Light</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/st-louis-cardinals-art-glass-night-light/</loc>
+		<lastmod>2017-11-04T14:58:28+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/7a7ddfda6de0fdef-photo-full.jpeg</image:loc>
+			<image:caption>St. Louis Cardinals Art Glass Night Light</image:caption>
+			<image:title>St</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/st-louis-cardinals-night-light.jpeg</image:loc>
+			<image:caption>St. Louis Cardinals Night Light</image:caption>
+			<image:title>St</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/st-louis-cardinals-art-glass-night-light-side-view.jpeg</image:loc>
+			<image:caption>St. Louis Cardinals Art Glass Night Light</image:caption>
+			<image:title>St</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/st-louis-cardinals-art-glass-night-light.jpeg</image:loc>
+			<image:caption>St. Louis Cardinals Art Glass Night Light</image:caption>
+			<image:title>St</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/chicago-bulls-art-glass-ornament/</loc>
+		<lastmod>2017-11-04T15:03:05+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/chicago-bulls-christmas-ornament.jpeg</image:loc>
+			<image:caption>Chicago Bulls  Christmas Ornament</image:caption>
+			<image:title>Chicago Bulls  Christmas Ornament</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/chicago-bulls-art-glass-ornaments.jpeg</image:loc>
+			<image:caption>Chicago Bulls Art Glass Ornaments</image:caption>
+			<image:title>Chicago Bulls Art Glass Ornaments</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/chicago-cubs-solar-bird-feeder/</loc>
+		<lastmod>2017-11-15T19:04:18+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/cubs-solar-bird-feeder.jpg</image:loc>
+			<image:caption>Cubs Solar Bird Feeder</image:caption>
+			<image:title>Cubs Solar Bird Feeder</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/chicago-cubs-light-lets-go-cubs/</loc>
+		<lastmod>2017-11-18T14:20:32+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/Lets-Go-Chicago-Cubs-Taffic-Light-Vertical-Fully-Lit.jpeg</image:loc>
+			<image:caption>Lets go Chicago Cubs Traffic Light Vertical view</image:caption>
+			<image:title>Lets-Go-Chicago-Cubs-Taffic-Light-Vertical-Fully-Lit</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/Lets-Go-Chicago-Cubs-Taffic-Light-Vertical.jpeg</image:loc>
+			<image:caption>Lets go Chicago Cubs Traffic Light Vertical view</image:caption>
+			<image:title>Lets-Go-Chicago-Cubs-Taffic-Light-Vertical</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/Lets-Go-Chicago-Cubs-Taffic-Light-Horizontal.jpeg</image:loc>
+			<image:caption>Lets go Chicago Cubs Traffic Light Horizontal view</image:caption>
+			<image:title>Lets go Chicago Cubs Traffic Light Horizontal view</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/Lets-Go-Chicago-Cubs-Taffic-Light-Horizontal-Facebook-1200-630.jpeg</image:loc>
+			<image:caption>Lets Go Chicago Cubs Traffic Light Horizontal-Facebook-1200-630</image:caption>
+			<image:title>Lets Go Chicago Cubs Traffic Light Horizontal-Facebook-1200-630</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/st-louis-cardinals-light-lets-go-cards/</loc>
+		<lastmod>2017-11-18T12:10:57+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/Lets-Go-St-Louis-Cardinals-Traffic-Light-Vertical.jpeg</image:loc>
+			<image:caption>Lets go St Louis Cardinals Traffic Light Vertical view</image:caption>
+			<image:title>Lets go St Louis Cardinals Traffic Light Vertical view</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/Lets-Go-St-Louis-Cardinals-Traffic-Light-Vertical-All-Lit.jpeg</image:loc>
+			<image:caption>Lets go St Louis Cardinals Traffic Light Vertical lit view</image:caption>
+			<image:title>Lets go St Louis Cardinals Traffic Light Vertical lit view</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/Lets-go-St-Louis-Cardnals-Traffic-Light-Horizontal.jpeg</image:loc>
+			<image:caption>Lets go St Louis Cardinals Traffic Light Horizontal view</image:caption>
+			<image:title>Lets go St Louis Cardinals Traffic Light Horizontal view</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/celtic-knot-brass-filigree/</loc>
+		<lastmod>2017-11-15T19:02:47+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/celtic-knot-brass-filigree.jpeg</image:loc>
+			<image:caption>Celtic Knot  Brass Filigree</image:caption>
+			<image:title>Celtic Knot  Brass Filigree</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/celtic-swirl-brass-filigree/</loc>
+		<lastmod>2017-11-15T19:02:38+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/celtic-swirl-brass-filigree.jpeg</image:loc>
+			<image:caption>Celtic Swirl Brass Filigree</image:caption>
+			<image:title>Celtic Swirl Brass Filigree</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/celtic-medallion-brass-filigree/</loc>
+		<lastmod>2017-11-15T19:02:31+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/celtic-medallion-brass-filigree.jpeg</image:loc>
+			<image:caption>Celtic Medallion  Brass Filigree</image:caption>
+			<image:title>Celtic Medallion  Brass Filigree</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/celtic-dragon-brass-filigree/</loc>
+		<lastmod>2017-11-15T19:02:23+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/celtic-dragon-brass-filigree.jpeg</image:loc>
+			<image:caption>Celtic Dragon  Brass Filigree</image:caption>
+			<image:title>Celtic Dragon  Brass Filigree</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/floral-brass-filigree/</loc>
+		<lastmod>2017-11-15T19:02:16+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/floral-round-brass-filigree.jpeg</image:loc>
+			<image:caption>Floral Round Brass Filigree</image:caption>
+			<image:title>Floral Round Brass Filigree</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/nouveau-rose-brass-filigree/</loc>
+		<lastmod>2017-11-15T19:02:09+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/nouveau-flower-small-brass-filigree.jpeg</image:loc>
+			<image:caption>Nouveau Flower Small Brass Filigree</image:caption>
+			<image:title>Nouveau Flower Small Brass Filigree</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/nouveau-rose-brass-filligree.jpeg</image:loc>
+			<image:caption>https://test.glasshousestore.com/wp-content/uploads/2017/11/Nouveau-Rose-Filligree.jpeg</image:caption>
+			<image:title>Nouveau Rose Brass Filligree</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/brass-dragonfly-wings/</loc>
+		<lastmod>2017-11-15T19:00:20+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/dragonfly-wings-brass-filigree.jpeg</image:loc>
+			<image:caption>Dragonfly Wings Brass Filigree</image:caption>
+			<image:title>Dragonfly Wings Brass Filigree</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/dragonfly-wings-brass-filligree.jpeg</image:loc>
+			<image:caption>Dragonfly Wings Brass Filligree</image:caption>
+			<image:title>Dragonfly Wings Brass Filligree</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/brass-cardinal-large/</loc>
+		<lastmod>2017-11-15T18:59:55+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/cardinal-brass-filigree.jpeg</image:loc>
+			<image:caption>Cardinal Brass Filigree</image:caption>
+			<image:title>Cardinal Brass Filigree</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/brass-hummingbird-filigree-large/</loc>
+		<lastmod>2017-11-18T15:05:50+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/hummingbird-brass-filigree.jpeg</image:loc>
+			<image:caption>Hummingbird Brass Filigree</image:caption>
+			<image:title>Hummingbird Brass Filigree</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/flowering-tree-square-brass-filigree/</loc>
+		<lastmod>2017-11-15T18:59:29+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/flowering-tree-brass-filigree.jpeg</image:loc>
+			<image:caption>Flowering Tree Brass Filigree</image:caption>
+			<image:title>Flowering Tree Brass Filigree</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/angel-wings-brass-filigree-8453/</loc>
+		<lastmod>2017-11-15T18:59:19+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/angel-wings-filligree-8453-metal-filigree.jpeg</image:loc>
+			<image:caption>Angel Wings Filligree 8453  Metal Filigree</image:caption>
+			<image:title>Angel Wings Filligree 8453  Metal Filigree</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/angel-wings-brass-filigree-8451/</loc>
+		<lastmod>2017-11-15T14:09:07+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/angel-wings-filligree-8451-brass-filigree.jpeg</image:loc>
+			<image:caption>Angel Wings Filligree 8451  Brass Filigree</image:caption>
+			<image:title>Angel Wings Filligree 8451  Brass Filigree</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/angel-wings-brass-filigree-8452/</loc>
+		<lastmod>2017-11-15T18:59:04+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/angel-wings-metal-filligree-8452.jpeg</image:loc>
+			<image:caption>Angel Wings Metal Filligree 8452</image:caption>
+			<image:title>Angel Wings Metal Filligree 8452</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/angel-wings-brass-filigree-8459/</loc>
+		<lastmod>2017-11-15T18:58:04+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/angel-wings-8459-brass-filigree.jpeg</image:loc>
+			<image:caption>Angel Wings 8459  Brass Filigree</image:caption>
+			<image:title>Angel Wings 8459  Brass Filigree</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/angel-wings-brass-filigree-8462/</loc>
+		<lastmod>2017-11-15T18:53:55+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/angel-wings-8462-brass-filigree.jpeg</image:loc>
+			<image:caption>Angel Wings 8462  Brass Filigree</image:caption>
+			<image:title>Angel Wings 8462  Brass Filigree</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/angel-wings-brass-filigree-8460/</loc>
+		<lastmod>2017-11-15T18:53:46+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/angel-wing-filligree-8460-brass.jpeg</image:loc>
+			<image:caption>Angel Wing Filligree 8460  Brass</image:caption>
+			<image:title>Angel Wing Filligree 8460  Brass</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/angel-wings-brass-filigrees-mika/</loc>
+		<lastmod>2017-11-15T18:53:40+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/angel-wings-mika-brass-filigree.jpeg</image:loc>
+			<image:caption>Angel Wings Mika  Brass Filigree</image:caption>
+			<image:title>Angel Wings Mika  Brass Filigree</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/angel-wings-brass-filigrees-8463/</loc>
+		<lastmod>2017-11-15T18:53:30+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/angel-wings-brass-filligree-8463.jpeg</image:loc>
+			<image:caption>Angel Wings Brass Filligree 8463</image:caption>
+			<image:title>Angel Wings Brass Filligree 8463</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/angel-halo-brass-filigrees-set-8446/</loc>
+		<lastmod>2017-11-15T18:51:41+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/angel-halos-8446-brass-filigree.jpeg</image:loc>
+			<image:caption>Angel Halos 8446 Brass Filigree</image:caption>
+			<image:title>Angel Halos 8446 Brass Filigree</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/angel-halo-brass-filigrees-set-8445/</loc>
+		<lastmod>2017-11-15T18:47:30+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/angel-halo-8445-brass-filigree.jpeg</image:loc>
+			<image:caption>Angel Halo 8445 Brass Filigree</image:caption>
+			<image:title>Angel Halo 8445 Brass Filigree</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/holly-brass-filigree-set/</loc>
+		<lastmod>2017-11-15T18:43:35+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/holly-leaves-brass-filigree.jpeg</image:loc>
+			<image:caption>Holly Leaves Brass Filigree</image:caption>
+			<image:title>Holly Leaves Brass Filigree</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/harley-born-to-ride-light/</loc>
+		<lastmod>2017-11-18T12:09:44+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/Harley-Davidson-Born-To-Ride-Traffic-Light-Vertical.jpg</image:loc>
+			<image:caption>Harley Davidson Born To Ride Traffic Light Vertical view</image:caption>
+			<image:title>Harley Davidson Born To Ride Traffic Light Vertical view</image:title>
+		</image:image>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/Harley-Davidson-Born-To-Ride-Traffic-Light-Horizontal.jpg</image:loc>
+			<image:caption>Harley Davidson Born To Ride Traffic Light Horizontal</image:caption>
+			<image:title>Harley Davidson Born To Ride Traffic Light Horizontal</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/black-friday-sale/</loc>
+		<lastmod>2017-11-24T12:13:11+00:00</lastmod>
+		<priority>0.8</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/black-friday-sales-1200x630.jpg</image:loc>
+			<image:caption>Black Friday Sales - 1200x630</image:caption>
+			<image:title>Black Friday Sales - 1200x630</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/glass-running-scoring-pad/</loc>
+		<lastmod>2017-11-21T21:59:31+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/ST-262_main.jpg</image:loc>
+			<image:caption>glass running/scoring pad</image:caption>
+			<image:title>glass running/scoring pad</image:title>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://test.glasshousestore.com/product/beveled-glass-cluster-mms-113/</loc>
+		<lastmod>2017-11-22T15:08:30+00:00</lastmod>
+		<priority>0.70</priority>
+		<image:image>
+			<image:loc>https://test.glasshousestore.com/wp-content/uploads/2017/11/IMG_7644.jpg</image:loc>
+			<image:caption>mms 113</image:caption>
+			<image:title>mms 113</image:title>
 		</image:image>
 	</url>
 </urlset>

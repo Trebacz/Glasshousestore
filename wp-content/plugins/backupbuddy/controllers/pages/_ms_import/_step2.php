@@ -114,7 +114,7 @@ if ( is_subdomain_install() ) {
 <input type="hidden" name="backup_file" value="<?php echo htmlentities( $_POST['backup_file'] ) ?>">
 <input type='hidden' name='blog_id' value='<?php echo esc_attr( absint( $blog_id ) ); ?>' />
 <input type='hidden' name='blog_path' value='<?php echo esc_attr( $path ); ?>' />
-<input type='hidden' name='global_options' value='<?php echo base64_encode( serialize( $this->advanced_options ) ); ?>' />
+<input type='hidden' name='global_options' value='<?php echo base64_encode( json_encode( $this->advanced_options ) ); ?>' />
 <?php submit_button( __('Next Step') . ' &raquo;', 'primary', 'add-site' ); ?>
 </form>
 <?php endif; ?>

@@ -377,15 +377,12 @@ class pb_backupbuddy {
 			if ( file_exists( $dat_file ) ) {
 				$options = file_get_contents( $dat_file );
 				
-				// Unserialize data; If it fails it then decodes the obscufated data then unserializes it. (new dat file method starting at 2.0).
-				if ( !is_serialized( $options ) || ( false === ( $return = unserialize( $options ) ) ) ) {
-					// Skip first line.
-					$second_line_pos = strpos( $options, "\n" ) + 1;
-					$options = substr( $options, $second_line_pos );
-					
-					// Decode back into an array.
-					$options = unserialize( base64_decode( $options ) );
-				}
+				// Skip first line.
+				$second_line_pos = strpos( $options, "\n" ) + 1;
+				$options = substr( $options, $second_line_pos );
+				
+				// Decode back into an array.
+				$options = json_decode( base64_decode( $options ), true );
 			} else { // No existing options. Empty options.
 				$options = array();
 			}
@@ -490,7 +487,7 @@ class pb_backupbuddy {
 	 */
 	public static function save() {
 		if ( defined( 'PB_STANDALONE' ) && PB_STANDALONE === true ) {
-			$options_content = base64_encode( serialize( pb_backupbuddy::$options ) );
+			$options_content = base64_encode( json_encode( pb_backupbuddy::$options ) );
 			$result = file_put_contents( ABSPATH . 'importbuddy/_settings_dat.php', "<?php die('<!-- // Silence is golden. -->'); ?>\n" . $options_content );
 			if ( $result === false ) {
 				return false;
@@ -798,7 +795,7 @@ class pb_backupbuddy {
 				} else { // Everything else.
 					$write_main = true;
 					if ( is_array( $serial ) ) {
-						error_log( print_r( $serial, true ) );
+						//error_log( print_r( $serial, true ) );
 					}
 					self::log( '[' . $serial . '] ' . $message, $type );
 				}

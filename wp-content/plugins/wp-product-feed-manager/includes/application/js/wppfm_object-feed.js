@@ -123,7 +123,7 @@ function mapACategory( categorySelectorId, category ) {
     var mo = JSON.parse( this.categoryMapping );
 
     // check if this.categoryMapping already has a maped category with this id
-    var categoryMapForGivenId = $jq.grep( mo, function(e) { return e.shopCategoryId === shopCategoryId; } );
+    var categoryMapForGivenId = jQuery.grep( mo, function(e) { return e.shopCategoryId === shopCategoryId; } );
     
     if ( categoryMapForGivenId.length > 0 ) {
         
@@ -148,7 +148,7 @@ function changeCustomCategoryMap( shopCategoryId, feedCategories ) {
     var mo = JSON.parse( this.categoryMapping );
 
     // check if this.categoryMapping already has a maped category with this id
-    var categoryMapForGivenId = $jq.grep( mo, function(e) { return e.shopCategoryId === shopCategoryId; } );
+    var categoryMapForGivenId = jQuery.grep( mo, function(e) { return e.shopCategoryId === shopCategoryId; } );
     
     if ( categoryMapForGivenId.length > 0 ) {
         
@@ -182,7 +182,7 @@ function activateCategoryMap( shopCategoryId, channelUsesOwnCategory ) {
     var mo = this.categoryMapping.length > 0 ? JSON.parse(this.categoryMapping) : [ ];
 
     // check if this.categoryMapping already has a maped category with this id
-    var categoryMapForGivenId = $jq.grep( mo, function(e) { return e.shopCategoryId === shopCategoryId.toString(); } );
+    var categoryMapForGivenId = jQuery.grep( mo, function(e) { return e.shopCategoryId === shopCategoryId.toString(); } );
 
     // only store this mapping if it has not been registered already to this id
     if ( categoryMapForGivenId.length < 1 ) {

@@ -8,7 +8,7 @@
 *      Created: 2015
 *      Licensed under the GPLv2 license - http://opensource.org/licenses/gpl-2.0.php
 *
-*      Copyright (c) 2014-2016, Robosoft. All rights reserved.
+*      Copyright (c) 2014-2018, Robosoft. All rights reserved.
 *      Available only in  https://robosoft.co/robogallery/ 
 */
 
@@ -23,6 +23,13 @@ $images_group = new_cmb2_box( array(
     'show_names'	=> false,
 ));
 
+/*$images_group->add_field(array(
+    'name' => __( 'cache_id', 'rbs_gallery' ),    
+    'id'   => ROBO_GALLERY_PREFIX . 'cache_id', 
+    'type' => 'hidden',
+    'default' => uniqid(),
+));
+*/
 $images_group->add_field(array(
     'name' => __( 'Manage Images', 'rbs_gallery' ),
     'desc' => __( 'Click on Manage Images button to open Images Manager where you can upload, edit or delete images from gallery. Also here you can edit settings of every particular image, define alt, links, description text', 'rbs_gallery' ),

@@ -1,7 +1,7 @@
 /*!
  * feed-form.js v3.4
  * Part of the WP Product Feed Manager
- * Copyright 2017, Michel Jongbloed
+ * Copyright 2018, Michel Jongbloed
  *
  */
 
@@ -186,7 +186,7 @@ function wppfm_editExistingFeed( feedId ) {
 
 		var channel = _feedHolder['channel'];
 		var categoryString = _feedHolder['mainCategory'];
-		var mainCategory = categoryString.indexOf( ' > ' ) > -1 ? categoryString.substring( 0, categoryString.indexOf( ' > ' ) ) : categoryString;
+		var mainCategory = categoryString && categoryString.indexOf( ' > ' ) > -1 ? categoryString.substring( 0, categoryString.indexOf( ' > ' ) ) : categoryString;
 		
 		wppfm_fillCategoryVariables( channel, mainCategory, 0); // make sure the category values are set correctly
 		
@@ -237,7 +237,6 @@ function wppfm_editExistingFeed( feedId ) {
 }
 
 function wppfm_fillSourcesList( customFields ) {
-
 	_inputFields = wppfm_woocommerceSourceOptions();
 	wppfm_addCustomFieldsToInputFields( _inputFields, customFields );
 	_inputFields.sort( function(a,b){ return (''+a.label).toUpperCase() < (''+b.label).toUpperCase() ? -1 : 1; });
@@ -397,27 +396,47 @@ function wppfm_generateAndSaveFeed() {
 		}
 
 		// convert the data to xml or csv and save the code to a feed file
-		wppfm_updateFeedFile( _feedHolder, function ( xmlResult ) {
+		wppfm_updateFeedFile( _feedHolder['feedId'], function ( xmlResult ) {
 
-			if ( xmlResult !== '1' && xmlResult !== 1 && ! xmlResult.includes( 'successfully' ) ) {
-
+			if ( xmlResult !== '1' && xmlResult !== 1 && ! xmlResult.includes( 'Started processing feed ' ) && ! xmlResult.includes( 'Processing starts after all other' ) ) {
 				wppfm_show_error_message( "Generating the xml file has failed! Return code = " + xmlResult + "." );
-
 				wppfm_hide_feed_spinner();
 			} else {
-
-				if ( ! newFeed ) {
-
-					wppfm_hide_feed_spinner();
-				}
+				if ( ! newFeed ) { wppfm_hide_feed_spinner(); }
+				wppfm_show_success_message( xmlResult );
 				
-				if ( xmlResult.includes( 'successfully' ) ) {
-
-					wppfm_show_success_message( xmlResult );
-				}
+				wppfm_alert_update_finished( _feedHolder['feedId'] );
 			}
 		} );
 	} );
+}
+
+/**
+ * Checks the status of the feed generation process every 5 seconds and shows a message when the feed is ready
+ * 
+ * @param int feedId
+ */
+function wppfm_alert_update_finished( feedId ) {
+	var wppfmStatusCheck = window.setInterval( wppfm_checkAndSetStatus, 5000, feedId );
+    
+	if( !feedId ) {
+		return;
+	}
+	
+	function wppfm_checkAndSetStatus( feedId ) {
+		wppfm_getFeedData( feedId, function( result ) {
+			var data = JSON.parse( result )[0];
+			
+			if( data["status_id"] !== "3" && data["status_id"] !== "4" ) {
+				var successMessage = 'Product feed ' + data["title"] + ' is now ready. It contains ' + data["products"] + ' products' ;
+				wppfm_show_success_message( successMessage );
+				window.clearInterval( wppfmStatusCheck );
+			} else {
+				var workingMessage = 'Still processing the feed in the background. You can wait for it to finish, but you can also close this form if you want.';
+				wppfm_show_success_message( workingMessage );
+			}
+		} );
+    }
 }
 
 function wppfm_saveFeed() {
@@ -2187,6 +2206,10 @@ function wppfm_decrease_channel_updates_counter() {
 	var oldValue = $jq( '.update-count' ).text();
 	var newValue = oldValue > 1 ? oldValue - 1 : '';
 	$jq( '.update-count' ).html( newValue );
+}
+
+function wppfm_feed_update_finished() {
+	console.log( "Feed update finished" );
 }
 
 function wppfm_getOutputFieldsList( level ) {

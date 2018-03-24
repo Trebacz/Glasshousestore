@@ -3,7 +3,7 @@
  Plugin Name: N-Media WooCommerce Personalized Product Meta Manager
 Plugin URI: http://najeebmedia.com/wordpress-plugin/woocommerce-personalized-product-option/
 Description: This plugin allow WooCommerce Store Admin to create unlimited input fields and files to attach with Product Page
-Version: 7.9.5
+Version: 8.8
 Author: Najeeb Ahmad
 Text Domain: nm-personalizedproduct
 Author URI: http://www.najeebmedia.com/
@@ -35,6 +35,12 @@ if( file_exists($_config))
 else
 	die('Reen, Reen, BUMP! not found '.$_config);
 
+// loading some helper functions
+$_hooks = dirname(__FILE__).'/inc/hooks.php';
+if( file_exists($_hooks))
+	include_once($_hooks);
+else
+	die('Reen, Reen, BUMP! not found '.$_hooks);
 
 /* ======= the plugin main class =========== */
 $_plugin = dirname(__FILE__).'/classes/plugin.class.php';
@@ -76,8 +82,17 @@ if( is_admin() ) {
 	add_filter( "plugin_action_links_$plugin_basename", 'ppom_settings_link');
 }
 function ppom_settings_link($links) {
+	
+	$quote_url = "https://najeebmedia.com/get-quote/";
+	
+	$ppom_links = array();
+	$ppom_links[] = '<a href="'.admin_url( 'options-general.php?page=nm-personalizedproduct').'">Add Fields</a>';
+	$ppom_links[] = '<a href="'.esc_url($quote_url).'">Request for Customized Solution</a>';
+	
+	foreach($ppom_links as $link) {
 		
-	$settings_link = '<a href="'.admin_url( 'options-general.php?page=nm-personalizedproduct').'">Add Fields</a>';
-  	array_push( $links, $settings_link );
+  		array_push( $links, $link );
+	}
+	
   	return $links;
 }
