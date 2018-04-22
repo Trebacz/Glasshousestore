@@ -72,6 +72,8 @@ class WC_Gateway_PayPal_Express_Request_AngellEYE {
         $payPalURL = $this->PAYPAL_URL . $paypal_express_checkout['token'];
         if (!empty($this->paypal_response['L_ERRORCODE0']) && $this->paypal_response['L_ERRORCODE0'] == '10486') {
             if (!empty($paypal_express_checkout['token'])) {
+                $this->function_helper->ec_clear_session_data();
+                WC()->session->set('is_smart_button_popup_closed', 'yes');
                 wc_clear_notices();
                 if (!empty($_REQUEST['request_from']) && $_REQUEST['request_from'] == 'JSv4') {
                     wp_send_json(array(
@@ -84,7 +86,7 @@ class WC_Gateway_PayPal_Express_Request_AngellEYE {
                 }
             }
         }
-        unset(WC()->session->paypal_express_checkout);
+        $this->function_helper->ec_clear_session_data();
         if (!is_ajax()) {
             if (!empty($_REQUEST['request_from']) && $_REQUEST['request_from'] == 'JSv4') {
                 wp_send_json(array(
@@ -381,7 +383,6 @@ class WC_Gateway_PayPal_Express_Request_AngellEYE {
                 $this->angelleye_wp_safe_redirect(add_query_arg('utm_nooverride', '1', $this->gateway->get_return_url($order)), 'do_express_checkout_payment');
                 exit();
             } else {
-                $this->function_helper->ec_clear_session_data();
                 $this->angelleye_add_order_note_with_error($order, $paypal_action_name = 'DoExpressCheckoutPayment');
                 $this->angelleye_write_error_log_and_send_email_notification($paypal_action_name = 'DoExpressCheckoutPayment');
                 $this->angelleye_redirect();
@@ -1213,6 +1214,10 @@ class WC_Gateway_PayPal_Express_Request_AngellEYE {
             }
             wp_redirect(get_permalink(wc_get_page_id('cart')));
             exit();
+        } else {
+            if( !empty($this->paypal_response['PAYMENTINFO_0_PROTECTIONELIGIBILITY']) ) {
+                $order->add_order_note('Seller Protection Status: ' . $this->paypal_response['PAYMENTINFO_0_PROTECTIONELIGIBILITY']);
+            }
         }
     }
 
@@ -1391,10 +1396,6 @@ class WC_Gateway_PayPal_Express_Request_AngellEYE {
         if ($this->paypal->APICallSuccessful($this->paypal_response['ACK'])) {
             $order->add_order_note('Refund Transaction ID:' . $this->paypal_response['REFUNDTRANSACTIONID']);
             update_post_meta($order_id, 'Refund Transaction ID', $this->paypal_response['REFUNDTRANSACTIONID']);
-            $max_remaining_refund = wc_format_decimal($order->get_total() - $order->get_total_refunded());
-            if (!$max_remaining_refund > 0) {
-                $order->update_status('refunded');
-            }
             if (ob_get_length())
                 ob_end_clean();
             return true;
@@ -1461,6 +1462,12 @@ class WC_Gateway_PayPal_Express_Request_AngellEYE {
     }
 
     public function angelleye_wp_safe_redirect($url, $action = null) {
+        $is_smart_button_popup_closed = WC()->session->get('is_smart_button_popup_closed');
+        if(!empty($is_smart_button_popup_closed) && $is_smart_button_popup_closed == 'yes') {
+            unset(WC()->session->is_smart_button_popup_closed);
+            wp_safe_redirect($url);
+            exit;
+        }
         if (!empty($_REQUEST['request_from']) && $_REQUEST['request_from'] == 'JSv4') {
             wp_send_json(array(
                 'url' => $url

@@ -1,8 +1,8 @@
 <?php
 
 /* * ******************************************************************
- * Version 4.1
- * Modified: 04-02-2018
+ * Version 4.2
+ * Modified: 23-03-2018
  * Copyright 2018 Accentio. All rights reserved.
  * License: None
  * By: Michel Jongbloed
@@ -131,7 +131,7 @@ if ( !class_exists( 'WPPFM_Queries' ) ) :
 			. "INNER JOIN {$this->_table_prefix}feedmanager_country AS c ON p.country_id = c.country_id "
 			. "INNER JOIN {$this->_table_prefix}feedmanager_channel AS m ON p.channel_id = m.channel_id "
 			. "WHERE p.product_feed_id = {$feed_id}", ARRAY_A );
-
+			
 			$category_mapping = $this->read_category_mapping( $feed_id );
 
 			if ( isset( $category_mapping[ 0 ][ 'meta_value' ] ) && $category_mapping[ 0 ][ 'meta_value' ] !== '' ) {
@@ -726,10 +726,12 @@ if ( !class_exists( 'WPPFM_Queries' ) ) :
 			$db_version = get_option( 'wppfm_db_version' );
 			$ftp_passive = "inactive";
 			$auto_fix = get_option( 'wppfm_auto_feed_fix', "true" );
+			$third_party_attributes = get_option( 'wppfm_third_party_attribute_keywords', '%wpmr%,%cpf%,%unit%,%bto%,%yoast%' );
+			$disabled_background_mode = get_option( 'wppfm_disabled_background_mode', 'false' ); // @since 2.0.7
 			$sep_string = '# backup string for database ->';
 			$time_stamp = current_time( 'timestamp' );
 			
-			$table_content = "$time_stamp#$db_version#$ftp_passive#$auto_fix";
+			$table_content = "$time_stamp#$db_version#$ftp_passive#$auto_fix#$third_party_attributes#$disabled_background_mode";
 			$table_content .= "$sep_string $main_table # <- # $main_table_content ";
 			$table_content .= "$sep_string $meta_table # <- # $meta_table_content ";
 			$table_content .= "$sep_string $channel_table # <- # $channel_table_content";

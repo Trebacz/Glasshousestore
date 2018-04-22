@@ -3,16 +3,17 @@
 Plugin Name: WooCommerce Order Export and More
 Plugin URI: http://www.jem-products.com
 Description: Export your woocommerce orders and more with this free plugin
-Version: 2.0.2
+Version: 2.0.5
 Author: JEM Plugins
 Author URI: http://www.jem-products.com
+Text Domain: order-export-and-more-for-woocommerce
 */
 
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 define ( 'JEM_EXP_PLUGIN_PATH' , plugin_dir_path( __FILE__ ) );
-define('JEM_EXP_DOMAIN', 'jem-woocommerce-exporter');
+define('JEM_EXP_DOMAIN', 'order-export-and-more-for-woocommerce');
 define( 'JEM_EXP_URL', plugin_dir_url( __FILE__ ) );
 
 //only proceed if we are in admin mode!
@@ -24,8 +25,15 @@ if( ! is_admin() ){
 global $jem_export_globals;
 
 // add option while plugin acivated
+//At activation, languages are NOT loaded! so we need to do this somewhere else and only add them if they do not exist
 function order_export_more_plugin_activation() {
     //add options for different tab
+
+    $order = new Order;
+//    foreach($order->fields as $key => $val){
+//        //error_log($val['placeholder']);
+//    }
+
     $product_option_array = Array('Product ID' => 1,'Product SKU' => 2,'Parent ID' => 3,'Parent SKU' => 4,'Product Name' => 5,'Product Type' => 6,'Shipping Class' => 7,'Width' => 8,'Length' => 9,'Height' => 10,'Managing Stock' => 11,'In Stock' => 12,'Qty In Stock' => 13,'Downloadable' => 14,'Tax Status' => 15,'Tax Class' => 16,'Featured Product' => 17,'Price' => 18,'Sale Price' => 19,'Sale Start Date' => 20,'Sale End Date' => 21);
     $order_option_array =  Array('Order ID' => 1,'Order Date' => 2,'Order Status' => 3,'Customer Name' => 4,'Customer Email' => 5,'Order Total' => 6,'Order Shipping' => 7,'Order Shipping Tax' => 8,'Shipping Address Line 1' => 9,'Shipping Address Line 2' => 10,'Shipping City' => 11,'Shipping State' => 12,'Shipping Zip/Postcode' => 13,'Shipping Country' => 14,'Product Name' => 15,'Quantity of items purchased' => 16,'Item price EXCL. tax' => 17,'Item tax' => 18,'Item price INCL. tax' => 19,'Product Variations' => 20,'Order Currency' => 21,'Order Discount' => 22,'Coupon Code' => 23,'Payment Gateway' => 24,'Shipping Method' => 25,'Shipping Weight' => 26,'Customer Message' => 27,'Billing Address Line 1' => 28,'Billing Address Line 2' => 29,'Billing City' => 30,'Billing State' => 31,'Billing Zip/Postcode' => 32,'Billing Country' => 33,'Billing Phone Number' => 34);
     $customer_option_array =  Array('User ID' => 1,'User Name' => 2,'Billing First Name' => 3,'Billing Last Name' => 4,'Billing Company' => 5,'Billing Address 1' => 6,'Billing Address 2' => 7,'Billing City' => 8,'Billing State' => 9,'Billing Zipcode/Postcode' => 10,'Billing Country' => 11,'Billing Phone Number' => 12,'Billing Email Address' => 13,'Shipping First Name' => 14,'Shipping Last Name' => 15,'Shipping Company' => 16,'Shipping Address 1' => 17,'Shipping Address 2' => 18,'Shipping City' => 19,'Shipping State' => 20,'Shipping Zipcode/Postcode' => 21,'Shipping Country' => 22,'# Orders Placed' => 23,'Total Spent' => 24);
@@ -50,7 +58,7 @@ function order_export_more_plugin_activation() {
     update_option('categories_option', $encoded_categories_option);
     update_option('tags_option', $encoded_tags_option);
 }
-register_activation_hook( __FILE__, 'order_export_more_plugin_activation' );
+//register_activation_hook( __FILE__, 'order_export_more_plugin_activation' );
 
 // add option while plugin upgraded
 function order_export_more_upgrade_process_completed($upgrader_object, $options) {
@@ -89,7 +97,7 @@ function order_export_more_upgrade_process_completed($upgrader_object, $options)
     }
 }
 
-add_action('upgrader_process_complete', 'order_export_more_upgrade_process_completed', 10, 2);
+//add_action('upgrader_process_complete', 'order_export_more_upgrade_process_completed', 10, 2);
 
 function order_export_more_plugin_deactivation() {
   delete_option( 'product_option' );
@@ -101,6 +109,19 @@ function order_export_more_plugin_deactivation() {
   delete_option( 'tags_option' );
 }
 register_deactivation_hook( __FILE__, 'order_export_more_plugin_deactivation' );
+
+
+//This handles internationalization
+function load_jem_export_lite_textdomain() {
+    error_log('loading langauges');
+    load_plugin_textdomain( JEM_EXP_DOMAIN, FALSE, basename( dirname( __FILE__ ) ) . '/languages' );
+}
+
+load_plugin_textdomain( JEM_EXP_DOMAIN, FALSE, basename( dirname( __FILE__ ) ) . '/languages' );
+
+
+//add_action( 'plugins_loaded', 'load_jem_export_lite_textdomain' );
+
 
 $entities = array();
 $entities[] = "Product";
@@ -156,6 +177,7 @@ function load_jem_exp_scripts(){
 
 add_action('admin_enqueue_scripts', 'load_jem_exp_scripts');
 
+//TODO does this get called ALL the time or only when we're on our admin pages??
 $jem_exporter_lite = new JEM_export_lite();
 
 //=========   function for ajax call

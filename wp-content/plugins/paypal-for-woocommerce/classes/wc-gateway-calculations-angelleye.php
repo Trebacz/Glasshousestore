@@ -44,7 +44,7 @@ if (!class_exists('WC_Gateway_Calculation_AngellEYE')) :
             if (!defined('WOOCOMMERCE_CART')) {
                 define('WOOCOMMERCE_CART', true);
             }
-            $desc = '';
+            
             WC()->cart->calculate_totals();
             $this->payment = array();
             $this->itemamt = 0;
@@ -71,6 +71,7 @@ if (!class_exists('WC_Gateway_Calculation_AngellEYE')) :
                     }
                 }
             }
+            $desc = '';
             foreach (WC()->cart->cart_contents as $cart_item_key => $values) {
                 $amount = round($values['line_subtotal'] / $values['quantity'], $this->decimals);
                 if (version_compare(WC_VERSION, '3.0', '<')) {
@@ -82,13 +83,14 @@ if (!class_exists('WC_Gateway_Calculation_AngellEYE')) :
                 }
                 $name = AngellEYE_Gateway_Paypal::clean_product_title($name);
                 if (is_object($product)) {
-                    if ($product->is_type('variation')) {
+                    if ($product->is_type('variation') && is_a( $product, 'WC_Product_Variation' )) {
+                        $desc = '';
                         if (version_compare(WC_VERSION, '3.0', '<')) {
                             $attributes = $product->get_variation_attributes();
                             if (!empty($attributes) && is_array($attributes)) {
                                 foreach ($attributes as $key => $value) {
                                     $key = str_replace(array('attribute_pa_', 'attribute_'), '', $key);
-                                    $desc .= ' ' . ucwords($key) . ': ' . $value;
+                                    $desc .= ' ' . ucwords( str_replace( 'pa_', '', $key ) ) . ': ' . $value;
                                 }
                                 $desc = trim($desc);
                             }
@@ -96,7 +98,7 @@ if (!class_exists('WC_Gateway_Calculation_AngellEYE')) :
                             $attributes = $product->get_attributes();
                             if (!empty($attributes) && is_array($attributes)) {
                                 foreach ($attributes as $key => $value) {
-                                    $desc .= ' ' . ucwords($key) . ': ' . $value;
+                                    $desc .= ' ' . ucwords( str_replace( 'pa_', '', $key ) ) . ': ' . $value;
                                 }
                             }
                             $desc = trim($desc);
@@ -204,13 +206,14 @@ if (!class_exists('WC_Gateway_Calculation_AngellEYE')) :
                 $name = AngellEYE_Gateway_Paypal::clean_product_title($name);
                 $amount = round($values['line_subtotal'] / $values['qty'], $this->decimals);
                 if (is_object($product)) {
-                    if ($product->is_type('variation')) {
+                    if ($product->is_type('variation') && is_a( $product, 'WC_Product_Variation' )) {
+                        $desc = '';
                         if (version_compare(WC_VERSION, '3.0', '<')) {
                             $attributes = $product->get_variation_attributes();
                             if (!empty($attributes) && is_array($attributes)) {
                                 foreach ($attributes as $key => $value) {
                                     $key = str_replace(array('attribute_pa_', 'attribute_'), '', $key);
-                                    $desc .= ' ' . ucwords($key) . ': ' . $value;
+                                    $desc .= ' ' . ucwords( str_replace( 'pa_', '', $key ) ) . ': ' . $value;
                                 }
                                 $desc = trim($desc);
                             }
@@ -218,7 +221,7 @@ if (!class_exists('WC_Gateway_Calculation_AngellEYE')) :
                             $attributes = $product->get_attributes();
                             if (!empty($attributes) && is_array($attributes)) {
                                 foreach ($attributes as $key => $value) {
-                                    $desc .= ' ' . ucwords($key) . ': ' . $value;
+                                    $desc .= ' ' . ucwords( str_replace( 'pa_', '', $key ) ) . ': ' . $value;
                                 }
                             }
                             $desc = trim($desc);

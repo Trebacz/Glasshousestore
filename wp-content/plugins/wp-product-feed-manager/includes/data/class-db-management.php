@@ -1,9 +1,9 @@
 <?php
 
 /* * ******************************************************************
- * Version 1.2
- * Modified: 20-08-2017
- * Copyright 2017 Accentio. All rights reserved.
+ * Version 1.3
+ * Modified: 25-03-2018
+ * Copyright 2018 Accentio. All rights reserved.
  * License: None
  * By: Michel Jongbloed
  * ****************************************************************** */
@@ -17,7 +17,6 @@ if ( !class_exists( 'WPPFM_Db_Management' ) ) :
 	 * The WPPFM_Db_Management Class contains several static database management functions
 	 * 
 	 * @class WPPFM_Db_Management
-	 * @version 1.1
 	 */
 	class WPPFM_Db_Management {
 
@@ -162,6 +161,22 @@ if ( !class_exists( 'WPPFM_Db_Management' ) ) :
 				$auto_feed_fix_setting = ltrim( $backup_string, '#' );
 				$auto_feed_fix_setting = substr( $auto_feed_fix_setting, 0, strpos( $auto_feed_fix_setting, '#' ) );
 				update_option( 'wppfm_auto_feed_fix', $auto_feed_fix_setting );
+				
+				// remove the auto feed fix setting
+				$backup_string = self::remove_left_data_part( $backup_string );
+				
+				// reset the third party attributes string
+				$third_party_attributes_string = ltrim( $backup_string, '#' );
+				$third_party_attributes_string = substr( $third_party_attributes_string, 0, strpos( $third_party_attributes_string, '#' ) );
+				update_option( 'wppfm_third_party_attribute_keywords', $third_party_attributes_string );
+				
+				// remove the third party attributes string
+				$backup_string = self::remove_left_data_part( $backup_string );
+				
+				// reset the disable background option
+				$disable_background_setting = ltrim( $backup_string, '#' );
+				$disable_background_setting = substr( $disable_background_setting, 0, strpos( $disable_background_setting, '#' ) );
+				update_option( 'wppfm_disabled_background_mode', $disable_background_setting );
 				
 				// remove the auto feed fix setting
 				$backup_string = self::remove_left_data_part( $backup_string );

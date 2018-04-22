@@ -6,9 +6,9 @@ Plugin URI: https://www.xadapter.com/product/order-import-export-plugin-for-wooc
 Description: Export and Import Order detail including line items, From and To your WooCommerce Store.
 Author: XAdapter
 Author URI: https://www.xadapter.com/
-Version: 1.2.9
+Version: 1.3.0
 Text Domain: wf_order_import_export
-WC tested up to: 3.3.3
+WC tested up to: 3.3.4
 */
 
 if ( ! defined( 'ABSPATH' ) || ! is_admin() ) {
@@ -22,7 +22,7 @@ define("WF_CPN_IMP_EXP_ID", "wf_cpn_imp_exp");
 define("wf_coupon_csv_im_ex", "wf_coupon_csv_im_ex");
 
 if (!defined('WF_ORDERIMPEXP_CURRENT_VERSION')) {
-    define("WF_ORDERIMPEXP_CURRENT_VERSION", "1.2.9");
+    define("WF_ORDERIMPEXP_CURRENT_VERSION", "1.3.0");
 }
 
 /**

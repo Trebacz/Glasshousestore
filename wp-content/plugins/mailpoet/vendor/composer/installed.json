@@ -717,17 +717,17 @@
     },
     {
         "name": "soundasleep/html2text",
-        "version": "0.3.4",
-        "version_normalized": "0.3.4.0",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
             "url": "https://github.com/mailpoet/html2text.git",
-            "reference": "a1f77b8f340c8425b746bef1d1040189e89be334"
+            "reference": "95c5f266e7ea1a79b3879555cf27289985b1e4c7"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/mailpoet/html2text/zipball/a1f77b8f340c8425b746bef1d1040189e89be334",
-            "reference": "a1f77b8f340c8425b746bef1d1040189e89be334",
+            "url": "https://api.github.com/repos/mailpoet/html2text/zipball/95c5f266e7ea1a79b3879555cf27289985b1e4c7",
+            "reference": "95c5f266e7ea1a79b3879555cf27289985b1e4c7",
             "shasum": ""
         },
         "require": {
@@ -739,7 +739,7 @@
             "phpunit/phpunit": ">=4.0",
             "soundasleep/component-tests": "dev-master"
         },
-        "time": "2016-06-09T04:56:16+00:00",
+        "time": "2018-04-08T14:18:46+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -767,7 +767,7 @@
         ],
         "support": {
             "email": "support@jevon.org",
-            "source": "https://github.com/mailpoet/html2text/tree/0.3.4"
+            "source": "https://github.com/mailpoet/html2text/tree/master"
         }
     },
     {

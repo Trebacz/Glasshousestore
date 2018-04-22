@@ -67,6 +67,42 @@ function wppfm_options_page() {
 	$add_options_page->show();
 }
 
+// ref MKFRPLGN
+function wppfm_manage_channels_page() {
+	$manage_channels_page = new WPPFM_Manage_Channels_Page ();
+
+	$updated = '';
+	
+	if ( isset( $_GET['wppfm_action'] ) && isset( $_GET['wppfm_channel'] ) && isset( $_GET['wppfm_nonce']) ) {
+		$channel_class = new WPPFM_Channel ();
+
+		$action = $_GET['wppfm_action'];
+		$channel = $_GET['wppfm_channel'];
+		$nonce = $_GET['wppfm_nonce'];
+		
+		switch ( $action ) {
+			case 'remove':
+				$channel_class->remove( $channel, $nonce );
+				break;
+			
+			case 'update':
+				$channel_class->update( $channel, $_GET['wppfm_code'], $nonce );
+				$updated = $channel;
+				echo "<script type='text/javascript'>wppfm_decrease_channel_updates_counter();</script>";
+				break;
+			
+			case 'install':
+				$channel_class->install( $channel, $_GET['wppfm_code'], $nonce );
+				break;
+			
+			default:
+				break; // do not react on a wrong action call
+		}
+	}
+
+	$manage_channels_page->show( $updated );
+}
+
 /**
  * Checks if the backups are valid for the current database version and warns the user if not
  * 

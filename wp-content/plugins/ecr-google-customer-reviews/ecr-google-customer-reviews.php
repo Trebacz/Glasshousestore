@@ -7,9 +7,9 @@
   License:            GPLv3
   License URI:        http://www.gnu.org/licenses/quick-guide-gplv3.html
   Text Domain:        ecr-google-customer-reviews
-  Version:            2.6
+  Version:            2.6.1
   Requires at least:  3.0.0
-  Tested up to:       4.9.4
+  Tested up to:       4.9.5
  */
 
 // If this file is called directly, abort.
@@ -157,7 +157,7 @@ function ecr_gcr_page(){
       <p class="description">Google wants to know about how many days it will take for the customer to receive the product.  They will add a few more days on top of that to make sure the customer has had time to use the product, and then they will send the review survey to the customer.</p></td>
       </tr>
     </table>
-    <h2>Product Review Settings</h2>
+    <h2>Product Review Settings (<em>Optional</em>)</h2>
     <table class="form-table">
       </tr>
       <tr valign="top">
@@ -202,7 +202,7 @@ function ecr_gcr_page(){
           }
           ?>
         </select>
-        <p class="description">Default is '_gtin'.  However, if you have another plugin that manages the GTIN field for your products, choose that field from the dropdown.</p></td>
+        <p class="description">This is only needed if you want to collect product reviews. With this set to "- NONE -", the survey popup will still collect merchant reviews.</p><p class="description">Default is '_gtin'.  However, if you have another plugin that manages the GTIN field for your products, choose that field from the dropdown.</p></td>
       </tr>
       <tr valign="top">
         <th scope="row">
@@ -427,7 +427,7 @@ function ecr_gcr_display_gtin_meta() {
     $gtin_field = get_ecr_gtin_field();
     if($gtin_field == 'NO_GTIN') return;
     $gtin = get_post_meta( $post->ID, $gtin_field, true );
-    if($gtin) {
+    if( $gtin || !is_array($gtin) ) {
       echo '<span class="ecr-gtin">' . esc_html__( 'GTIN: ', 'ecr-google-customer-reviews' ) . '<span>' . $gtin . '</span></span>';
     }
   }

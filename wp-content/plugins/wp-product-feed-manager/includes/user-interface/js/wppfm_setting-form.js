@@ -13,6 +13,10 @@ function wppfm_auto_feed_fix_changed() {
 	wppfm_auto_feed_fix_mode( $jq( '#wppfm_auto_feed_fix_mode' ).is( ':checked' ), function( response ) { console.log( response ); } );	
 }
 
+function wppfm_background_processing_mode_changed() {
+	wppfm_background_processing_mode( $jq( '#wppfm_background_processing_mode' ).is( ':checked' ), function( response ) { console.log( response ); } );
+}
+
 function wppfm_third_party_attributes_changed() {
 	wppfm_change_third_party_attribute_keywords( $jq( '#wppfm_third_party_attr_keys' ).val(), function( response ) { console.log( response ); } );
 }

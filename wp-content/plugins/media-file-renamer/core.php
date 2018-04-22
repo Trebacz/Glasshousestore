@@ -2,60 +2,48 @@
 
 class Meow_MFRH_Core {
 
-	private $mfrh_admin = null;
+	private $admin = null;
 
-	public function __construct( $mfrh_admin ) {
-		$this->mfrh_admin = $mfrh_admin;
+	public function __construct( $admin ) {
+		$this->admin = $admin;
 		add_action( 'plugins_loaded', array( $this, 'init' ) );
-		add_action( 'plugins_loaded', array( $this, 'init_actions' ) );
-
-		// Support for additional plugins
-		add_action( 'wpml_loaded', array( $this, 'wpml_load' ) );
 	}
 
 	function init() {
-		include( 'mfrh_custom.php' );
 		include( 'api.php' );
-
-		global $mfrh_version;
+		include( 'updates.php' );
+		new Meow_MFRH_Updates( $this, $this->admin );
 		load_plugin_textdomain( 'media-file-renamer', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 
-		add_action( 'admin_head', array( $this, 'admin_head' ) );
-		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
-		add_action( 'wp_ajax_mfrh_rename_media', array( $this, 'wp_ajax_mfrh_rename_media' ) );
-		add_action( 'wp_ajax_mfrh_undo_media', array( $this, 'wp_ajax_mfrh_undo_media' ) );
-		add_filter( 'media_send_to_editor', array( $this, 'media_send_to_editor' ), 20, 3 );
-		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
-		//add_action( 'edit_attachment', array( $this, 'edit_attachment' ) );
-		//add_action( 'add_attachment', array( $this, 'add_attachment' ) );
-		add_action( 'add_meta_boxes', array( $this, 'add_rename_metabox' ) );
-		add_filter( 'attachment_fields_to_save', array( $this, 'attachment_fields_to_save' ), 20, 2 );
-		add_action( 'save_post', array( $this, 'save_post' ) );
+		// Those actions/filters are only for the admin screens
+		if ( is_admin() ) {
+			add_action( 'admin_head', array( $this, 'admin_head' ) );
+			add_action( 'admin_menu', array( $this, 'admin_menu' ) );
+			add_action( 'wp_ajax_mfrh_rename_media', array( $this, 'wp_ajax_mfrh_rename_media' ) );
+			add_action( 'wp_ajax_mfrh_undo_media', array( $this, 'wp_ajax_mfrh_undo_media' ) );
+			add_filter( 'media_send_to_editor', array( $this, 'media_send_to_editor' ), 20, 3 );
+			add_action( 'admin_notices', array( $this, 'admin_notices' ) );
+			//add_action( 'edit_attachment', array( $this, 'edit_attachment' ) );
+			//add_action( 'add_attachment', array( $this, 'add_attachment' ) );
+			add_action( 'add_meta_boxes', array( $this, 'add_rename_metabox' ) );
+			add_filter( 'attachment_fields_to_save', array( $this, 'attachment_fields_to_save' ), 20, 2 );
+			add_action( 'save_post', array( $this, 'save_post' ) );
 
-		if ( get_option( 'mfrh_on_upload', false ) ) {
-			add_filter( 'wp_handle_upload_prefilter', array( $this, 'wp_handle_upload_prefilter' ), 10, 2 );
+			if ( get_option( 'mfrh_on_upload', false ) ) {
+				add_filter( 'wp_handle_upload_prefilter', array( $this, 'wp_handle_upload_prefilter' ), 10, 2 );
+			}
+
+			// Column for Media Library
+			$method = apply_filters( 'mfrh_method', 'media_title' );
+			if ( $method != 'none' ) {
+				add_filter( 'manage_media_columns', array( $this, 'add_media_columns' ) );
+				add_action( 'manage_media_custom_column', array( $this, 'manage_media_custom_column' ), 10, 2 );
+			}
+
+			// Media Library Bulk Actions
+			add_filter( 'bulk_actions-upload', array( $this, 'library_bulk_actions' ) );
+			add_filter( 'handle_bulk_actions-upload', array( $this, 'library_bulk_actions_handler' ), 10, 3 );
 		}
-
-		// Column for Media Library
-		$method = apply_filters( 'mfrh_method', 'media_title' );
-		if ( $method != 'none' ) {
-			add_filter( 'manage_media_columns', array( $this, 'add_media_columns' ) );
-			add_action( 'manage_media_custom_column', array( $this, 'manage_media_custom_column' ), 10, 2 );
-		}
-
-		// Media Library Bulk Actions
-		add_filter( 'bulk_actions-upload', array( $this, 'library_bulk_actions' ) );
-		add_filter( 'handle_bulk_actions-upload', array( $this, 'library_bulk_actions_handler' ), 10, 3 );
-	}
-
-	/**
-	 *
-	 * ADDITIONAL PLUGINS
-	 *
-	 */
-
-	function wpml_load() {
-		require( 'plugins/wpml.php' );
 	}
 
 	/**
@@ -161,7 +149,7 @@ class Meow_MFRH_Core {
 	 *
 	 */
 
-	function add_media_columns($columns) {
+	function add_media_columns( $columns ) {
 			$columns['mfrh_column'] = __( 'Rename', 'media-file-renamer' );
 			return $columns;
 	}
@@ -668,7 +656,7 @@ class Meow_MFRH_Core {
 	function rename_media_files() {
 		$hide_ads = get_option( 'meowapps_hide_ads' );
 		echo '<div class="wrap">';
-	  echo $this->mfrh_admin->display_title( "Media File Renamer" );
+	  echo $this->admin->display_title( "Media File Renamer" );
 		echo '<p></p>';
 		global $wpdb;
 
@@ -699,7 +687,7 @@ class Meow_MFRH_Core {
 		?>
 
 		<?php
-		if ( !$this->mfrh_admin->is_registered() ) {
+		if ( !$this->admin->is_registered() ) {
 		  echo '<div class="updated"><p>';
 		  echo __( '<b>The Pro version</b> of the plugin allows you to <b>rename based on the title of the post</b> (product or whatever else) you media is attached to, <b>rename manually</b>, use <b>numbered files</b> (by adding a counter if the filenames are similar), <b>sync the title with your ALT text</b>, UTF8 support (if you need it), a force rename (to repair a broken install), and, more importantly, <b>supports the developer</b> :) The serial key for the Pro has to be inserted in your Meow Apps > File Renamer > Pro. Thank you :)<br /><br /><a class="button-primary" href="http://meowapps.com/media-file-renamer/" target="_blank">Get the serial key for the Pro</a>', 'media-file-renamer' );
 		  echo '</p></div>';
@@ -897,12 +885,12 @@ class Meow_MFRH_Core {
 		$is_manual = apply_filters( 'mfrh_manual', false );
 		$html = '<input type="text" readonly class="widefat" name="mfrh_new_filename" value="' . $basename. '" />';
 		$html .= '<p class="description">This feature is for <a target="_blank" href="http://meowapps.com/media-file-renamer/">Pro users</a> only.</p>';
-		echo apply_filters( "mfrh_admin_attachment_fields", $html, $post );
+		echo apply_filters( "admin_attachment_fields", $html, $post );
 		return $post;
 	}
 
 	function log_sql( $data, $antidata ) {
-		if ( !get_option( 'mfrh_logsql' ) || !$this->mfrh_admin->is_registered() )
+		if ( !get_option( 'mfrh_logsql' ) || !$this->admin->is_registered() )
 			return;
 		$fh = fopen( trailingslashit( dirname(__FILE__) ) . 'mfrh_sql.log', 'a' );
 		$fh_anti = fopen( trailingslashit( dirname(__FILE__) ) . 'mfrh_sql_revert.log', 'a' );
@@ -1031,6 +1019,8 @@ class Meow_MFRH_Core {
 	 }
 
 	function rename_file( $old, $new, $case_issue = false ) {
+		// If there is a case issue, that means the system doesn't make the difference between AA.jpg and aa.jpg even though WordPress does.
+		// In that case it is important to rename the file to a temporary filename in between like: AA.jpg -> TMP.jpg -> aa.jpg.
 		if ( $case_issue ) {
 			if ( !rename( $old, $old . md5( $old ) ) ) {
 				$this->log( "The file couldn't be renamed (case issue) from $old to " . $old . md5( $old ) . "." );
@@ -1220,6 +1210,8 @@ class Meow_MFRH_Core {
 		if ( $meta )
 			wp_update_attachment_metadata( $id, $meta );
 		update_attached_file( $id, $new_filepath );
+
+		// I wonder about cleaning the cache for this media. It might have no impact, and will not reset the cache for the posts using this media anyway, and it adds processing time. I keep it for now, but there might be something better to do.
 		clean_post_cache( $id );
 
 		// Rename slug/permalink
@@ -1260,126 +1252,5 @@ class Meow_MFRH_Core {
 
 		do_action( 'mfrh_media_renamed', $post, $old_filepath, $new_filepath );
 		return $post;
-	}
-
-	/**
-	 *
-	 * INTERNAL ACTIONS (HOOKS)
-	 * Mostly from the Side-Updates
-	 *
-	 * Available actions are:
-	 * mfrh_path_renamed
-	 * mfrh_url_renamed
-	 * mfrh_media_renamed
-	 *
-	 */
-
-	// Register internal actions
-	function init_actions() {
-		if ( get_option( "mfrh_update_posts", true ) )
-			add_action( 'mfrh_url_renamed', array( $this, 'action_update_posts' ), 10, 3 );
-		if ( get_option( "mfrh_update_postmeta", true ) )
-			add_action( 'mfrh_url_renamed', array( $this, 'action_update_postmeta' ), 10, 3 );
-		if ( get_option( "mfrh_rename_guid" ) )
-			add_action( 'mfrh_media_renamed', array( $this, 'action_rename_guid' ), 10, 3 );
-	}
-
-	// The GUID should never be updated but... this will if the option is checked.
-	// [TigrouMeow] It the recent version of WordPress, the GUID is not part of the $post (even though it is in database)
-	// Explanation: http://pods.io/2013/07/17/dont-use-the-guid-field-ever-ever-ever/
-	function action_rename_guid( $post, $old_filepath, $new_filepath ) {
-		$meta = wp_get_attachment_metadata( $post['ID'] );
-		$old_guid = get_the_guid( $post['ID'] );
-		if ( $meta )
-			$new_filepath = wp_get_attachment_url( $post['ID'] );
-		global $wpdb;
-		$query = $wpdb->prepare( "UPDATE $wpdb->posts SET guid = '%s' WHERE ID = '%d'", $new_filepath,  $post['ID'] );
-		$query_revert = $wpdb->prepare( "UPDATE $wpdb->posts SET guid = '%s' WHERE ID = '%d'", $old_guid,  $post['ID'] );
-		$this->log_sql( $query, $query_revert );
-		$wpdb->query( $query );
-		clean_post_cache( $post['ID'] );
-		$this->log( "GUID\t$old_guid -> $new_filepath." );
-	}
-
-	// Mass update of all the meta with the new filenames
-	function action_update_postmeta( $post, $orig_image_url, $new_image_url ) {
-		global $wpdb;
-		$query = $wpdb->prepare( "UPDATE $wpdb->postmeta 
-			SET meta_value = '%s'
-			WHERE meta_key <> '_original_filename'
-			AND (TRIM(meta_value) = '%s'
-			OR TRIM(meta_value) = '%s'
-		);", $new_image_url, $orig_image_url, str_replace( ' ', '%20', $orig_image_url ) );
-		$query_revert = $wpdb->prepare( "UPDATE $wpdb->postmeta 
-			SET meta_value = '%s'
-			WHERE meta_key <> '_original_filename'
-			AND meta_value = '%s';
-		", $orig_image_url, $new_image_url );
-		$wpdb->query( $query );
-		$this->log_sql( $query, $query_revert );
-		$this->log( "Meta\t$orig_image_url -> $new_image_url" );
-	}
-
-	// Mass update of all the articles with the new filenames
-	function action_update_posts( $post, $orig_image_url, $new_image_url ) {
-		global $wpdb;
-
-		// Content
-		$query = $wpdb->prepare( "UPDATE $wpdb->posts 
-			SET post_content = REPLACE(post_content, '%s', '%s')
-			WHERE post_status != 'inherit'
-			AND post_status != 'trash'
-			AND post_type != 'attachment'
-			AND post_type NOT LIKE '%acf-%'
-			AND post_type NOT LIKE '%edd_%'
-			AND post_type != 'shop_order'
-			AND post_type != 'shop_order_refund'
-			AND post_type != 'nav_menu_item'
-			AND post_type != 'revision'
-			AND post_type != 'auto-draft'", $orig_image_url, $new_image_url );
-		$query_revert = $wpdb->prepare( "UPDATE $wpdb->posts 
-			SET post_content = REPLACE(post_content, '%s', '%s')
-			WHERE post_status != 'inherit'
-			AND post_status != 'trash'
-			AND post_type != 'attachment'
-			AND post_type NOT LIKE '%acf-%'
-			AND post_type NOT LIKE '%edd_%'
-			AND post_type != 'shop_order'
-			AND post_type != 'shop_order_refund'
-			AND post_type != 'nav_menu_item'
-			AND post_type != 'revision'
-			AND post_type != 'auto-draft'", $new_image_url, $orig_image_url );
-		$wpdb->query( $query );
-		$this->log_sql( $query, $query_revert );
-		$this->log( "Content\t$orig_image_url -> $new_image_url" );
-		
-		// Excerpt
-		$query = $wpdb->prepare( "UPDATE $wpdb->posts 
-			SET post_excerpt = REPLACE(post_excerpt, '%s', '%s')
-			WHERE post_status != 'inherit'
-			AND post_status != 'trash'
-			AND post_type != 'attachment'
-			AND post_type NOT LIKE '%acf-%'
-			AND post_type NOT LIKE '%edd_%'
-			AND post_type != 'shop_order'
-			AND post_type != 'shop_order_refund'
-			AND post_type != 'nav_menu_item'
-			AND post_type != 'revision'
-			AND post_type != 'auto-draft'", $orig_image_url, $new_image_url );
-		$query_revert = $wpdb->prepare( "UPDATE $wpdb->posts 
-			SET post_excerpt = REPLACE(post_excerpt, '%s', '%s')
-			WHERE post_status != 'inherit'
-			AND post_status != 'trash'
-			AND post_type != 'attachment'
-			AND post_type NOT LIKE '%acf-%'
-			AND post_type NOT LIKE '%edd_%'
-			AND post_type != 'shop_order'
-			AND post_type != 'shop_order_refund'
-			AND post_type != 'nav_menu_item'
-			AND post_type != 'revision'
-			AND post_type != 'auto-draft'", $new_image_url, $orig_image_url );
-		$wpdb->query( $query );
-		$this->log_sql( $query, $query_revert );
-		$this->log( "Excerpt\t$orig_image_url -> $new_image_url" );
 	}
 }

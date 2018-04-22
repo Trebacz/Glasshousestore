@@ -240,8 +240,10 @@ abstract class WPPFM_Background_Process extends WPPFM_Async_Request {
 	public function maybe_handle() {
 		// Don't lock up other requests while processing
 		session_write_close();
-
-		if ( $this->is_process_running() ) {
+		
+		$background_mode_disabled = get_option( 'wppfm_disabled_background_mode', 'false' );
+		
+		if ( $background_mode_disabled === 'false' && $this->is_process_running() ) {
 			// Background process already running.
 			wp_die();
 		}
@@ -251,7 +253,8 @@ abstract class WPPFM_Background_Process extends WPPFM_Async_Request {
 			wp_die();
 		}
 
-		check_ajax_referer( $this->identifier, 'nonce' );
+		if ( $background_mode_disabled === 'false' )
+			check_ajax_referer( $this->identifier, 'nonce' );
 		
 		$this->handle();
 
@@ -325,7 +328,6 @@ abstract class WPPFM_Background_Process extends WPPFM_Async_Request {
 	 */
 	protected function unlock_process() {
 		delete_site_transient( $this->identifier . '_process_lock' );
-
 		return $this;
 	}
 	

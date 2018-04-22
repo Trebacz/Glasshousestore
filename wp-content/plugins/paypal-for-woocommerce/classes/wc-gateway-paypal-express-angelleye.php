@@ -144,7 +144,7 @@ class WC_Gateway_PayPal_Express_AngellEYE extends WC_Payment_Gateway {
         $this->version = "64";
         $this->Force_tls_one_point_two = get_option('Force_tls_one_point_two', 'no');
         $this->page_style = $this->get_option('page_style', '');
-        
+        add_action('woocommerce_update_options_payment_gateways_paypal_express', array($this, 'angelleye_update_marketing_solution'), 10);
         add_action('woocommerce_update_options_payment_gateways_' . $this->id, array($this, 'process_admin_options'), 999);
         add_filter('woocommerce_settings_api_sanitized_fields_' . $this->id, array($this, 'angelleye_express_checkout_encrypt_gateway_api'), 10, 1);
         if (!has_action('woocommerce_api_' . strtolower('WC_Gateway_PayPal_Express_AngellEYE'))) {
@@ -293,6 +293,7 @@ class WC_Gateway_PayPal_Express_AngellEYE extends WC_Payment_Gateway {
                 angelleye_button_tagline.hide();
                 if( is_funding_icon_should_show_php() === false) {
                     angelleye_button_fundingicons.hide();
+                    jQuery("#woocommerce_paypal_express_button_fundingicons").val("false");
                 }
             } else {
                 if( jQuery("#woocommerce_paypal_express_button_size option[value='small']").length == 0) {
@@ -319,6 +320,7 @@ class WC_Gateway_PayPal_Express_AngellEYE extends WC_Payment_Gateway {
                 if ( this.value === 'credit' ) {
                     jQuery('#woocommerce_paypal_express_button_color').closest('tr').hide();
                     jQuery('#woocommerce_paypal_express_button_fundingicons').closest('tr').hide();
+                    jQuery("#woocommerce_paypal_express_button_fundingicons").val("false");
                     if( jQuery("#woocommerce_paypal_express_button_layout").val() !== 'vertical' ) {
                         paypal_express_button_tagline.show();
                     }
@@ -386,20 +388,7 @@ class WC_Gateway_PayPal_Express_AngellEYE extends WC_Payment_Gateway {
                     production.show();
                 }
             }).change();
-            jQuery('#woocommerce_paypal_express_button_fundingicons').change(function () {
-                var paypal_express_button_tagline = jQuery('#woocommerce_paypal_express_button_tagline').closest('tr').hide();
-                if (this.value === 'true') {
-                    paypal_express_button_tagline.hide();
-                } else {
-                    if( jQuery("#woocommerce_paypal_express_button_layout").val() !== 'vertical' ) {
-                        if( jQuery('#woocommerce_paypal_express_button_label').val() !== 'buynow' ) {
-                            paypal_express_button_tagline.show();
-                        }
-                       
-                    }
-                    
-                }
-        }).change();
+            
         jQuery('#woocommerce_paypal_express_disallowed_funding_methods').change(function () {
             if( jQuery.inArray('credit', jQuery('#woocommerce_paypal_express_disallowed_funding_methods').val()) ) {
                 
@@ -413,6 +402,7 @@ class WC_Gateway_PayPal_Express_AngellEYE extends WC_Payment_Gateway {
             
             if( is_funding_icon_should_show_php() === false) {
                 jQuery("#woocommerce_paypal_express_button_fundingicons").closest('tr').hide();
+                jQuery("#woocommerce_paypal_express_button_fundingicons").val("false");
                 if( jQuery('#woocommerce_paypal_express_button_label').val() !== 'buynow' ) {
                     if( jQuery("#woocommerce_paypal_express_button_layout").val() !== 'vertical' ) {
                         jQuery('#woocommerce_paypal_express_button_tagline').closest('tr').show();
@@ -420,8 +410,27 @@ class WC_Gateway_PayPal_Express_AngellEYE extends WC_Payment_Gateway {
                 }
             } else {
                  jQuery("#woocommerce_paypal_express_button_fundingicons").closest('tr').show();
-                 jQuery('#woocommerce_paypal_express_button_tagline').closest('tr').hide();
+                 if(jQuery('#woocommerce_paypal_express_button_fundingicons').val() !== 'true') {
+                     var angelleye_button_tagline =  jQuery("#woocommerce_paypal_express_button_tagline").closest('tr');
+                    angelleye_button_tagline.show();
+                } else {
+                    jQuery('#woocommerce_paypal_express_button_tagline').closest('tr').hide();
+                }
             }
+        }).change();
+        jQuery('#woocommerce_paypal_express_button_fundingicons').change(function () {
+                var paypal_express_button_tagline = jQuery('#woocommerce_paypal_express_button_tagline').closest('tr').hide();
+                if (this.value === 'true') {
+                    paypal_express_button_tagline.hide();
+                } else {
+                    if( jQuery("#woocommerce_paypal_express_button_layout").val() !== 'vertical' ) {
+                        if( jQuery('#woocommerce_paypal_express_button_label').val() !== 'buynow' ) {
+                            paypal_express_button_tagline.show();
+                        }
+                       
+                    }
+                    
+                }
         }).change();
         </script>
          <?php
@@ -1804,5 +1813,73 @@ class WC_Gateway_PayPal_Express_AngellEYE extends WC_Payment_Gateway {
                 }
             }
         }
+    }
+    
+    public function angelleye_update_marketing_solution() {
+        if (!empty($_POST['reset']) && 'reset' == $_POST['reset']) {
+            unset($_POST['reset']);
+            return false;
+        }
+        if (!empty($_POST['woocommerce_paypal_express_paypal_marketing_solutions_enabled']) && $_POST['woocommerce_paypal_express_paypal_marketing_solutions_enabled'] == true) {
+            if (empty($_POST['woocommerce_paypal_express_testmode'])) {
+                if ($_POST['woocommerce_paypal_express_api_username'] != $this->api_username || empty($this->paypal_marketing_solutions_cid_production)) {
+                    $cid_production = '';
+                    $result = array();
+                    $website_name = get_bloginfo('name');
+                    $website_url = get_bloginfo('url');
+                    $website_url = str_ireplace('www.', '', parse_url($website_url, PHP_URL_HOST));
+                    $post = '{"owner_id":"woocommerce_container","owner_type":"PAYPAL","application_context":{"terms_accepted":true,"bn_code":"AngellEYE_SP_WooCommerce_MS","partner_name":"' . $website_name . '"},"name":"woocommerce_container","description":"Container created from PayPal for WooCommerce plugin","url":"' . $website_url . '","published":true,"tags":[{"tag_definition_id":"credit","enabled":true,"configuration":[{"id":"analytics-id","value":"' . $_POST['woocommerce_paypal_express_api_username'] . '-1"},{"id":"variant","value":"slide-up"},{"id":"flow","value":"credit"},{"id":"mobile-flow","value":"credit"},{"id":"is-mobile-enabled","value":"true"},{"id":"is-desktop-enabled","value":"true"},{"id":"limit","value":"3"}]}, {"tag_definition_id": "analytics", "enabled": true, "configuration": [{"id": "analytics-id", "value": "' . $_POST['woocommerce_paypal_express_api_username'] . '-1"}]}]}';
+                    $headers = array(
+                        'Accept: application/json',
+                        'Content-Type: application/json',
+                        'Content-Length: ' . strlen($post),
+                        "x_nvp_pwd: " . $_POST['woocommerce_paypal_express_api_password'],
+                        "x_nvp_signature: " . $_POST['woocommerce_paypal_express_api_signature'],
+                        "x_nvp_user: " . $_POST['woocommerce_paypal_express_api_username']
+                    );
+                    $result_response = $this->angelleye_paypal_marketing_solutions_request($post, $headers);
+                    if (!empty($result_response['response'])) {
+                        self::$log_enabled = true;
+                        self::log('PayPal Marketing Solution request: ' . print_r($post, true), 'info', 'paypal_marketing_solutions');
+                        $Response = json_decode($result_response['response']);
+                        self::log('PayPal Marketing Solution response: ' . json_encode($Response), 'info', 'paypal_marketing_solutions');
+                        if (!empty($result_response['httpCode']) && $result_response['httpCode'] == 400) {
+                            if (!empty($Response->details[0]->issue) && 'EXISTING_CONTAINER' == $Response->details[0]->issue) {
+                                $cid_production = !empty($Response->details[0]->value) ? $Response->details[0]->value : '';
+                                $_POST['woocommerce_paypal_express_paypal_marketing_solutions_cid_production'] = $cid_production;
+                            } else {
+                                unset($_POST['woocommerce_paypal_express_paypal_marketing_solutions_enabled']);
+                                $result['error_msg'] = !empty($Response->message) ? $Response->message : '';
+                                echo '<div class="notice error"><p>' . $result['error_msg'] . '</p></div>';
+                            }
+                        } elseif (!empty($result_response['httpCode']) && $result_response['httpCode'] == 201) {
+                            $result['success'] = true;
+                            $link = $Response->links[0];
+                            $e = explode('/', $link->href);
+                            $_POST['woocommerce_paypal_express_paypal_marketing_solutions_cid_production'] = end($e);
+                        }
+                    } else {
+                        unset($_POST['woocommerce_paypal_express_paypal_marketing_solutions_enabled']);
+                    }
+                }
+            }
+        }
+    }
+
+    public function angelleye_paypal_marketing_solutions_request($post, $headers) {
+        $result = array();
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_VERBOSE, 1);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 30);
+        curl_setopt($curl, CURLOPT_URL, 'https://api.paypal.com/proxy/v1/offers/containers');
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $post);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($curl, CURLOPT_SSLVERSION, 6);
+        $result['response'] = curl_exec($curl);
+        $result['httpCode'] = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+        return $result;
     }
 }

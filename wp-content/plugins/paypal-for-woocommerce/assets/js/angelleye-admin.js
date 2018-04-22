@@ -336,7 +336,7 @@ jQuery(document).ready(function ($) {
         }
         var angelleye_woocommerce_paypal_express_disallowed_funding_methods = jQuery('#woocommerce_paypal_express_disallowed_funding_methods').val();
         if (angelleye_woocommerce_paypal_express_disallowed_funding_methods === null) {
-            angelleye_woocommerce_paypal_express_disallowed_funding_methods = '';
+            angelleye_woocommerce_paypal_express_disallowed_funding_methods = [];
         }
         if (angelleye_layout === 'vertical') {
             angelleye_label = '';
@@ -356,40 +356,54 @@ jQuery(document).ready(function ($) {
             shape: angelleye_shape,
             label: angelleye_label,
             layout: angelleye_layout,
-            tagline: angelleye_tagline};
+            tagline: ( angelleye_tagline === "true" ) ? true : false
+        };
 
         var disallowed_funding_methods = jQuery('#woocommerce_paypal_express_disallowed_funding_methods').val();
         if (disallowed_funding_methods === null) {
             disallowed_funding_methods = [];
         }
         if (angelleye_layout === 'horizontal' && (jQuery.inArray('card', disallowed_funding_methods) > -1 === false) && angelleye_label !== 'credit' && angelleye_fundingicons === "true") {
-            style_object['fundingicons'] = angelleye_fundingicons;
+            style_object['fundingicons'] = ( angelleye_fundingicons === "true" ) ? true : false;
         }
         angelleye_woocommerce_paypal_express_allowed_funding_methods = jQuery.grep(angelleye_woocommerce_paypal_express_allowed_funding_methods, function (value) {
             return jQuery.inArray(value, angelleye_woocommerce_paypal_express_disallowed_funding_methods) < 0;
         });
+        
         if (angelleye_admin.shop_based_us_or_uk == "no") {
             angelleye_woocommerce_paypal_express_disallowed_funding_methods.push("credit");
         }
         window.paypalCheckoutReady = function () {
             paypal.Button.render({
-                env: angelleye_env,
+                env: 'sandbox',
+                client: {
+                    sandbox:    'AZDxjDScFpQtjWTOUtWKbyN_bDt4OgqaF4eYXlewfBP4-8aqX3PiV8e1GWU6liB2CUXlkA59kJXE7M6R'
+                },
                 style: style_object,
                 funding: {
                     allowed: angelleye_woocommerce_paypal_express_allowed_funding_methods,
                     disallowed: angelleye_woocommerce_paypal_express_disallowed_funding_methods
                 },
-                payment: function () {
-
+                payment: function(data, actions) {
+                    return actions.payment.create({
+                        payment: {
+                            transactions: [
+                                {
+                                    amount: { total: '0.01', currency: 'USD' }
+                                }
+                            ]
+                        }
+                    });
                 },
                 onAuthorize: function (data, actions) {
-
+                    return actions.payment.execute().then(function() {
+                       window.alert('Payment Complete!');
+                   });
                 },
                 onCancel: function (data, actions) {
 
                 },
                 onError: function (err) {
-                    alert(err);
                 }
             }, '.display_smart_button_previews');
 

@@ -7,7 +7,8 @@ class BaseEntity{
 	public $fieldsToExport; //What fields does the user want to export
 	public $filters;		//Filters for the query
 	public $settings;		//The plugin settings for this user
-	
+	public $fieldSequence;	//what order are the fields in?
+
 	/**
 	 * outputs the HTML for the fields for this entity
 	 */
@@ -21,6 +22,35 @@ class BaseEntity{
 	 */
 	private function get_label_overrides(){
 	
+	}
+
+	/**
+	 * Generates the export sequence option if it doesn't exist
+	 */
+	public function generate_export_order_sequence(){
+
+		error_log('order sequence');
+		//build the option name - TODO need to refactor it is hardcoded everywhere
+		$name = strtolower($this->id) . "_option";
+
+		//does it exist?
+		$fields = array();
+		$i = 1;
+
+		if(false == get_option($name)){
+			//need to create it!
+
+			//loop thru all the fields
+			foreach($this->fields as $key => $val){
+				$fields[$val['placeholder']] = $i;
+				$i++;
+			}
+
+			//now save it
+			update_option($name,  json_encode($fields) );
+		}
+
+
 	}
 
 	/**

@@ -40,7 +40,7 @@ if ( !class_exists( 'WPPFM_Schedules' ) ) :
 			$current_timestamp = date( 'Y-m-d H:i:s', current_time( 'timestamp' ) );
 			$active_feeds_schedules = $data_class->get_schedule_data();
 			$failed_feeds = $data_class->get_failed_feeds();
-			
+
 			// update scheduled feeds
 			foreach ( $active_feeds_schedules as $schedule ) {
 				$update_time = $this->new_activation_time( $schedule[ 'updated' ], $schedule[ 'schedule' ] );

@@ -62,7 +62,9 @@ if ( !class_exists( 'WPPFM_Options_Form' ) ) :
 
 			$auto_fix_feed_option = get_option( 'wppfm_auto_feed_fix', true );
 			$auto_feed_fix_checked = true === $auto_fix_feed_option || $auto_fix_feed_option === 'true' ? ' checked ' : '';
-
+			$background_processing_option = get_option( 'wppfm_disabled_background_mode', 'false' );
+			$background_processing_unchecked = true === $background_processing_option || $background_processing_option === 'true' ? ' checked ' : '';
+			
 			$html_code .= '<tr valign="top" class="">';
 			$html_code .= '<th scope="row" class="titledesc">' . __( 'Auto Feed Fix', 'wp-product-feed-manager' ) . '</th>';
 			$html_code .= '<td class="forminp forminp-checkbox">';
@@ -71,6 +73,16 @@ if ( !class_exists( 'WPPFM_Options_Form' ) ) :
 			$html_code .= '<label for="wppfm_auto_feed_fix_mode">';
 			$html_code .= '<input name="wppfm_auto_feed_fix_mode" id="wppfm_auto_feed_fix_mode" type="checkbox" class="" value="1"';
 			$html_code .= $auto_feed_fix_checked . '> ' . __( 'Automatically fix feeds that are failed (default on). Change this setting if a feed keeps failing.', 'wp-product-feed-manager') . '</label></fieldset>';
+			$html_code .= '</td></tr>';
+
+			$html_code .= '<tr valign="top" class="">';
+			$html_code .= '<th scope="row" class="titledesc">' . __( 'Disable background processing', 'wp-product-feed-manager' ) . '</th>';
+			$html_code .= '<td class="forminp forminp-checkbox">';
+			$html_code .= '<fieldset>';
+			$html_code .= '<legend class="screen-reader-text"><span>' . __( 'Disable background processing', 'wp-product-feed-manager' ) . '</span></legend>';
+			$html_code .= '<label for="wppfm_background_processing_mode">';
+			$html_code .= '<input name="wppfm_background_processing_mode" id="wppfm_background_processing_mode" type="checkbox" class="" value="1"';
+			$html_code .= $background_processing_unchecked . '> ' . __( 'Process feeds directly instead of in the background (default off). Try this option when feeds keep getting stuck in processing.', 'wp-product-feed-manager') . '</label></fieldset>';
 			$html_code .= '</td></tr>';
 
 			$html_code .= '<tr valign="top" class="">';

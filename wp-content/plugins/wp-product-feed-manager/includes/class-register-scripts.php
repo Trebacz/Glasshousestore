@@ -138,6 +138,7 @@ if ( !class_exists( 'WPPFM_Register_Scripts' ) ) :
 				'ajaxurl'						=> admin_url( 'admin-ajax.php' ),
 				// generate the required nonces
 				'setAutoFeedFixNonce'			=> wp_create_nonce( 'myajax-auto-feed-fix-nonce' ),
+				'setBackgroundModeNonce'		=> wp_create_nonce( 'myajax-background-mode-nonce' ),
 				'setThirdPartyKeywordsNonce'	=> wp_create_nonce( 'myajax-set-third-party-keywords-nonce' ),
 				'backupNonce'					=> wp_create_nonce( 'myajax-backup-nonce' ),
 				'deleteBackupNonce'				=> wp_create_nonce( 'myajax-delete-backup-nonce' ),
@@ -152,7 +153,7 @@ if ( !class_exists( 'WPPFM_Register_Scripts' ) ) :
 
 		public function wppfm_register_level_one_scripts() {
 			if ( stripos( $this->_uri, '/wp-admin/admin.php?page=' . WPPFM_PLUGIN_NAME ) === false ) { return; }
-
+			
 			$data				 = new WPPFM_Data_Class;
 			$installed_channels	 = $data->get_channels();
 

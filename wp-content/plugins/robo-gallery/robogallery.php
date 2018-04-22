@@ -3,7 +3,7 @@
 Plugin Name: Robo Gallery
 Plugin URI: https://robosoft.co/wordpress-gallery-plugin
 Description: Gallery modes photo gallery, images gallery, video gallery, Polaroid gallery, gallery lighbox, portfolio gallery, responsive gallery
-Version: 2.7.7
+Version: 2.7.9
 Author: RoboSoft
 Author URI: https://robosoft.co/wordpress-gallery-plugin
 License: GPLv3 or later
@@ -14,8 +14,9 @@ Domain Path: /languages
 if(!defined('WPINC'))die;
 if(!defined("ABSPATH"))exit;
 
+
 define("ROBO_GALLERY", 1); 
-define("ROBO_GALLERY_VERSION", '2.7.7'); 
+define("ROBO_GALLERY_VERSION", '2.7.9'); 
 
 if( !defined("ROBO_GALLERY_PATH") ) define("ROBO_GALLERY_PATH", plugin_dir_path( __FILE__ ));
 
@@ -27,6 +28,58 @@ add_action( 'plugins_loaded', 'rbs_gallery_load_textdomain' );
 function rbs_gallery_load_textdomain() {
   load_plugin_textdomain( 'robo-gallery', false, dirname(plugin_basename( __FILE__ )) . '/languages' ); 
 }
+
+
+/*add_action('wp', array($this, 'buffer_start'), 1000000);
+*/
+
+/*add_action( 'plugins_loaded', 'robo_cache_check', 1000000);
+function robo_cache_check(){
+	if ( !is_admin() ) { 
+		if(
+			isset($_SERVER) &&
+			isset($_SERVER['HTTP_HOST']) &&
+			isset($_SERVER['REQUEST_URI']) 
+		) {
+
+			$fileCacheName = md5($_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
+			$fileCacheFullName = ROBO_GALLERY_PATH.'/cache/html/'.$fileCacheName;
+
+			if(file_exists($fileCacheFullName)){
+				$cacheContent = file_get_contents($fileCacheFullName);
+				echo $cacheContent;
+				die();
+			}
+		}
+
+		ob_start('robo_cache_html_compress');
+	}
+}
+
+add_action('shutdown',  'robo_cache_write', 1000000);
+add_action( 'wp_loaded', 'robo_cache_write', 1000000);
+function robo_cache_write() {
+    if ( !is_admin() ) { 
+        ob_start('robo_cache_html_compress');
+    }
+}
+
+function robo_cache_html_compress( $html ) {
+	if(
+		isset($_SERVER) &&
+		isset($_SERVER['HTTP_HOST']) &&
+		isset($_SERVER['REQUEST_URI']) 
+	) {
+		$fileCacheName = md5($_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
+		$fileCacheFullName = ROBO_GALLERY_PATH.'/cache/html/'.$fileCacheName;
+		if(!file_exists($fileCacheFullName)){
+			$htmlComment = '<!-- read from cache file '.$fileCacheName.' url '.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].' -->';
+			file_put_contents( $fileCacheFullName, $html.$htmlComment);		
+		}
+	}
+	return $html;
+}*/
+
 
 if(!function_exists('rbs_gallery_pro_check')){
 	function rbs_gallery_pro_check(){

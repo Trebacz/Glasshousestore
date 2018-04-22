@@ -64,9 +64,16 @@ jQuery(document).ready(function() {
 	//Lets handle the clicks when a new export type is selected
 	jQuery("input[type=radio][name=datatype]").on('change', function(){
 		
-		
-		console.log('it changed' + jQuery(this).attr("value"));
-		
+
+		var type = jQuery(this).attr("value");
+
+		//console.log('it changed' + jQuery(this).attr("value"));
+
+		//the label contains the text if it is translated to another language
+		var label= "label[for='" + type + "']";
+		var transtext =  jQuery(this).next(label).text();
+		//console.log('it changed' + jQuery(this).next(label).text());
+
 		$entity = jQuery(this).attr("value") + '-div';
 		
 		//we need to load the field, labels & filter tabs with the appropriate data...
@@ -101,8 +108,9 @@ jQuery(document).ready(function() {
 		jQuery('#' + $entity).css("display", "block");
 		
 		//and change the title!
-		jQuery('#entity-type-title').text(jQuery(this).attr("value"));
-		
+		//jQuery('#entity-type-title').text(jQuery(this).attr("value"));
+		jQuery('#entity-type-title').text(transtext);
+
 		//update the hidden field with the name of the entity
 		jQuery('#entity-being-edited').val(jQuery(this).attr("value"));
 		
@@ -110,10 +118,10 @@ jQuery(document).ready(function() {
 		jQuery('#entity-to-export').val(jQuery(this).attr("value"));
 		
 		//update the Submit Button
-		jQuery('#submit-export').val('Export ' +  jQuery(this).attr("value") );
+		jQuery('#submit-export').val('Export ' +  transtext );
 		
 		//update the Submit Button
-		jQuery('#submit2-export').val('Export ' +  jQuery(this).attr("value") );
+		jQuery('#submit2-export').val('Export ' +  transtext );
 		
 		//do we need to disable it?
 		if(jQuery(this).attr("value") != "Product" && jQuery(this).attr("value") != "Order"){

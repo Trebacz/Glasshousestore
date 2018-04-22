@@ -2,8 +2,8 @@
 
 /* * ******************************************************************
  * Version 1.0
- * Modified: 26-13-2017
- * Copyright 2017 Accentio. All rights reserved.
+ * Modified: 12-03-2018
+ * Copyright 2018 Accentio. All rights reserved.
  * License: None
  * By: Michel Jongbloed
  * ****************************************************************** */
@@ -80,7 +80,7 @@ if ( !class_exists( 'WPPFM_Feed_Controller_Class' ) ) :
 		/**
 		 * Sets the background_process_is_running option
 		 * 
-		 * @param bool $set
+		 * @param bool $set (default false)
 		 */
 		public static function set_feed_processing_flag( $set = false ) {
 			$status = false === $set ? 'false' : 'true';

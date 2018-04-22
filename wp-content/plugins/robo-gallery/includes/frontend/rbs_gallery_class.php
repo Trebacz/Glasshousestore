@@ -503,7 +503,7 @@ class roboGallery extends roboGalleryUtils{
 
 				$descBoxData=''; 
 
-				if(get_post_meta( $this->id, ROBO_GALLERY_PREFIX.'lightboxDescPanel', true )){
+				if( get_post_meta( $this->id, ROBO_GALLERY_PREFIX.'lightboxDescPanel', true ) && isset($img['data'])){
 
 					switch(get_post_meta( $this->id, ROBO_GALLERY_PREFIX.'lightboxDescSource', true )){
 						case 'caption': 
@@ -523,18 +523,23 @@ class roboGallery extends roboGalleryUtils{
 					if($descBoxData) $descBoxData = ' data-descbox="'.esc_attr($descBoxData).'" ';
 				}
 
-				$polaroidDesc =  str_replace( 
-					array('@TITLE@','@CAPTION@','@DESC@', '@LINK@'), 
-					array( 
-						$img['data']->post_title,
-						$img['data']->post_excerpt,
-						$img['data']->post_content,
-						$img['link']
-					), 
-					$polaroid_template
-				);
-
-				$link = $img['image'];
+				if( isset($img['data']) && isset($img['link'])  ){
+					$polaroidDesc =  str_replace( 
+						array('@TITLE@','@CAPTION@','@DESC@', '@LINK@'), 
+						array( 
+							$img['data']->post_title,
+							$img['data']->post_excerpt,
+							$img['data']->post_content,
+							$img['link']
+						), 
+						$polaroid_template
+					);
+				} else {
+					$polaroidDesc = '';
+				}
+				if( isset( $img['image'] ) ){
+					$link = $img['image'];
+				} else $link = '';
 
 				if( $img['link'] && ( !$this->hover || ( $this->hover == 1 && !$this->linkIcon && !$this->zoomIcon  ) )  ){
 					$link = $img['link'].'" data-type="'.($img['typelink']?'blank':'').'link';

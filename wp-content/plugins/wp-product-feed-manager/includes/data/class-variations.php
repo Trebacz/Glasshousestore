@@ -63,8 +63,6 @@ if ( !class_exists( 'WPPFM_Variations_Class' ) ) :
 		}
 		
 		private static function variation_conversion_table( $variation_data, $main_permalink, $feed_language ) {
-// 200118	$permalink_value = self::variation_permalink_value_string( $main_permalink, $variation_data->get_variation_attributes() );
-
 			return array(
 				'ID'						=> (string)$variation_data->get_id(),
 				'_downloadable'				=> $variation_data->get_downloadable( 'feed' ),
@@ -84,26 +82,9 @@ if ( !class_exists( 'WPPFM_Variations_Class' ) ) :
 				'_sale_price_dates_from'	=> $variation_data->get_date_on_sale_from( 'feed' ) && ( $date = $variation_data->get_date_on_sale_from( 'feed' )->getTimestamp() ) ? convert_price_date_to_feed_format( $date) : '',
 				'_sale_price_dates_to'		=> $variation_data->get_date_on_sale_to( 'feed' ) && ( $date = $variation_data->get_date_on_sale_to( 'feed' )->getTimestamp() ) ? convert_price_date_to_feed_format( $date) : '',
 				'attachment_url'			=> wp_get_attachment_url( get_post_thumbnail_id( $variation_data->get_id() ) ),
-// 200118		'permalink'					=> $main_permalink . $permalink_value
 				'permalink'					=> $main_permalink
 		    );
 		}
-		
-// 200118
-//		private static function variation_permalink_value_string( $main_permalink, $attributes ) {
-//			
-//			$string = stripos( $main_permalink, '?' ) ? '&' : '?';
-//			
-//			foreach( $attributes as $attribute_name => $attribute_value ) {
-//				if ( $attribute_value ) { // only add variations that where set
-//					$clean_attr_name = str_replace( ' ', '+', $attribute_name );
-//					$string .= strtolower( $clean_attr_name ) . '=' . $attribute_value . '&';
-//				}
-//			}
-//			
-//			return rtrim( $string, '&?' );
-//		}
-
 	}
 
 	

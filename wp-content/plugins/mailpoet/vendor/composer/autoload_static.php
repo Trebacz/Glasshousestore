@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit8984a4428cf64cb5131b0166cb46976b
+class ComposerStaticInit683c9e96a2feac320233f10a1d68d14e
 {
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
@@ -334,7 +334,10 @@ class ComposerStaticInit8984a4428cf64cb5131b0166cb46976b
         'MailPoet\\Statistics\\Track\\Clicks' => __DIR__ . '/../..' . '/lib/Statistics/Track/Clicks.php',
         'MailPoet\\Statistics\\Track\\Opens' => __DIR__ . '/../..' . '/lib/Statistics/Track/Opens.php',
         'MailPoet\\Statistics\\Track\\Unsubscribes' => __DIR__ . '/../..' . '/lib/Statistics/Track/Unsubscribes.php',
+        'MailPoet\\Subscribers\\ImportExport\\Export\\DefaultSubscribersGetter' => __DIR__ . '/../..' . '/lib/Subscribers/ImportExport/Export/DefaultSubscribersGetter.php',
+        'MailPoet\\Subscribers\\ImportExport\\Export\\DynamicSubscribersGetter' => __DIR__ . '/../..' . '/lib/Subscribers/ImportExport/Export/DynamicSubscribersGetter.php',
         'MailPoet\\Subscribers\\ImportExport\\Export\\Export' => __DIR__ . '/../..' . '/lib/Subscribers/ImportExport/Export/Export.php',
+        'MailPoet\\Subscribers\\ImportExport\\Export\\SubscribersGetter' => __DIR__ . '/../..' . '/lib/Subscribers/ImportExport/Export/SubscribersGetter.php',
         'MailPoet\\Subscribers\\ImportExport\\ImportExportFactory' => __DIR__ . '/../..' . '/lib/Subscribers/ImportExport/ImportExportFactory.php',
         'MailPoet\\Subscribers\\ImportExport\\Import\\Import' => __DIR__ . '/../..' . '/lib/Subscribers/ImportExport/Import/Import.php',
         'MailPoet\\Subscribers\\ImportExport\\Import\\MailChimp' => __DIR__ . '/../..' . '/lib/Subscribers/ImportExport/Import/MailChimp.php',
@@ -988,10 +991,10 @@ class ComposerStaticInit8984a4428cf64cb5131b0166cb46976b
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit8984a4428cf64cb5131b0166cb46976b::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit8984a4428cf64cb5131b0166cb46976b::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit8984a4428cf64cb5131b0166cb46976b::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit8984a4428cf64cb5131b0166cb46976b::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit683c9e96a2feac320233f10a1d68d14e::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit683c9e96a2feac320233f10a1d68d14e::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit683c9e96a2feac320233f10a1d68d14e::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit683c9e96a2feac320233f10a1d68d14e::$classMap;
 
         }, null, ClassLoader::class);
     }

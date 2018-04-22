@@ -711,6 +711,12 @@ mfp-container, 	.rbs-img, 	.rbs-imges-load-more, 	.rbs-imges-filter,	.rbs-im
 	color: white; 
 	background-color: rgba(185, 35, 215,0.8);
 }
+/* 2018 */
+.rbs-flex-container {
+  display: flex;
+  float: none;
+  flex-direction: column;
+}
 /**      Robo Gallery     *      Licensed under the GPLv2 license - http://opensource.org/licenses/gpl-2.0.php*      Copyright (c) 2014-2018, Robosoft. All rights reserved.*      Available only in  https://robosoft.co/robogallery/ */.robo_gallery .rbs-img-container div a,.robo_gallery .rbs-img-container div a:link,.robo_gallery .rbs-img-container div a:focus,.robo_gallery .rbs-img-container div a:hover{	border-bottom: none;}	.rbs_gallery_button_bottom .rbs-imges-no-more-entries{	display: none !important;}.rbs_gallery_button_bottom{	margin-top: 10px;}.robo_gallery .rbs-img-container img{	box-shadow: none !important;}.robo_gallery .rbsTitle{	padding: 0 0 4px 0;}.robo_gallery .rbsIcons{	text-align: center;	padding: 0 0 4px 0;}.robo_gallery .rbsIcons .rbsZoomIcon,.robo_gallery .rbsIcons .rbsLinkIcon {	line-height: 0.9 ;}.robo_gallery_hide_block{	display: none !important;}
 
 /*! @license

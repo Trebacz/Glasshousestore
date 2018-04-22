@@ -2,8 +2,8 @@
 Contributors: ecreationsllc, natekinkead
 Tags: WooCommerce, Google Customer Reviews, Google Merchant, Google Trusted Sites, Opt-in, Badge, Google Rating Badge, GCR
 Requires at least: 3.0.0
-Tested up to: 4.9.4
-Stable tag: 2.6
+Tested up to: 4.9.5
+Stable tag: 2.6.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/quick-guide-gplv3.html
 
@@ -108,6 +108,10 @@ You can use the filter hook called 'ecr_show_gcr_badge'.  Return false inside of
 add_filter('ecr_show_gcr_badge', 'my_gcr_badge_function');`
 
 == Changelog ==
+
+= 2.6.1 =
+* Fix GTIN displaying "Array"
+* Added notes on settings page to clarify that GTIN is not required
 
 = 2.6 =
 * Bug fix

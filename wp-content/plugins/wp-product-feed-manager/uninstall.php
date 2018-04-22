@@ -79,6 +79,7 @@ function unregister_plugin() {
 	delete_option( 'wppfm_channels_to_update' );
 	delete_option( 'wppfm_ftp_passive' ); // deprecated as of 1.9.3
 	delete_option( 'wppfm_auto_feed_fix' );
+	delete_option( 'wppfm_disabled_background_mode' ); // @since 2.0.7
 	delete_option( 'wppfm_debug_mode' );
 	delete_option( 'wppfm_prep_check' );
 	delete_option( 'wppfm_third_party_attribute_keywords' );

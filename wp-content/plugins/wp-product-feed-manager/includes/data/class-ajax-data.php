@@ -82,7 +82,7 @@ if ( !class_exists( 'WPPFM_Ajax_Data_Class' ) ) :
 		public function myajax_get_settings_options() {
 
 			if ( $this->safe_ajax_call( filter_input( INPUT_POST, 'postSetupOptionsNonce' ), 'myajax-setting-options-nonce' ) ) {
-				$options = [ get_option( 'wppfm_auto_feed_fix' ), get_option( 'wppfm_debug_mode' ) ];
+				$options = [ get_option( 'wppfm_auto_feed_fix' ), get_option( 'wppfm_third_party_attribute_keywords' ), get_option( 'wppfm_disabled_background_mode' ) ];
 				echo json_encode( $options );
 			}
 

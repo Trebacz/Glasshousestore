@@ -842,7 +842,12 @@ class WF_CpnImpExpCsv_Coupon_Import extends WP_Importer {
 					}
 					else
 					{
-						update_post_meta( $post_id, $key, maybe_unserialize( $meta['value'] ) );
+                                            if($key == 'customer_email'){ 
+                                                $data= explode(',', $meta['value']);
+                                                update_post_meta( $post_id, $key,( $data ) );
+                                            }else{
+                                                update_post_meta( $post_id, $key, maybe_unserialize( $meta['value'] ) );
+                                            }					
 					}
 					
 				}

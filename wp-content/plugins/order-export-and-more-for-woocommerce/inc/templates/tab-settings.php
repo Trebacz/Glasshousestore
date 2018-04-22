@@ -52,7 +52,7 @@
 			</tbody>
 	</table>
 	<p class="submit">
-		<input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes">
+		<input type="submit" name="submit" id="submit" class="button button-primary" value="<?php _e('Save changes', JEM_EXP_DOMAIN); ?>">
 	</p>
 		<input type="hidden" name="action" value="save_settings">
 		<input type="hidden" name="_wp_http_referer" value="<?php echo urlencode( $_SERVER['REQUEST_URI'] ); ?>">

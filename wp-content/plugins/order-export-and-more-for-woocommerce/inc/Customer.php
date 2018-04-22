@@ -14,6 +14,8 @@ class Customer extends BaseEntity{
 		$this->fields = $this->load_fields();
 		
 		$this->filters = array();
+
+		$this->generate_export_order_sequence();
 	}
 	
 	

@@ -37,6 +37,7 @@ if ( !class_exists( 'WPPFM_Ajax_File_Class' ) ) :
 			add_action( 'wp_ajax_myajax-update-feed-file', array( $this, 'myajax_update_feed_file' ) );
 			add_action( 'wp_ajax_myajax-log-message', array( $this, 'myajax_log_message' ) );
 			add_action( 'wp_ajax_myajax-auto-feed-fix-mode-selection', array( $this, 'myajax_auto_feed_fix_mode_selection' ) );
+			add_action( 'wp_ajax_myajax-background-processing-mode-selection', array( $this, 'myajax_background_processing_mode_selection' ) );
 			add_action( 'wp_ajax_myajax-debug-mode-selection', array( $this, 'myajax_debut_mode_selection' ) );
 			add_action( 'wp_ajax_myajax-third-party-attribute-keywords', array( $this, 'myajax_set_third_party_attribute_keywords' ) );
 			add_action( 'wp_ajax_myajax-clear-feed-process-data', array( $this, 'myajax_clear_feed_process_data' ) );
@@ -205,6 +206,25 @@ if ( !class_exists( 'WPPFM_Ajax_File_Class' ) ) :
 			exit;
 		}
 
+		/**
+		 * Changes the Disable Background processing setting from the Settings page
+		 * 
+		 * @since 2.0.7
+		 */
+		public function myajax_background_processing_mode_selection() {
+			
+			// make sure this call is legal
+			if ( $this->safe_ajax_call( filter_input( INPUT_POST, 'backgroundModeNonce' ), 'myajax-background-mode-nonce' ) ) {
+				$selection = filter_input( INPUT_POST, 'mode_selection' );
+				update_option( 'wppfm_disabled_background_mode', $selection );
+				
+				echo get_option( 'wppfm_disabled_background_mode' );
+			}
+
+			// IMPORTANT: don't forget to exit
+			exit;
+		}
+		
 		/**
 		 * Changes the Debug setting from the Settings page
 		 * 

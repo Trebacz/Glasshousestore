@@ -3,8 +3,8 @@
  * Plugin Name: WooCommerce Google Feed Manager
  * Plugin URI: https://www.wpmarketingrobot.com
  * Description: An easy to use WordPress plugin that generates and submits your product feeds to merchant centres.
- * Version: 2.0.6
- * Modified: 09-03-2018
+ * Version: 2.0.8
+ * Modified: 31-03-2018
  * Author: Michel Jongbloed
  * Author URI: https://www.wpmarketingrobot.com
  * Requires at least: 4.6
@@ -18,7 +18,7 @@
  */
 
 // Prevent direct access
-if ( !defined( 'ABSPATH' ) ) { exit; }
+if ( !defined( 'ABSPATH' ) ) exit;
 
 if ( !class_exists( 'WP_Product_Feed_Manager' ) ) :
 
@@ -35,7 +35,7 @@ if ( !class_exists( 'WP_Product_Feed_Manager' ) ) :
 		/**
 		 * @var string containing the version number of the plugin
 		 */
-		public $version = '2.0.6';
+		public $version = '2.0.8';
 
 		/**
 		 * @var string countaining the authors name
@@ -304,8 +304,6 @@ if ( !class_exists( 'WP_Product_Feed_Manager' ) ) :
 		 * @global WPPFM_Feed_Processor_Class $background_process
 		 */
 		public function initiate_background_process() {
-//			global $wp_query;
-			
 			if ( class_exists( 'WPPFM_Feed_Processor_Class' ) ) {
 				global $background_process;
 				$background_process = new WPPFM_Feed_Processor_Class();

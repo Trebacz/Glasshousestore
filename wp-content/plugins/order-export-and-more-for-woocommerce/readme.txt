@@ -1,14 +1,15 @@
 ﻿=== WooCommerce Order Export and More ===
 Contributors: merlinmonmouth
+Text Domain: order-export-and-more-for-woocommerce
 Donate link: http://www.jem-products.com
 Tags: woocommerce, export, xls, xlsx, csv, export orders, export products, export category, export categories, export customers, customers, coupons, extract order, extract orders, extract customers, woocommerce extract
 Requires at least: 4.0
 Tested up to: 4.9.4
-Stable tag: 2.0.2
+Stable tag: 2.0.5
 License: GPLv2 
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Export WooCommerce Orders, products and more EASILY. Supports all CSV & all Excel format XLS, XLSX & Mac) 
+Export WooCommerce Orders, products and more EASILY. Supports all CSV & all Excel format XLS, XLSX & Mac)
 
 == Description ==
 A super easy to use plugin that will provide Easily and quickly export data from your WooCommerce store into Excel/CSV formats. Tested on Windows and Mac this tool is perfect to quickly get access to your WooCommerce data.
@@ -78,6 +79,12 @@ If you have any questions please contact us [here](https://jem-products.com/cont
 
 
 == Changelog ==
+
+= 2.0.5 =
+Adding Spanish Language support
+
+= 2.0.3 =
+Adding Spanish Language support
 
 = 2.0 =
 Major upgrade. Added sortable columns and minor UI changes

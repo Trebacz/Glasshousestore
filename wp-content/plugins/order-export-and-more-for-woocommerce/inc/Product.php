@@ -14,6 +14,8 @@ class Product extends BaseEntity{
 		$this->fields = $this->load_fields();
 		
 		$this->filters = array();
+
+		//$this->generate_export_order_sequence();
 	}
 	
 	
@@ -161,7 +163,7 @@ class Product extends BaseEntity{
 	 */
 	public function generate_filters(){
 		
-		return '<p>Coming Soon!</p>';
+		return '<p>' .  __('Coming soon', JEM_EXP_DOMAIN) . '</p>';
 	}
 	
 	/**

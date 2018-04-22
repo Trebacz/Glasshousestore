@@ -4,7 +4,7 @@ Tags: credit card, stripe, apple pay, payment request, google pay, sepa, sofort,
 Requires at least: 4.4
 Tested up to: 4.9
 Requires PHP: 5.6
-Stable tag: 4.0.7
+Stable tag: 4.1.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Attributions: thorsten-stripe
@@ -91,10 +91,6 @@ For help setting up and configuring, please refer to our [user guide](https://do
 
 If you get stuck, you can ask for help in the Plugin Forum.
 
-= When will the older credit card form ( pre version 4.0.0 ) be deprecated? =
-
-We will completely remove the older form by version 4.1.0.
-
 == Screenshots ==
 
 1. The settings panel used to configure the gateway.
@@ -105,14 +101,17 @@ We will completely remove the older form by version 4.1.0.
 
 == Changelog ==
 
-= 4.0.7 - 2018-02-23 =
-* Fix - Potential conflict issue when adding payment method from another payment gateway.
-* Fix - Issue when using saved card before sources were introduced.
-* Add - Description field/setting for Stripe Checkout Modal/popup.
+= 4.1.1 - 2018-04-17 =
+* Tweak - Use payment_complete method when charge is succeeded or captured so other WC related tasks gets triggered.
+* Tweak - Styling for the credit card logos.
+* Add - Subscription change payment method support for SEPA.
+* Add - Credit card branding detection on credit card field.
+* Fix - When checkout form fields fails second time, page refreshes instead of using AJAX.
+* Fix - Potential issue when WC is not activated.
 
 [See changelog for all versions](https://raw.githubusercontent.com/woothemes/woocommerce-gateway-stripe/master/changelog.txt).
 
 == Upgrade Notice ==
 
-= 4.0 =
-4.0 is a major update. Please do a full site backup and test on a staging site before deploying to a live/production server.
+= 4.1 =
+4.1 is a minor release. Please do a full site backup and test on a staging site before deploying to a live/production server.

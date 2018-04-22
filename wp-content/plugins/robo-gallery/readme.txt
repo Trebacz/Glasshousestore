@@ -4,7 +4,7 @@ Donate link: https://robosoft.co/robogallery
 Tags: gallery, photo gallery, images gallery, gallery images, wordpress gallery plugin, responsive gallery, categories gallery, Polaroid gallery, gallery lightbox, portfolio gallery, video gallery, Gallery Plugin, Robo Gallery
 Requires at least: 3.3
 Tested up to: 4.9
-Stable tag: 2.7.7
+Stable tag: 2.7.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -259,6 +259,12 @@ If any problem occurs, please contact us.
 
 == Changelog ==
 
+= 2.7.9 =
+*  Fix of the notifications
+
+= 2.7.8 =
+*  Updated gallery interface icons and css fixes
+
 = 2.7.7 =
 *  Updated cache functionality of the gallery
 *  Added gallery cache expire option
@@ -443,6 +449,12 @@ If any problem occurs, please contact us.
 
 
 == Upgrade Notice ==
+
+= 2.7.9 =
+Fix of the notifications
+
+= 2.7.8 =
+Updated gallery interface icons and css fixes
 
 = 2.7.7 =
 Updated cache functionality of the gallery

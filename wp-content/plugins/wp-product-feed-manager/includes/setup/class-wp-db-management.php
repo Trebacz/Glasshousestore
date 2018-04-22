@@ -24,7 +24,7 @@ if ( !class_exists( 'WPPFM_Database' ) ) :
 		 * Attributes
 		 * -------------------------------------------------------------------------------------------------- */
 
-		private $_version = '1.2.4'; // as of plugin version 1.10.0
+		private $_version = '1.2.6'; // as of plugin version 1.10.0
 		private $_wpdb;
 		private $_charset_collate = '';
 		private $_image_folder;

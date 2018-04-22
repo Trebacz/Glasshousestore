@@ -164,7 +164,9 @@ if ( !class_exists( 'WPPFM_Feed_Processor_Class' ) ) :
 			$product_parent_id = $product_id;
 			$product_data = (array)$this->get_products_main_data( $product_id, $post_columns_query_string );
 			
-			if( $wc_product instanceof WC_Product_Variation || $wc_product instanceof WC_Product_Variable ) {
+			if( ( $wc_product instanceof WC_Product_Variation && $this->_pre_data['include_vars'] ) 
+				|| ( $wc_product instanceof WC_Product_Variable ) && $this->_pre_data['include_vars'] ) {
+
 				$product_parent_id = $wc_product->get_parent_id();
 				
 				// add parent data when this item is not available in the variation
@@ -241,7 +243,7 @@ if ( !class_exists( 'WPPFM_Feed_Processor_Class' ) ) :
 			$meta_data = $queries_class->read_meta_data( $product_id, $meta_parent_ids, $this->_pre_data['database_fields']['meta_fields'] );
 			
 			foreach ( $meta_data as $meta ) {
-				$meta_value = $prep_meta_class->prep_meta_values( $meta, $this->_feed->language );
+				$meta_value = $prep_meta_class->prep_meta_values( $meta, $this->_feed_data->language );
 
 				if ( array_key_exists( $meta->meta_key, $product_data ) ) {
 					$meta_key = $meta->meta_key;

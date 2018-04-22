@@ -17,7 +17,7 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 	 * The Feed Master class contains the feed functions that are used to control the
 	 * feed processing actions
 	 * 
-	 * @since 1.10.0
+	 * @since 2.0.0
 	 * 
 	 * @class WPPFM_Feed_Master_Class
 	 */
@@ -45,8 +45,6 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 		 * @var class
 		 */
 		protected $_background_process;
-		
-//		protected $_background_process_id;
 		
 		/**
 		 * Placeholder for the correct channel class
@@ -91,14 +89,14 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 		/**
 		 * The update feed file function that starts the update process
 		 * 
-		 * @param bool $silent
+		 * @param bool $silent (default true)
 		 * @return string or false
 		 */
 		public function update_feed_file( $silent = true ) {
 			$feed_id = WPPFM_Feed_Controller_Class::get_next_id_from_feed_queue();
 			
 			if( false === $feed_id ) return false;
-			
+
 			$data_class = new WPPFM_Data_Class();
 			$feed_data = $data_class->get_feed_data( $feed_id );
 		
@@ -106,7 +104,7 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 				if ( !$silent ) echo __( "1428 - Failed to load the feed data", 'wp-product-feed-manager' );
 				return false;
 			}
-			
+
 			// store the feed data in a property
 			$this->_feed = $feed_data;
 
@@ -128,7 +126,7 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 			$this->fill_the_background_queue();
 			
 			$result = $this->activate_feed_file_update();
-
+			
 			if ( !$silent && true !== $result ) {
 				echo sprintf( __( 'Started processing feed "%s" in the background.', 'wp-product-feed-manager' ), $this->_feed->title );
 			}
@@ -272,7 +270,6 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 		 * @param string $title
 		 * @return string
 		 */
-//		protected function header( $title ) { return apply_filters( 'wppfm_xml_header', '<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0"><products>', $title ); }
 		protected function header( $title ) { return apply_filters( 'wppfm_xml_header', $title ); }
 		
 		/**
@@ -305,7 +302,7 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 			
 			$this->_products_in_feed = count( $products );
 			
-			return $products;
+			return apply_filters( 'wppfm_feed_ids_in_queue', $products );
 		}
 		
 		/**
@@ -332,7 +329,10 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 		private function get_required_pre_data() {
 			// get the feed query string if the user has added to filter out specific products from the feed (Paid version only)
 			$feed_filter = $this->_data_class->get_filter_query( $this->_feed->feedId );
-			
+
+			// should the feed include product variations?
+			$include_variations = $this->_feed->includeVariations === '1' ? true : false;
+
 			// get an array with all the field names that are required to make the feed (including the source fields, fields for the queries and fields for static data)
 			$required_column_names = $this->get_column_names_required_for_feed( $feed_filter );
 
@@ -343,12 +343,18 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 			
 			return array(
 				'filters'			=> $feed_filter,
+				'include_vars'		=> $include_variations,
 				'column_names'		=> $required_column_names,
 				'active_fields'		=> $active_fields,
 				'database_fields'	=> $database_fields
 			);
 		}
 		
+		/**
+		 * Get category name and description name from the active channel
+		 * 
+		 * @return array
+		 */
 		private function get_channel_details() {
 			return function_exists( 'channel_file_text_data' ) ? channel_file_text_data( $this->_feed->channel ) :	
 				array( 'channel_id' => $this->_feed->channel, 'category_name' => 'google_product_category', 'description_name' => 'description' );			
@@ -388,14 +394,11 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 		 * @return array
 		 */
 		private function get_db_column_name_from_attribute( $attribute ) {
-
 			$column_names = array();
 
 			if ( property_exists( $attribute, 'isActive' ) && $attribute->isActive ) { // only select the active attributes
-
 				// source columns
 				if ( ! empty( $attribute->value ) ) {
-
 					$source_columns		 = $this->get_source_columns_from_attribute_value( $attribute->value );
 					$condition_columns	 = $this->get_condition_columns_from_attribute_value( $attribute->value );
 					$query_columns		 = $this->get_queries_columns_from_attribute_value( $attribute->value );
@@ -427,20 +430,15 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 		 * @return array
 		 */
 		private function get_active_fields() {
-
 			$active_fields = array();
 
 			foreach ( $this->_feed->attributes as $attribute ) {
-
 				if ( $attribute->isActive && $attribute->fieldName !== 'category_mapping' ) {
-
 					$push = false;
 
 					if ( $attribute->fieldLevel === '1' ) {
-
 						$push = true;
 					} else {
-
 						$value_object = property_exists( $attribute, 'value' ) ? json_decode( $attribute->value ) : new stdClass();
 
 						if ( !empty( $attribute->value ) && property_exists( $value_object, 'm' ) && key_exists( 's', $value_object->m[ 0 ] ) ) {
@@ -470,7 +468,6 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 		 * @return array
 		 */
 		private function get_database_fields( $active_field_names ) {
-
 			$queries_class = new WPPFM_Queries();
 			
 			$post_fields			 = array();
@@ -494,7 +491,6 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
 			// filter the post columns, the meta columns and the custom columns to only those that are actually in use
 			
 			foreach ( $active_field_names as $column ) {
-
 				if ( in_array( $column, $post_fields ) && $column !== 'ID' ) { // because ID is always required, it's excluded here and hard coded in the query
 					$post_columns_string .= $column . ', '; // here a string is required to push in the query
 				} elseif ( in_array( $column, $custom_fields ) ) {
@@ -527,4 +523,3 @@ if ( !class_exists( 'WPPFM_Feed_Master_Class' ) ) :
      // end of WPPFM_Feed_Master_Class
 	
 endif;
-

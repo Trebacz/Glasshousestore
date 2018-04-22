@@ -10,6 +10,8 @@ class JEM_export_lite {
 
 	public function __construct(){	
 
+		//error_log('jem_exporter');
+
 		//Globals
 		global $jem_export_globals;
 		
@@ -24,27 +26,44 @@ class JEM_export_lite {
 
 		//handles the form post for the SETTINGS
 		add_action('admin_post_save_settings', array( &$this, 'save_settings'));
-		
-		//load up all the entity classes
+
+
+
 		$entities = $jem_export_globals['entities'];
-		
-		//$entities[] = "Product";
-		//$entities[] = "Order";
-		
+
 		foreach($entities as $entity){
 			//create the object
 			$ent = new $entity;
 			//stick it in an array
 			$this->objects[$ent->id] = $ent;
 		}
-		
+
 		//get the settings
 		$this->get_settings();
 		
 		//create the error object
 		$this->my_errors = new WP_Error();
+
+		//Create the saved order of fields if needed
+		foreach($this->objects as $obj){
+
+		}
 	}
-	
+
+	//Gets called from Render settings and gets us ready!
+	public function init() {
+		//error_log('init');
+		//Globals
+		global $jem_export_globals;
+		//load up all the entity classes
+//		$entities = $jem_export_globals['entities'];
+
+		//Go through and check they the saved export order sequence is set
+		foreach($this->objects as $entity){
+			$entity->generate_export_order_sequence();
+		}
+
+	}
 	
 	/**
 	 * Load up the stuff we need!
@@ -102,6 +121,7 @@ class JEM_export_lite {
 	public function render_settings(){
 
 
+		$this->init();
 
 		//get the main tab
 		if( isset($_REQUEST['tab'])){
@@ -169,7 +189,7 @@ class JEM_export_lite {
 
 		
 		$html = '<div class="wrap">
-					<h2>WooCommerce Order Export and More</h2>' . $this->print_admin_messages() . '
+					<h2>' . __('WooCommerce Order Export and More', JEM_EXP_DOMAIN) . '</h2>' . $this->print_admin_messages() . '
 
 							
 				<!--  begin email -->
@@ -256,9 +276,9 @@ class JEM_export_lite {
 				
 					<div id="jem-content">
 					<h2 class="nav-tab-wrapper">
-						<a data-tab-id="export" class="nav-tab ' . $export_active . '" href="admin.php?page=JEM_EXPORT_MENU&amp;tab=export-data"">Export Data</a>
-						<a data-tab-id="setting" class="nav-tab ' . $settings_active . '" href="admin.php?page=JEM_EXPORT_MENU&amp;tab=settings">Settings</a>
-						<a data-tab-id="meta" class="nav-tab ' . $meta_active . '" href="admin.php?page=JEM_EXPORT_MENU&amp;tab=meta">Meta</a>
+						<a data-tab-id="export" class="nav-tab ' . $export_active . '" href="admin.php?page=JEM_EXPORT_MENU&amp;tab=export-data"">' . __('Export Data', JEM_EXP_DOMAIN) . '</a>
+						<a data-tab-id="setting" class="nav-tab ' . $settings_active . '" href="admin.php?page=JEM_EXPORT_MENU&amp;tab=settings">' . __('Settings', JEM_EXP_DOMAIN) . '</a>
+						<a data-tab-id="meta" class="nav-tab ' . $meta_active . '" href="admin.php?page=JEM_EXPORT_MENU&amp;tab=meta">' . __('Meta', JEM_EXP_DOMAIN) . '</a>
 					</h2>
 					</div>
 			
@@ -311,9 +331,9 @@ class JEM_export_lite {
 
 	<div class="jemex-panel-wrap">			
 		<ul class="jemex-vert-tabs">
-		  <li><a href="#field-tab" id="vert-field-tab" class="dashicons-before dashicons-media-spreadsheet">Fields & <span id="vert-label-tab" class="dashicons-before dashicons-tag">Labels</a></a></li>
-		  <li><a href="#filters-tab" id="vert-filter-tab"  class="dashicons-before dashicons-filter">Filters</a></li>		  
-		  <li><a href="#scheduled-tab" id="vert-scheduled-tab" class="dashicons-before dashicons-clock">Scheduled</a></li>
+		  <li><a href="#field-tab" id="vert-field-tab" class="dashicons-before dashicons-media-spreadsheet">' . __('Fields', JEM_EXP_DOMAIN) .  ' & <span id="vert-label-tab" class="dashicons-before dashicons-tag">' . __('Labels', JEM_EXP_DOMAIN) .  '</a></a></li>
+		  <li><a href="#filters-tab" id="vert-filter-tab"  class="dashicons-before dashicons-filter">' . __('Filters', JEM_EXP_DOMAIN) .  '</a></li>
+		  <li><a href="#scheduled-tab" id="vert-scheduled-tab" class="dashicons-before dashicons-clock">' . __('Scheduled', JEM_EXP_DOMAIN) .  '</a></li>
 								</ul>
 		<div id="field-tab" class="jemex-panel">
 		<div class="jemex-inner-panel">
@@ -544,8 +564,8 @@ class JEM_export_lite {
 		global $jem_export_globals;
                 
 		$html = "<p class='instructions'>" . __('Select the fields you would like to export and drag rows to reorder exported fields.', JEM_EXP_DOMAIN) ."</p>";
-		$html .= '<a href="javascript:void(0);" id="export-select-all">select all</a>  |';
-		$html .= '<a href="javascript:void(0);" id="export-select-none">select none</a>';
+		$html .= '<a href="javascript:void(0);" id="export-select-all">' . __('Select all', JEM_EXP_DOMAIN) .'</a>  |';
+		$html .= '<a href="javascript:void(0);" id="export-select-none">' . __('Select none', JEM_EXP_DOMAIN) .'</a>';
 		$html .= '<form method="post" id="postform"  action="' . admin_url( "admin-post.php" ) . '?tab=export&sub-tab=fields">';
 	                   
 		foreach($this->objects as $object){
@@ -596,7 +616,7 @@ class JEM_export_lite {
 
                                     if(isset($field['disabled'])){
                                             $disabled = " disabled='disabled' ";
-                                            $msg = "<td><a href='http://jem-products.com/woocommerce-export-orders-pro-plugin/?utm_source=wordpress&utm_medium=plugin&utm_campaign=wordpress' target='_blank'>Available in the PRO version</a></td>";
+                                            $msg = "<td><a href='http://jem-products.com/woocommerce-export-orders-pro-plugin/?utm_source=wordpress&utm_medium=plugin&utm_campaign=wordpress' target='_blank'>" . __('Available in the PRO version', JEM_EXP_DOMAIN) . "</a></td>";
                                     } else {
                                             $disabled='';
                                             $msg = "";
@@ -666,7 +686,7 @@ class JEM_export_lite {
 		$html .= ' <input type="hidden" name="_wp_http_referer" value="' . urlencode( $_SERVER['REQUEST_URI'] ) . '">';
 		$html .= '  <input type="hidden" name="action" value="update_labels"> <input type="hidden" name="data" value="update_labels">';
 		
-		$html .= '<p class="submit"><input type="submit" value="Save Changes " class="button-primary"></p>';
+		$html .= '<p class="submit"><input type="submit" value="' . __('Save changes', JEM_EXP_DOMAIN) . '" class="button-primary"></p>';
 //		
                 return $html;
 	
@@ -686,14 +706,14 @@ class JEM_export_lite {
 			$html .= '<div class="export-filters" id="' . $object->id . '-filters-div" style="display: block;">';
 			
 			
- 			$html .= '
- 				<div class="filter-dates">
- 					<label>
- 				 	' . __('From Date', JEM_EXP_DOMAIN) . '
- 				 	</label>
- 				 	<input id="order-filter-start-date"  class="jemexp-datepicker">
- 				</div>
- 			';
+// 			$html .= '
+// 				<div class="filter-dates">
+// 					<label>
+// 				 	' . __('From Date', JEM_EXP_DOMAIN) . '
+// 				 	</label>
+// 				 	<input id="order-filter-start-date"  class="jemexp-datepicker">
+// 				</div>
+// 			';
 			
 
 			$html .= $object->generate_filters();
@@ -728,7 +748,7 @@ class JEM_export_lite {
 			$html .= '<div class="jemex-scheduled export-scheduled" id="' . $object->id . '-scheduled-div" style="display: block;">';
 	
 			$html .= "<h2>Scheduled Exports</h2>";
-			$html .= "<p><a href='http://jem-products.com/woocommerce-export-orders-pro-plugin/?utm_source=wordpress&utm_medium=plugin&utm_campaign=wordpress' target='_blank'>This feature is available in the PRO version</a></p>";
+			$html .= "<p><a href='http://jem-products.com/woocommerce-export-orders-pro-plugin/?utm_source=wordpress&utm_medium=plugin&utm_campaign=wordpress' target='_blank'>" . __('Available in the PRO version', JEM_EXP_DOMAIN) . "</a></p>";
 			$html .= '</div>';
 	
 			}
@@ -760,21 +780,21 @@ class JEM_export_lite {
 				$msg = "";
 				
 			} else {
-				$msg = "<a href='http://jem-products.com/woocommerce-export-orders-pro-plugin/?utm_source=wordpress&utm_medium=plugin&utm_campaign=wordpress' target='_blank'>This data is available in the PRO version</a>";
+				$msg = "<a href='http://jem-products.com/woocommerce-export-orders-pro-plugin/?utm_source=wordpress&utm_medium=plugin&utm_campaign=wordpress' target='_blank'>" . __('This data is available in the PRO version', JEM_EXP_DOMAIN) . "</a>";
 			}
 			
 			$html .= '<tr><td width="150px"><input type="radio" class="checkbox-class" id="' . $id . '" value="' . $id . '" name="datatype">';
-			$html .= '<label for="' . $id .'">' . $id . '</label></td>';
+			$html .= '<label for="' . $id . '">' . __($id, JEM_EXP_DOMAIN) . '</label></td>';
 			$html .= '<td>' . $msg . '</td>';
 			$html .= '</tr>';
 		}
-		
+
 		
 		$table = '<table><tbody>' . $html . '</tbody></table>';
 		
 		$html = '
 <div id="export-type" class="postbox">
-	<h3 class="hndle">Export Type</h3>
+	<h3 class="hndle">' . __('Export Type', JEM_EXP_DOMAIN) . '</h3>
 	<div class="inside">
 		<p class="instructions">' . __('Select the data type you would like to export.', JEM_EXP_DOMAIN) . '</p>' . $table . '
 	</div>

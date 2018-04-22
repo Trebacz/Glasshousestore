@@ -290,6 +290,21 @@ function wppfm_auto_feed_fix_mode( selection, callback ) {
 	} );
 }
 
+function wppfm_background_processing_mode( selection, callback ) {
+
+	jQuery.post(
+		MyAjax.ajaxurl,
+		{
+			action: 'myajax-background-processing-mode-selection',
+			mode_selection: selection,
+			backgroundModeNonce: MyAjax.setBackgroundModeNonce
+			
+		}, function ( response ) {
+
+		callback( response.trim() );
+	} );
+}
+
 function wppfm_change_third_party_attribute_keywords( keywords, callback ) {
 	
 	jQuery.post(

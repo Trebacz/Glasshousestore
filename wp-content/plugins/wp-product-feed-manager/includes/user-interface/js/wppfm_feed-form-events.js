@@ -86,6 +86,11 @@ function wppfm_listen() {
 	
 	$jq( '#wppfm_auto_feed_fix_mode' ).change( function () { wppfm_auto_feed_fix_changed(); } );
 	
+	$jq( '#wppfm_background_processing_mode' ).change( function() { 
+		wppfm_clear_feed_process();
+		wppfm_background_processing_mode_changed(); 
+	} );
+	
 	$jq( '#wppfm_third_party_attr_keys' ).focusout( function() { wppfm_third_party_attributes_changed(); } );
 	
 	$jq( '#wppfm-clear-feed-process-button' ).click( function() { wppfm_clear_feed_process(); } );

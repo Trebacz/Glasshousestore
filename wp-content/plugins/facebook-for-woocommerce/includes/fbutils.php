@@ -16,7 +16,7 @@ if (!class_exists('WC_Facebookcommerce_Utils')) :
   class WC_Facebookcommerce_Utils {
 
     const FB_RETAILER_ID_PREFIX = 'wc_post_id_';
-    const PLUGIN_VERSION = '1.8.1';  // Change it in `facebook-for-*.php` also
+    const PLUGIN_VERSION = '1.8.3';  // Change it in `facebook-for-*.php` also
 
     const FB_VARIANT_IMAGE = 'fb_image';
     const FB_VARIANT_SIZE = 'size';
@@ -221,6 +221,10 @@ if (!class_exists('WC_Facebookcommerce_Utils')) :
       $object = array(),
       $error = false,
       $ems = '') {
+      if ($error) {
+        $object['plugin_version'] = self::PLUGIN_VERSION;
+        $object['php_version'] = phpversion();
+      }
       $message = json_encode(array(
         'message' => $message,
         'object' => $object
@@ -260,16 +264,18 @@ if (!class_exists('WC_Facebookcommerce_Utils')) :
      * Helper function to query posts.
      */
     public static function get_wp_posts(
-      $product_group_id,
-      $compare_condition,
+      $product_group_id = null,
+      $compare_condition = null,
       $post_type = 'product') {
       $args = array(
         'fields'         => 'ids',
         'meta_query' => array(
-           array(
-             'key'     => $product_group_id,
-             'compare' => $compare_condition,
-           ),
+          (($product_group_id) ?
+            array(
+              'key'     => $product_group_id,
+              'compare' => $compare_condition,
+            ) : array()
+          ),
         ),
         'post_status' => 'publish',
         'post_type'  => $post_type,
@@ -383,6 +389,22 @@ if (!class_exists('WC_Facebookcommerce_Utils')) :
       return get_post_meta($wp_id, $fbid_type, true);
     }
 
+    public static function is_all_caps($value) {
+      if ($value === null || $value === '') {
+        return true;
+      }
+      if (preg_match('/[^\\p{Common}\\p{Latin}]/u', $value)) {
+        // Contains non-western characters
+        // So, it can't be all uppercase
+        return true;
+      }
+      $latin_string = preg_replace('/[^\\p{Latin}]/u', '', $value);
+      if ($latin_string === '') {
+        // Symbols only
+        return true;
+      }
+      return strtoupper($latin_string) === $latin_string;
+    }
   }
 
 endif;

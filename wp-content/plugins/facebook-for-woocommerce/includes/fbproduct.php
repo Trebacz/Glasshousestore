@@ -259,16 +259,23 @@ class WC_Facebook_Product {
   }
 
   public function is_hidden() {
+    $wpid = $this->id;
+    if (WC_Facebookcommerce_Utils::is_variation_type($this->get_type())) {
+      $wpid = $this->get_parent_id();
+    }
     $hidden_from_catalog = has_term(
       'exclude-from-catalog',
       'product_visibility',
-      $this->id);
+      $wpid);
     $hidden_from_search = has_term(
       'exclude-from-search',
       'product_visibility',
-      $this->id);
+      $wpid);
+    // fb_visibility === '': after initial sync by feed
+    // fb_visibility === false: set hidden on FB metadata
+    // Explicitly check whether flip 'hide' before.
     return ($hidden_from_catalog && $hidden_from_search) ||
-      !$this->fb_visibility || !$this->get_fb_price();
+      $this->fb_visibility === false || !$this->get_fb_price();
   }
 
   public function get_price_plus_tax($price) {
@@ -455,6 +462,11 @@ class WC_Facebook_Product {
 
     if (!$prepare_for_product_feed) {
       $this->prepare_variants_for_item($product_data);
+    } else if (
+      WC_Facebookcommerce_Utils::is_all_caps($product_data['description'])
+    ) {
+      $product_data['description'] =
+        mb_strtolower($product_data['description']);
     }
 
     /**

@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: woocommerce, paypal, express checkout, payments pro, angelleye, payflow, dodirectpayment, braintree, payments advanced, rest, credit cards, credit card payments, payments, payment
 Requires at least: 3.8
 Tested up to: 4.9.4
-Stable tag: 1.4.8.2
+Stable tag: 1.4.8.7
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -102,6 +102,8 @@ Automatic updates should work great for you.  As always, though, we recommend ba
 3. Your logo and cart items accurately displayed on PayPal Express Checkout review pages.
 4. Direct credit card processing option available with PayPal Payments Pro.
 5. WooCommerce Payment Tokens - Save to Account option displayed to buyer during checkout.
+6. PayPal Credit banner ad displayed on site via Marketing Solutions option (contracted).
+7. PayPal Credit banner ad displayed on site via Marketing Solutions option (expanded).
 
 == Frequently Asked Questions ==
 
@@ -124,6 +126,38 @@ Automatic updates should work great for you.  As always, though, we recommend ba
 * If you are unsure, you may need to [contact PayPal](https://www.paypal.com/us/webapps/helpcenter/helphub/home/) and request the information.  Just let them know you need to enable a Payments Pro plugin on your website, but you're unsure whether you should use Website Payments Pro 3.0(DoDirectPayment) or Payments Pro 2.0 (PayFlow).  They can confirm which one you need to use.
 
 == Changelog ==
+
+= 1.4.8.7 - 04.03.2018 =
+* Tweak - Performance adjustments for PayPal Smart Buttons. ([#1080](https://github.com/angelleye/paypal-woocommerce/issues/1080))
+* Tweak - Adjusts the CSS for PayPal Smart Buttons in the WooCommerce mini-cart. ([#1072](https://github.com/angelleye/paypal-woocommerce/issues/1072))
+* Fix - Resolves a PHP error happening when some types of variable products are in the cart. ([#1069](https://github.com/angelleye/paypal-woocommerce/issues/1069))([#1071](https://github.com/angelleye/paypal-woocommerce/issues/1071))([#1078](https://github.com/angelleye/paypal-woocommerce/issues/1078))
+* Fix - Resolves a conflict with UPS and USPS plugins on the Express Checkout review page. ([#1079](https://github.com/angelleye/paypal-woocommerce/issues/1079))
+
+= 1.4.8.6 - 03.29.2018 =
+* Tweak - Adjustments to Smart Buttons in mini-cart. ([#1042](https://github.com/angelleye/paypal-woocommerce/issues/1042))
+* Fix - Resolves a PHP syntax error on old versions of PHP. ([#1064](https://github.com/angelleye/paypal-woocommerce/issues/1064))
+
+= 1.4.8.5 - 03.28.2018 =
+* Feature - Adds PayPal Seller Protection Status to WooCommerce order notes. ([#1053](https://github.com/angelleye/paypal-woocommerce/issues/1053))
+* Feature - Adds -OR- between the Proceed to Checkout button and PayPal buttons on cart page, with filter to adjust. ([#1061](https://github.com/angelleye/paypal-woocommerce/issues/1061))
+* Tweak - Adjusts error handling with Express Checkout token is not available. ([#1047](https://github.com/angelleye/paypal-woocommerce/issues/1047))
+* Tweak - Hides PayPal Smart Payment Buttons on external products. ([#1054](https://github.com/angelleye/paypal-woocommerce/issues/1054))
+* Tweak - Update PayPal Smart Payment Button JS to use minified version. ([#1056](https://github.com/angelleye/paypal-woocommerce/issues/1056))
+* Tweak - Adjusts PayPal Smart Payment Button preview in the settings panel. ([#1063](https://github.com/angelleye/paypal-woocommerce/issues/1063))
+* Fix - Resolves a duplicate note added to WooCommerce order when an order is refunded. ([#1057](https://github.com/angelleye/paypal-woocommerce/issues/1057))
+* Fix - Resolves an issue where PayPal buttons fail from the product page if the item is already in the cart. ([#1036](https://github.com/angelleye/paypal-woocommerce/issues/1036))
+* Fix - Resolves an issue where Marketing Solutions was automatically becoming enabled. ([#1041](https://github.com/angelleye/paypal-woocommerce/issues/1041))
+* Fix - Resolves duplicate form IDs. ([#1037](https://github.com/angelleye/paypal-woocommerce/issues/1037))
+
+= 1.4.8.4 - 03.27.2018 =
+* Tweak - Adjusts some Smart Button options under settings to avoid confusion. ([#1032](https://github.com/angelleye/paypal-woocommerce/issues/1032))
+* Tweak - Adjusts progress spinner provided by WooCommerce when used with Smart Buttons / In Context checkout flow. ([#1048](https://github.com/angelleye/paypal-woocommerce/issues/1048))
+* Tweak - Version tracking on CSS / jQuery to help avoid caching conflicts. ([#1051](https://github.com/angelleye/paypal-woocommerce/issues/1051))
+* Fix - More adjustments to jQuery with Smart Buttons. ([#1044](https://github.com/angelleye/paypal-woocommerce/issues/1044)) ([#1049](https://github.com/angelleye/paypal-woocommerce/issues/1049))
+* Fix - Resolves an issue with Smart Buttons on the Woo mini-cart. ([#1042](https://github.com/angelleye/paypal-woocommerce/issues/1042))
+
+= 1.4.8.3 - 03.25.2018 =
+* Fix - Resolves a jQuery conflict with Smart Buttons when shipping methods are switched on the cart page. ([#1040](https://github.com/angelleye/paypal-woocommerce/issues/1040))
 
 = 1.4.8.2 - 03.24.2018 =
 * Fix - Resolves a redirect loop on the cart page caused by a jQuery conflict with Smart Buttons and some 3rd party plugins. ([#1038](https://github.com/angelleye/paypal-woocommerce/issues/1038))

@@ -4,7 +4,7 @@
  * Plugin Name:       PayPal for WooCommerce
  * Plugin URI:        http://www.angelleye.com/product/paypal-for-woocommerce-plugin/
  * Description:       Easily enable PayPal Express Checkout, PayPal Pro, PayPal Advanced, PayPal REST, and PayPal Braintree.  Each option is available separately so you can enable them individually.
- * Version:           1.4.8.2
+ * Version:           1.4.8.7
  * Author:            Angell EYE
  * Author URI:        http://www.angelleye.com/
  * License:           GNU General Public License v3.0
@@ -39,7 +39,7 @@ if (!defined('PAYPAL_FOR_WOOCOMMERCE_ASSET_URL')) {
     define('PAYPAL_FOR_WOOCOMMERCE_ASSET_URL', plugin_dir_url(__FILE__));
 }
 if (!defined('VERSION_PFW')) {
-    define('VERSION_PFW', '1.4.8.2');
+    define('VERSION_PFW', '1.4.8.7');
 }
 if ( ! defined( 'PAYPAL_FOR_WOOCOMMERCE_PLUGIN_FILE' ) ) {
     define( 'PAYPAL_FOR_WOOCOMMERCE_PLUGIN_FILE', __FILE__ );
@@ -290,7 +290,7 @@ if(!class_exists('AngellEYE_Gateway_Paypal')){
             wp_enqueue_media();
             wp_enqueue_script( 'jquery');
             // Localize the script with new data
-            wp_register_script( 'angelleye_admin', plugins_url( '/assets/js/angelleye-admin.js' , __FILE__ ), array( 'jquery' ));
+            wp_register_script( 'angelleye_admin', plugins_url( '/assets/js/angelleye-admin.js' , __FILE__ ), array( 'jquery' ), VERSION_PFW);
             
             $translation_array = array(
                 'is_ssl' => AngellEYE_Gateway_Paypal::is_ssl()? "yes":"no",
@@ -301,7 +301,7 @@ if(!class_exists('AngellEYE_Gateway_Paypal')){
 
             );
             wp_localize_script( 'angelleye_admin', 'angelleye_admin', $translation_array );
-            wp_enqueue_script('angelleye-in-context-checkout-js-admin', 'https://www.paypalobjects.com/api/checkout.js', array(), null, true);
+            wp_enqueue_script('angelleye-in-context-checkout-js-admin', 'https://www.paypalobjects.com/api/checkout.min.js', array(), null, true);
             wp_enqueue_script( 'angelleye_admin');
             
         }
@@ -570,7 +570,7 @@ if(!class_exists('AngellEYE_Gateway_Paypal')){
         }
         
         public function angelleye_woocommerce_admin_enqueue_scripts() {
-            wp_enqueue_style( 'ppe_cart', plugins_url( 'assets/css/admin.css' , __FILE__ ) );
+            wp_enqueue_style( 'ppe_cart', plugins_url( 'assets/css/admin.css' , __FILE__ ), array(), VERSION_PFW );
         }
         
         public function angelleye_woocommerce_pfw_ed_shipping_bulk_tool() {

@@ -111,10 +111,15 @@ abstract class WPPFM_Async_Request {
 	 * @return array|WP_Error
 	 */
 	public function dispatch() {
-		$url  = add_query_arg( $this->get_query_args(), $this->get_query_url() );
-		$args = $this->get_post_args();
-		
-		return wp_remote_post( esc_url_raw( $url ), $args );
+		if ( get_option( 'wppfm_disabled_background_mode', 'false' ) === 'false' ) {
+			// start the background process
+			$url  = add_query_arg( $this->get_query_args(), $this->get_query_url() );
+			$args = $this->get_post_args();
+			return wp_remote_post( esc_url_raw( $url ), $args );
+		} else {
+			// start a foreground proces
+			return $this->maybe_handle();
+		}
 	}
 
 	/**

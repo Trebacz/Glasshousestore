@@ -13,7 +13,8 @@ class Order extends BaseEntity{
 		$this->fields = $this->load_fields();
 		
 		$this->filters = array();
-		
+
+		$this->generate_export_order_sequence();
 	}
 	
 	
@@ -256,7 +257,7 @@ class Order extends BaseEntity{
 		//lets create the array of order status
 		$status = wc_get_order_statuses();
 		
-		$html = '<a href="#" id="order-filter-select-all-status">Select All</a>   |   <a href="#" id="order-filter-select-none-status">Select None</a>
+		$html = '<a href="#" id="order-filter-select-all-status">' . __('Select all', JEM_EXP_DOMAIN) .'</a>   |   <a href="#" id="order-filter-select-none-status">' . __('Select all', JEM_EXP_DOMAIN) .'</a>
 		';
 		
 		foreach ($status as $key=>$val){

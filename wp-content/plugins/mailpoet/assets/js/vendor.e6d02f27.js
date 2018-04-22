@@ -76,7 +76,7 @@
 /******/ 			script.charset = 'utf-8';
 /******/ 			script.async = true;
 
-/******/ 			script.src = __webpack_require__.p + "" + ({"0":"admin","1":"admin_vendor","2":"form_editor","3":"mailpoet","4":"newsletter_editor"}[chunkId]||chunkId) + "." + {"0":"7d9a0ed0","1":"3ee799bc","2":"20737db0","3":"4267d9a6","4":"e3bf0dd8"}[chunkId] + ".chunk.js";
+/******/ 			script.src = __webpack_require__.p + "" + ({"0":"admin","1":"admin_vendor","2":"form_editor","3":"mailpoet","4":"newsletter_editor"}[chunkId]||chunkId) + "." + {"0":"0a76985e","1":"9fdf3dc7","2":"20737db0","3":"273fb921","4":"c65261cf"}[chunkId] + ".chunk.js";
 /******/ 			head.appendChild(script);
 /******/ 		}
 /******/ 	};
@@ -99,18 +99,18 @@
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(568);
-	__webpack_require__(628);
-	module.exports = __webpack_require__(432);
+	__webpack_require__(571);
+	__webpack_require__(632);
+	module.exports = __webpack_require__(433);
 
 
 /***/ },
 
-/***/ 628:
+/***/ 632:
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* eslint-disable func-names */
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(568)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Handlebars) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(571)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Handlebars) {
 	  // Handlebars helpers
 	  Handlebars.registerHelper('concat', function () {
 	    var size = (arguments.length - 1);
@@ -272,16 +272,16 @@
 
 /***/ },
 
-/***/ 432:
+/***/ 433:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {if(!global["MailPoetLib"]) global["MailPoetLib"] = {};
-	module.exports = global["MailPoetLib"]["Hooks"] = __webpack_require__(433);
+	module.exports = global["MailPoetLib"]["Hooks"] = __webpack_require__(434);
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 
-/***/ 433:
+/***/ 434:
 /***/ function(module, exports) {
 
 	( function( window, undefined ) {
@@ -539,7 +539,7 @@
 
 /***/ },
 
-/***/ 568:
+/***/ 571:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**!

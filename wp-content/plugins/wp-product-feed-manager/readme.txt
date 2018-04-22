@@ -3,7 +3,7 @@ Contributors: Wpmarketingrobot, Michel Jongbloed, AukeJomm
 Tags: Google Merchant Export, Product feed, woocommerce, Google product feed export, google, shopping, Google Adwords, Google Merchant, wooCommerce export, woocommerce variations, e-commerce, google merchant product feed, product variations, variations export, wp-e-commerce export, wp marketing robot
 Requires at least: 4.6
 Tested up to: 4.9
-Stable tag: 2.0.6
+Stable tag: 2.0.8
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -89,7 +89,12 @@ In case it does please do submit your feed in your Google Merchant center and ch
 3. Save and generate your feed
 
 == Changelog ==
-= 2.0.6 - 09/03/2018 =
+= 2.0.8 - 31/03/2018 =
+* Added the wppfm_feed_ids_in_queue filter
+* Fixed an issue  that prevented the Third Party Attributes setting to be ignored in a backup
+* Extended the Disable background process selection so that it also autmatically clears the feed process when selected
+* Fixed an error with product variations when the feed settings was to exclude product variations
+* Added an extra option on the settings page to switch the background processing off in case the feeds get stuck in the processing
 * Fixed an error that prevented attributes of variable products to show up in the feed
 * Fixed an error that prevented the image library to work on variable products
 * Fixed an error where some items of variable products of type WC_Product_Variable where not correctly implemented

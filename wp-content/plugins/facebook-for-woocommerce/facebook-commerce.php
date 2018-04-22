@@ -156,6 +156,9 @@ class WC_Facebookcommerce_Integration extends WC_Integration {
         }
       }
       $this->fb_check_for_new_version();
+      $this->feed_id = isset($this->settings['fb_feed_id'])
+       ? $this->settings['fb_feed_id']
+       : '';
 
       if (!$this->pixel_install_time && $this->pixel_id) {
         $this->pixel_install_time = current_time('mysql');
@@ -596,6 +599,7 @@ class WC_Facebookcommerce_Integration extends WC_Integration {
       }
       ,feed: {
         totalVisibleProducts: '<?php echo $this->get_product_count() ?>'
+        ,hasClientSideFeedUpload: '<?php echo !!$this->feed_id ?>'
       }
       ,feedPrepared: {
         feedUrl: ''
@@ -711,18 +715,11 @@ class WC_Facebookcommerce_Integration extends WC_Integration {
       // If default variation value is to update, delete old fb_product_item_id
       // and create new one in order to make it order correctly.
       foreach ($child_products as $item_id) {
-        if ($item_id !== $variation_id) {
+        $fb_product_item_id =
           $this->on_simple_product_publish($item_id, null, $woo_product);
-        } else {
-          $this->delete_product_item($item_id);
+        if ($item_id == $variation_id && $fb_product_item_id) {
+          $this->set_default_variant($fb_product_group_id, $fb_product_item_id);
         }
-      }
-      if ($variation_id) {
-        $this->on_simple_product_publish(
-          $variation_id,
-          null,
-          $woo_product,
-          true);
       }
     } else {
       $this->create_product_variable($woo_product);
@@ -732,8 +729,7 @@ class WC_Facebookcommerce_Integration extends WC_Integration {
   function on_simple_product_publish(
     $wp_id,
     $woo_product = null,
-    &$parent_product = null,
-    $reset = false) {
+    &$parent_product = null) {
     if (get_post_status($wp_id) != 'publish') {
       return;
     }
@@ -753,11 +749,12 @@ class WC_Facebookcommerce_Integration extends WC_Integration {
       $wp_id,
       $woo_product);
 
-    if ($fb_product_item_id && !$reset) {
+    if ($fb_product_item_id) {
       $woo_product->update_visibility(
         isset($_POST['is_product_page']),
         isset($_POST[self::FB_VISIBILITY]));
       $this->update_product_item($woo_product, $fb_product_item_id);
+      return $fb_product_item_id;
     } else {
       // Check if this is a new product item for an existing product group
       if ($woo_product->get_parent_id()) {
@@ -768,14 +765,15 @@ class WC_Facebookcommerce_Integration extends WC_Integration {
 
         // New variant added
         if ($fb_product_group_id) {
-          $this->create_product_simple($woo_product, $fb_product_group_id);
+          return
+            $this->create_product_simple($woo_product, $fb_product_group_id);
         } else {
           WC_Facebookcommerce_Utils::fblog(
             "Wrong! simple_product_publish called without group ID for
-              a variable product!");
+              a variable product!", array(), true);
         }
       } else {
-        $this->create_product_simple($woo_product);  // new product
+        return $this->create_product_simple($woo_product);  // new product
       }
     }
   }
@@ -792,20 +790,16 @@ class WC_Facebookcommerce_Integration extends WC_Integration {
       $child_products = $woo_product->get_children();
       $variation_id = $woo_product->find_matching_product_variation();
       foreach ($child_products as $item_id) {
-        if ($item_id !== $variation_id) {
-          $this->create_product_item_using_itemid(
-            $item_id,
-            $fb_product_group_id,
-            $woo_product);
+        $child_product = new WC_Facebook_Product($item_id, $woo_product);
+        $retailer_id =
+          WC_Facebookcommerce_Utils::get_fb_retailer_id($child_product);
+        $fb_product_item_id = $this->create_product_item(
+            $child_product,
+            $retailer_id,
+            $fb_product_group_id);
+        if ($item_id == $variation_id && $fb_product_item_id) {
+          $this->set_default_variant($fb_product_group_id, $fb_product_item_id);
         }
-      }
-      // In FB shop, when clicking on a variable product, it will redirect to
-      // last child of this product group.
-      if ($variation_id) {
-        $this->create_product_item_using_itemid(
-          $variation_id,
-          $fb_product_group_id,
-          $woo_product);
       }
     }
   }
@@ -823,10 +817,11 @@ class WC_Facebookcommerce_Integration extends WC_Integration {
     }
 
     if ($fb_product_group_id) {
-      $this->create_product_item(
+      $fb_product_item_id = $this->create_product_item(
         $woo_product,
         $retailer_id,
         $fb_product_group_id);
+      return $fb_product_item_id;
     }
   }
 
@@ -1497,7 +1492,7 @@ class WC_Facebookcommerce_Integration extends WC_Integration {
     if ($currently_syncing) {
       WC_Facebookcommerce_Utils::log('Not syncing, sync in progress');
       WC_Facebookcommerce_Utils::fblog(
-        'Tried to sync during an in-progress sync!');
+        'Tried to sync during an in-progress sync!', array(), true);
       $this->display_warning_message('A product sync is in progress.
         Please wait until the sync finishes before starting a new one.');
       wp_die();
@@ -1510,7 +1505,7 @@ class WC_Facebookcommerce_Integration extends WC_Integration {
     if (!$is_valid_product_catalog) {
       WC_Facebookcommerce_Utils::log('Not syncing, invalid product catalog!');
       WC_Facebookcommerce_Utils::fblog(
-        'Tried to sync with an invalid product catalog!');
+        'Tried to sync with an invalid product catalog!', array(), true);
       $this->display_warning_message('We\'ve detected that your
         Facebook Product Catalog is no longer valid. This may happen if it was
         deleted, or this may be a transient error.
@@ -1632,7 +1627,7 @@ class WC_Facebookcommerce_Integration extends WC_Integration {
     if (!$is_valid_product_catalog) {
       WC_Facebookcommerce_Utils::log('Not syncing, invalid product catalog!');
       WC_Facebookcommerce_Utils::fblog(
-        'Tried to sync with an invalid product catalog!');
+        'Tried to sync with an invalid product catalog!', array(), true);
       $this->display_warning_message('We\'ve detected that your
         Facebook Product Catalog is no longer valid. This may happen if it was
         deleted, or this may be a transient error.
@@ -1646,7 +1641,7 @@ class WC_Facebookcommerce_Integration extends WC_Integration {
       include_once 'includes/fbproductfeed.php';
     }
     $this->fbproductfeed = new WC_Facebook_Product_Feed(
-      $this->product_catalog_id, $this->fbgraph);
+      $this->product_catalog_id, $this->fbgraph, $this->feed_id);
     $upload_success = $this->fbproductfeed->sync_all_products_using_feed();
     if ($upload_success) {
       $this->settings['fb_feed_id'] = $this->fbproductfeed->feed_id;
@@ -1659,7 +1654,7 @@ class WC_Facebookcommerce_Integration extends WC_Integration {
     } else {
       // curl failed, roll back to original sync approach.
       WC_Facebookcommerce_Utils::fblog(
-        'Sync all products using feed, curl failed');
+        'Sync all products using feed, curl failed', array(), true);
       $this->sync_all_products();
     }
   }
@@ -1897,7 +1892,7 @@ class WC_Facebookcommerce_Integration extends WC_Integration {
                   echo sprintf(__('<strong> Good News! You can now optimize your
                     Facebook Ads, based on data from your pixel.<br>
                     <a href='. $redirect_uri. ' target="_blank">'
-                    .'Get Started</a></strong>',
+                    .'Get More Sales</a></strong>',
                     'facebook-for-woocommerce'));
               }
               ?>
@@ -2009,20 +2004,6 @@ class WC_Facebookcommerce_Integration extends WC_Integration {
     return $to_delete;
   }
 
-  function create_product_item_using_itemid(
-    $wp_id,
-    $product_group_id,
-    &$parent_product) {
-    $woo_product = new WC_Facebook_Product($wp_id, $parent_product);
-    $retailer_id =
-      WC_Facebookcommerce_Utils::get_fb_retailer_id($woo_product);
-    return $this->create_product_item(
-      $woo_product,
-      $retailer_id,
-      $product_group_id);
-
-  }
-
   /**
    * Helper function to check time cap.
    */
@@ -2118,6 +2099,19 @@ class WC_Facebookcommerce_Integration extends WC_Integration {
       }
     }
     return;
+  }
+
+  private function set_default_variant($product_group_id, $product_item_id) {
+    $result = $this->check_api_result(
+      $this->fbgraph->set_default_variant(
+      $product_group_id,
+      array('default_product_id' => $product_item_id)));
+    if (!$result) {
+      WC_Facebookcommerce_Utils::fblog(
+        'Fail to set default product item',
+        array(),
+        true);
+    }
   }
 
 }

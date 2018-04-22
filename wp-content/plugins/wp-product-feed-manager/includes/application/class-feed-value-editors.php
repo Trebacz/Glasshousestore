@@ -125,19 +125,7 @@ if ( !class_exists( 'WPPFM_Feed_Value_Editors_Class' ) ) :
 		}
 
 		public function prep_meta_values( $meta_data, $feed_language ) {
-
 			$result = $meta_data->meta_value;
-
-// 130517
-//			$special_price_keys = array(
-//				'_max_variation_price',
-//				'_max_variation_regular_price',
-//				'_max_variation_sale_price',
-//				'_min_variation_price',
-//				'_min_variation_regular_price',
-//				'_min_variation_sale_price',
-//				'_regular_price',
-//				'_sale_price' );
 
 			if ( meta_key_is_money( $meta_data->meta_key ) ) { 
 				$result = prep_money_values( $result, $feed_language ); 

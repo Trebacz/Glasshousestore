@@ -403,7 +403,9 @@ function wppfm_generateAndSaveFeed() {
 				wppfm_hide_feed_spinner();
 			} else {
 				if ( ! newFeed ) { wppfm_hide_feed_spinner(); }
-				wppfm_show_success_message( xmlResult );
+				
+				if ( xmlResult !== '1' )
+					wppfm_show_success_message( xmlResult );
 				
 				wppfm_alert_update_finished( _feedHolder['feedId'] );
 			}
@@ -614,8 +616,8 @@ function wppfm_fillFeedFields( isNew, categoryChanged ) {
 
 		$jq( '#lvl_0' ).css( 'display', 'initial' );
 	}
-
-	var schedule = _feedHolder['updateSchedule'].split( ':' );
+	
+	var schedule = _feedHolder['updateSchedule'] ? _feedHolder['updateSchedule'].split( ':' ) : [];
 	
 	if ( ! isNew ) { 
 		wppfm_showChannelInputs( _feedHolder['channel'], isNew ); 

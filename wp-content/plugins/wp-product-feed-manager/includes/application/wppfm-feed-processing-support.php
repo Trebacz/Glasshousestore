@@ -19,7 +19,6 @@ trait WPPFM_Processing_Support {
 			wp_get_post_terms( $id, 'product_cat', array( 'taxonomy' => 'product_cat' ) ); // get the categories from a specific product in the shop
 
 		if ( $product_categories && !is_wp_error( $product_categories ) ) {
-
 			// loop through each category
 			foreach ( $product_categories as $category ) {
 
@@ -62,25 +61,20 @@ trait WPPFM_Processing_Support {
 	 * @return boolean
 	 */
 	protected function is_product_filtered( $feed_filter_strings, $product_data ) {
-
 		if ( $feed_filter_strings ) {
-
 			return $this->filter_result( json_decode( $feed_filter_strings[0]['meta_value'] ), $product_data ) ? true : false;
 		} else {
-
 			return false;
 		}
 	}
 
 	protected function get_meta_parent_ids( $feed_id ) {
-
 		$queries_class = new WPPFM_Queries();
 
 		$query_result	 = $queries_class->get_meta_parents( $feed_id );
 		$ids			 = array();
 
 		foreach ( $query_result as $result ) {
-
 			array_push( $ids, $result[ 'ID' ] );
 		}
 
@@ -94,24 +88,18 @@ trait WPPFM_Processing_Support {
 	 * @return array
 	 */
 	protected function get_source_columns_from_attribute_value( $value_string ) {
-
 		$source_columns = array();
 
 		$value_object = json_decode( $value_string );
 
 		if ( property_exists( $value_object, 'm' ) ) {
-
 			foreach ( $value_object->m as $source ) {
-
 				// TODO: Volgens mij kan ik de volgende "if" loops nog verder combineren
 				if ( property_exists( $source, 's' ) ) {
-
 					if ( property_exists( $source->s, 'source' ) ) {
-
 						if ( $source->s->source !== 'combined' ) {
 							array_push( $source_columns, $source->s->source );
 						} else {
-
 							if ( property_exists( $source->s, 'f' ) ) {
 								$source_columns = array_merge( $source_columns, $this->get_combined_sources_from_combined_string( $source->s->f ) );
 							}
@@ -131,19 +119,14 @@ trait WPPFM_Processing_Support {
 	 * @return array
 	 */
 	protected function get_condition_columns_from_attribute_value( $value_string ) {
-
 		$condition_columns = array();
 
 		$value_object = json_decode( $value_string );
 
 		if ( property_exists( $value_object, 'm' ) ) {
-
 			foreach ( $value_object->m as $source ) {
-
 				if ( property_exists( $source, 'c' ) ) {
-
 					for ( $i = 0; $i < count( $source->c ); $i++ ) {
-// 06018				array_push( $condition_columns, $this->get_column_names_from_condition_string( $source->c[ $i ]->{$i + 1} ) );
 						array_push( $condition_columns, $this->get_names_from_string( $source->c[ $i ]->{$i + 1} ) );
 					}
 				}
@@ -160,19 +143,14 @@ trait WPPFM_Processing_Support {
 	 * @return array
 	 */
 	protected function get_queries_columns_from_attribute_value( $value_string ) {
-
 		$query_columns = array();
 
 		$value_object = json_decode( $value_string );
 
 		if ( property_exists( $value_object, 'v' ) ) {
-
 			foreach ( $value_object->v as $changed_value ) {
-
 				if ( property_exists( $changed_value, 'q' ) ) {
-
 					for ( $i = 0; $i < count( $changed_value->q ); $i++ ) {
-// 060118				array_push( $query_columns, $this->get_column_names_from_query_string( $changed_value->q[ $i ]->{$i + 1} ) );
 						array_push( $query_columns, $this->get_names_from_string( $changed_value->q[ $i ]->{$i + 1} ) );
 					}
 				}
@@ -189,38 +167,10 @@ trait WPPFM_Processing_Support {
 	 * @return array
 	 */
 	protected function get_names_from_string( $string ) {
-
 		$condition_string_array = explode( '#', $string );
 
 		return $condition_string_array[ 1 ];
 	}
-
-// depricated 060118
-//	/**
-//	 * extract the column name from the query string
-//	 * 
-//	 * @param string $query_string
-//	 * @return array
-//	 */
-//	protected function get_column_names_from_query_string( $query_string ) {
-//
-//		$condition_string_array = explode( '#', $query_string );
-//
-//		return $condition_string_array[ 1 ];
-//	}
-//
-//	/**
-//	 * extract the column name from the condition string
-//	 * 
-//	 * @param string $condition_string
-//	 * @return array
-//	 */
-//	protected function get_column_names_from_condition_string( $condition_string ) {
-//
-//		$condition_string_array = explode( '#', $condition_string );
-//
-//		return $condition_string_array[ 1 ];
-//	}
 
 	/**
 	 * split the combined string into single combination items
@@ -229,14 +179,12 @@ trait WPPFM_Processing_Support {
 	 * @return array
 	 */
 	protected function get_combined_sources_from_combined_string( $combined_string ) {
-
 		$result					 = array();
 		$combined_string_array	 = explode( '|', $combined_string );
 
 		array_push( $result, $combined_string_array[ 0 ] );
 
 		for ( $i = 1; $i < count( $combined_string_array ); $i++ ) {
-
 			$a = explode( '#', $combined_string_array[ $i ] );
 			array_push( $result, $a[ 1 ] );
 		}
@@ -252,11 +200,9 @@ trait WPPFM_Processing_Support {
 	 * @return variable attribute
 	 */
 	protected function get_meta_data_from_specific_field( $field, $attributes ) {
-
 		$i = 0;
 
 		while ( true ) {
-
 			if ( $attributes[ $i ]->fieldName !== $field ) {
 				$i++;
 				if ( $i>1000 ) { break; }
@@ -286,7 +232,6 @@ trait WPPFM_Processing_Support {
 	 * Processes a single field of a single product in the feed
 	 */
 	protected function get_correct_field_value( $field_meta_data, $product_data, $main_category_feed_title, $row_category, $feed_language, $relation_table ) {
-
 		$end_row_value = '';
 		$this->_nr_thats_selected = 0;
 
@@ -305,7 +250,6 @@ trait WPPFM_Processing_Support {
 			} else { // no queries, edit valies or alternative sources for this field
 
 				if ( property_exists( $field_meta_data, 'advisedSource' ) && $field_meta_data->advisedSource !== '' ) {
-
 					$db_title = $field_meta_data->advisedSource;
 				} else {
 					$support_class = new WPPFM_Feed_Support_Class();
@@ -318,7 +262,6 @@ trait WPPFM_Processing_Support {
 
 			// change value if requested
 			if ( key_exists( 'value', $field_meta_data ) && $field_meta_data->value !== '' && key_exists( 'v', $value_object ) ) {
-
 				$pos = $this->_nr_thats_selected;
 
 				if ( key_exists( 'm', $value_object ) && key_exists( 's', $value_object->m[$pos] ) ) {
@@ -340,7 +283,6 @@ trait WPPFM_Processing_Support {
 	}
 
 	protected function get_correct_end_row_value( $value, $product_data, $advised_source ) {
-
 		$end_row_value = '';
 		$nr_values = count( $value ); // added @since 1.9.4
 		$value_counter = 1; // added @since 1.9.4
@@ -362,7 +304,6 @@ trait WPPFM_Processing_Support {
 
 		// not found a condition that was correct so lets take the "for all other products" data to fetch the correct row_value
 		if ( $end_row_value === '' ) {
-
 			$end_row_value = $this->get_row_source_data( end( $value ), $product_data, $advised_source );
 		}
 
@@ -370,26 +311,21 @@ trait WPPFM_Processing_Support {
 	}
 
 	protected function get_filter_status( $filter, $product_data ) {
-
 		if ( key_exists( 'c', $filter ) ) {
-
 			// check if the query is true for this field
 			return $this->filter_result( $filter->c, $product_data );
 		} else {
-
 			// apparently there is no condition so the result is always true
 			return true;
 		}
 	}
 
 	protected function filter_result( $conditions, $product_data ) {
-
 		$query_results = array();
 		$support_class = new WPPFM_Feed_Support_Class();			
 
 		// run each query on the data
 		foreach ( $conditions as $condition ) {
-
 			$condition_string = $support_class->get_query_string_from_query_object( $condition );
 
 			$query_split = explode( '#', $condition_string );
@@ -411,19 +347,15 @@ trait WPPFM_Processing_Support {
 	 * @return boolean
 	 */
 	protected function connect_query_results( $results ) {
-
 		$and_results = array();
 		$end_result	 = true;
 		$or_results	 = array();
 
 		if ( count( $results ) > 0 ) {
-
 			foreach ( $results as $query_result ) {
-
 				$result_split = explode( '#', $query_result );
 
 				if ( $result_split[ 0 ] === '2' ) {
-
 					array_push( $or_results, $and_results ); // store the current "and" result for processing as "or" result
 
 					$and_results = array(); // clear the "and" array
@@ -435,20 +367,16 @@ trait WPPFM_Processing_Support {
 			}
 
 			if ( count( $and_results ) > 0 ) {
-
 				array_push( $or_results, $and_results );
 			}
 
 			if ( count( $or_results ) > 0 ) {
-
 				$end_result = false;
 
 				foreach ( $or_results as $or_result ) {
-
 					$a = true;
 
 					foreach ( $or_result as $and_array ) {
-
 						if ( $and_array === 'false' ) {
 							$a = false;
 						}
@@ -462,7 +390,6 @@ trait WPPFM_Processing_Support {
 				$end_result = false;
 			}
 		} else {
-
 			$end_result = false;
 		}
 
@@ -476,7 +403,6 @@ trait WPPFM_Processing_Support {
 	 * @param string $status
 	 */
 	protected function register_feed_update( $feed_id, $feed_name, $nr_products, $status = null ) {
-
 		$data_class = new WPPFM_Data_Class();
 		
 		// register the update and update the feed Last Change time
@@ -498,14 +424,11 @@ trait WPPFM_Processing_Support {
 	protected function get_file_url( $feed_name ) {
 		// previous to plugin version 1.3.0 feeds where stored in the plugins but after that version they are stored in the upload folder
 		if( file_exists( WP_PLUGIN_DIR . '/wp-product-feed-manager-support/feeds/' . $feed_name ) ) {
-
 			return plugins_url() . '/wp-product-feed-manager-support/feeds/' . $feed_name;
 		} elseif( file_exists( WPPFM_FEEDS_DIR . '/' . $feed_name ) ) {
-
 			//$upload_dir = wp_upload_dir();
 			return WPPFM_UPLOADS_URL . '/wppfm-feeds/' . $feed_name;
 		} else { // as of version 1.5.0 all spaces in new filenames are replaced by a dash
-
 			$forbitten_name_chars = array( ' ', '<', '>', ':', '?', ',' ); // characters that are not allowed in a feed file name
 			//$upload_dir = wp_upload_dir();
 			return WPPFM_UPLOADS_URL . '/wppfm-feeds/' . str_replace( $forbitten_name_chars, '-', $feed_name);
@@ -513,27 +436,21 @@ trait WPPFM_Processing_Support {
 	}
 
 	protected function get_row_source_data( $filter, $product_data, $advised_source ) {
-
 		$row_source_data = '';
 
 		if ( key_exists( 's', $filter ) ) {
 			if ( key_exists( 'static', $filter->s ) ) {
 				$row_source_data = $filter->s->static;
 			} elseif ( key_exists( 'source', $filter->s ) ) {
-
 				if ( $filter->s->source !== 'combined' ) {
-
 					$row_source_data = array_key_exists( $filter->s->source, $product_data ) ? $product_data[ $filter->s->source ] : '';
 				} else {
-
 					$row_source_data = $this->generate_combined_string( $filter->s->f, $product_data );
 				}
 			}
 		} else {
-
 			// return the advised source data
 			if ( $advised_source !== '' ) {
-
 				$row_source_data = array_key_exists( $advised_source, $product_data ) ? $product_data[ $advised_source ] : '';
 			}
 		}
@@ -542,7 +459,6 @@ trait WPPFM_Processing_Support {
 	}
 
 	protected function generate_combined_string( $combined_sources, $row ) {
-
 		$source_selectors_array = explode( '|', $combined_sources ); //split the combined source string in an array containing every single source
 		$values_class = new WPPFM_Feed_Value_Editors_Class();
 		$separators = $values_class->combination_separators(); // array with all possible separators
@@ -552,12 +468,9 @@ trait WPPFM_Processing_Support {
 		$result = $result_is_array ? array() : '';
 
 		if ( ! $result_is_array ) {
-
 			$result = $this->make_combined_string( $source_selectors_array, $separators, $row, false );
 		} else {
-
 			for( $i = 0; $i < count( $result_is_array ); $i++ ) {
-
 				$combined_string = $this->make_combined_string( $source_selectors_array, $separators, $row, $i );
 				array_push( $result, $combined_string );				
 			}
@@ -575,9 +488,7 @@ trait WPPFM_Processing_Support {
 	 * @return false or an array from the data_row
 	 */
 	protected function check_if_any_source_has_array_data( $sources, $data_row ) {
-
 		foreach( $sources as $source ) {
-
 			$split_source = explode( '#', $source );
 
 			if ( count( $split_source ) > 1 && $split_source[1] === 'static' ) {
@@ -607,13 +518,10 @@ trait WPPFM_Processing_Support {
 		$y = 0;
 
 		for ( $i = 0; $i < ( count( $change_parameters ) - 1 ); $i++ ) {
-
 			if ( key_exists( 'q', $change_parameters[ $i ] ) ) {
-
 				$filter_result = $this->filter_result( $change_parameters[ $i ]->q, $product_data );
 
 				if ( $filter_result === true ) {
-
 					$combined_data_elements = $combination_string ? $this->get_combined_elements( $product_data, $combination_string ) : '';
 					$final_output = $support_class->edit_value( $origional_output, $change_parameters[ $i ]->{$i + 1}, $combination_string, 
 						$combined_data_elements, $feed_language );
@@ -635,7 +543,6 @@ trait WPPFM_Processing_Support {
 	}
 
 	protected function get_combined_elements( $product_data, $combination_string ) {
-
 		$result = array();
 		$found_all_data = true;
 
@@ -653,19 +560,15 @@ trait WPPFM_Processing_Support {
 		}
 
 		for ( $i = 1; $i <= count($combination_elements) - 1; $i++ ) {
-
 			$pos = strpos( $combination_elements[$i], '#');
 			$selector = substr( $combination_elements[$i], ($pos !== false ? $pos + 1 : 0 ));
 
 			if ( substr( $selector, 0, 7 ) === 'static#' ) {
-
 				$selector = explode( '#', $selector );
 				array_push( $result, $selector[1] );
 			} elseif ( array_key_exists( $selector, $product_data ) ) {
-
 				array_push( $result, $product_data[$selector] );
 			} else {
-
 				//array_push( $result, $selector );
 				$found_all_data = false;
 			}
@@ -675,11 +578,9 @@ trait WPPFM_Processing_Support {
 	}
 
 	protected function make_combined_string( $source_selectors_array, $separators, $row, $array_pos ) {
-
 		$combined_string = '';
 
 		foreach ( $source_selectors_array as $source ) {
-
 			$split_source = explode( '#', $source );
 
 			// get the separator
@@ -689,17 +590,13 @@ trait WPPFM_Processing_Support {
 			$data_key = count( $split_source ) > 1 && $split_source[ 0 ] !== 'static' ? $split_source[ 1 ] : $split_source[ 0 ] ;
 
 			if ( ( array_key_exists( $data_key, $row ) && $row[ $data_key ] ) || $data_key === 'static' ) {
-
 				if ( $data_key !== 'static' && ! is_array( $row[ $data_key ] ) ) { // not static and no array
-
 					$combined_string .= $sep;
 					$combined_string .= $data_key !== 'static' ? $row[ $data_key ] : $split_source[ 2 ];
 				} elseif ( $data_key === 'static' ) { // static inputs
-
 					$static_string = count( $split_source ) > 2 ? $split_source[ 2 ] : $split_source[ 1 ];
 					$combined_string .= $sep . $static_string;
 				} else { // array inputs
-
 					$input_array = $row[ $data_key ][$array_pos];
 					$combined_string .= $sep . $input_array;
 				}
@@ -726,7 +623,6 @@ trait WPPFM_Processing_Support {
 			}
 
 			if ( ! empty( $source ) ) {
-
 				// correct googles product category source
 				if ( $attribute->fieldName === 'google_product_category' ) {
 					$source = 'google_product_category';
@@ -778,11 +674,9 @@ trait WPPFM_Processing_Support {
 	 * @return string
 	 */
 	protected function get_source_from_attribute_value( $value ) {
-
 		$source = '';
 
 		if ( $value ) {
-
 			$value_string = $this->get_source_string( $value );
 
 			$value_object = json_decode( $value_string );
@@ -800,11 +694,9 @@ trait WPPFM_Processing_Support {
 	 * @return string
 	 */
 	protected function get_source_string( $value_string ) {
-
 		$source_string = '';
 
 		if ( ! empty( $value_string ) ) {
-
 			$value_object = json_decode( $value_string );
 
 			if ( property_exists( $value_object, 'm' ) && property_exists( $value_object->m[ 0 ], 's' ) ) {
@@ -918,7 +810,6 @@ trait WPPFM_Processing_Support {
 				$clean_row_item = '';
 			}
 
-// 060118		$clean_row_item = array_key_exists( $row_item, $row_data ) ? preg_replace( "/\r|\n/", "", $row_data[$row_item] ) : "";
 			$no_double_quote_item = str_replace( '"', "'", $clean_row_item );
 			$row_string .= '"'.$no_double_quote_item.'"' . $separator;
 		}
@@ -1072,24 +963,6 @@ trait WPPFM_Processing_Support {
 	}
 
 	/**
-	 * retrieve the selected catagories from the categoryMapping object
-	 * 
-	 * @param object $category_mapping
-	 * @return string
-	 */
-// depricated 060118
-//	protected function make_category_selection_string( $category_mapping ) {
-//
-//		$category_selection_string = '';
-//
-//		foreach ( $category_mapping as $category ) {
-//			$category_selection_string .= $category->shopCategoryId . ', ';
-//		}
-//
-//		return $category_selection_string ? substr( $category_selection_string, 0, -2 ) : '';
-//	}
-
-	/**
 	 * get formal woocommerce custom fields data
 	 * 
 	 * @param string $id
@@ -1097,7 +970,6 @@ trait WPPFM_Processing_Support {
 	 * @return string
 	 */
 	protected function get_custom_field_data( $id, $field ) {
-
 		$custom_string	 = '';
 		$taxonomy		 = 'pa_' . $field;
 		$custom_values	 = get_the_terms( $id, $taxonomy );
@@ -1119,12 +991,10 @@ trait WPPFM_Processing_Support {
 	 * @return string
 	 */
 	protected function get_third_party_custom_field_data( $feed_id, $field ) {
-
 		$result = '';
 
 		// YITH Brands plugin
 		if ( $field === get_option( 'yith_wcbr_brands_label' ) ) { // YITH Brands plugin active
-
 			if ( has_term( '', 'yith_product_brand', $feed_id ) ) {
 				$product_brand = get_the_terms( $feed_id, 'yith_product_brand' );
 
@@ -1168,18 +1038,30 @@ trait WPPFM_Processing_Support {
 
 		if ( in_array( 'permalink', $active_field_names ) ) {
 			$product->permalink = get_permalink( $product->ID );
+			if( false === $product->permalink && $woocommerce_parent_id !== 0 ) {
+				$product->permalink = get_permalink( $woocommerce_parent_id );
+			}
 		}
 
 		if ( in_array( 'attachment_url', $active_field_names ) ) {
 			$product->attachment_url = wp_get_attachment_url( get_post_thumbnail_id( $product->ID ) );
+			if( false === $product->attachment_url && $woocommerce_parent_id !== 0 ) {
+				$product->attachment_url = wp_get_attachment_url( get_post_thumbnail_id( $woocommerce_parent_id ) );
+			}
 		}
 
 		if ( in_array( 'product_cat', $active_field_names ) ) {
 			$product->product_cat = WPPFM_Taxonomies_Class::get_shop_categories( $product->ID );
+			if( $product->product_cat === '' && $woocommerce_parent_id !== 0 ) {
+				$product->product_cat = WPPFM_Taxonomies_Class::get_shop_categories( $woocommerce_parent_id );
+			}
 		}
 
 		if ( in_array( 'product_cat_string', $active_field_names ) ) {
 			$product->product_cat_string = WPPFM_Taxonomies_Class::make_shop_taxonomies_string( $product->ID );
+			if( $product->product_cat_string === '' && $woocommerce_parent_id !== 0 ) {
+				$product->product_cat_string = WPPFM_Taxonomies_Class::make_shop_taxonomies_string( $woocommerce_parent_id );
+			}
 		}
 
 		if ( in_array( 'last_update', $active_field_names ) ) {
@@ -1241,36 +1123,14 @@ trait WPPFM_Processing_Support {
 	 * @return array
 	 */
 	protected function get_product_image_galery( $post_id ) {
-
 		$image_urls		 = array();
 		$images			 = 1;
 		$max_nr_images	 = 10;
-// 060118
-//			$args			 = array(
-//				'post_type'		 => 'attachment',
-//				'numberposts'	 => -1,
-//				'post_status'	 => 'any',
-//				'post_parent'	 => $post_id,
-//				'exclude'		 => get_post_thumbnail_id( $post_id )
-//			);
-//
-//			$attachments = get_posts( $args );
-//
-//			if ( $attachments ) {
-//				foreach ( $attachments as $attachment ) {
-//
-//					array_push( $image_urls, $attachment->guid );
-//					$images++;
-//
-//					if ( $images > $max_nr_images ) { break; }
-//				}
-//			}
 
 		$prdct = wc_get_product( $post_id );
 		$attachment_ids = $prdct->get_gallery_image_ids();
 
 		foreach( $attachment_ids as $attachment ) {
-
 			$image_link = wp_get_attachment_url( $attachment );
 			array_push( $image_urls, $image_link );
 			$images++;
@@ -1282,21 +1142,18 @@ trait WPPFM_Processing_Support {
 	}
 
 	protected function get_product_tags( $id ) {
-
 		$product_tags_string = '';
 		$product_tag_values	 = get_the_terms( $id, 'product_tag' );
 		$post_tag_values	 = get_the_tags( $id );
 
 		if ( $product_tag_values ) {
 			foreach ( $product_tag_values as $product_tag ) {
-
 				$product_tags_string .= $product_tag->name . ', ';
 			}
 		}
 
 		if ( $post_tag_values ) {
 			foreach ( $post_tag_values as $post_tag ) {
-
 				$product_tags_string .= $post_tag->name . ', ';
 			}
 		}

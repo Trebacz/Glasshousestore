@@ -3,7 +3,7 @@ Contributors: TigrouMeow
 Tags: rename, file, files, media, manager, image, renamer, wpml, optimization, seo, retina, gutenberg
 Requires at least: 4.6
 Tested up to: 4.9.4
-Stable tag: 4.0.3
+Stable tag: 4.0.4
 
 Automatically rename files depending on Media titles dynamically + update links. Pro version has many more options. Check the description :)
 
@@ -33,62 +33,9 @@ Languages: English, French.
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Try it with one file first! :)
 
-== Upgrade Notice ==
-
-Simply replace `media-file-renamer.php` by the new one.
-
 == Frequently Asked Questions ==
 
-Check the FAQ on the official website, here: https://meowapps.com/media-file-renamer/faq/. The following is to enhance the plugin for your own install and is aim to advanced users and developers. If you want to quickly try to use the following filters and actions, please have a look a the file called mfrh_custom.php in the plugin, uncomment some code and hack it :)
-
-**Change the way the files are renamed**
-
-If you are willing to customize the way the file are renamed, please use the mfrh_new_filename filter. The $new is the new filename proposed by the plugin, $old is the previous one and $post contains the information about the current attachment.
-
-`
-add_filter( 'mfrh_new_filename', 'my_filter_filename', 10, 3 );
-
-function my_filter_filename( $new, $old, $post ) {
-  return "renamed-" . $new;
-}
-`
-
-The mfrh_replace_rules filter is a bit simpler and allows you to customize specific characters or bit of strings, like with the example below.
-
-`
-add_filter( 'mfrh_replace_rules', 'replace_s_by_z', 10, 1 );
-
-function replace_s_by_z( $rules ) {
-  $rules['s'] = 'z';
-  return $rules;
-}
-`
-
-**Update References**
-
-You can also update the references to the files or URLs which are renamed/modified by using the following filters. If you themes or another plugins are storing those references by yourself, then this is a chance to achieve this :)
-
-The $post is an array containing information about the media (as it is like a post), and you can use the $original_image_url and $new_image_url to do the required renaming:
-
-`
-add_action( 'mfrh_url_renamed', 'my_url_renamed', 10, 3 );
-
-function my_url_renamed( $post, $orig_image_url, $new_image_url ) {
-  return "renamed-" . $new;
-}
-`
-
-This is the same as above but it is about the physical filepath on your filesystem:
-
-`
-add_action( 'mfrh_media_renamed', 'my_media_renamed', 10, 3 );
-
-function my_media_renamed( $post, $old_filepath, $new_filepath ) {
-  return "renamed-" . $new;
-}
-`
-
-You are welcome to create plugins using Media File Renamer using special rules for renaming. Please tell me you so if you make one and I will list those plugins here.
+Check the FAQ on the official website, [here](https://meowapps.com/media-file-renamer/faq/).
 
 == Screenshots ==
 
@@ -100,7 +47,8 @@ You are welcome to create plugins using Media File Renamer using special rules f
 
 == Changelog ==
 
-= 4.0.3 =
+= 4.0.4 =
+* Fix: Renaming using filters (work in progress).
 * Fix: Insensitive-case match was giving the wrong file in some cases (webp for instance).
 
 = 4.0.2 =

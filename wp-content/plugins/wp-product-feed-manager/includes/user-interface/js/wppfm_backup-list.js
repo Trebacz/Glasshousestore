@@ -37,14 +37,15 @@ function wppfm_resetBackupsList() {
  * Restores the options on the settings page
  */
 function wppfm_resetOptionSettings() {
-	
 	wppfm_getSettingsOptions( function ( optionsString ) {
 		
 		if ( optionsString ) {
-
 			var options = JSON.parse( optionsString );
 			
-			$jq( '#wppfm_auto_feed_fix_mode' ).prop( "checked", options[1] === "true" ? true : false );
+			$jq( '#wppfm_auto_feed_fix_mode' ).prop( "checked", options[0] === "true" ? true : false );
+			$jq( '#wppfm_background_processing_mode' ).prop( "checked", options[2] === "true" ? true : false );
+			
+			$jq( '#wppfm_third_party_attr_keys' ).val( options[1] );
 		}
 	} );
 }

@@ -11,14 +11,14 @@
  */
 
 // Prevent direct access
-if (!defined('ABSPATH')) exit;
+if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
  * Returns the html for a standard WordPress error message
  * 
  * @param string $message
- * @param bool $dismissible
- * @param string $permanent_dismissible_id
+ * @param bool $dismissible (default false)
+ * @param string $permanent_dismissible_id (default '')
  * @return html string
  */
 function wppfm_show_wp_error( $message, $dismissible = false, $permanent_dismissible_id = '' ) {
@@ -29,8 +29,8 @@ function wppfm_show_wp_error( $message, $dismissible = false, $permanent_dismiss
  * Returns the html for a standard WordPress warning message
  * 
  * @param string $message
- * @param bool $dismissible
- * @param string $permanent_dismissible_id
+ * @param bool $dismissible (default false)
+ * @param string $permanent_dismissible_id (default '')
  * @return html string
  */
 function wppfm_show_wp_warning( $message, $dismissible = false, $permanent_dismissible_id = '' ) {
@@ -41,8 +41,8 @@ function wppfm_show_wp_warning( $message, $dismissible = false, $permanent_dismi
  * Returns the html for a standard WordPress success message
  * 
  * @param string $message
- * @param bool $dismissible
- * @param string $permanent_dismissible_id
+ * @param bool $dismissible (default false)
+ * @param string $permanent_dismissible_id (default '')
  * @return html string
  */
 function wppfm_show_wp_success( $message, $dismissible = false, $permanent_dismissible_id = '' ) {
@@ -53,8 +53,8 @@ function wppfm_show_wp_success( $message, $dismissible = false, $permanent_dismi
  * Returns the html for a standard WordPress info message
  * 
  * @param string $message
- * @param bool $dismissible
- * @param string $permanent_dismissible_id
+ * @param bool $dismissible (default false)
+ * @param string $permanent_dismissible_id (default '')
  * @return html string
  */
 function wppfm_show_wp_info( $message, $dismissible = false, $permanent_dismissible_id = '' ) {
@@ -102,7 +102,7 @@ function wppfm_handle_wp_errors_response( $response, $message ) {
  * @since 1.5.1
  * 
  * @param string $error_message
- * @param string $filename
+ * @param string $filename (default 'error')
  */
 function wppfm_write_log_file( $error_message, $filename = 'error' ) {
 	$file = fopen( WPPFM_PLUGIN_DIR . $filename . '.log', "a");
@@ -152,7 +152,6 @@ add_filter( 'http_response', 'wppfm_log_http_requests', 10, 3 );
 class MJ {
 
 	static function log( $var ) {
-
 		?>
 		<style>
 			.mj_debug { word-wrap: break-word; white-space: pre; text-align: left; position: relative; 
@@ -189,5 +188,3 @@ class MJ {
 		self::log( $queries_class->get_feedmanager_product_feedmeta_table() );
 	}
 }
-
-

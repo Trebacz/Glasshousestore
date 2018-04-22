@@ -3,8 +3,8 @@ Contributors: xadapter, mujeebur
 Donate link: 
 Tags: order, coupon, subscription, export, import, woocommerce
 Requires at least: 3.0.1
-Tested up to: 4.9.4
-Stable tag: 1.2.9
+Tested up to: 4.9.5
+Stable tag: 1.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -76,6 +76,9 @@ Yes. You can import or export order line item details.
 
 == Changelog ==
 
+= 1.3.0 =
+* Fixed Coupon customer import issue.
+* WP 4.9.5 and WC 3.3.4 Tested OK
 = 1.2.9 =
 * Improved UI
 * Uninstall feedback
@@ -141,6 +144,6 @@ Yes. You can import or export order line item details.
 * Export /Import WooCommerce Orders.
 
 == Upgrade Notice ==
-= 1.2.9 =
-* Improved UI
-* Uninstall feedback
+= 1.3.0 =
+* Fixed Coupon customer import issue.
+* WP 4.9.5 and WC 3.3.4 Tested OK

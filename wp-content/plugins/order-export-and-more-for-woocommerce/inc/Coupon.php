@@ -14,6 +14,8 @@ class Coupon extends BaseEntity{
 		$this->fields = $this->load_fields();
 		
 		$this->filters = array();
+
+		$this->generate_export_order_sequence();
 	}
 	
 	
@@ -81,7 +83,7 @@ class Coupon extends BaseEntity{
 		
 		$fields['exclude_sales'] = array(
 				'name' => 'exclude_sales',
-				'placeholder' => __('Eclude Sale Items', JEM_EXP_DOMAIN)
+				'placeholder' => __('Exclude Sale Items', JEM_EXP_DOMAIN)
 		
 		);
 		
