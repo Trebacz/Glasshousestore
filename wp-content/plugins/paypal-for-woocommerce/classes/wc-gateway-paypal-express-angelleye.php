@@ -32,16 +32,16 @@ class WC_Gateway_PayPal_Express_AngellEYE extends WC_Payment_Gateway {
             'multiple_subscriptions',
         );
         if (substr(get_option("woocommerce_default_country"), 0, 2) == 'US' || substr(get_option("woocommerce_default_country"), 0, 2) == 'GB') {
-            $this->is_us_or_uk = true;
+            $this->is_paypal_credit_enable = true;
         } else {
-            $this->is_us_or_uk = false;
+            $this->is_paypal_credit_enable = false;
         }
         if(substr(get_option("woocommerce_default_country"), 0, 2) == 'US') {
             $this->is_us = true;
         } else {
             $this->is_us = false;
         }
-        if( $this->is_us_or_uk ) {
+        if( $this->is_paypal_credit_enable ) {
             $this->disallowed_funding_methods_array = array(
                 'credit' => __('PayPal Credit', 'paypal-for-woocommerce'),
                 'card' => __('Credit or Debit card', 'paypal-for-woocommerce'),
@@ -119,7 +119,7 @@ class WC_Gateway_PayPal_Express_AngellEYE extends WC_Payment_Gateway {
                 $this->notifyurl = str_replace('&amp;', '&', $this->notifyurl);
             }
         }
-        if ($this->is_us_or_uk == false) {
+        if ($this->is_paypal_credit_enable == false) {
             $this->show_paypal_credit = 'no';
         }
         if ($this->testmode == true) {
@@ -557,33 +557,39 @@ class WC_Gateway_PayPal_Express_AngellEYE extends WC_Payment_Gateway {
                 'title' => __('Sandbox API User Name', 'paypal-for-woocommerce'),
                 'type' => 'text',
                 'description' => __('Create sandbox accounts and obtain API credentials from within your <a href="http://developer.paypal.com">PayPal developer account</a>.', 'paypal-for-woocommerce'),
-                'default' => ''
+                'default' => '',
+                'custom_attributes' => array( 'autocomplete' => 'off'),
             ),
             'sandbox_api_password' => array(
                 'title' => __('Sandbox API Password', 'paypal-for-woocommerce'),
                 'type' => 'password',
-                'default' => ''
+                'default' => '',
+                'custom_attributes' => array( 'autocomplete' => 'off'),
             ),
             'sandbox_api_signature' => array(
                 'title' => __('Sandbox API Signature', 'paypal-for-woocommerce'),
                 'type' => 'password',
-                'default' => ''
+                'default' => '',
+                'custom_attributes' => array( 'autocomplete' => 'off'),
             ),
             'api_username' => array(
                 'title' => __('Live API User Name', 'paypal-for-woocommerce'),
                 'type' => 'text',
                 'description' => __('Get your live account API credentials from your PayPal account profile <br />or by using <a target="_blank" href="https://www.paypal.com/us/cgi-bin/webscr?cmd=_login-api-run">this tool</a>.', 'paypal-for-woocommerce'),
-                'default' => ''
+                'default' => '',
+                'custom_attributes' => array( 'autocomplete' => 'off'),
             ),
             'api_password' => array(
                 'title' => __('Live API Password', 'paypal-for-woocommerce'),
                 'type' => 'password',
-                'default' => ''
+                'default' => '',
+                'custom_attributes' => array( 'autocomplete' => 'off'),
             ),
             'api_signature' => array(
                 'title' => __('Live API Signature', 'paypal-for-woocommerce'),
                 'type' => 'password',
-                'default' => ''
+                'default' => '',
+                'custom_attributes' => array( 'autocomplete' => 'off'),
             ),
             'error_email_notify' => array(
                 'title' => __('Error Email Notifications', 'paypal-for-woocommerce'),
@@ -715,8 +721,8 @@ class WC_Gateway_PayPal_Express_AngellEYE extends WC_Payment_Gateway {
                 'type' => 'checkbox',
                 'label' => __('Show the PayPal Credit button next to the Express Checkout button.', 'paypal-for-woocommerce'),
                 'default' => 'yes',
-                'description' => ($this->is_us_or_uk == false) ? __('Currently disabled because PayPal Credit is only available for U.S. and U.K merchants.', 'paypal-for-woocommerce') : "",
-                'desc_tip' => ($this->is_us_or_uk) ? true : false,
+                'description' => ($this->is_paypal_credit_enable == false) ? __('Currently disabled because PayPal Credit is only available for U.S.', 'paypal-for-woocommerce') : "",
+                'desc_tip' => ($this->is_paypal_credit_enable) ? true : false,
             ),
             'use_wp_locale_code' => array(
                 'title' => __('Use WordPress Locale Code', 'paypal-for-woocommerce'),

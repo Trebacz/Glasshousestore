@@ -80,13 +80,6 @@ class WC_Gateway_Stripe extends WC_Stripe_Payment_Gateway {
 	public $publishable_key;
 
 	/**
-	 * Do we accept bitcoin?
-	 *
-	 * @var bool
-	 */
-	public $bitcoin;
-
-	/**
 	 * Do we accept Payment Request?
 	 *
 	 * @var bool
@@ -163,7 +156,6 @@ class WC_Gateway_Stripe extends WC_Stripe_Payment_Gateway {
 		$this->saved_cards                 = 'yes' === $this->get_option( 'saved_cards' );
 		$this->secret_key                  = $this->testmode ? $this->get_option( 'test_secret_key' ) : $this->get_option( 'secret_key' );
 		$this->publishable_key             = $this->testmode ? $this->get_option( 'test_publishable_key' ) : $this->get_option( 'publishable_key' );
-		$this->bitcoin                     = 'USD' === strtoupper( get_woocommerce_currency() ) && 'yes' === $this->get_option( 'stripe_bitcoin' );
 		$this->payment_request             = 'yes' === $this->get_option( 'payment_request', 'yes' );
 
 		if ( $this->stripe_checkout ) {
@@ -254,10 +246,6 @@ class WC_Gateway_Stripe extends WC_Stripe_Payment_Gateway {
 			$icons_str .= $icons['diners'];
 		}
 
-		if ( $this->bitcoin && $this->stripe_checkout ) {
-			$icons_str .= $icons['bitcoin'];
-		}
-
 		return apply_filters( 'woocommerce_gateway_icon', $icons_str, $this->id );
 	}
 
@@ -277,6 +265,8 @@ class WC_Gateway_Stripe extends WC_Stripe_Payment_Gateway {
 		$total                = WC()->cart->total;
 		$user_email           = '';
 		$description          = $this->get_description() ? $this->get_description() : '';
+		$firstname            = '';
+		$lastname             = '';
 
 		// If paying from order, we need to get total from order not cart.
 		if ( isset( $_GET['pay_for_order'] ) && ! empty( $_GET['key'] ) ) {
@@ -292,7 +282,10 @@ class WC_Gateway_Stripe extends WC_Stripe_Payment_Gateway {
 
 		if ( is_add_payment_method_page() ) {
 			$pay_button_text = __( 'Add Card', 'woocommerce-gateway-stripe' );
-			$total        = '';
+			$total           = '';
+			$firstname       = $user->user_firstname;
+			$lastname        = $user->user_lastname;
+
 		} elseif ( function_exists( 'wcs_order_contains_subscription' ) && isset( $_GET['change_payment_method'] ) ) {
 			$pay_button_text = __( 'Change Payment Method', 'woocommerce-gateway-stripe' );
 			$total        = '';
@@ -312,9 +305,9 @@ class WC_Gateway_Stripe extends WC_Stripe_Payment_Gateway {
 			data-shipping-address="' . esc_attr( apply_filters( 'wc_stripe_checkout_require_shipping_address', false ) ? 'true' : 'false' ) . '" 
 			data-amount="' . esc_attr( WC_Stripe_Helper::get_stripe_amount( $total ) ) . '"
 			data-name="' . esc_attr( $this->statement_descriptor ) . '"
+			data-full-name="' . esc_attr( $firstname . ' ' . $lastname ) . '"
 			data-currency="' . esc_attr( strtolower( get_woocommerce_currency() ) ) . '"
 			data-image="' . esc_attr( $this->stripe_checkout_image ) . '"
-			data-bitcoin="' . esc_attr( ( $this->bitcoin && $this->capture ) ? 'true' : 'false' ) . '"
 			data-locale="' . esc_attr( apply_filters( 'wc_stripe_checkout_locale', $this->get_locale() ) ) . '"
 			data-three-d-secure="' . esc_attr( $this->three_d_secure ? 'true' : 'false' ) . '"
 			data-allow-remember-me="' . esc_attr( apply_filters( 'wc_stripe_allow_remember_me', true ) ? 'true' : 'false' ) . '">';
@@ -560,7 +553,6 @@ class WC_Gateway_Stripe extends WC_Stripe_Payment_Gateway {
 			data-name="' . esc_attr( $this->statement_descriptor ) . '"
 			data-currency="' . esc_attr( strtolower( get_woocommerce_currency() ) ) . '"
 			data-image="' . esc_attr( $this->stripe_checkout_image ) . '"
-			data-bitcoin="' . esc_attr( ( $this->bitcoin && $this->capture ) ? 'true' : 'false' ) . '"
 			data-locale="' . esc_attr( apply_filters( 'wc_stripe_checkout_locale', $this->get_locale() ) ) . '"
 			data-three-d-secure="' . esc_attr( $this->three_d_secure ? 'true' : 'false' ) . '"
 			data-allow-remember-me="' . esc_attr( apply_filters( 'wc_stripe_allow_remember_me', true ) ? 'true' : 'false' ) . '">';

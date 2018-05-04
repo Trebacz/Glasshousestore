@@ -3,7 +3,7 @@ Contributors: ecreationsllc, natekinkead
 Tags: WooCommerce, Google Customer Reviews, Google Merchant, Google Trusted Sites, Opt-in, Badge, Google Rating Badge, GCR
 Requires at least: 3.0.0
 Tested up to: 4.9.5
-Stable tag: 2.6.1
+Stable tag: 2.6.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/quick-guide-gplv3.html
 
@@ -13,7 +13,7 @@ Integrates Google Merchant Center's Google Customer Reviews survey opt-in and ba
 
 This is THE WordPress plugin to integrate Google Merchant Center's "Google Customer Reviews" into your WooCommerce store.
 
-It allows the Survey Opt-in code onto your Thank You (Order Received) page with the option to pick which location the popup will appear.  It can also send GTIN data to Google for each product purchase which enabled product reviews.
+It allows the Survey Opt-in code onto your Thank You (Order Received) page and your View Past Order page with the option to pick which location the popup will appear.  It can also send GTIN data to Google for each product purchase which enabled product reviews.
 
 It also integrates the Google Customer Reviews Badge onto your site.  You can choose to show it in the bottom left or bottom right.  You can also choose to only show the badge when users are in the WooCommerce area of your website.
 
@@ -108,6 +108,9 @@ You can use the filter hook called 'ecr_show_gcr_badge'.  Return false inside of
 add_filter('ecr_show_gcr_badge', 'my_gcr_badge_function');`
 
 == Changelog ==
+
+= 2.6.2 =
+* Added survey opt-in to the View Past Order page within My Account
 
 = 2.6.1 =
 * Fix GTIN displaying "Array"

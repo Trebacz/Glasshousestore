@@ -7,8 +7,8 @@ Author URI: http://www.tatvic.com/
 Author: Tatvic
 Requires at least: 3.6
 Tested up to: 4.9
-Stable tag: 2.0.0
-Version: 2.0.0
+Stable tag: 2.0.1
+Version: 2.0.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -104,7 +104,19 @@ When you have the UA script/tag implemented via your GTM, it may happen sometime
 
 Reason :
 
-* Our Plugin's script works/fetches the data based on the GA's default tracker ('ga' in the case of Universal Analytics script used in our plugin). While you implement the UA tracking script from your GTM, the script in your store may not be able to initialize the tracker, which in turn will hinder the plugin from populating insights in your Analytics account.
+* Our Plugin's script works/fetches the data based on the GTAG's default tracker ('gtag' in the case of Universal Analytics script used in our plugin). While you implement the UA tracking script from your GTM, the script in your store may not be able to initialize the tracker, which in turn will hinder the plugin from populating insights in your Analytics account.
+
+= Does your plugin supports new Global Site Tag (gtag.js)? =
+
+Yes our plugin supports new Global Site Tag (gtag.js).
+
+= Since I have Implemented Old GA Script (UA Script) Manually in my store, I didn't enable Add Global site Tracking Code option gtag.js, but seems that it is not working. =
+
+When you have the Old UA script implemented Manually in your store, it is not working with our plugin.
+
+Reason :
+
+* Our Plugin's script works/fetches the data based on the GTAG's default tracker ('gtag' in the case of Universal Analytics script used in our plugin). While you implement the Old UA tracking script manually, the script in your store may not be able to initialize the tracker, which in turn will hinder the plugin from populating insights in your Analytics account.
 
 = Where I can see my all Enhanced Ecommerce Reports (Eg. Sales Report,Product Performance Report)? =
 
@@ -149,7 +161,7 @@ Our plugin does not support Multilingual Wordpress site.
 
 = Does your plugin supports Child/Custom Theme? =
 
-The free version of our plugin is not fully compatible with the child/custom theme. Request you to go through the <a href="https://codecanyon.net/item/actionable-google-analytics-for-woocommerce/9899552?ref=tatvic" target="_blank">premium version</a> of our plugin which is fully compatible with the child/custom theme. We are not providing any kind of support for Child/Custom Theme. For more information kindly contact us at analytics2(at)tatvic(dot)com.
+The free version of our plugin is not fully compatible with the child/custom theme. Request you to go through the <a href="https://codecanyon.net/item/actionable-google-analytics-for-woocommerce/9899552?ref=tatvic" target="_blank">premium version</a> of our plugin which is fully compatible with the child/custom theme. We are not providing any kind of support for Child/Custom Theme in the Free version of our plugin. For more information kindly contact us at analytics2(at)tatvic(dot)com.
 
 = Have you Provided Full support for the free version plugin? =
 
@@ -270,4 +282,7 @@ Important Note: When you update the plugin, please save your settings again.
  = 2.0.0 - 07/03/2018 =
  * New Implementation with Global Site Tag (gtag.js)
  * gtag.js supported
+ * Minor Bug Fixes & Optimization.
+
+  = 2.0.1 - 24/04/2018 =
  * Minor Bug Fixes & Optimization.

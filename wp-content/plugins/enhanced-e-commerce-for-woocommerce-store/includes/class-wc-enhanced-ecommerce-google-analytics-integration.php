@@ -18,7 +18,7 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
      * @return void
      */
     //set plugin version
-    public $tvc_eeVer = '2.0.0';
+    public $tvc_eeVer = '2.0.1';
     public function __construct() {
         
          //Set Global Variables
@@ -31,7 +31,10 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
         $this->method_description = __("Enhanced Ecommerce is a new feature of Universal Analytics that generates detailed statistics about the users journey from product page to thank you page on your e-store. <br/><a href='http://www.tatvic.com/blog/enhanced-ecommerce/' target='_blank'>Know more about Enhanced Ecommerce.</a><br/><br/><b>Quick Tip:</b> We also have an Advanced Google Analytics Plugin for WooCommerce! The plugin offers tracking of 9 Reports of Enhanced Ecommerce, User ID Tracking, Add Google Optimize Snippet, 15+ Custom Dimenensions & Metrics, Content Grouping & much more. <a href='https://codecanyon.net/item/actionable-google-analytics-for-woocommerce/9899552?ref=tatvic' target='_blank'>Learn More</a>", "woocommerce");
 
         //session for product position count
-        //session_start removed bcoz it gives warning
+        //session_start inserted bcoz it gives warning
+        if (session_status() == PHP_SESSION_NONE) {
+          session_start();
+        }
         $_SESSION['t_npcnt']=0;
         $_SESSION['t_fpcnt']=0;
         // Load the integration form
@@ -253,7 +256,7 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
             "ga_ST" => array(
                 "title" => __("Tracking code", "woocommerce"),
                 "label" => __("Add Global Site Tracking Code 'gtag.js' (Optional)", "woocommerce"),
-                "description" => sprintf(__("This feature adds New gtag.js Tracking Code to your Store. You don't need to enable this if using a 3rd party analytics plugin.", "woocommerce")),
+                "description" => sprintf(__("This feature adds New gtag.js Tracking Code to your Store. You don't need to enable this if gtag.js implemented via a 3rd party analytics plugin.", "woocommerce")),
                 "type" => "checkbox",
                 "checkboxgroup" => "start",
                 "desc_tip"  =>  true,

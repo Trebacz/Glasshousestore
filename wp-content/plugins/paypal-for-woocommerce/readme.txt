@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: woocommerce, paypal, express checkout, payments pro, angelleye, payflow, dodirectpayment, braintree, payments advanced, rest, credit cards, credit card payments, payments, payment
 Requires at least: 3.8
 Tested up to: 4.9.4
-Stable tag: 1.4.8.7
+Stable tag: 1.4.8.9
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -126,6 +126,20 @@ Automatic updates should work great for you.  As always, though, we recommend ba
 * If you are unsure, you may need to [contact PayPal](https://www.paypal.com/us/webapps/helpcenter/helphub/home/) and request the information.  Just let them know you need to enable a Payments Pro plugin on your website, but you're unsure whether you should use Website Payments Pro 3.0(DoDirectPayment) or Payments Pro 2.0 (PayFlow).  They can confirm which one you need to use.
 
 == Changelog ==
+
+= 1.4.8.9 - 04.26.2018 =
+* Fix - Resolves an issue with Smart Button jQuery conflict. ([#1106](https://github.com/angelleye/paypal-woocommerce/issues/1106)) ([#1110](https://github.com/angelleye/paypal-woocommerce/issues/1110)) ([#1112](https://github.com/angelleye/paypal-woocommerce/issues/1112))
+
+= 1.4.8.8 - 04.23.2018 =
+* Feature - Ensures WooCommerce 3.4 compatibility. ([#1098](https://github.com/angelleye/paypal-woocommerce/issues/1098))
+* Tweak - Adds priority to Express Checkout hooks to ensure it always redirects as expected. ([#1086](https://github.com/angelleye/paypal-woocommerce/issues/1086))
+* Tweak - Disables autocomplete on API credential fields to keep browser auto-fillers from populating fields with incorrect data. ([#1088](https://github.com/angelleye/paypal-woocommerce/issues/1088))
+* Tweak - Adds validation to ensure the AMT is always a numeric value. ([#1090](https://github.com/angelleye/paypal-woocommerce/issues/1090))
+* Tweak - Adjustments to CSS for PayPal buttons on the cart page to avoid conflicts with some themes. ([#1096](https://github.com/angelleye/paypal-woocommerce/issues/1096))
+* Tweak - Sets PayPal Credit for US only. ([#1099](https://github.com/angelleye/paypal-woocommerce/issues/1099))
+* Fix - Resolves jQuery conflict in admin panel. [#1092](https://github.com/angelleye/paypal-woocommerce/issues/1092))
+* Fix - Resolves a bug in the Braintree Kount Custom fraud tools. [(#1020](https://github.com/angelleye/paypal-woocommerce/issues/1020))
+* Fix - Resolves a bug in Express Checkout when specific countries are set in WooCommerce. [(#1100](https://github.com/angelleye/paypal-woocommerce/issues/1100))
 
 = 1.4.8.7 - 04.03.2018 =
 * Tweak - Performance adjustments for PayPal Smart Buttons. ([#1080](https://github.com/angelleye/paypal-woocommerce/issues/1080))

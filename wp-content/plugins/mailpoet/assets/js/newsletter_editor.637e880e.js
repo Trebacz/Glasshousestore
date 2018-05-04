@@ -17236,13 +17236,13 @@ webpackJsonp([4],{
 	          case 'popup':
 	            screenWidth = jQuery(window).width();
 	            screenHeight = jQuery(window).height();
-	            modalWidth = jQuery('.mailpoet_'+ this.options.type +'_wrapper').width();
-	            modalHeight = jQuery('.mailpoet_'+ this.options.type +'_wrapper').height();
+	            modalWidth = jQuery('.mailpoet_' + this.options.type + '_wrapper').width();
+	            modalHeight = jQuery('.mailpoet_' + this.options.type + '_wrapper').height();
 
 	            // set position of popup depending on screen dimensions.
 	            jQuery('#mailpoet_popup').css({
-	              top: Math.max(48, parseInt((screenHeight / 2) - (modalHeight / 2))),
-	              left: Math.max(0, parseInt((screenWidth / 2) - (modalWidth / 2)))
+	              top: Math.max(48, parseInt((screenHeight / 2) - (modalHeight / 2), 10)),
+	              left: Math.max(0, parseInt((screenWidth / 2) - (modalWidth / 2), 10))
 	            });
 	            break;
 	          case 'panel':
@@ -17711,15 +17711,14 @@ webpackJsonp([4],{
 	      }
 	    },
 	    hide: function hide(all) {
-	      var id;
 	      if (all !== undefined && all === true) {
 	        // all notices
 	        jQuery('.mailpoet_notice:not([id])').trigger('close');
 	      } else if (all !== undefined && jQuery.isArray(all)) {
 	        // array of ids
-	        for (id in all) {
+	        Object.keys(all).forEach(function close(id) {
 	          jQuery('[data-id="' + all[id] + '"]').trigger('close');
-	        }
+	        });
 	      } if (all !== undefined) {
 	        // single id
 	        jQuery('[data-id="' + all + '"]').trigger('close');
@@ -38129,12 +38128,12 @@ webpackJsonp([4],{
 	      callable(event);
 	    },
 	    updateMaxWidth: function () {
-	      var maxWidth = parseInt(this.model.get('maxWidth'));
+	      var maxWidth = parseInt(this.model.get('maxWidth'), 10);
 	      this.$('.mailpoet_field_image_width').attr('max', maxWidth);
 	      this.$('.mailpoet_field_image_width_input').attr('max', maxWidth);
 	    },
 	    updateWidth: function () {
-	      var width = parseInt(this.model.get('width'));
+	      var width = parseInt(this.model.get('width'), 10);
 	      this.$('.mailpoet_field_image_width').val(width);
 	      this.$('.mailpoet_field_image_width_input').val(width);
 	    },
@@ -38520,7 +38519,7 @@ webpackJsonp([4],{
 	    },
 	    templateContext: function templateContext() {
 	      return _.extend({
-	        totalHeight: (parseInt(this.model.get('styles.block.padding'), 10) * 2) + parseInt(this.model.get('styles.block.borderWidth')) + 'px'
+	        totalHeight: (parseInt(this.model.get('styles.block.padding'), 10) * 2) + parseInt(this.model.get('styles.block.borderWidth'), 10) + 'px'
 	      }, base.BlockView.prototype.templateContext.apply(this));
 	    },
 	    onRender: function onRender() {
@@ -38534,7 +38533,7 @@ webpackJsonp([4],{
 	    changePadding: function changePadding() {
 	      this.$('.mailpoet_content').css('padding-top', this.model.get('styles.block.padding'));
 	      this.$('.mailpoet_content').css('padding-bottom', this.model.get('styles.block.padding'));
-	      this.$('.mailpoet_resize_handle_text').text((parseInt(this.model.get('styles.block.padding'), 10) * 2) + parseInt(this.model.get('styles.block.borderWidth')) + 'px');
+	      this.$('.mailpoet_resize_handle_text').text((parseInt(this.model.get('styles.block.padding'), 10) * 2) + parseInt(this.model.get('styles.block.borderWidth'), 10) + 'px');
 	    }
 	  });
 

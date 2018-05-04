@@ -20,7 +20,7 @@ add_action( 'init', 'spacexchimp_p005_textdomain' );
  * and inserts a link to the plugin admin page
  */
 function spacexchimp_p005_settings_link( $links ) {
-    $page = '<a href="' . admin_url( 'options-general.php?page=' . SPACEXCHIMP_P005_SLUG . '.php' ) .'">' . __( 'Settings', SPACEXCHIMP_P005_TEXT ) . '</a>';
+    $page = '<a href="' . admin_url( 'options-general.php?page=' . SPACEXCHIMP_P005_SLUG ) . '">' . __( 'Settings', SPACEXCHIMP_P005_TEXT ) . '</a>';
     array_unshift( $links, $page );
     return $links;
 }
@@ -34,7 +34,7 @@ function spacexchimp_p005_plugin_row_meta( $links, $file ) {
     if ( strpos( $file, SPACEXCHIMP_P005_SLUG . '.php' ) !== false ) {
 
         $new_links = array(
-                           'donate' => '<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8A88KC7TFF6CS" target="_blank"><span class="dashicons dashicons-heart"></span> ' . __( 'Donate', SPACEXCHIMP_P005_TEXT ) . '</a>'
+                           'donate' => '<a href="https://www.spacexchimp.com/donate.html" target="_blank"><span class="dashicons dashicons-heart"></span> ' . __( 'Donate', SPACEXCHIMP_P005_TEXT ) . '</a>'
                            );
         $links = array_merge( $links, $new_links );
     }

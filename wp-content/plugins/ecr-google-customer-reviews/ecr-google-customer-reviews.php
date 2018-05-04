@@ -7,7 +7,7 @@
   License:            GPLv3
   License URI:        http://www.gnu.org/licenses/quick-guide-gplv3.html
   Text Domain:        ecr-google-customer-reviews
-  Version:            2.6.1
+  Version:            2.6.2
   Requires at least:  3.0.0
   Tested up to:       4.9.5
  */
@@ -22,6 +22,7 @@ function ecr_woocheck () {
   if (class_exists( 'WooCommerce' )) {
     if( get_option( 'ecr_merch_id' ) ) {
       add_action('woocommerce_thankyou', 'ecr_gcr_scripts');
+      add_action('woocommerce_view_order', 'ecr_gcr_scripts');
     }else{
       add_action( 'admin_notices', 'ecr_gcr_missing_key_notice' );
     }

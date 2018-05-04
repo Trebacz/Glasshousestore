@@ -14,7 +14,7 @@ webpackJsonp([1],[
 	__webpack_require__(547);
 	__webpack_require__(540);
 	__webpack_require__(542);
-	__webpack_require__(528);
+	__webpack_require__(533);
 	__webpack_require__(575);
 	__webpack_require__(244);
 	module.exports = __webpack_require__(277);
@@ -30825,13 +30825,15 @@ webpackJsonp([1],[
 	          if (action.name === 'trash') {
 	            customAction = _react2['default'].createElement(
 	              'span',
-	              { key: 'action-' + index, className: 'trash' },
+	              { key: 'action-' + action.name, className: 'trash' },
 	              !isFirst ? ' | ' : '',
 	              _react2['default'].createElement(
 	                'a',
 	                {
 	                  href: 'javascript:;',
-	                  onClick: _this.handleTrashItem.bind(null, _this.props.item.id)
+	                  onClick: function () {
+	                    return _this.handleTrashItem(_this.props.item.id);
+	                  }
 	                },
 	                _mailpoet2['default'].I18n.t('moveToTrash')
 	              )
@@ -30841,7 +30843,8 @@ webpackJsonp([1],[
 	              'span',
 	              {
 	                onClick: _this.props.onRefreshItems,
-	                key: 'action-' + index, className: action.name,
+	                key: 'action-' + action.name,
+	                className: action.name,
 	                role: 'button',
 	                tabIndex: index
 	              },
@@ -30852,7 +30855,8 @@ webpackJsonp([1],[
 	            customAction = _react2['default'].createElement(
 	              'span',
 	              {
-	                key: 'action-' + index, className: action.name
+	                key: 'action-' + action.name,
+	                className: action.name
 	              },
 	              !isFirst ? ' | ' : '',
 	              action.link(_this.props.item)
@@ -30861,12 +30865,17 @@ webpackJsonp([1],[
 	            customAction = _react2['default'].createElement(
 	              'span',
 	              {
-	                key: 'action-' + index, className: action.name
+	                key: 'action-' + action.name,
+	                className: action.name
 	              },
 	              !isFirst ? ' | ' : '',
 	              _react2['default'].createElement(
 	                'a',
-	                { href: 'javascript:;', onClick: action.onClick !== undefined ? action.onClick.bind(null, _this.props.item, _this.props.onRefreshItems) : false
+	                {
+	                  href: 'javascript:;',
+	                  onClick: action.onClick !== undefined ? function () {
+	                    return action.onClick(_this.props.item, _this.props.onRefreshItems);
+	                  } : false
 	                },
 	                action.label
 	              )
@@ -30908,7 +30917,9 @@ webpackJsonp([1],[
 	              'a',
 	              {
 	                href: 'javascript:;',
-	                onClick: this.handleRestoreItem.bind(null, this.props.item.id)
+	                onClick: function () {
+	                  return _this.handleRestoreItem(_this.props.item.id);
+	                }
 	              },
 	              _mailpoet2['default'].I18n.t('restore')
 	            )
@@ -30922,7 +30933,9 @@ webpackJsonp([1],[
 	              {
 	                className: 'submitdelete',
 	                href: 'javascript:;',
-	                onClick: this.handleDeleteItem.bind(null, this.props.item.id)
+	                onClick: function () {
+	                  return _this.handleDeleteItem(_this.props.item.id);
+	                }
 	              },
 	              _mailpoet2['default'].I18n.t('deletePermanently')
 	            )
@@ -30931,8 +30944,11 @@ webpackJsonp([1],[
 	        _react2['default'].createElement(
 	          'button',
 	          {
-	            onClick: this.handleToggleItem.bind(null, this.props.item.id),
-	            className: 'toggle-row', type: 'button'
+	            onClick: function () {
+	              return _this.handleToggleItem(_this.props.item.id);
+	            },
+	            className: 'toggle-row',
+	            type: 'button'
 	          },
 	          _react2['default'].createElement(
 	            'span',
@@ -30953,8 +30969,11 @@ webpackJsonp([1],[
 	        _react2['default'].createElement(
 	          'button',
 	          {
-	            onClick: this.handleToggleItem.bind(null, this.props.item.id),
-	            className: 'toggle-row', type: 'button'
+	            onClick: function () {
+	              return _this.handleToggleItem(_this.props.item.id);
+	            },
+	            className: 'toggle-row',
+	            type: 'button'
 	          },
 	          _react2['default'].createElement(
 	            'span',
@@ -31032,10 +31051,14 @@ webpackJsonp([1],[
 	          )
 	        )
 	      ),
-	      this.props.items.map(function (item, index) {
+	      this.props.items.map(function (item) {
 	        var renderItem = item;
 	        renderItem.id = parseInt(item.id, 10);
 	        renderItem.selected = _this2.props.selected_ids.indexOf(renderItem.id) !== -1;
+	        var key = 'item-' + renderItem.id + '-' + item.id;
+	        if (typeof _this2.props.getListingItemKey === 'function') {
+	          key = _this2.props.getListingItemKey(item);
+	        }
 
 	        return _react2['default'].createElement(ListingItem, {
 	          columns: _this2.props.columns,
@@ -31049,7 +31072,7 @@ webpackJsonp([1],[
 	          is_selectable: _this2.props.is_selectable,
 	          item_actions: _this2.props.item_actions,
 	          group: _this2.props.group,
-	          key: 'item-' + renderItem.id + '-' + index,
+	          key: key,
 	          item: renderItem
 	        });
 	      })
@@ -31216,16 +31239,18 @@ webpackJsonp([1],[
 	  componentDidMount: function componentDidMount() {
 	    var _this6 = this;
 
-	    if (this.isMounted()) {
-	      var params = this.props.params || {};
-	      this.initWithParams(params);
+	    this.isComponentMounted = true;
+	    var params = this.props.params || {};
+	    this.initWithParams(params);
 
-	      if (this.props.auto_refresh) {
-	        (0, _jquery2['default'])(document).on('heartbeat-tick.mailpoet', function () {
-	          _this6.getItems();
-	        });
-	      }
+	    if (this.props.auto_refresh) {
+	      (0, _jquery2['default'])(document).on('heartbeat-tick.mailpoet', function () {
+	        _this6.getItems();
+	      });
 	    }
+	  },
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.isComponentMounted = false;
 	  },
 	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
 	    var params = nextProps.params || {};
@@ -31234,7 +31259,7 @@ webpackJsonp([1],[
 	  getItems: function getItems() {
 	    var _this7 = this;
 
-	    if (this.isMounted()) {
+	    if (this.isComponentMounted) {
 	      this.setState({ loading: true });
 
 	      this.clearSelection();
@@ -31641,6 +31666,7 @@ webpackJsonp([1],[
 	        ),
 	        _react2['default'].createElement(ListingItems, {
 	          onRenderItem: this.handleRenderItem,
+	          getListingItemKey: this.props.getListingItemKey,
 	          onDeleteItem: this.handleDeleteItem,
 	          onRestoreItem: this.handleRestoreItem,
 	          onTrashItem: this.handleTrashItem,
@@ -33261,137 +33287,150 @@ webpackJsonp([1],[
 /* 283 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;'use strict';
+	'use strict';
 
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(276)], __WEBPACK_AMD_DEFINE_RESULT__ = function (React, MailPoet) {
-	  var ListingBulkActions = React.createClass({
-	    displayName: 'ListingBulkActions',
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
 
-	    getInitialState: function getInitialState() {
-	      return {
-	        action: false,
-	        extra: false
-	      };
-	    },
-	    handleChangeAction: function handleChangeAction(e) {
-	      var _this = this;
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	      this.setState({
-	        action: e.target.value,
-	        extra: false
-	      }, function () {
-	        var action = _this.getSelectedAction();
+	var _react = __webpack_require__(2);
 
-	        // action on select callback
-	        if (action !== null && action.onSelect !== undefined) {
-	          _this.setState({
-	            extra: action.onSelect(e)
-	          });
-	        }
-	      });
-	    },
-	    handleApplyAction: function handleApplyAction(e) {
-	      e.preventDefault();
+	var _react2 = _interopRequireDefault(_react);
 
-	      var action = this.getSelectedAction();
+	var _mailpoet = __webpack_require__(276);
 
-	      if (action === null) {
-	        return;
-	      }
+	var _mailpoet2 = _interopRequireDefault(_mailpoet);
 
-	      var selectedIds = this.props.selection !== 'all' ? this.props.selected_ids : [];
+	var ListingBulkActions = _react2['default'].createClass({
+	  displayName: 'ListingBulkActions',
 
-	      var data = action.getData !== undefined ? action.getData() : {};
+	  getInitialState: function getInitialState() {
+	    return {
+	      action: false,
+	      extra: false
+	    };
+	  },
+	  handleChangeAction: function handleChangeAction(e) {
+	    var _this = this;
 
-	      data.action = this.state.action;
+	    this.setState({
+	      action: e.target.value,
+	      extra: false
+	    }, function () {
+	      var action = _this.getSelectedAction();
 
-	      var onSuccess = function onSuccess() {};
-	      if (action.onSuccess !== undefined) {
-	        onSuccess = action.onSuccess;
-	      }
-
-	      if (data.action) {
-	        var promise = this.props.onBulkAction(selectedIds, data);
-	        if (promise !== false) {
-	          promise.then(onSuccess);
-	        }
-	      }
-
-	      this.setState({
-	        action: false,
-	        extra: false
-	      });
-	    },
-	    getSelectedAction: function getSelectedAction() {
-	      var selectedAction = this.action.value;
-	      if (selectedAction.length > 0) {
-	        var action = this.props.bulk_actions.filter(function (act) {
-	          return act.name === selectedAction;
+	      // action on select callback
+	      if (action !== null && action.onSelect !== undefined) {
+	        _this.setState({
+	          extra: action.onSelect(e)
 	        });
-
-	        if (action.length > 0) {
-	          return action[0];
-	        }
 	      }
-	      return null;
-	    },
-	    render: function render() {
-	      var _this2 = this;
+	    });
+	  },
+	  handleApplyAction: function handleApplyAction(e) {
+	    e.preventDefault();
 
-	      if (this.props.bulk_actions.length === 0) {
-	        return null;
-	      }
+	    var action = this.getSelectedAction();
 
-	      return React.createElement(
-	        'div',
-	        { className: 'alignleft actions bulkactions' },
-	        React.createElement(
-	          'label',
-	          {
-	            className: 'screen-reader-text',
-	            htmlFor: 'bulk-action-selector-top'
-	          },
-	          MailPoet.I18n.t('selectBulkAction')
-	        ),
-	        React.createElement(
-	          'select',
-	          {
-	            name: 'bulk_actions',
-	            ref: function (c) {
-	              _this2.action = c;
-	            },
-	            value: this.state.action,
-	            onChange: this.handleChangeAction
-	          },
-	          React.createElement(
-	            'option',
-	            { value: '' },
-	            MailPoet.I18n.t('bulkActions')
-	          ),
-	          this.props.bulk_actions.map(function (action, index) {
-	            return React.createElement(
-	              'option',
-	              {
-	                value: action.name,
-	                key: 'action-' + index
-	              },
-	              action.label
-	            );
-	          })
-	        ),
-	        React.createElement('input', {
-	          onClick: this.handleApplyAction,
-	          type: 'submit',
-	          defaultValue: MailPoet.I18n.t('apply'),
-	          className: 'button action'
-	        }),
-	        this.state.extra
-	      );
+	    if (action === null) {
+	      return;
 	    }
-	  });
 
-	  return ListingBulkActions;
-	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	    var selectedIds = this.props.selection !== 'all' ? this.props.selected_ids : [];
+
+	    var data = action.getData !== undefined ? action.getData() : {};
+
+	    data.action = this.state.action;
+
+	    var onSuccess = function onSuccess() {};
+	    if (action.onSuccess !== undefined) {
+	      onSuccess = action.onSuccess;
+	    }
+
+	    if (data.action) {
+	      var promise = this.props.onBulkAction(selectedIds, data);
+	      if (promise !== false) {
+	        promise.then(onSuccess);
+	      }
+	    }
+
+	    this.setState({
+	      action: false,
+	      extra: false
+	    });
+	  },
+	  getSelectedAction: function getSelectedAction() {
+	    var selectedAction = this.action.value;
+	    if (selectedAction.length > 0) {
+	      var action = this.props.bulk_actions.filter(function (act) {
+	        return act.name === selectedAction;
+	      });
+
+	      if (action.length > 0) {
+	        return action[0];
+	      }
+	    }
+	    return null;
+	  },
+	  render: function render() {
+	    var _this2 = this;
+
+	    if (this.props.bulk_actions.length === 0) {
+	      return null;
+	    }
+
+	    return _react2['default'].createElement(
+	      'div',
+	      { className: 'alignleft actions bulkactions' },
+	      _react2['default'].createElement(
+	        'label',
+	        {
+	          className: 'screen-reader-text',
+	          htmlFor: 'bulk-action-selector-top'
+	        },
+	        _mailpoet2['default'].I18n.t('selectBulkAction')
+	      ),
+	      _react2['default'].createElement(
+	        'select',
+	        {
+	          name: 'bulk_actions',
+	          ref: function (c) {
+	            _this2.action = c;
+	          },
+	          value: this.state.action,
+	          onChange: this.handleChangeAction
+	        },
+	        _react2['default'].createElement(
+	          'option',
+	          { value: '' },
+	          _mailpoet2['default'].I18n.t('bulkActions')
+	        ),
+	        this.props.bulk_actions.map(function (action) {
+	          return _react2['default'].createElement(
+	            'option',
+	            {
+	              value: action.name,
+	              key: 'action-' + action.name
+	            },
+	            action.label
+	          );
+	        })
+	      ),
+	      _react2['default'].createElement('input', {
+	        onClick: this.handleApplyAction,
+	        type: 'submit',
+	        defaultValue: _mailpoet2['default'].I18n.t('apply'),
+	        className: 'button action'
+	      }),
+	      this.state.extra
+	    );
+	  }
+	});
+
+	exports['default'] = ListingBulkActions;
+	module.exports = exports['default'];
 
 /***/ },
 /* 284 */
@@ -33429,7 +33468,7 @@ webpackJsonp([1],[
 	      return _react2['default'].createElement(ListingColumn, {
 	        onSort: _this.props.onSort,
 	        sort_by: _this.props.sort_by,
-	        key: 'column-' + index,
+	        key: 'column-' + column.name,
 	        column: renderColumn
 	      });
 	    });
@@ -33519,274 +33558,328 @@ webpackJsonp([1],[
 /* 285 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;'use strict';
+	'use strict';
 
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(277), __webpack_require__(276)], __WEBPACK_AMD_DEFINE_RESULT__ = function (React, classNames, MailPoet) {
-	  var ListingPages = React.createClass({
-	    displayName: 'ListingPages',
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	    getInitialState: function getInitialState() {
-	      return {
-	        page: null
-	      };
-	    },
-	    setPage: function setPage(page) {
-	      var _this = this;
+	var _react = __webpack_require__(2);
 
-	      this.setState({
-	        page: null
-	      }, function () {
-	        _this.props.onSetPage(_this.constrainPage(page));
-	      });
-	    },
-	    setFirstPage: function setFirstPage() {
-	      this.setPage(1);
-	    },
-	    setLastPage: function setLastPage() {
-	      this.setPage(this.getLastPage());
-	    },
-	    setPreviousPage: function setPreviousPage() {
-	      this.setPage(this.constrainPage(parseInt(this.props.page, 10) - 1));
-	    },
-	    setNextPage: function setNextPage() {
-	      this.setPage(this.constrainPage(parseInt(this.props.page, 10) + 1));
-	    },
-	    constrainPage: function constrainPage(page) {
-	      return Math.min(Math.max(1, Math.abs(Number(page))), this.getLastPage());
-	    },
-	    handleSetManualPage: function handleSetManualPage(e) {
-	      if (e.which === 13) {
-	        this.setPage(this.state.page);
-	      }
-	    },
-	    handleChangeManualPage: function handleChangeManualPage(e) {
-	      this.setState({
-	        page: e.target.value
-	      });
-	    },
-	    handleBlurManualPage: function handleBlurManualPage(e) {
-	      this.setPage(e.target.value);
-	    },
-	    getLastPage: function getLastPage() {
-	      return Math.ceil(this.props.count / this.props.limit);
-	    },
-	    render: function render() {
-	      if (this.props.count === 0) {
-	        return false;
-	      }
-	      var pagination = false;
-	      var firstPage = React.createElement(
-	        'span',
-	        { 'aria-hidden': 'true', className: 'tablenav-pages-navspan' },
-	        '«'
-	      );
-	      var previousPage = React.createElement(
-	        'span',
-	        { 'aria-hidden': 'true', className: 'tablenav-pages-navspan' },
-	        '‹'
-	      );
-	      var nextPage = React.createElement(
-	        'span',
-	        { 'aria-hidden': 'true', className: 'tablenav-pages-navspan' },
-	        '›'
-	      );
-	      var lastPage = React.createElement(
-	        'span',
-	        { 'aria-hidden': 'true', className: 'tablenav-pages-navspan' },
-	        '»'
-	      );
+	var _react2 = _interopRequireDefault(_react);
 
-	      if (this.props.limit > 0 && this.props.count > this.props.limit) {
-	        if (this.props.page > 1) {
-	          previousPage = React.createElement(
-	            'a',
-	            { href: 'javascript:;',
-	              onClick: this.setPreviousPage,
-	              className: 'prev-page'
-	            },
-	            React.createElement(
-	              'span',
-	              { className: 'screen-reader-text' },
-	              MailPoet.I18n.t('previousPage')
-	            ),
-	            React.createElement(
-	              'span',
-	              { 'aria-hidden': 'true' },
-	              '‹'
-	            )
-	          );
-	        }
+	var _classnames = __webpack_require__(277);
 
-	        if (this.props.page > 2) {
-	          firstPage = React.createElement(
-	            'a',
-	            { href: 'javascript:;',
-	              onClick: this.setFirstPage,
-	              className: 'first-page'
-	            },
-	            React.createElement(
-	              'span',
-	              { className: 'screen-reader-text' },
-	              MailPoet.I18n.t('firstPage')
-	            ),
-	            React.createElement(
-	              'span',
-	              { 'aria-hidden': 'true' },
-	              '«'
-	            )
-	          );
-	        }
+	var _classnames2 = _interopRequireDefault(_classnames);
 
-	        if (this.props.page < this.getLastPage()) {
-	          nextPage = React.createElement(
-	            'a',
-	            { href: 'javascript:;',
-	              onClick: this.setNextPage,
-	              className: 'next-page'
-	            },
-	            React.createElement(
-	              'span',
-	              { className: 'screen-reader-text' },
-	              MailPoet.I18n.t('nextPage')
-	            ),
-	            React.createElement(
-	              'span',
-	              { 'aria-hidden': 'true' },
-	              '›'
-	            )
-	          );
-	        }
+	var _mailpoet = __webpack_require__(276);
 
-	        if (this.props.page < this.getLastPage() - 1) {
-	          lastPage = React.createElement(
-	            'a',
-	            { href: 'javascript:;',
-	              onClick: this.setLastPage,
-	              className: 'last-page'
-	            },
-	            React.createElement(
-	              'span',
-	              { className: 'screen-reader-text' },
-	              MailPoet.I18n.t('lastPage')
-	            ),
-	            React.createElement(
-	              'span',
-	              { 'aria-hidden': 'true' },
-	              '»'
-	            )
-	          );
-	        }
+	var _mailpoet2 = _interopRequireDefault(_mailpoet);
 
-	        var pageValue = this.props.page;
-	        if (this.state.page !== null) {
-	          pageValue = this.state.page;
-	        }
+	var ListingPages = _react2['default'].createClass({
+	  displayName: 'ListingPages',
 
-	        pagination = React.createElement(
-	          'span',
-	          { className: 'pagination-links' },
-	          firstPage,
-	          ' ',
-	          previousPage,
-	          ' ',
-	          React.createElement(
+	  getInitialState: function getInitialState() {
+	    return {
+	      page: null
+	    };
+	  },
+	  setPage: function setPage(page) {
+	    var _this = this;
+
+	    this.setState({
+	      page: null
+	    }, function () {
+	      _this.props.onSetPage(_this.constrainPage(page));
+	    });
+	  },
+	  setFirstPage: function setFirstPage() {
+	    this.setPage(1);
+	  },
+	  setLastPage: function setLastPage() {
+	    this.setPage(this.getLastPage());
+	  },
+	  setPreviousPage: function setPreviousPage() {
+	    this.setPage(this.constrainPage(parseInt(this.props.page, 10) - 1));
+	  },
+	  setNextPage: function setNextPage() {
+	    this.setPage(this.constrainPage(parseInt(this.props.page, 10) + 1));
+	  },
+	  constrainPage: function constrainPage(page) {
+	    return Math.min(Math.max(1, Math.abs(Number(page))), this.getLastPage());
+	  },
+	  handleSetManualPage: function handleSetManualPage(e) {
+	    if (e.which === 13) {
+	      this.setPage(this.state.page);
+	    }
+	  },
+	  handleChangeManualPage: function handleChangeManualPage(e) {
+	    this.setState({
+	      page: e.target.value
+	    });
+	  },
+	  handleBlurManualPage: function handleBlurManualPage(e) {
+	    this.setPage(e.target.value);
+	  },
+	  getLastPage: function getLastPage() {
+	    return Math.ceil(this.props.count / this.props.limit);
+	  },
+	  render: function render() {
+	    if (this.props.count === 0) {
+	      return false;
+	    }
+	    var pagination = false;
+	    var firstPage = _react2['default'].createElement(
+	      'span',
+	      { 'aria-hidden': 'true', className: 'tablenav-pages-navspan' },
+	      '«'
+	    );
+	    var previousPage = _react2['default'].createElement(
+	      'span',
+	      { 'aria-hidden': 'true', className: 'tablenav-pages-navspan' },
+	      '‹'
+	    );
+	    var nextPage = _react2['default'].createElement(
+	      'span',
+	      { 'aria-hidden': 'true', className: 'tablenav-pages-navspan' },
+	      '›'
+	    );
+	    var lastPage = _react2['default'].createElement(
+	      'span',
+	      { 'aria-hidden': 'true', className: 'tablenav-pages-navspan' },
+	      '»'
+	    );
+
+	    if (this.props.limit > 0 && this.props.count > this.props.limit) {
+	      if (this.props.page > 1) {
+	        previousPage = _react2['default'].createElement(
+	          'a',
+	          {
+	            href: 'javascript:;',
+	            onClick: this.setPreviousPage,
+	            className: 'prev-page'
+	          },
+	          _react2['default'].createElement(
 	            'span',
-	            { className: 'paging-input' },
-	            React.createElement(
-	              'label',
-	              {
-	                className: 'screen-reader-text',
-	                htmlFor: 'current-page-selector'
-	              },
-	              MailPoet.I18n.t('currentPage')
-	            ),
-	            React.createElement('input', {
-	              type: 'text',
-	              onChange: this.handleChangeManualPage,
-	              onKeyUp: this.handleSetManualPage,
-	              onBlur: this.handleBlurManualPage,
-	              'aria-describedby': 'table-paging',
-	              size: '2',
-	              value: pageValue,
-	              name: 'paged',
-	              id: 'current-page-selector',
-	              className: 'current-page'
-	            }),
-	            MailPoet.I18n.t('pageOutOf'),
-	            ' ',
-	            React.createElement(
-	              'span',
-	              { className: 'total-pages' },
-	              Math.ceil(this.props.count / this.props.limit).toLocaleString()
-	            )
+	            { className: 'screen-reader-text' },
+	            _mailpoet2['default'].I18n.t('previousPage')
 	          ),
-	          ' ',
-	          nextPage,
-	          ' ',
-	          lastPage
+	          _react2['default'].createElement(
+	            'span',
+	            { 'aria-hidden': 'true' },
+	            '‹'
+	          )
 	        );
 	      }
 
-	      var classes = classNames('tablenav-pages', { 'one-page': this.props.count <= this.props.limit });
-
-	      var numberOfItemsLabel = undefined;
-	      if (Number(this.props.count) === 1) {
-	        numberOfItemsLabel = MailPoet.I18n.t('numberOfItemsSingular');
-	      } else {
-	        numberOfItemsLabel = MailPoet.I18n.t('numberOfItemsMultiple').replace('%$1d', parseInt(this.props.count, 10).toLocaleString());
+	      if (this.props.page > 2) {
+	        firstPage = _react2['default'].createElement(
+	          'a',
+	          {
+	            href: 'javascript:;',
+	            onClick: this.setFirstPage,
+	            className: 'first-page'
+	          },
+	          _react2['default'].createElement(
+	            'span',
+	            { className: 'screen-reader-text' },
+	            _mailpoet2['default'].I18n.t('firstPage')
+	          ),
+	          _react2['default'].createElement(
+	            'span',
+	            { 'aria-hidden': 'true' },
+	            '«'
+	          )
+	        );
 	      }
 
-	      return React.createElement(
-	        'div',
-	        { className: classes },
-	        React.createElement(
+	      if (this.props.page < this.getLastPage()) {
+	        nextPage = _react2['default'].createElement(
+	          'a',
+	          {
+	            href: 'javascript:;',
+	            onClick: this.setNextPage,
+	            className: 'next-page'
+	          },
+	          _react2['default'].createElement(
+	            'span',
+	            { className: 'screen-reader-text' },
+	            _mailpoet2['default'].I18n.t('nextPage')
+	          ),
+	          _react2['default'].createElement(
+	            'span',
+	            { 'aria-hidden': 'true' },
+	            '›'
+	          )
+	        );
+	      }
+
+	      if (this.props.page < this.getLastPage() - 1) {
+	        lastPage = _react2['default'].createElement(
+	          'a',
+	          {
+	            href: 'javascript:;',
+	            onClick: this.setLastPage,
+	            className: 'last-page'
+	          },
+	          _react2['default'].createElement(
+	            'span',
+	            { className: 'screen-reader-text' },
+	            _mailpoet2['default'].I18n.t('lastPage')
+	          ),
+	          _react2['default'].createElement(
+	            'span',
+	            { 'aria-hidden': 'true' },
+	            '»'
+	          )
+	        );
+	      }
+
+	      var pageValue = this.props.page;
+	      if (this.state.page !== null) {
+	        pageValue = this.state.page;
+	      }
+
+	      pagination = _react2['default'].createElement(
+	        'span',
+	        { className: 'pagination-links' },
+	        firstPage,
+	        ' ',
+	        previousPage,
+	        ' ',
+	        _react2['default'].createElement(
 	          'span',
-	          { className: 'displaying-num' },
-	          numberOfItemsLabel
+	          { className: 'paging-input' },
+	          _react2['default'].createElement(
+	            'label',
+	            {
+	              className: 'screen-reader-text',
+	              htmlFor: 'current-page-selector'
+	            },
+	            _mailpoet2['default'].I18n.t('currentPage')
+	          ),
+	          _react2['default'].createElement('input', {
+	            type: 'text',
+	            onChange: this.handleChangeManualPage,
+	            onKeyUp: this.handleSetManualPage,
+	            onBlur: this.handleBlurManualPage,
+	            'aria-describedby': 'table-paging',
+	            size: '2',
+	            value: pageValue,
+	            name: 'paged',
+	            id: 'current-page-selector',
+	            className: 'current-page'
+	          }),
+	          _mailpoet2['default'].I18n.t('pageOutOf'),
+	          ' ',
+	          _react2['default'].createElement(
+	            'span',
+	            { className: 'total-pages' },
+	            Math.ceil(this.props.count / this.props.limit).toLocaleString()
+	          )
 	        ),
-	        pagination
+	        ' ',
+	        nextPage,
+	        ' ',
+	        lastPage
 	      );
 	    }
-	  });
 
-	  return ListingPages;
-	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	    var classes = (0, _classnames2['default'])('tablenav-pages', { 'one-page': this.props.count <= this.props.limit });
+
+	    var numberOfItemsLabel = undefined;
+	    if (Number(this.props.count) === 1) {
+	      numberOfItemsLabel = _mailpoet2['default'].I18n.t('numberOfItemsSingular');
+	    } else {
+	      numberOfItemsLabel = _mailpoet2['default'].I18n.t('numberOfItemsMultiple').replace('%$1d', parseInt(this.props.count, 10).toLocaleString());
+	    }
+
+	    return _react2['default'].createElement(
+	      'div',
+	      { className: classes },
+	      _react2['default'].createElement(
+	        'span',
+	        { className: 'displaying-num' },
+	        numberOfItemsLabel
+	      ),
+	      pagination
+	    );
+	  }
+	});
+
+	module.exports = ListingPages;
 
 /***/ },
 /* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;'use strict';
+	'use strict';
 
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(276), __webpack_require__(2)], __WEBPACK_AMD_DEFINE_RESULT__ = function (MailPoet, React) {
-	  var ListingSearch = React.createClass({
-	    displayName: 'ListingSearch',
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
 
-	    handleSearch: function handleSearch(e) {
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _mailpoet = __webpack_require__(276);
+
+	var _mailpoet2 = _interopRequireDefault(_mailpoet);
+
+	var _propTypes = __webpack_require__(185);
+
+	var _propTypes2 = _interopRequireDefault(_propTypes);
+
+	var ListingSearch = (function (_React$Component) {
+	  _inherits(ListingSearch, _React$Component);
+
+	  function ListingSearch() {
+	    _classCallCheck(this, ListingSearch);
+
+	    _get(Object.getPrototypeOf(ListingSearch.prototype), 'constructor', this).apply(this, arguments);
+	  }
+
+	  _createClass(ListingSearch, [{
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(nextProps) {
+	      this.search.value = nextProps.search;
+	      this.handleSearch = this.handleSearch.bind(this);
+	    }
+	  }, {
+	    key: 'handleSearch',
+	    value: function handleSearch(e) {
 	      e.preventDefault();
 	      this.props.onSearch(this.search.value.trim());
-	    },
-	    componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-	      this.search.value = nextProps.search;
-	    },
-	    render: function render() {
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
 	      var _this = this;
 
 	      if (this.props.search === false) {
 	        return false;
 	      }
-	      return React.createElement(
+	      return _react2['default'].createElement(
 	        'form',
 	        { name: 'search', onSubmit: this.handleSearch },
-	        React.createElement(
+	        _react2['default'].createElement(
 	          'p',
 	          { className: 'search-box' },
-	          React.createElement(
+	          _react2['default'].createElement(
 	            'label',
 	            { htmlFor: 'search_input', className: 'screen-reader-text' },
-	            MailPoet.I18n.t('searchLabel')
+	            _mailpoet2['default'].I18n.t('searchLabel')
 	          ),
-	          React.createElement('input', {
+	          _react2['default'].createElement('input', {
 	            type: 'search',
 	            id: 'search_input',
 	            ref: function (c) {
@@ -33795,33 +33888,77 @@ webpackJsonp([1],[
 	            name: 's',
 	            defaultValue: this.props.search
 	          }),
-	          React.createElement('input', {
+	          _react2['default'].createElement('input', {
 	            type: 'submit',
-	            defaultValue: MailPoet.I18n.t('searchLabel'),
+	            defaultValue: _mailpoet2['default'].I18n.t('searchLabel'),
 	            className: 'button'
 	          })
 	        )
 	      );
 	    }
-	  });
+	  }]);
 
 	  return ListingSearch;
-	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	})(_react2['default'].Component);
+
+	ListingSearch.propTypes = {
+	  search: _propTypes2['default'].string.isRequired,
+	  onSearch: _propTypes2['default'].func.isRequired
+	};
+
+	exports['default'] = ListingSearch;
+	module.exports = exports['default'];
 
 /***/ },
 /* 287 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;'use strict';
+	'use strict';
 
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(277)], __WEBPACK_AMD_DEFINE_RESULT__ = function (React, classNames) {
-	  var ListingGroups = React.createClass({
-	    displayName: 'ListingGroups',
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
 
-	    handleSelect: function handleSelect(group) {
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _classnames = __webpack_require__(277);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
+	var _propTypes = __webpack_require__(185);
+
+	var _propTypes2 = _interopRequireDefault(_propTypes);
+
+	var ListingGroups = (function (_React$Component) {
+	  _inherits(ListingGroups, _React$Component);
+
+	  function ListingGroups(props) {
+	    _classCallCheck(this, ListingGroups);
+
+	    _get(Object.getPrototypeOf(ListingGroups.prototype), 'constructor', this).call(this, props);
+	    this.handleSelect = this.handleSelect.bind(this);
+	  }
+
+	  _createClass(ListingGroups, [{
+	    key: 'handleSelect',
+	    value: function handleSelect(group) {
 	      return this.props.onSelectGroup(group);
-	    },
-	    render: function render() {
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
 	      var _this = this;
 
 	      var groups = this.props.groups.map(function (group, index) {
@@ -33829,21 +33966,23 @@ webpackJsonp([1],[
 	          return false;
 	        }
 
-	        var classes = classNames({ current: group.name === _this.props.group });
+	        var classes = (0, _classnames2['default'])({ current: group.name === _this.props.group });
 
-	        return React.createElement(
+	        return _react2['default'].createElement(
 	          'li',
-	          { key: index },
+	          { key: group.name },
 	          index > 0 ? ' |' : '',
-	          React.createElement(
+	          _react2['default'].createElement(
 	            'a',
 	            {
 	              href: 'javascript:;',
 	              className: classes,
-	              onClick: _this.handleSelect.bind(_this, group.name)
+	              onClick: function () {
+	                return _this.handleSelect(group.name);
+	              }
 	            },
 	            group.label,
-	            React.createElement(
+	            _react2['default'].createElement(
 	              'span',
 	              { className: 'count' },
 	              '(',
@@ -33854,119 +33993,148 @@ webpackJsonp([1],[
 	        );
 	      });
 
-	      return React.createElement(
+	      return _react2['default'].createElement(
 	        'ul',
 	        { className: 'subsubsub' },
 	        groups
 	      );
 	    }
-	  });
+	  }]);
 
 	  return ListingGroups;
-	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	})(_react2['default'].Component);
+
+	ListingGroups.propTypes = {
+	  onSelectGroup: _propTypes2['default'].func.isRequired,
+	  groups: _propTypes2['default'].arrayOf(_propTypes2['default'].shape({
+	    name: _propTypes2['default'].string,
+	    count: _propTypes2['default'].number
+	  })).isRequired,
+	  group: _propTypes2['default'].any.isRequired };
+
+	//  eslint-disable-line react/forbid-prop-types
+	exports['default'] = ListingGroups;
+	module.exports = exports['default'];
 
 /***/ },
 /* 288 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;'use strict';
+	'use strict';
 
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(275), __webpack_require__(276)], __WEBPACK_AMD_DEFINE_RESULT__ = function (React, jQuery, MailPoet) {
-	  var ListingFilters = React.createClass({
-	    displayName: 'ListingFilters',
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
 
-	    handleFilterAction: function handleFilterAction() {
-	      var _this = this;
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	      var filters = {};
-	      this.getAvailableFilters().forEach(function (filter, i) {
-	        filters[_this['filter-' + i].name] = _this['filter-' + i].value;
-	      });
-	      if (this.props.onBeforeSelectFilter) {
-	        this.props.onBeforeSelectFilter(filters);
-	      }
-	      return this.props.onSelectFilter(filters);
-	    },
-	    handleEmptyTrash: function handleEmptyTrash() {
-	      return this.props.onEmptyTrash();
-	    },
-	    getAvailableFilters: function getAvailableFilters() {
-	      var filters = this.props.filters;
-	      return Object.keys(filters).filter(function (filter) {
-	        return !(filters[filter].length === 0 || filters[filter].length === 1 && !filters[filter][0].value);
-	      });
-	    },
-	    componentDidUpdate: function componentDidUpdate() {
-	      var _this2 = this;
+	var _react = __webpack_require__(2);
 
-	      var selectedFilters = this.props.filter;
-	      this.getAvailableFilters().forEach(function (filter, i) {
-	        if (selectedFilters[filter] !== undefined && selectedFilters[filter]) {
-	          jQuery(_this2['filter-' + i]).val(selectedFilters[filter]).trigger('change');
-	        }
-	      });
-	    },
-	    render: function render() {
-	      var _this3 = this;
+	var _react2 = _interopRequireDefault(_react);
 
-	      var filters = this.props.filters;
-	      var availableFilters = this.getAvailableFilters().map(function (filter, i) {
-	        return React.createElement(
-	          'select',
-	          {
-	            ref: function (c) {
-	              _this3['filter-' + i] = c;
-	            },
-	            key: 'filter-' + i,
-	            name: filter
-	          },
-	          filters[filter].map(function (option, j) {
-	            return React.createElement(
-	              'option',
-	              {
-	                value: option.value,
-	                key: 'filter-option-' + j
-	              },
-	              option.label
-	            );
-	          })
-	        );
-	      });
+	var _jquery = __webpack_require__(275);
 
-	      var button = undefined;
+	var _jquery2 = _interopRequireDefault(_jquery);
 
-	      if (availableFilters.length > 0) {
-	        button = React.createElement('input', {
-	          id: 'post-query-submit',
-	          onClick: this.handleFilterAction,
-	          type: 'submit',
-	          defaultValue: MailPoet.I18n.t('filter'),
-	          className: 'button'
-	        });
-	      }
+	var _mailpoet = __webpack_require__(276);
 
-	      var emptyTrash = undefined;
-	      if (this.props.group === 'trash') {
-	        emptyTrash = React.createElement('input', {
-	          onClick: this.handleEmptyTrash,
-	          type: 'submit',
-	          value: MailPoet.I18n.t('emptyTrash'),
-	          className: 'button'
-	        });
-	      }
+	var _mailpoet2 = _interopRequireDefault(_mailpoet);
 
-	      return React.createElement(
-	        'div',
-	        { className: 'alignleft actions actions' },
-	        availableFilters,
-	        button,
-	        emptyTrash
-	      );
+	var ListingFilters = _react2['default'].createClass({
+	  displayName: 'ListingFilters',
+
+	  handleFilterAction: function handleFilterAction() {
+	    var _this = this;
+
+	    var filters = {};
+	    this.getAvailableFilters().forEach(function (filter, i) {
+	      filters[_this['filter-' + i].name] = _this['filter-' + i].value;
+	    });
+	    if (this.props.onBeforeSelectFilter) {
+	      this.props.onBeforeSelectFilter(filters);
 	    }
-	  });
+	    return this.props.onSelectFilter(filters);
+	  },
+	  handleEmptyTrash: function handleEmptyTrash() {
+	    return this.props.onEmptyTrash();
+	  },
+	  getAvailableFilters: function getAvailableFilters() {
+	    var filters = this.props.filters;
+	    return Object.keys(filters).filter(function (filter) {
+	      return !(filters[filter].length === 0 || filters[filter].length === 1 && !filters[filter][0].value);
+	    });
+	  },
+	  componentDidUpdate: function componentDidUpdate() {
+	    var _this2 = this;
 
-	  return ListingFilters;
-	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	    var selectedFilters = this.props.filter;
+	    this.getAvailableFilters().forEach(function (filter, i) {
+	      if (selectedFilters[filter] !== undefined && selectedFilters[filter]) {
+	        (0, _jquery2['default'])(_this2['filter-' + i]).val(selectedFilters[filter]).trigger('change');
+	      }
+	    });
+	  },
+	  render: function render() {
+	    var _this3 = this;
+
+	    var filters = this.props.filters;
+	    var availableFilters = this.getAvailableFilters().map(function (filter, i) {
+	      return _react2['default'].createElement(
+	        'select',
+	        {
+	          ref: function (c) {
+	            _this3['filter-' + i] = c;
+	          },
+	          key: 'filter-' + filter,
+	          name: filter
+	        },
+	        filters[filter].map(function (option) {
+	          return _react2['default'].createElement(
+	            'option',
+	            {
+	              value: option.value,
+	              key: 'filter-option-' + option.value
+	            },
+	            option.label
+	          );
+	        })
+	      );
+	    });
+
+	    var button = undefined;
+
+	    if (availableFilters.length > 0) {
+	      button = _react2['default'].createElement('input', {
+	        id: 'post-query-submit',
+	        onClick: this.handleFilterAction,
+	        type: 'submit',
+	        defaultValue: _mailpoet2['default'].I18n.t('filter'),
+	        className: 'button'
+	      });
+	    }
+
+	    var emptyTrash = undefined;
+	    if (this.props.group === 'trash') {
+	      emptyTrash = _react2['default'].createElement('input', {
+	        onClick: this.handleEmptyTrash,
+	        type: 'submit',
+	        value: _mailpoet2['default'].I18n.t('emptyTrash'),
+	        className: 'button'
+	      });
+	    }
+
+	    return _react2['default'].createElement(
+	      'div',
+	      { className: 'alignleft actions actions' },
+	      availableFilters,
+	      button,
+	      emptyTrash
+	    );
+	  }
+	});
+
+	exports['default'] = ListingFilters;
+	module.exports = exports['default'];
 
 /***/ },
 /* 289 */
@@ -33982,260 +34150,281 @@ webpackJsonp([1],[
 /* 290 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;'use strict';
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(34), __webpack_require__(275), __webpack_require__(281), __webpack_require__(291)], __WEBPACK_AMD_DEFINE_RESULT__ = function (React, ReactDOM, jQuery, _) {
-	  var Selection = React.createClass({
-	    displayName: 'Selection',
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	    allowMultipleValues: function allowMultipleValues() {
-	      return this.props.field.multiple === true;
-	    },
-	    isSelect2Initialized: function isSelect2Initialized() {
-	      return jQuery('#' + this.select.id).hasClass('select2-hidden-accessible') === true;
-	    },
-	    isSelect2Component: function isSelect2Component() {
-	      return this.allowMultipleValues() || this.props.field.forceSelect2;
-	    },
-	    componentDidMount: function componentDidMount() {
-	      if (this.isSelect2Component()) {
-	        this.setupSelect2();
-	      }
-	    },
-	    componentDidUpdate: function componentDidUpdate(prevProps) {
-	      if (this.props.item !== undefined && prevProps.item !== undefined && this.props.item.id !== prevProps.item.id) {
-	        jQuery('#' + this.select.id).val(this.getSelectedValues()).trigger('change');
-	      }
+	var _react = __webpack_require__(2);
 
-	      if (this.isSelect2Initialized() && this.getFieldId(this.props) !== this.getFieldId(prevProps) && this.props.field.resetSelect2OnUpdate !== undefined) {
-	        this.resetSelect2();
-	      }
-	    },
-	    componentWillUnmount: function componentWillUnmount() {
-	      if (this.isSelect2Component()) {
-	        this.destroySelect2();
-	      }
-	    },
-	    getFieldId: function getFieldId(data) {
-	      var props = data || this.props;
-	      return props.field.id || props.field.name;
-	    },
-	    resetSelect2: function resetSelect2() {
-	      this.destroySelect2();
+	var _react2 = _interopRequireDefault(_react);
+
+	var _jquery = __webpack_require__(275);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _underscore = __webpack_require__(281);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	__webpack_require__(34);
+
+	__webpack_require__(291);
+
+	var Selection = _react2['default'].createClass({
+	  displayName: 'Selection',
+
+	  allowMultipleValues: function allowMultipleValues() {
+	    return this.props.field.multiple === true;
+	  },
+	  isSelect2Initialized: function isSelect2Initialized() {
+	    return (0, _jquery2['default'])('#' + this.select.id).hasClass('select2-hidden-accessible') === true;
+	  },
+	  isSelect2Component: function isSelect2Component() {
+	    return this.allowMultipleValues() || this.props.field.forceSelect2;
+	  },
+	  componentDidMount: function componentDidMount() {
+	    if (this.isSelect2Component()) {
 	      this.setupSelect2();
-	    },
-	    destroySelect2: function destroySelect2() {
-	      if (this.isSelect2Initialized()) {
-	        jQuery('#' + this.select.id).select2('destroy');
-	        this.cleanupAfterSelect2();
-	      }
-	    },
-	    cleanupAfterSelect2: function cleanupAfterSelect2() {
-	      // remove DOM elements created by Select2 that are not tracked by React
-	      jQuery('#' + this.select.id).find('option:not(.default)').remove();
-
-	      // unbind events (https://select2.org/programmatic-control/methods#event-unbinding)
-	      jQuery('#' + this.select.id).off('select2:unselecting').off('select2:opening');
-	    },
-	    setupSelect2: function setupSelect2() {
-	      if (this.isSelect2Initialized()) {
-	        return;
-	      }
-
-	      var select2Options = {
-	        disabled: this.props.disabled || false,
-	        width: this.props.width || '',
-	        placeholder: {
-	          id: '', // the value of the option
-	          text: this.props.field.placeholder
-	        },
-	        templateResult: function templateResult(item) {
-	          if (item.element && item.element.selected) {
-	            return null;
-	          } else if (item.title) {
-	            return item.title;
-	          }
-	          return item.text;
-	        }
-	      };
-
-	      var remoteQuery = this.props.field.remoteQuery || null;
-	      if (remoteQuery) {
-	        select2Options = Object.assign(select2Options, {
-	          ajax: {
-	            url: window.ajaxurl,
-	            type: 'POST',
-	            dataType: 'json',
-	            data: function data(params) {
-	              return {
-	                action: 'mailpoet',
-	                api_version: window.mailpoet_api_version,
-	                token: window.mailpoet_token,
-	                endpoint: remoteQuery.endpoint,
-	                method: remoteQuery.method,
-	                data: Object.assign(remoteQuery.data, { query: params.term })
-	              };
-	            },
-	            processResults: function processResults(response) {
-	              return {
-	                results: response.data.map(function (item) {
-	                  return { id: item.id || item.value, text: item.name || item.text };
-	                })
-	              };
-	            }
-	          },
-	          minimumInputLength: remoteQuery.minimumInputLength || 2
-	        });
-	      }
-
-	      if (this.props.field.extendSelect2Options !== undefined) {
-	        select2Options = Object.assign(select2Options, this.props.field.extendSelect2Options);
-	      }
-
-	      var select2 = jQuery('#' + this.select.id).select2(select2Options);
-
-	      var hasRemoved = false;
-	      select2.on('select2:unselecting', function () {
-	        hasRemoved = true;
-	      });
-	      select2.on('select2:opening', function (e) {
-	        if (hasRemoved === true) {
-	          hasRemoved = false;
-	          e.preventDefault();
-	        }
-	      });
-
-	      select2.on('change', this.handleChange);
-	    },
-	    getSelectedValues: function getSelectedValues() {
-	      if (this.props.field.selected !== undefined) {
-	        return this.props.field.selected(this.props.item);
-	      } else if (this.props.item !== undefined && this.props.field.name !== undefined) {
-	        if (this.allowMultipleValues()) {
-	          if (_.isArray(this.props.item[this.props.field.name])) {
-	            return this.props.item[this.props.field.name].map(function (item) {
-	              return item.id;
-	            });
-	          }
-	        } else {
-	          return this.props.item[this.props.field.name];
-	        }
-	      }
-	      return null;
-	    },
-	    getItems: function getItems() {
-	      var items = undefined;
-	      if (typeof window['mailpoet_' + this.props.field.endpoint] !== 'undefined') {
-	        items = window['mailpoet_' + this.props.field.endpoint];
-	      } else if (this.props.field.values !== undefined) {
-	        items = this.props.field.values;
-	      }
-
-	      if (_.isArray(items)) {
-	        if (this.props.field.filter !== undefined) {
-	          items = items.filter(this.props.field.filter);
-	        }
-	      }
-
-	      return items;
-	    },
-	    handleChange: function handleChange(e) {
-	      if (this.props.onValueChange === undefined) return;
-
-	      var valueTextPair = jQuery('#' + this.select.id).children(':selected').map(function element() {
-	        return { id: jQuery(this).val(), text: jQuery(this).text() };
-	      });
-	      var value = this.props.field.multiple ? _.pluck(valueTextPair, 'id') : _.pluck(valueTextPair, 'id').toString();
-	      var transformedValue = this.transformChangedValue(value, valueTextPair);
-
-	      this.props.onValueChange({
-	        target: {
-	          value: transformedValue,
-	          name: this.props.field.name,
-	          id: e.target.id
-	        }
-	      });
-	    },
-	    getLabel: function getLabel(item) {
-	      if (this.props.field.getLabel !== undefined) {
-	        return this.props.field.getLabel(item, this.props.item);
-	      }
-	      return item.name;
-	    },
-	    getSearchLabel: function getSearchLabel(item) {
-	      if (this.props.field.getSearchLabel !== undefined) {
-	        return this.props.field.getSearchLabel(item, this.props.item);
-	      }
-	      return null;
-	    },
-	    getValue: function getValue(item) {
-	      if (this.props.field.getValue !== undefined) {
-	        return this.props.field.getValue(item, this.props.item);
-	      }
-	      return item.id;
-	    },
-	    // When it's impossible to represent the desired value in DOM,
-	    // this function may be used to transform the placeholder value into
-	    // desired value.
-	    transformChangedValue: function transformChangedValue(value, textValuePair) {
-	      if (typeof this.props.field.transformChangedValue === 'function') {
-	        return this.props.field.transformChangedValue.call(this, value, textValuePair);
-	      }
-	      return value;
-	    },
-	    insertEmptyOption: function insertEmptyOption() {
-	      // https://select2.org/placeholders
-	      // For single selects only, in order for the placeholder value to appear,
-	      // we must have a blank <option> as the first option in the <select> control.
-	      if (this.allowMultipleValues()) return undefined;
-	      if (this.props.field.placeholder) return React.createElement('option', { className: 'default' });
-	      return undefined;
-	    },
-	    render: function render() {
-	      var _this = this;
-
-	      var items = this.getItems(this.props.field);
-	      var selectedValues = this.getSelectedValues();
-	      var options = items.map(function (item, index) {
-	        var label = _this.getLabel(item);
-	        var searchLabel = _this.getSearchLabel(item);
-	        var value = _this.getValue(item);
-
-	        return React.createElement(
-	          'option',
-	          {
-	            key: 'option-' + index,
-	            className: 'default',
-	            value: value,
-	            title: searchLabel,
-	            selected: value === selectedValues
-	          },
-	          label
-	        );
-	      });
-
-	      return React.createElement(
-	        'select',
-	        _extends({
-	          id: this.getFieldId(),
-	          ref: function (c) {
-	            _this.select = c;
-	          },
-	          disabled: this.props.field.disabled,
-	          'data-placeholder': this.props.field.placeholder,
-	          multiple: this.props.field.multiple,
-	          defaultValue: selectedValues
-	        }, this.props.field.validation),
-	        this.insertEmptyOption(),
-	        options
-	      );
 	    }
-	  });
+	  },
+	  componentDidUpdate: function componentDidUpdate(prevProps) {
+	    if (this.props.item !== undefined && prevProps.item !== undefined && this.props.item.id !== prevProps.item.id) {
+	      (0, _jquery2['default'])('#' + this.select.id).val(this.getSelectedValues()).trigger('change');
+	    }
 
-	  return Selection;
-	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	    if (this.isSelect2Initialized() && this.getFieldId(this.props) !== this.getFieldId(prevProps) && this.props.field.resetSelect2OnUpdate !== undefined) {
+	      this.resetSelect2();
+	    }
+	  },
+	  componentWillUnmount: function componentWillUnmount() {
+	    if (this.isSelect2Component()) {
+	      this.destroySelect2();
+	    }
+	  },
+	  getFieldId: function getFieldId(data) {
+	    var props = data || this.props;
+	    return props.field.id || props.field.name;
+	  },
+	  resetSelect2: function resetSelect2() {
+	    this.destroySelect2();
+	    this.setupSelect2();
+	  },
+	  destroySelect2: function destroySelect2() {
+	    if (this.isSelect2Initialized()) {
+	      (0, _jquery2['default'])('#' + this.select.id).select2('destroy');
+	      this.cleanupAfterSelect2();
+	    }
+	  },
+	  cleanupAfterSelect2: function cleanupAfterSelect2() {
+	    // remove DOM elements created by Select2 that are not tracked by React
+	    (0, _jquery2['default'])('#' + this.select.id).find('option:not(.default)').remove();
+
+	    // unbind events (https://select2.org/programmatic-control/methods#event-unbinding)
+	    (0, _jquery2['default'])('#' + this.select.id).off('select2:unselecting').off('select2:opening');
+	  },
+	  setupSelect2: function setupSelect2() {
+	    if (this.isSelect2Initialized()) {
+	      return;
+	    }
+
+	    var select2Options = {
+	      disabled: this.props.disabled || false,
+	      width: this.props.width || '',
+	      placeholder: {
+	        id: '', // the value of the option
+	        text: this.props.field.placeholder
+	      },
+	      templateResult: function templateResult(item) {
+	        if (item.element && item.element.selected) {
+	          return null;
+	        } else if (item.title) {
+	          return item.title;
+	        }
+	        return item.text;
+	      }
+	    };
+
+	    var remoteQuery = this.props.field.remoteQuery || null;
+	    if (remoteQuery) {
+	      select2Options = Object.assign(select2Options, {
+	        ajax: {
+	          url: window.ajaxurl,
+	          type: 'POST',
+	          dataType: 'json',
+	          data: function data(params) {
+	            return {
+	              action: 'mailpoet',
+	              api_version: window.mailpoet_api_version,
+	              token: window.mailpoet_token,
+	              endpoint: remoteQuery.endpoint,
+	              method: remoteQuery.method,
+	              data: Object.assign(remoteQuery.data, { query: params.term })
+	            };
+	          },
+	          processResults: function processResults(response) {
+	            return {
+	              results: response.data.map(function (item) {
+	                return { id: item.id || item.value, text: item.name || item.text };
+	              })
+	            };
+	          }
+	        },
+	        minimumInputLength: remoteQuery.minimumInputLength || 2
+	      });
+	    }
+
+	    if (this.props.field.extendSelect2Options !== undefined) {
+	      select2Options = Object.assign(select2Options, this.props.field.extendSelect2Options);
+	    }
+
+	    var select2 = (0, _jquery2['default'])('#' + this.select.id).select2(select2Options);
+
+	    var hasRemoved = false;
+	    select2.on('select2:unselecting', function () {
+	      hasRemoved = true;
+	    });
+	    select2.on('select2:opening', function (e) {
+	      if (hasRemoved === true) {
+	        hasRemoved = false;
+	        e.preventDefault();
+	      }
+	    });
+
+	    select2.on('change', this.handleChange);
+	  },
+	  getSelectedValues: function getSelectedValues() {
+	    if (this.props.field.selected !== undefined) {
+	      return this.props.field.selected(this.props.item);
+	    } else if (this.props.item !== undefined && this.props.field.name !== undefined) {
+	      if (this.allowMultipleValues()) {
+	        if (_underscore2['default'].isArray(this.props.item[this.props.field.name])) {
+	          return this.props.item[this.props.field.name].map(function (item) {
+	            return item.id;
+	          });
+	        }
+	      } else {
+	        return this.props.item[this.props.field.name];
+	      }
+	    }
+	    return null;
+	  },
+	  getItems: function getItems() {
+	    var items = undefined;
+	    if (typeof window['mailpoet_' + this.props.field.endpoint] !== 'undefined') {
+	      items = window['mailpoet_' + this.props.field.endpoint];
+	    } else if (this.props.field.values !== undefined) {
+	      items = this.props.field.values;
+	    }
+
+	    if (_underscore2['default'].isArray(items)) {
+	      if (this.props.field.filter !== undefined) {
+	        items = items.filter(this.props.field.filter);
+	      }
+	    }
+
+	    return items;
+	  },
+	  handleChange: function handleChange(e) {
+	    if (this.props.onValueChange === undefined) return;
+
+	    var valueTextPair = (0, _jquery2['default'])('#' + this.select.id).children(':selected').map(function element() {
+	      return { id: (0, _jquery2['default'])(this).val(), text: (0, _jquery2['default'])(this).text() };
+	    });
+	    var value = this.props.field.multiple ? _underscore2['default'].pluck(valueTextPair, 'id') : _underscore2['default'].pluck(valueTextPair, 'id').toString();
+	    var transformedValue = this.transformChangedValue(value, valueTextPair);
+
+	    this.props.onValueChange({
+	      target: {
+	        value: transformedValue,
+	        name: this.props.field.name,
+	        id: e.target.id
+	      }
+	    });
+	  },
+	  getLabel: function getLabel(item) {
+	    if (this.props.field.getLabel !== undefined) {
+	      return this.props.field.getLabel(item, this.props.item);
+	    }
+	    return item.name;
+	  },
+	  getSearchLabel: function getSearchLabel(item) {
+	    if (this.props.field.getSearchLabel !== undefined) {
+	      return this.props.field.getSearchLabel(item, this.props.item);
+	    }
+	    return null;
+	  },
+	  getValue: function getValue(item) {
+	    if (this.props.field.getValue !== undefined) {
+	      return this.props.field.getValue(item, this.props.item);
+	    }
+	    return item.id;
+	  },
+	  // When it's impossible to represent the desired value in DOM,
+	  // this function may be used to transform the placeholder value into
+	  // desired value.
+	  transformChangedValue: function transformChangedValue(value, textValuePair) {
+	    if (typeof this.props.field.transformChangedValue === 'function') {
+	      return this.props.field.transformChangedValue.call(this, value, textValuePair);
+	    }
+	    return value;
+	  },
+	  insertEmptyOption: function insertEmptyOption() {
+	    // https://select2.org/placeholders
+	    // For single selects only, in order for the placeholder value to appear,
+	    // we must have a blank <option> as the first option in the <select> control.
+	    if (this.allowMultipleValues()) return undefined;
+	    if (this.props.field.placeholder) return _react2['default'].createElement('option', { className: 'default' });
+	    return undefined;
+	  },
+	  render: function render() {
+	    var _this = this;
+
+	    var items = this.getItems(this.props.field);
+	    var selectedValues = this.getSelectedValues();
+	    var options = items.map(function (item) {
+	      var label = _this.getLabel(item);
+	      var searchLabel = _this.getSearchLabel(item);
+	      var value = _this.getValue(item);
+
+	      return _react2['default'].createElement(
+	        'option',
+	        {
+	          key: 'option-' + item.id,
+	          className: 'default',
+	          value: value,
+	          title: searchLabel,
+	          selected: value === selectedValues
+	        },
+	        label
+	      );
+	    });
+
+	    return _react2['default'].createElement(
+	      'select',
+	      _extends({
+	        id: this.getFieldId(),
+	        ref: function (c) {
+	          _this.select = c;
+	        },
+	        disabled: this.props.field.disabled,
+	        'data-placeholder': this.props.field.placeholder,
+	        multiple: this.props.field.multiple,
+	        defaultValue: selectedValues
+	      }, this.props.field.validation),
+	      this.insertEmptyOption(),
+	      options
+	    );
+	  }
+	});
+
+	exports['default'] = Selection;
+	module.exports = exports['default'];
 
 /***/ },
 /* 291 */
@@ -40005,255 +40194,278 @@ webpackJsonp([1],[
 /* 295 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(setImmediate) {'use strict';
+	/* WEBPACK VAR INJECTION */(function(setImmediate) {'use strict';
 
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(276), __webpack_require__(277), __webpack_require__(181), __webpack_require__(297), __webpack_require__(275)], __WEBPACK_AMD_DEFINE_RESULT__ = function (React, MailPoet, classNames, Router, FormField, jQuery) {
-	  var Form = React.createClass({
-	    displayName: 'Form',
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
 
-	    contextTypes: {
-	      router: React.PropTypes.object.isRequired
-	    },
-	    getDefaultProps: function getDefaultProps() {
-	      return {
-	        params: {}
-	      };
-	    },
-	    getInitialState: function getInitialState() {
-	      return {
-	        loading: false,
-	        errors: [],
-	        item: {}
-	      };
-	    },
-	    getValues: function getValues() {
-	      return this.props.item ? this.props.item : this.state.item;
-	    },
-	    getErrors: function getErrors() {
-	      return this.props.errors ? this.props.errors : this.state.errors;
-	    },
-	    componentDidMount: function componentDidMount() {
-	      var _this = this;
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	      if (this.isMounted()) {
-	        if (this.props.params.id !== undefined) {
-	          this.loadItem(this.props.params.id);
-	        } else {
-	          setImmediate(function () {
-	            _this.setState({
-	              item: jQuery('.mailpoet_form').mailpoetSerializeObject()
-	            });
-	          });
-	        }
-	      }
-	    },
-	    componentWillReceiveProps: function componentWillReceiveProps(props) {
-	      var _this2 = this;
+	var _react = __webpack_require__(2);
 
-	      if (props.params.id === undefined) {
-	        setImmediate(function () {
-	          _this2.setState({
-	            loading: false,
-	            item: {}
-	          });
+	var _react2 = _interopRequireDefault(_react);
+
+	var _mailpoet = __webpack_require__(276);
+
+	var _mailpoet2 = _interopRequireDefault(_mailpoet);
+
+	var _classnames = __webpack_require__(277);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
+	var _formFieldsFieldJsx = __webpack_require__(297);
+
+	var _formFieldsFieldJsx2 = _interopRequireDefault(_formFieldsFieldJsx);
+
+	var _jquery = __webpack_require__(275);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var Form = _react2['default'].createClass({
+	  displayName: 'Form',
+
+	  contextTypes: {
+	    router: _react2['default'].PropTypes.object.isRequired
+	  },
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      params: {}
+	    };
+	  },
+	  getInitialState: function getInitialState() {
+	    return {
+	      loading: false,
+	      errors: [],
+	      item: {}
+	    };
+	  },
+	  getValues: function getValues() {
+	    return this.props.item ? this.props.item : this.state.item;
+	  },
+	  getErrors: function getErrors() {
+	    return this.props.errors ? this.props.errors : this.state.errors;
+	  },
+	  componentDidMount: function componentDidMount() {
+	    var _this = this;
+
+	    if (this.props.params.id !== undefined) {
+	      this.loadItem(this.props.params.id);
+	    } else {
+	      setImmediate(function () {
+	        _this.setState({
+	          item: (0, _jquery2['default'])('.mailpoet_form').mailpoetSerializeObject()
 	        });
-	        if (props.item === undefined) {
-	          this.form.reset();
-	        }
-	      }
-	    },
-	    loadItem: function loadItem(id) {
-	      var _this3 = this;
+	      });
+	    }
+	  },
+	  componentWillReceiveProps: function componentWillReceiveProps(props) {
+	    var _this2 = this;
 
-	      this.setState({ loading: true });
-
-	      MailPoet.Ajax.post({
-	        api_version: window.mailpoet_api_version,
-	        endpoint: this.props.endpoint,
-	        action: 'get',
-	        data: {
-	          id: id
-	        }
-	      }).done(function (response) {
-	        _this3.setState({
-	          loading: false,
-	          item: response.data
-	        });
-	        if (typeof _this3.props.onItemLoad === 'function') {
-	          _this3.props.onItemLoad(response.data);
-	        }
-	      }).fail(function () {
-	        _this3.setState({
+	    if (props.params.id === undefined) {
+	      setImmediate(function () {
+	        _this2.setState({
 	          loading: false,
 	          item: {}
-	        }, function failSetStateCallback() {
-	          this.context.router.push('/new');
 	        });
 	      });
-	    },
-	    handleSubmit: function handleSubmit(e) {
-	      var _this4 = this;
-
-	      e.preventDefault();
-
-	      // handle validation
-	      if (this.props.isValid !== undefined) {
-	        if (this.props.isValid() === false) {
-	          return;
-	        }
+	      if (props.item === undefined) {
+	        this.form.reset();
 	      }
-
-	      this.setState({ loading: true });
-
-	      // only get values from displayed fields
-	      var item = {};
-	      this.props.fields.forEach(function (field) {
-	        if (field.fields !== undefined) {
-	          field.fields.forEach(function (subfield) {
-	            item[subfield.name] = _this4.state.item[subfield.name];
-	          });
-	        } else {
-	          item[field.name] = _this4.state.item[field.name];
-	        }
-	      });
-	      // set id if specified
-	      if (this.props.params.id !== undefined) {
-	        item.id = this.props.params.id;
-	      }
-
-	      MailPoet.Ajax.post({
-	        api_version: window.mailpoet_api_version,
-	        endpoint: this.props.endpoint,
-	        action: 'save',
-	        data: item
-	      }).always(function () {
-	        _this4.setState({ loading: false });
-	      }).done(function () {
-	        if (_this4.props.onSuccess !== undefined) {
-	          _this4.props.onSuccess();
-	        } else {
-	          _this4.context.router.push('/');
-	        }
-
-	        if (_this4.props.params.id !== undefined) {
-	          _this4.props.messages.onUpdate();
-	        } else {
-	          _this4.props.messages.onCreate();
-	        }
-	      }).fail(function (response) {
-	        if (response.errors.length > 0) {
-	          _this4.setState({ errors: response.errors });
-	        }
-	      });
-	    },
-	    handleValueChange: function handleValueChange(e) {
-	      if (this.props.onChange) {
-	        return this.props.onChange(e);
-	      }
-	      var item = this.state.item;
-	      var field = e.target.name;
-
-	      item[field] = e.target.value;
-
-	      this.setState({
-	        item: item
-	      });
-	      return true;
-	    },
-	    render: function render() {
-	      var _this5 = this;
-
-	      var errors = undefined;
-	      if (this.getErrors() !== undefined) {
-	        errors = this.getErrors().map(function (error, index) {
-	          return React.createElement(
-	            'div',
-	            { className: 'mailpoet_notice notice inline error is-dismissible', key: 'error-' + index },
-	            React.createElement(
-	              'p',
-	              null,
-	              error.message
-	            )
-	          );
-	        });
-	      }
-
-	      var formClasses = classNames('mailpoet_form', { mailpoet_form_loading: this.state.loading || this.props.loading });
-
-	      var beforeFormContent = false;
-	      var afterFormContent = false;
-
-	      if (this.props.beforeFormContent !== undefined) {
-	        beforeFormContent = this.props.beforeFormContent(this.getValues());
-	      }
-
-	      if (this.props.afterFormContent !== undefined) {
-	        afterFormContent = this.props.afterFormContent(this.getValues());
-	      }
-
-	      var fields = this.props.fields.map(function (field, i) {
-	        // Compose an onChange handler from the default and custom one
-	        var onValueChange = _this5.handleValueChange;
-	        if (field.onBeforeChange) {
-	          onValueChange = function (e) {
-	            field.onBeforeChange(e);
-	            return _this5.handleValueChange(e);
-	          };
-	        }
-
-	        return React.createElement(FormField, {
-	          field: field,
-	          item: _this5.getValues(),
-	          onValueChange: onValueChange,
-	          key: 'field-' + i
-	        });
-	      });
-
-	      var actions = false;
-	      if (this.props.children) {
-	        actions = this.props.children;
-	      } else {
-	        actions = React.createElement('input', {
-	          className: 'button button-primary',
-	          type: 'submit',
-	          value: MailPoet.I18n.t('save'),
-	          disabled: this.state.loading
-	        });
-	      }
-
-	      return React.createElement(
-	        'div',
-	        null,
-	        beforeFormContent,
-	        React.createElement(
-	          'form',
-	          {
-	            id: this.props.id,
-	            ref: function (c) {
-	              _this5.form = c;
-	            },
-	            className: formClasses,
-	            onSubmit: this.props.onSubmit !== undefined ? this.props.onSubmit : this.handleSubmit
-	          },
-	          errors,
-	          React.createElement(
-	            'table',
-	            { className: 'form-table' },
-	            React.createElement(
-	              'tbody',
-	              null,
-	              fields
-	            )
-	          ),
-	          actions
-	        ),
-	        afterFormContent
-	      );
 	    }
-	  });
+	  },
+	  loadItem: function loadItem(id) {
+	    var _this3 = this;
 
-	  return Form;
-	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	    this.setState({ loading: true });
+
+	    _mailpoet2['default'].Ajax.post({
+	      api_version: window.mailpoet_api_version,
+	      endpoint: this.props.endpoint,
+	      action: 'get',
+	      data: {
+	        id: id
+	      }
+	    }).done(function (response) {
+	      _this3.setState({
+	        loading: false,
+	        item: response.data
+	      });
+	      if (typeof _this3.props.onItemLoad === 'function') {
+	        _this3.props.onItemLoad(response.data);
+	      }
+	    }).fail(function () {
+	      _this3.setState({
+	        loading: false,
+	        item: {}
+	      }, function failSetStateCallback() {
+	        this.context.router.push('/new');
+	      });
+	    });
+	  },
+	  handleSubmit: function handleSubmit(e) {
+	    var _this4 = this;
+
+	    e.preventDefault();
+
+	    // handle validation
+	    if (this.props.isValid !== undefined) {
+	      if (this.props.isValid() === false) {
+	        return;
+	      }
+	    }
+
+	    this.setState({ loading: true });
+
+	    // only get values from displayed fields
+	    var item = {};
+	    this.props.fields.forEach(function (field) {
+	      if (field.fields !== undefined) {
+	        field.fields.forEach(function (subfield) {
+	          item[subfield.name] = _this4.state.item[subfield.name];
+	        });
+	      } else {
+	        item[field.name] = _this4.state.item[field.name];
+	      }
+	    });
+	    // set id if specified
+	    if (this.props.params.id !== undefined) {
+	      item.id = this.props.params.id;
+	    }
+
+	    _mailpoet2['default'].Ajax.post({
+	      api_version: window.mailpoet_api_version,
+	      endpoint: this.props.endpoint,
+	      action: 'save',
+	      data: item
+	    }).always(function () {
+	      _this4.setState({ loading: false });
+	    }).done(function () {
+	      if (_this4.props.onSuccess !== undefined) {
+	        _this4.props.onSuccess();
+	      } else {
+	        _this4.context.router.push('/');
+	      }
+
+	      if (_this4.props.params.id !== undefined) {
+	        _this4.props.messages.onUpdate();
+	      } else {
+	        _this4.props.messages.onCreate();
+	      }
+	    }).fail(function (response) {
+	      if (response.errors.length > 0) {
+	        _this4.setState({ errors: response.errors });
+	      }
+	    });
+	  },
+	  handleValueChange: function handleValueChange(e) {
+	    if (this.props.onChange) {
+	      return this.props.onChange(e);
+	    }
+	    var item = this.state.item;
+	    var field = e.target.name;
+
+	    item[field] = e.target.value;
+
+	    this.setState({
+	      item: item
+	    });
+	    return true;
+	  },
+	  render: function render() {
+	    var _this5 = this;
+
+	    var errors = undefined;
+	    if (this.getErrors() !== undefined) {
+	      errors = this.getErrors().map(function (error) {
+	        return _react2['default'].createElement(
+	          'div',
+	          { className: 'mailpoet_notice notice inline error is-dismissible', key: 'error-' + error.message },
+	          _react2['default'].createElement(
+	            'p',
+	            null,
+	            error.message
+	          )
+	        );
+	      });
+	    }
+
+	    var formClasses = (0, _classnames2['default'])('mailpoet_form', { mailpoet_form_loading: this.state.loading || this.props.loading });
+
+	    var beforeFormContent = false;
+	    var afterFormContent = false;
+
+	    if (this.props.beforeFormContent !== undefined) {
+	      beforeFormContent = this.props.beforeFormContent(this.getValues());
+	    }
+
+	    if (this.props.afterFormContent !== undefined) {
+	      afterFormContent = this.props.afterFormContent(this.getValues());
+	    }
+
+	    var fields = this.props.fields.map(function (field) {
+	      // Compose an onChange handler from the default and custom one
+	      var onValueChange = _this5.handleValueChange;
+	      if (field.onBeforeChange) {
+	        onValueChange = function (e) {
+	          field.onBeforeChange(e);
+	          return _this5.handleValueChange(e);
+	        };
+	      }
+
+	      return _react2['default'].createElement(_formFieldsFieldJsx2['default'], {
+	        field: field,
+	        item: _this5.getValues(),
+	        onValueChange: onValueChange,
+	        key: 'field-' + field.name
+	      });
+	    });
+
+	    var actions = false;
+	    if (this.props.children) {
+	      actions = this.props.children;
+	    } else {
+	      actions = _react2['default'].createElement('input', {
+	        className: 'button button-primary',
+	        type: 'submit',
+	        value: _mailpoet2['default'].I18n.t('save'),
+	        disabled: this.state.loading
+	      });
+	    }
+
+	    return _react2['default'].createElement(
+	      'div',
+	      null,
+	      beforeFormContent,
+	      _react2['default'].createElement(
+	        'form',
+	        {
+	          id: this.props.id,
+	          ref: function (c) {
+	            _this5.form = c;
+	          },
+	          className: formClasses,
+	          onSubmit: this.props.onSubmit !== undefined ? this.props.onSubmit : this.handleSubmit
+	        },
+	        errors,
+	        _react2['default'].createElement(
+	          'table',
+	          { className: 'form-table' },
+	          _react2['default'].createElement(
+	            'tbody',
+	            null,
+	            fields
+	          )
+	        ),
+	        actions
+	      ),
+	      afterFormContent
+	    );
+	  }
+	});
+
+	exports['default'] = Form;
+	module.exports = exports['default'];
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(296).setImmediate))
 
 /***/ },
@@ -40342,137 +40554,178 @@ webpackJsonp([1],[
 /* 297 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;'use strict';
+	'use strict';
 
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(298), __webpack_require__(300), __webpack_require__(301), __webpack_require__(302), __webpack_require__(303), __webpack_require__(289), __webpack_require__(304), __webpack_require__(275)], __WEBPACK_AMD_DEFINE_RESULT__ = function (React, FormFieldText, FormFieldTextarea, FormFieldSelect, FormFieldRadio, FormFieldCheckbox, FormFieldSelection, FormFieldDate, jQuery) {
-	  var FormField = React.createClass({
-	    displayName: 'FormField',
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
 
-	    renderField: function renderField(data) {
-	      var inline = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	      var description = false;
-	      if (data.field.description) {
-	        description = React.createElement(
-	          'p',
-	          { className: 'description' },
-	          data.field.description
-	        );
-	      }
+	var _react = __webpack_require__(2);
 
-	      var field = false;
-	      var dataField = data.field;
+	var _react2 = _interopRequireDefault(_react);
 
-	      if (data.field.field !== undefined) {
-	        dataField = jQuery.merge(dataField, data.field.field);
-	      }
+	var _formFieldsTextJsx = __webpack_require__(298);
 
-	      switch (dataField.type) {
-	        case 'text':
-	          field = React.createElement(FormFieldText, data);
-	          break;
+	var _formFieldsTextJsx2 = _interopRequireDefault(_formFieldsTextJsx);
 
-	        case 'textarea':
-	          field = React.createElement(FormFieldTextarea, data);
-	          break;
+	var _formFieldsTextareaJsx = __webpack_require__(300);
 
-	        case 'select':
-	          field = React.createElement(FormFieldSelect, data);
-	          break;
+	var _formFieldsTextareaJsx2 = _interopRequireDefault(_formFieldsTextareaJsx);
 
-	        case 'radio':
-	          field = React.createElement(FormFieldRadio, data);
-	          break;
+	var _formFieldsSelectJsx = __webpack_require__(301);
 
-	        case 'checkbox':
-	          field = React.createElement(FormFieldCheckbox, data);
-	          break;
+	var _formFieldsSelectJsx2 = _interopRequireDefault(_formFieldsSelectJsx);
 
-	        case 'selection':
-	          field = React.createElement(FormFieldSelection, data);
-	          break;
+	var _formFieldsRadioJsx = __webpack_require__(302);
 
-	        case 'date':
-	          field = React.createElement(FormFieldDate, data);
-	          break;
+	var _formFieldsRadioJsx2 = _interopRequireDefault(_formFieldsRadioJsx);
 
-	        case 'reactComponent':
-	          field = React.createElement(data.field.component, data);
-	          break;
+	var _formFieldsCheckboxJsx = __webpack_require__(303);
 
-	        default:
-	          field = 'invalid';
-	          break;
-	      }
+	var _formFieldsCheckboxJsx2 = _interopRequireDefault(_formFieldsCheckboxJsx);
 
-	      if (inline === true) {
-	        return React.createElement(
-	          'span',
-	          { key: 'field-' + (data.index || 0) },
-	          field,
-	          description
-	        );
-	      }
-	      return React.createElement(
-	        'div',
+	var _formFieldsSelectionJsx = __webpack_require__(289);
+
+	var _formFieldsSelectionJsx2 = _interopRequireDefault(_formFieldsSelectionJsx);
+
+	var _formFieldsDateJsx = __webpack_require__(304);
+
+	var _formFieldsDateJsx2 = _interopRequireDefault(_formFieldsDateJsx);
+
+	var _jquery = __webpack_require__(275);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var FormField = _react2['default'].createClass({
+	  displayName: 'FormField',
+
+	  renderField: function renderField(data) {
+	    var inline = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+
+	    var description = false;
+	    if (data.field.description) {
+	      description = _react2['default'].createElement(
+	        'p',
+	        { className: 'description' },
+	        data.field.description
+	      );
+	    }
+
+	    var field = false;
+	    var dataField = data.field;
+
+	    if (data.field.field !== undefined) {
+	      dataField = _jquery2['default'].merge(dataField, data.field.field);
+	    }
+
+	    switch (dataField.type) {
+	      case 'text':
+	        field = _react2['default'].createElement(_formFieldsTextJsx2['default'], data);
+	        break;
+
+	      case 'textarea':
+	        field = _react2['default'].createElement(_formFieldsTextareaJsx2['default'], data);
+	        break;
+
+	      case 'select':
+	        field = _react2['default'].createElement(_formFieldsSelectJsx2['default'], data);
+	        break;
+
+	      case 'radio':
+	        field = _react2['default'].createElement(_formFieldsRadioJsx2['default'], data);
+	        break;
+
+	      case 'checkbox':
+	        field = _react2['default'].createElement(_formFieldsCheckboxJsx2['default'], data);
+	        break;
+
+	      case 'selection':
+	        field = _react2['default'].createElement(_formFieldsSelectionJsx2['default'], data);
+	        break;
+
+	      case 'date':
+	        field = _react2['default'].createElement(_formFieldsDateJsx2['default'], data);
+	        break;
+
+	      case 'reactComponent':
+	        field = _react2['default'].createElement(data.field.component, data);
+	        break;
+
+	      default:
+	        field = 'invalid';
+	        break;
+	    }
+
+	    if (inline === true) {
+	      return _react2['default'].createElement(
+	        'span',
 	        { key: 'field-' + (data.index || 0) },
 	        field,
 	        description
 	      );
-	    },
-	    render: function render() {
-	      var _this = this;
+	    }
+	    return _react2['default'].createElement(
+	      'div',
+	      { key: 'field-' + (data.index || 0) },
+	      field,
+	      description
+	    );
+	  },
+	  render: function render() {
+	    var _this = this;
 
-	      var field = false;
+	    var field = false;
 
-	      if (this.props.field.fields !== undefined) {
-	        field = this.props.field.fields.map(function (subfield, index) {
-	          return _this.renderField({
-	            index: index,
-	            field: subfield,
-	            item: _this.props.item,
-	            onValueChange: _this.props.onValueChange || false
-	          });
+	    if (this.props.field.fields !== undefined) {
+	      field = this.props.field.fields.map(function (subfield, index) {
+	        return _this.renderField({
+	          index: index,
+	          field: subfield,
+	          item: _this.props.item,
+	          onValueChange: _this.props.onValueChange || false
 	        });
-	      } else {
-	        field = this.renderField(this.props);
-	      }
+	      });
+	    } else {
+	      field = this.renderField(this.props);
+	    }
 
-	      var tip = false;
-	      if (this.props.field.tip) {
-	        tip = React.createElement(
-	          'p',
-	          { className: 'description' },
-	          this.props.field.tip
-	        );
-	      }
-
-	      return React.createElement(
-	        'tr',
-	        { className: 'form-field-row-' + this.props.field.name },
-	        React.createElement(
-	          'th',
-	          { scope: 'row' },
-	          React.createElement(
-	            'label',
-	            {
-	              htmlFor: 'field_' + this.props.field.name
-	            },
-	            this.props.field.label,
-	            tip
-	          )
-	        ),
-	        React.createElement(
-	          'td',
-	          null,
-	          field
-	        )
+	    var tip = false;
+	    if (this.props.field.tip) {
+	      tip = _react2['default'].createElement(
+	        'p',
+	        { className: 'description' },
+	        this.props.field.tip
 	      );
 	    }
-	  });
 
-	  return FormField;
-	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	    return _react2['default'].createElement(
+	      'tr',
+	      { className: 'form-field-row-' + this.props.field.name },
+	      _react2['default'].createElement(
+	        'th',
+	        { scope: 'row' },
+	        _react2['default'].createElement(
+	          'label',
+	          {
+	            htmlFor: 'field_' + this.props.field.name
+	          },
+	          this.props.field.label,
+	          tip
+	        )
+	      ),
+	      _react2['default'].createElement(
+	        'td',
+	        null,
+	        field
+	      )
+	    );
+	  }
+	});
+
+	exports['default'] = FormField;
+	module.exports = exports['default'];
 
 /***/ },
 /* 298 */
@@ -40548,30 +40801,50 @@ webpackJsonp([1],[
 /* 300 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;"use strict";
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2)], __WEBPACK_AMD_DEFINE_RESULT__ = function (React) {
-	  var FormFieldTextarea = React.createClass({
-	    displayName: "FormFieldTextarea",
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	    render: function render() {
-	      return React.createElement("textarea", _extends({
-	        type: "text",
-	        className: "regular-text",
-	        name: this.props.field.name,
-	        id: "field_" + this.props.field.name,
-	        value: this.props.item[this.props.field.name],
-	        placeholder: this.props.field.placeholder,
-	        defaultValue: this.props.field.defaultValue,
-	        onChange: this.props.onValueChange
-	      }, this.props.field.validation));
-	    }
-	  });
+	var _react = __webpack_require__(2);
 
-	  return FormFieldTextarea;
-	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	var _react2 = _interopRequireDefault(_react);
+
+	var _propTypes = __webpack_require__(185);
+
+	var _propTypes2 = _interopRequireDefault(_propTypes);
+
+	var FormFieldTextarea = function FormFieldTextarea(props) {
+	  return _react2['default'].createElement('textarea', _extends({
+	    type: 'text',
+	    className: 'regular-text',
+	    name: props.field.name,
+	    id: 'field_' + props.field.name,
+	    value: props.item[props.field.name],
+	    placeholder: props.field.placeholder,
+	    defaultValue: props.field.defaultValue,
+	    onChange: props.onValueChange
+	  }, props.field.validation));
+	};
+
+	FormFieldTextarea.propTypes = {
+	  item: _propTypes2['default'].object.isRequired, //  eslint-disable-line react/forbid-prop-types
+	  field: _propTypes2['default'].shape({
+	    name: _propTypes2['default'].string,
+	    placeholder: _propTypes2['default'].string,
+	    defaultValue: _propTypes2['default'].string,
+	    validation: _propTypes2['default'].object }). //  eslint-disable-line react/forbid-prop-types
+	  isRequired,
+	  onValueChange: _propTypes2['default'].func.isRequired
+	};
+
+	exports['default'] = FormFieldTextarea;
+	module.exports = exports['default'];
 
 /***/ },
 /* 301 */
@@ -40637,11 +40910,11 @@ webpackJsonp([1],[
 	    var options = keys.filter(function (value) {
 	      if (filter === false) return true;
 	      return filter(_this.props.item, value);
-	    }).map(function (value, index) {
+	    }).map(function (value) {
 	      return _react2['default'].createElement(
 	        'option',
 	        {
-	          key: 'option-' + index,
+	          key: 'option-' + value,
 	          value: value
 	        },
 	        _this.props.field.values[value]
@@ -40668,118 +40941,142 @@ webpackJsonp([1],[
 /* 302 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;"use strict";
+	"use strict";
 
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2)], __WEBPACK_AMD_DEFINE_RESULT__ = function (React) {
-	  var FormFieldRadio = React.createClass({
-	    displayName: "FormFieldRadio",
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
 
-	    render: function render() {
-	      var _this = this;
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-	      if (this.props.field.values === undefined) {
-	        return false;
-	      }
+	var _react = __webpack_require__(2);
 
-	      var selectedValue = this.props.item[this.props.field.name];
-	      var options = Object.keys(this.props.field.values).map(function (value, index) {
-	        return React.createElement(
-	          "p",
-	          { key: "radio-" + index },
-	          React.createElement(
-	            "label",
-	            { htmlFor: _this.props.field.name },
-	            React.createElement("input", {
-	              type: "radio",
-	              checked: selectedValue === value,
-	              value: value,
-	              onChange: _this.props.onValueChange,
-	              name: _this.props.field.name,
-	              id: _this.props.field.name
-	            }),
-	            _this.props.field.values[value]
-	          )
-	        );
-	      });
+	var _react2 = _interopRequireDefault(_react);
 
-	      return React.createElement(
-	        "div",
-	        null,
-	        options
-	      );
+	var FormFieldRadio = _react2["default"].createClass({
+	  displayName: "FormFieldRadio",
+
+	  render: function render() {
+	    var _this = this;
+
+	    if (this.props.field.values === undefined) {
+	      return false;
 	    }
-	  });
 
-	  return FormFieldRadio;
-	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	    var selectedValue = this.props.item[this.props.field.name];
+	    var options = Object.keys(this.props.field.values).map(function (value) {
+	      return _react2["default"].createElement(
+	        "p",
+	        { key: "radio-" + value },
+	        _react2["default"].createElement(
+	          "label",
+	          { htmlFor: _this.props.field.name },
+	          _react2["default"].createElement("input", {
+	            type: "radio",
+	            checked: selectedValue === value,
+	            value: value,
+	            onChange: _this.props.onValueChange,
+	            name: _this.props.field.name,
+	            id: _this.props.field.name
+	          }),
+	          _this.props.field.values[value]
+	        )
+	      );
+	    });
+
+	    return _react2["default"].createElement(
+	      "div",
+	      null,
+	      options
+	    );
+	  }
+	});
+
+	exports["default"] = FormFieldRadio;
+	module.exports = exports["default"];
 
 /***/ },
 /* 303 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;'use strict';
+	'use strict';
 
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2)], __WEBPACK_AMD_DEFINE_RESULT__ = function (React) {
-	  var FormFieldCheckbox = React.createClass({
-	    displayName: 'FormFieldCheckbox',
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
 
-	    onValueChange: function onValueChange(e) {
-	      e.target.value = this.checkbox.checked ? '1' : '0';
-	      return this.props.onValueChange(e);
-	    },
-	    render: function render() {
-	      var _this = this;
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	      if (this.props.field.values === undefined) {
-	        return false;
-	      }
+	var _react = __webpack_require__(2);
 
-	      // isChecked will be true only if the value is "1"
-	      // it will be false in case value is "0" or empty
-	      var isChecked = !!Number(this.props.item[this.props.field.name]);
-	      var options = Object.keys(this.props.field.values).map(function (value, index) {
-	        return React.createElement(
-	          'p',
-	          { key: 'checkbox-' + index },
-	          React.createElement(
-	            'label',
-	            { htmlFor: _this.props.field.name },
-	            React.createElement('input', {
-	              ref: function (c) {
-	                _this.checkbox = c;
-	              },
-	              type: 'checkbox',
-	              value: '1',
-	              checked: isChecked,
-	              onChange: _this.onValueChange,
-	              name: _this.props.field.name,
-	              id: _this.props.field.name
-	            }),
-	            _this.props.field.values[value]
-	          )
-	        );
-	      });
+	var _react2 = _interopRequireDefault(_react);
 
-	      return React.createElement(
-	        'div',
-	        null,
-	        options
-	      );
+	var FormFieldCheckbox = _react2['default'].createClass({
+	  displayName: 'FormFieldCheckbox',
+
+	  onValueChange: function onValueChange(e) {
+	    e.target.value = this.checkbox.checked ? '1' : '0';
+	    return this.props.onValueChange(e);
+	  },
+	  render: function render() {
+	    var _this = this;
+
+	    if (this.props.field.values === undefined) {
+	      return false;
 	    }
-	  });
 
-	  return FormFieldCheckbox;
-	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	    // isChecked will be true only if the value is "1"
+	    // it will be false in case value is "0" or empty
+	    var isChecked = !!Number(this.props.item[this.props.field.name]);
+	    var options = Object.keys(this.props.field.values).map(function (value) {
+	      return _react2['default'].createElement(
+	        'p',
+	        { key: 'checkbox-' + value },
+	        _react2['default'].createElement(
+	          'label',
+	          { htmlFor: _this.props.field.name },
+	          _react2['default'].createElement('input', {
+	            ref: function (c) {
+	              _this.checkbox = c;
+	            },
+	            type: 'checkbox',
+	            value: '1',
+	            checked: isChecked,
+	            onChange: _this.onValueChange,
+	            name: _this.props.field.name,
+	            id: _this.props.field.name
+	          }),
+	          _this.props.field.values[value]
+	        )
+	      );
+	    });
+
+	    return _react2['default'].createElement(
+	      'div',
+	      null,
+	      options
+	    );
+	  }
+	});
+
+	exports['default'] = FormFieldCheckbox;
+	module.exports = exports['default'];
 
 /***/ },
 /* 304 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;'use strict';
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -40787,280 +41084,327 @@ webpackJsonp([1],[
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(305)], __WEBPACK_AMD_DEFINE_RESULT__ = function (React, Moment) {
-	  function FormFieldDateYear(props) {
-	    var yearsRange = 100;
-	    var years = [];
+	var _react = __webpack_require__(2);
 
-	    if (props.placeholder !== undefined) {
-	      years.push(React.createElement(
-	        'option',
-	        { value: '', key: 0 },
-	        props.placeholder
-	      ));
-	    }
+	var _react2 = _interopRequireDefault(_react);
 
-	    var currentYear = Moment().year();
-	    for (var i = currentYear; i >= currentYear - yearsRange; i -= 1) {
-	      years.push(React.createElement(
-	        'option',
-	        {
-	          key: i,
-	          value: i
-	        },
-	        i
-	      ));
-	    }
-	    return React.createElement(
-	      'select',
-	      {
-	        name: props.name + '[year]',
-	        value: props.year,
-	        onChange: props.onValueChange
-	      },
-	      years
-	    );
+	var _moment = __webpack_require__(305);
+
+	var _moment2 = _interopRequireDefault(_moment);
+
+	var _propTypes = __webpack_require__(185);
+
+	var _propTypes2 = _interopRequireDefault(_propTypes);
+
+	function FormFieldDateYear(props) {
+	  var yearsRange = 100;
+	  var years = [];
+
+	  if (props.placeholder !== undefined) {
+	    years.push(_react2['default'].createElement(
+	      'option',
+	      { value: '', key: 0 },
+	      props.placeholder
+	    ));
 	  }
 
-	  function FormFieldDateMonth(props) {
-	    var months = [];
-
-	    if (props.placeholder !== undefined) {
-	      months.push(React.createElement(
-	        'option',
-	        { value: '', key: 0 },
-	        props.placeholder
-	      ));
-	    }
-
-	    for (var i = 1; i <= 12; i += 1) {
-	      months.push(React.createElement(
-	        'option',
-	        {
-	          key: i,
-	          value: i
-	        },
-	        props.monthNames[i - 1]
-	      ));
-	    }
-	    return React.createElement(
-	      'select',
+	  var currentYear = (0, _moment2['default'])().year();
+	  for (var i = currentYear; i >= currentYear - yearsRange; i -= 1) {
+	    years.push(_react2['default'].createElement(
+	      'option',
 	      {
-	        name: props.name + '[month]',
-	        value: props.month,
-	        onChange: props.onValueChange
+	        key: i,
+	        value: i
 	      },
-	      months
-	    );
+	      i
+	    ));
+	  }
+	  return _react2['default'].createElement(
+	    'select',
+	    {
+	      name: props.name + '[year]',
+	      value: props.year,
+	      onChange: props.onValueChange
+	    },
+	    years
+	  );
+	}
+
+	FormFieldDateYear.propTypes = {
+	  name: _propTypes2['default'].string.isRequired,
+	  placeholder: _propTypes2['default'].string.isRequired,
+	  onValueChange: _propTypes2['default'].func.isRequired,
+	  year: _propTypes2['default'].string.isRequired
+	};
+
+	function FormFieldDateMonth(props) {
+	  var months = [];
+
+	  if (props.placeholder !== undefined) {
+	    months.push(_react2['default'].createElement(
+	      'option',
+	      { value: '', key: 0 },
+	      props.placeholder
+	    ));
 	  }
 
-	  function FormFieldDateDay(props) {
-	    var days = [];
-
-	    if (props.placeholder !== undefined) {
-	      days.push(React.createElement(
-	        'option',
-	        { value: '', key: 0 },
-	        props.placeholder
-	      ));
-	    }
-
-	    for (var i = 1; i <= 31; i += 1) {
-	      days.push(React.createElement(
-	        'option',
-	        {
-	          key: i,
-	          value: i
-	        },
-	        i
-	      ));
-	    }
-
-	    return React.createElement(
-	      'select',
+	  for (var i = 1; i <= 12; i += 1) {
+	    months.push(_react2['default'].createElement(
+	      'option',
 	      {
-	        name: props.name + '[day]',
-	        value: props.day,
-	        onChange: props.onValueChange
+	        key: i,
+	        value: i
 	      },
-	      days
-	    );
+	      props.monthNames[i - 1]
+	    ));
+	  }
+	  return _react2['default'].createElement(
+	    'select',
+	    {
+	      name: props.name + '[month]',
+	      value: props.month,
+	      onChange: props.onValueChange
+	    },
+	    months
+	  );
+	}
+
+	FormFieldDateMonth.propTypes = {
+	  name: _propTypes2['default'].string.isRequired,
+	  placeholder: _propTypes2['default'].string.isRequired,
+	  onValueChange: _propTypes2['default'].func.isRequired,
+	  month: _propTypes2['default'].string.isRequired,
+	  monthNames: _propTypes2['default'].arrayOf(_propTypes2['default'].string).isRequired
+	};
+
+	function FormFieldDateDay(props) {
+	  var days = [];
+
+	  if (props.placeholder !== undefined) {
+	    days.push(_react2['default'].createElement(
+	      'option',
+	      { value: '', key: 0 },
+	      props.placeholder
+	    ));
 	  }
 
-	  var FormFieldDate = (function (_React$Component) {
-	    _inherits(FormFieldDate, _React$Component);
+	  for (var i = 1; i <= 31; i += 1) {
+	    days.push(_react2['default'].createElement(
+	      'option',
+	      {
+	        key: i,
+	        value: i
+	      },
+	      i
+	    ));
+	  }
 
-	    function FormFieldDate(props) {
-	      _classCallCheck(this, FormFieldDate);
+	  return _react2['default'].createElement(
+	    'select',
+	    {
+	      name: props.name + '[day]',
+	      value: props.day,
+	      onChange: props.onValueChange
+	    },
+	    days
+	  );
+	}
 
-	      _get(Object.getPrototypeOf(FormFieldDate.prototype), 'constructor', this).call(this, props);
-	      this.state = {
-	        year: '',
-	        month: '',
-	        day: ''
-	      };
+	FormFieldDateDay.propTypes = {
+	  name: _propTypes2['default'].string.isRequired,
+	  placeholder: _propTypes2['default'].string.isRequired,
+	  onValueChange: _propTypes2['default'].func.isRequired,
+	  day: _propTypes2['default'].string.isRequired
+	};
+
+	var FormFieldDate = (function (_React$Component) {
+	  _inherits(FormFieldDate, _React$Component);
+
+	  function FormFieldDate(props) {
+	    _classCallCheck(this, FormFieldDate);
+
+	    _get(Object.getPrototypeOf(FormFieldDate.prototype), 'constructor', this).call(this, props);
+	    this.state = {
+	      year: '',
+	      month: '',
+	      day: ''
+	    };
+
+	    this.onValueChange = this.onValueChange.bind(this);
+	  }
+
+	  _createClass(FormFieldDate, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.extractDateParts();
 	    }
-
-	    _createClass(FormFieldDate, [{
-	      key: 'componentDidMount',
-	      value: function componentDidMount() {
+	  }, {
+	    key: 'componentDidUpdate',
+	    value: function componentDidUpdate(prevProps) {
+	      if (this.props.item !== undefined && prevProps.item !== undefined && this.props.item.id !== prevProps.item.id) {
 	        this.extractDateParts();
 	      }
-	    }, {
-	      key: 'componentDidUpdate',
-	      value: function componentDidUpdate(prevProps) {
-	        if (this.props.item !== undefined && prevProps.item !== undefined && this.props.item.id !== prevProps.item.id) {
-	          this.extractDateParts();
-	        }
-	      }
-	    }, {
-	      key: 'extractDateParts',
-	      value: function extractDateParts() {
-	        var value = this.props.item[this.props.field.name] !== undefined ? this.props.item[this.props.field.name].trim() : '';
+	    }
+	  }, {
+	    key: 'onValueChange',
+	    value: function onValueChange(e) {
+	      var _this = this;
 
-	        if (value === '') {
-	          return;
-	        }
+	      // extract property from name
+	      var matches = e.target.name.match(/(.*?)\[(.*?)\]/);
+	      var field = null;
+	      var property = null;
 
-	        var dateTime = Moment(value);
+	      if (matches !== null && matches.length === 3) {
+	        field = matches[1];
+	        property = matches[2];
 
-	        this.setState({
-	          year: dateTime.format('YYYY'),
-	          month: dateTime.format('M'),
-	          day: dateTime.format('D')
-	        });
-	      }
-	    }, {
-	      key: 'formatValue',
-	      value: function formatValue() {
-	        var dateType = this.props.field.params.date_type;
+	        var value = Number(e.target.value);
 
-	        var value = undefined;
-
-	        switch (dateType) {
-	          case 'year_month_day':
-	            value = {
-	              year: this.state.year,
-	              month: this.state.month,
-	              day: this.state.day
-	            };
-	            break;
-
-	          case 'year_month':
-	            value = {
-	              year: this.state.year,
-	              month: this.state.month
-	            };
-	            break;
-
-	          case 'month':
-	            value = {
-	              month: this.state.month
-	            };
-	            break;
-
-	          case 'year':
-	            value = {
-	              year: this.state.year
-	            };
-	            break;
-	          default:
-	            value = {
-	              value: 'invalid type'
-	            };
-	            break;
-	        }
-
-	        return value;
-	      }
-	    }, {
-	      key: 'onValueChange',
-	      value: function onValueChange(e) {
-	        var _this = this;
-
-	        // extract property from name
-	        var matches = e.target.name.match(/(.*?)\[(.*?)\]/);
-	        var field = null;
-	        var property = null;
-
-	        if (matches !== null && matches.length === 3) {
-	          field = matches[1];
-	          property = matches[2];
-
-	          var value = Number(e.target.value);
-
-	          this.setState(_defineProperty({}, '' + property, value), function () {
-	            _this.props.onValueChange({
-	              target: {
-	                name: field,
-	                value: _this.formatValue()
-	              }
-	            });
+	        this.setState(_defineProperty({}, '' + property, value), function () {
+	          _this.props.onValueChange({
+	            target: {
+	              name: field,
+	              value: _this.formatValue()
+	            }
 	          });
-	        }
-	      }
-	    }, {
-	      key: 'render',
-	      value: function render() {
-	        var _this2 = this;
-
-	        var monthNames = window.mailpoet_month_names || [];
-	        var dateFormats = window.mailpoet_date_formats || {};
-	        var dateType = this.props.field.params.date_type;
-	        var dateSelects = dateFormats[dateType][0].split('/');
-
-	        var fields = dateSelects.map(function (type) {
-	          switch (type) {
-	            case 'YYYY':
-	              return React.createElement(FormFieldDateYear, {
-	                onValueChange: _this2.onValueChange.bind(_this2),
-	                key: 'year',
-	                name: _this2.props.field.name,
-	                year: _this2.state.year,
-	                placeholder: _this2.props.field.year_placeholder
-	              });
-
-	            case 'MM':
-	              return React.createElement(FormFieldDateMonth, {
-	                onValueChange: _this2.onValueChange.bind(_this2),
-	                key: 'month',
-	                name: _this2.props.field.name,
-	                month: _this2.state.month,
-	                monthNames: monthNames,
-	                placeholder: _this2.props.field.month_placeholder
-	              });
-
-	            case 'DD':
-	              return React.createElement(FormFieldDateDay, {
-	                onValueChange: _this2.onValueChange.bind(_this2),
-	                key: 'day',
-	                name: _this2.props.field.name,
-	                day: _this2.state.day,
-	                placeholder: _this2.props.field.day_placeholder
-	              });
-
-	            default:
-	              return React.createElement(
-	                'div',
-	                null,
-	                'Invalid date type'
-	              );
-	          }
 	        });
-
-	        return React.createElement(
-	          'div',
-	          null,
-	          fields
-	        );
 	      }
-	    }]);
+	    }
+	  }, {
+	    key: 'formatValue',
+	    value: function formatValue() {
+	      var dateType = this.props.field.params.date_type;
 
-	    return FormFieldDate;
-	  })(React.Component);
+	      var value = undefined;
+
+	      switch (dateType) {
+	        case 'year_month_day':
+	          value = {
+	            year: this.state.year,
+	            month: this.state.month,
+	            day: this.state.day
+	          };
+	          break;
+
+	        case 'year_month':
+	          value = {
+	            year: this.state.year,
+	            month: this.state.month
+	          };
+	          break;
+
+	        case 'month':
+	          value = {
+	            month: this.state.month
+	          };
+	          break;
+
+	        case 'year':
+	          value = {
+	            year: this.state.year
+	          };
+	          break;
+	        default:
+	          value = {
+	            value: 'invalid type'
+	          };
+	          break;
+	      }
+
+	      return value;
+	    }
+	  }, {
+	    key: 'extractDateParts',
+	    value: function extractDateParts() {
+	      var value = this.props.item[this.props.field.name] !== undefined ? this.props.item[this.props.field.name].trim() : '';
+
+	      if (value === '') {
+	        return;
+	      }
+
+	      var dateTime = (0, _moment2['default'])(value);
+
+	      this.setState({
+	        year: dateTime.format('YYYY'),
+	        month: dateTime.format('M'),
+	        day: dateTime.format('D')
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this;
+
+	      var monthNames = window.mailpoet_month_names || [];
+	      var dateFormats = window.mailpoet_date_formats || {};
+	      var dateType = this.props.field.params.date_type;
+	      var dateSelects = dateFormats[dateType][0].split('/');
+
+	      var fields = dateSelects.map(function (type) {
+	        switch (type) {
+	          case 'YYYY':
+	            return _react2['default'].createElement(FormFieldDateYear, {
+	              onValueChange: _this2.onValueChange,
+	              key: 'year',
+	              name: _this2.props.field.name,
+	              year: _this2.state.year,
+	              placeholder: _this2.props.field.year_placeholder
+	            });
+
+	          case 'MM':
+	            return _react2['default'].createElement(FormFieldDateMonth, {
+	              onValueChange: _this2.onValueChange,
+	              key: 'month',
+	              name: _this2.props.field.name,
+	              month: _this2.state.month,
+	              monthNames: monthNames,
+	              placeholder: _this2.props.field.month_placeholder
+	            });
+
+	          case 'DD':
+	            return _react2['default'].createElement(FormFieldDateDay, {
+	              onValueChange: _this2.onValueChange,
+	              key: 'day',
+	              name: _this2.props.field.name,
+	              day: _this2.state.day,
+	              placeholder: _this2.props.field.day_placeholder
+	            });
+
+	          default:
+	            return _react2['default'].createElement(
+	              'div',
+	              null,
+	              'Invalid date type'
+	            );
+	        }
+	      });
+
+	      return _react2['default'].createElement(
+	        'div',
+	        null,
+	        fields
+	      );
+	    }
+	  }]);
 
 	  return FormFieldDate;
-	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	})(_react2['default'].Component);
+
+	FormFieldDate.propTypes = {
+	  item: _propTypes2['default'].object.isRequired, //  eslint-disable-line react/forbid-prop-types
+	  field: _propTypes2['default'].shape({
+	    name: _propTypes2['default'].string,
+	    day_placeholder: _propTypes2['default'].string,
+	    month_placeholder: _propTypes2['default'].string,
+	    year_placeholder: _propTypes2['default'].string,
+	    params: _propTypes2['default'].object }). //  eslint-disable-line react/forbid-prop-types
+	  isRequired,
+	  onValueChange: _propTypes2['default'].func.isRequired
+	};
+
+	exports['default'] = FormFieldDate;
+	module.exports = exports['default'];
 
 /***/ },
 /* 305 */
@@ -58115,72 +58459,84 @@ webpackJsonp([1],[
 /* 437 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;'use strict';
+	'use strict';
 
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(181), __webpack_require__(277), __webpack_require__(276)], __WEBPACK_AMD_DEFINE_RESULT__ = function (React, Router, classNames, MailPoet) {
-	  var Link = Router.Link;
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	  var Breadcrumb = React.createClass({
-	    displayName: 'Breadcrumb',
+	var _react = __webpack_require__(2);
 
-	    getInitialState: function getInitialState() {
-	      var steps = this.props.steps || [{
-	        name: 'type',
-	        label: MailPoet.I18n.t('selectType'),
-	        link: '/new'
-	      }, {
-	        name: 'template',
-	        label: MailPoet.I18n.t('template')
-	      }, {
-	        name: 'editor',
-	        label: MailPoet.I18n.t('designer')
-	      }, {
-	        name: 'send',
-	        label: MailPoet.I18n.t('send')
-	      }];
-	      return {
-	        step: null,
-	        steps: steps
-	      };
-	    },
-	    render: function render() {
-	      var _this = this;
+	var _react2 = _interopRequireDefault(_react);
 
-	      var steps = this.state.steps.map(function (step, index) {
-	        var stepClasses = classNames({ mailpoet_current: _this.props.step === step.name });
+	var _classnames = __webpack_require__(277);
 
-	        var label = step.label;
+	var _classnames2 = _interopRequireDefault(_classnames);
 
-	        if (step.link !== undefined && _this.props.step !== step.name) {
-	          label = React.createElement(
-	            Link,
-	            { to: step.link },
-	            step.label
-	          );
-	        }
+	var _reactRouter = __webpack_require__(181);
 
-	        return React.createElement(
-	          'span',
-	          { key: 'step-' + index },
-	          React.createElement(
-	            'span',
-	            { className: stepClasses },
-	            label
-	          ),
-	          index < _this.state.steps.length - 1 ? ' > ' : ''
+	var _mailpoet = __webpack_require__(276);
+
+	var _mailpoet2 = _interopRequireDefault(_mailpoet);
+
+	var Breadcrumb = _react2['default'].createClass({
+	  displayName: 'Breadcrumb',
+
+	  getInitialState: function getInitialState() {
+	    var steps = this.props.steps || [{
+	      name: 'type',
+	      label: _mailpoet2['default'].I18n.t('selectType'),
+	      link: '/new'
+	    }, {
+	      name: 'template',
+	      label: _mailpoet2['default'].I18n.t('template')
+	    }, {
+	      name: 'editor',
+	      label: _mailpoet2['default'].I18n.t('designer')
+	    }, {
+	      name: 'send',
+	      label: _mailpoet2['default'].I18n.t('send')
+	    }];
+	    return {
+	      step: null,
+	      steps: steps
+	    };
+	  },
+	  render: function render() {
+	    var _this = this;
+
+	    var steps = this.state.steps.map(function (step, index) {
+	      var stepClasses = (0, _classnames2['default'])({ mailpoet_current: _this.props.step === step.name });
+
+	      var label = step.label;
+
+	      if (step.link !== undefined && _this.props.step !== step.name) {
+	        label = _react2['default'].createElement(
+	          _reactRouter.Link,
+	          { to: step.link },
+	          step.label
 	        );
-	      });
+	      }
 
-	      return React.createElement(
-	        'p',
-	        { className: 'mailpoet_breadcrumb' },
-	        steps
+	      return _react2['default'].createElement(
+	        'span',
+	        { key: 'step-' + step.label },
+	        _react2['default'].createElement(
+	          'span',
+	          { className: stepClasses },
+	          label
+	        ),
+	        index < _this.state.steps.length - 1 ? ' > ' : ''
 	      );
-	    }
-	  });
+	    });
 
-	  return Breadcrumb;
-	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	    return _react2['default'].createElement(
+	      'p',
+	      { className: 'mailpoet_breadcrumb' },
+	      steps
+	    );
+	  }
+	});
+
+	module.exports = Breadcrumb;
 
 /***/ },
 /* 438 */,
@@ -59647,17 +60003,124 @@ webpackJsonp([1],[
 /* 525 */,
 /* 526 */,
 /* 527 */,
-/* 528 */
+/* 528 */,
+/* 529 */,
+/* 530 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {"use strict";
 
 	if (!global["MailPoetLib"]) global["MailPoetLib"] = {};
-	module.exports = global["MailPoetLib"]["NewsletterWelcomeNotificationScheduling"] = __webpack_require__(529);
+	module.exports = global["MailPoetLib"]["NewsletterSchedulingCommonOptions"] = __webpack_require__(531);
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 529 */
+/* 531 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _underscore = __webpack_require__(281);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	var _mailpoet = __webpack_require__(276);
+
+	var _mailpoet2 = _interopRequireDefault(_mailpoet);
+
+	var timeFormat = window.mailpoet_time_format || 'H:i';
+
+	// welcome emails
+	var timeDelayValues = {
+	  immediate: _mailpoet2['default'].I18n.t('delayImmediately'),
+	  hours: _mailpoet2['default'].I18n.t('delayHoursAfter'),
+	  days: _mailpoet2['default'].I18n.t('delayDaysAfter'),
+	  weeks: _mailpoet2['default'].I18n.t('delayWeeksAfter')
+	};
+
+	var intervalValues = {
+	  daily: _mailpoet2['default'].I18n.t('daily'),
+	  weekly: _mailpoet2['default'].I18n.t('weekly'),
+	  monthly: _mailpoet2['default'].I18n.t('monthly'),
+	  nthWeekDay: _mailpoet2['default'].I18n.t('monthlyEvery'),
+	  immediately: _mailpoet2['default'].I18n.t('immediately')
+	};
+
+	// notification emails
+	var SECONDS_IN_DAY = 86400;
+	var TIME_STEP_SECONDS = 3600;
+	var numberOfTimeSteps = SECONDS_IN_DAY / TIME_STEP_SECONDS;
+
+	var timeOfDayValues = _underscore2['default'].object(_underscore2['default'].map(_underscore2['default'].times(numberOfTimeSteps, function (step) {
+	  return step * TIME_STEP_SECONDS;
+	}), function (seconds) {
+	  var date = new Date(null);
+	  date.setSeconds(seconds);
+	  var timeLabel = _mailpoet2['default'].Date.format(date, { format: timeFormat, offset: 0 });
+	  return [seconds, timeLabel];
+	}));
+
+	var weekDayValues = {
+	  0: _mailpoet2['default'].I18n.t('sunday'),
+	  1: _mailpoet2['default'].I18n.t('monday'),
+	  2: _mailpoet2['default'].I18n.t('tuesday'),
+	  3: _mailpoet2['default'].I18n.t('wednesday'),
+	  4: _mailpoet2['default'].I18n.t('thursday'),
+	  5: _mailpoet2['default'].I18n.t('friday'),
+	  6: _mailpoet2['default'].I18n.t('saturday')
+	};
+
+	var NUMBER_OF_DAYS_IN_MONTH = 28;
+	var monthDayValues = _underscore2['default'].object(_underscore2['default'].map(_underscore2['default'].times(NUMBER_OF_DAYS_IN_MONTH, function (day) {
+	  return day;
+	}), function (day) {
+	  var labels = {
+	    0: _mailpoet2['default'].I18n.t('first'),
+	    1: _mailpoet2['default'].I18n.t('second'),
+	    2: _mailpoet2['default'].I18n.t('third')
+	  };
+	  var label = undefined;
+	  if (labels[day] !== undefined) {
+	    label = labels[day];
+	  } else {
+	    label = _mailpoet2['default'].I18n.t('nth').replace('%$1d', day + 1);
+	  }
+	  return [day + 1, label];
+	}));
+
+	var nthWeekDayValues = {
+	  1: _mailpoet2['default'].I18n.t('first'),
+	  2: _mailpoet2['default'].I18n.t('second'),
+	  3: _mailpoet2['default'].I18n.t('third'),
+	  L: _mailpoet2['default'].I18n.t('last')
+	};
+
+	exports.timeDelayValues = timeDelayValues;
+	exports.intervalValues = intervalValues;
+	exports.timeOfDayValues = timeOfDayValues;
+	exports.weekDayValues = weekDayValues;
+	exports.monthDayValues = monthDayValues;
+	exports.nthWeekDayValues = nthWeekDayValues;
+
+/***/ },
+/* 532 */,
+/* 533 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {"use strict";
+
+	if (!global["MailPoetLib"]) global["MailPoetLib"] = {};
+	module.exports = global["MailPoetLib"]["NewsletterWelcomeNotificationScheduling"] = __webpack_require__(534);
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 534 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -59835,113 +60298,6 @@ webpackJsonp([1],[
 	module.exports = WelcomeScheduling;
 
 /***/ },
-/* 530 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {"use strict";
-
-	if (!global["MailPoetLib"]) global["MailPoetLib"] = {};
-	module.exports = global["MailPoetLib"]["NewsletterSchedulingCommonOptions"] = __webpack_require__(531);
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 531 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	var _underscore = __webpack_require__(281);
-
-	var _underscore2 = _interopRequireDefault(_underscore);
-
-	var _mailpoet = __webpack_require__(276);
-
-	var _mailpoet2 = _interopRequireDefault(_mailpoet);
-
-	var timeFormat = window.mailpoet_time_format || 'H:i';
-
-	// welcome emails
-	var timeDelayValues = {
-	  immediate: _mailpoet2['default'].I18n.t('delayImmediately'),
-	  hours: _mailpoet2['default'].I18n.t('delayHoursAfter'),
-	  days: _mailpoet2['default'].I18n.t('delayDaysAfter'),
-	  weeks: _mailpoet2['default'].I18n.t('delayWeeksAfter')
-	};
-
-	var intervalValues = {
-	  daily: _mailpoet2['default'].I18n.t('daily'),
-	  weekly: _mailpoet2['default'].I18n.t('weekly'),
-	  monthly: _mailpoet2['default'].I18n.t('monthly'),
-	  nthWeekDay: _mailpoet2['default'].I18n.t('monthlyEvery'),
-	  immediately: _mailpoet2['default'].I18n.t('immediately')
-	};
-
-	// notification emails
-	var SECONDS_IN_DAY = 86400;
-	var TIME_STEP_SECONDS = 3600;
-	var numberOfTimeSteps = SECONDS_IN_DAY / TIME_STEP_SECONDS;
-
-	var timeOfDayValues = _underscore2['default'].object(_underscore2['default'].map(_underscore2['default'].times(numberOfTimeSteps, function (step) {
-	  return step * TIME_STEP_SECONDS;
-	}), function (seconds) {
-	  var date = new Date(null);
-	  date.setSeconds(seconds);
-	  var timeLabel = _mailpoet2['default'].Date.format(date, { format: timeFormat, offset: 0 });
-	  return [seconds, timeLabel];
-	}));
-
-	var weekDayValues = {
-	  0: _mailpoet2['default'].I18n.t('sunday'),
-	  1: _mailpoet2['default'].I18n.t('monday'),
-	  2: _mailpoet2['default'].I18n.t('tuesday'),
-	  3: _mailpoet2['default'].I18n.t('wednesday'),
-	  4: _mailpoet2['default'].I18n.t('thursday'),
-	  5: _mailpoet2['default'].I18n.t('friday'),
-	  6: _mailpoet2['default'].I18n.t('saturday')
-	};
-
-	var NUMBER_OF_DAYS_IN_MONTH = 28;
-	var monthDayValues = _underscore2['default'].object(_underscore2['default'].map(_underscore2['default'].times(NUMBER_OF_DAYS_IN_MONTH, function (day) {
-	  return day;
-	}), function (day) {
-	  var labels = {
-	    0: _mailpoet2['default'].I18n.t('first'),
-	    1: _mailpoet2['default'].I18n.t('second'),
-	    2: _mailpoet2['default'].I18n.t('third')
-	  };
-	  var label = undefined;
-	  if (labels[day] !== undefined) {
-	    label = labels[day];
-	  } else {
-	    label = _mailpoet2['default'].I18n.t('nth').replace('%$1d', day + 1);
-	  }
-	  return [day + 1, label];
-	}));
-
-	var nthWeekDayValues = {
-	  1: _mailpoet2['default'].I18n.t('first'),
-	  2: _mailpoet2['default'].I18n.t('second'),
-	  3: _mailpoet2['default'].I18n.t('third'),
-	  L: _mailpoet2['default'].I18n.t('last')
-	};
-
-	exports.timeDelayValues = timeDelayValues;
-	exports.intervalValues = intervalValues;
-	exports.timeOfDayValues = timeOfDayValues;
-	exports.weekDayValues = weekDayValues;
-	exports.monthDayValues = monthDayValues;
-	exports.nthWeekDayValues = nthWeekDayValues;
-
-/***/ },
-/* 532 */,
-/* 533 */,
-/* 534 */,
 /* 535 */,
 /* 536 */,
 /* 537 */,
@@ -59988,6 +60344,10 @@ webpackJsonp([1],[
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
+	var _propTypes = __webpack_require__(185);
+
+	var _propTypes2 = _interopRequireDefault(_propTypes);
+
 	var AutomaticEmailEventsList = (function (_React$Component) {
 	  _inherits(AutomaticEmailEventsList, _React$Component);
 
@@ -60016,7 +60376,8 @@ webpackJsonp([1],[
 	        if (_this.email.premium) {
 	          action = _react2['default'].createElement(
 	            'a',
-	            { href: '?page=mailpoet-premium',
+	            {
+	              href: '?page=mailpoet-premium',
 	              target: '_blank'
 	            },
 	            _mailpoet2['default'].I18n.t('premiumFeatureLink')
@@ -60026,7 +60387,8 @@ webpackJsonp([1],[
 
 	          action = _react2['default'].createElement(
 	            'a',
-	            { className: 'button button-primary',
+	            {
+	              className: 'button button-primary',
 	              disabled: disabled,
 	              onClick: !disabled ? _this.eventsConfigurator.bind(null, event.slug) : null
 	            },
@@ -60110,6 +60472,20 @@ webpackJsonp([1],[
 	  return AutomaticEmailEventsList;
 	})(_react2['default'].Component);
 
+	AutomaticEmailEventsList.propTypes = {
+
+	  route: _propTypes2['default'].shape({
+	    data: _propTypes2['default'].shape({
+	      email: _propTypes2['default'].string.isRequired
+	    }).isRequired
+	  }).isRequired,
+
+	  router: _propTypes2['default'].shape({
+	    push: _propTypes2['default'].func.isRequired
+	  }).isRequired
+
+	};
+
 	module.exports = AutomaticEmailEventsList;
 
 /***/ },
@@ -60142,6 +60518,10 @@ webpackJsonp([1],[
 
 	var _mailpoet2 = _interopRequireDefault(_mailpoet);
 
+	var _propTypes = __webpack_require__(185);
+
+	var _propTypes2 = _interopRequireDefault(_propTypes);
+
 	function AutomaticEmailsBreadcrumb(props) {
 	  var steps = [{
 	    name: 'type',
@@ -60166,6 +60546,10 @@ webpackJsonp([1],[
 
 	  return _react2['default'].createElement(_newslettersBreadcrumbJsx2['default'], { step: props.step, steps: steps });
 	}
+
+	AutomaticEmailsBreadcrumb.propTypes = {
+	  step: _propTypes2['default'].string.isRequired
+	};
 
 	module.exports = AutomaticEmailsBreadcrumb;
 
@@ -60230,13 +60614,13 @@ webpackJsonp([1],[
 	  render: function render() {
 	    var _this = this;
 
-	    var tabs = this.state.tabs.map(function (tab, index) {
+	    var tabs = this.state.tabs.map(function (tab) {
 	      var tabClasses = (0, _classnames2['default'])('nav-tab', { 'nav-tab-active': _this.props.tab === tab.name });
 
 	      return _react2['default'].createElement(
 	        _reactRouter.Link,
 	        {
-	          key: 'tab-' + index,
+	          key: 'tab-' + tab.label,
 	          className: tabClasses,
 	          to: tab.link,
 	          onClick: function () {
@@ -60308,6 +60692,10 @@ webpackJsonp([1],[
 	var _jquery = __webpack_require__(275);
 
 	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _underscore = __webpack_require__(281);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
 
 	var _wpJsHooks = __webpack_require__(433);
 
@@ -60393,6 +60781,7 @@ webpackJsonp([1],[
 	        _mailpoet2['default'].I18n.t('newsletterQueueCompleted').replace('%$1d', parseInt(newsletter.queue.count_processed, 10).toLocaleString()).replace('%$2d', parseInt(newsletter.queue.count_total, 10).toLocaleString())
 	      );
 	    } else {
+	      var resumeSendingClick = _underscore2['default'].partial(this.resumeSending, newsletter);
 	      label = _react2['default'].createElement(
 	        'span',
 	        null,
@@ -60407,7 +60796,7 @@ webpackJsonp([1],[
 	            className: 'button',
 	            style: { display: newsletter.queue.status === 'paused' ? 'inline-block' : 'none' },
 	            href: 'javascript:;',
-	            onClick: this.resumeSending.bind(null, newsletter)
+	            onClick: resumeSendingClick
 	          },
 	          _mailpoet2['default'].I18n.t('resume')
 	        ),
@@ -60418,7 +60807,7 @@ webpackJsonp([1],[
 	            className: 'button mailpoet_pause',
 	            style: { display: newsletter.queue.status === null ? 'inline-block' : 'none' },
 	            href: 'javascript:;',
-	            onClick: this.pauseSending.bind(null, newsletter)
+	            onClick: resumeSendingClick
 	          },
 	          _mailpoet2['default'].I18n.t('pause')
 	        )
@@ -60756,7 +61145,8 @@ webpackJsonp([1],[
 	        null,
 	        _react2['default'].createElement(
 	          'a',
-	          { href: 'javascript:;',
+	          {
+	            href: 'javascript:;',
 	            className: 'button',
 	            onClick: this.resumeMailerSending
 	          },
@@ -60831,6 +61221,10 @@ webpackJsonp([1],[
 	var _react = __webpack_require__(2);
 
 	var _react2 = _interopRequireDefault(_react);
+
+	var _propTypes = __webpack_require__(185);
+
+	var _propTypes2 = _interopRequireDefault(_propTypes);
 
 	var _badgeJsx = __webpack_require__(551);
 
@@ -60940,6 +61334,17 @@ webpackJsonp([1],[
 	  return StatsBadge;
 	})(_react2['default'].Component);
 
+	StatsBadge.propTypes = {
+	  stat: _propTypes2['default'].string.isRequired,
+	  rate: _propTypes2['default'].number.isRequired,
+	  tooltipId: _propTypes2['default'].string.isRequired,
+	  headline: _propTypes2['default'].string
+	};
+
+	StatsBadge.defaultProps = {
+	  headline: ''
+	};
+
 	exports['default'] = StatsBadge;
 	module.exports = exports['default'];
 
@@ -60967,6 +61372,10 @@ webpackJsonp([1],[
 
 	var _reactTooltip2 = _interopRequireDefault(_reactTooltip);
 
+	var _propTypes = __webpack_require__(185);
+
+	var _propTypes2 = _interopRequireDefault(_propTypes);
+
 	function Badge(props) {
 	  var badgeClasses = (0, _classnames2['default'])('mailpoet_badge', props.type ? 'mailpoet_badge_' + props.type : '');
 
@@ -60993,6 +61402,19 @@ webpackJsonp([1],[
 	    })
 	  );
 	}
+
+	Badge.propTypes = {
+	  name: _propTypes2['default'].string.isRequired,
+	  tooltip: _propTypes2['default'].string,
+	  tooltipId: _propTypes2['default'].string,
+	  type: _propTypes2['default'].string
+	};
+
+	Badge.defaultProps = {
+	  type: undefined,
+	  tooltipId: undefined,
+	  tooltip: undefined
+	};
 
 	exports['default'] = Badge;
 	module.exports = exports['default'];
